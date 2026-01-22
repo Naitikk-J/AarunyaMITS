@@ -152,13 +152,13 @@ const History = () => {
             <MainNavigation />
 
             {/* Header */}
-            <div className="relative overflow-hidden bg-gradient-to-b from-primary/20 to-transparent py-16">
+            <div className="relative overflow-hidden bg-gradient-to-b from-kidcore-blue/20 via-kidcore-pink/10 to-transparent py-16">
                 <div className="absolute inset-0 scanlines opacity-10" />
                 <div className="container mx-auto px-6 relative z-10">
-                    <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-kidcore-blue via-kidcore-pink to-kidcore-orange bg-clip-text text-transparent animate-rainbow">
                         CAMPUS HISTORY
                     </h1>
-                    <p className="text-xl text-center text-muted-foreground font-rajdhani max-w-3xl mx-auto">
+                    <p className="text-xl text-center text-kidcore-cream font-rajdhani max-w-3xl mx-auto">
                         Journey through time and discover the milestones that shaped our campus into what it is today
                     </p>
                 </div>
@@ -171,9 +171,11 @@ const History = () => {
                         <Button
                             key={era.id}
                             onClick={() => setSelectedEra(era.id)}
-                            variant={selectedEra === era.id ? 'default' : 'outline'}
-                            className={`font-orbitron text-sm tracking-wider ${selectedEra === era.id ? 'animate-neon-pulse' : ''
-                                }`}
+                            className={`font-orbitron text-sm tracking-wider transition-all ${
+                                selectedEra === era.id
+                                    ? 'kidcore-btn'
+                                    : 'border-kidcore-blue/40 text-kidcore-yellow hover:text-kidcore-orange hover:bg-kidcore-blue/20'
+                            }`}
                         >
                             {era.label}
                         </Button>
@@ -182,12 +184,12 @@ const History = () => {
 
                 {/* Category Legend */}
                 <div className="mb-12">
-                    <h3 className="text-xl font-orbitron text-primary text-center mb-6">Event Categories</h3>
+                    <h3 className="text-xl font-orbitron text-kidcore-yellow text-center mb-6">Event Categories</h3>
                     <div className="flex flex-wrap justify-center gap-4">
                         {categories.map((category) => (
-                            <div key={category.id} className="flex items-center gap-2 px-3 py-2 rounded-full border border-secondary/30 bg-card/50">
+                            <div key={category.id} className="flex items-center gap-2 px-3 py-2 rounded-full border border-kidcore-blue/40 bg-kidcore-blue/10">
                                 <span className="text-lg">{category.icon}</span>
-                                <span className="text-sm font-rajdhani text-muted-foreground">{category.label}</span>
+                                <span className="text-sm font-rajdhani text-kidcore-cream">{category.label}</span>
                             </div>
                         ))}
                     </div>
@@ -196,7 +198,7 @@ const History = () => {
                 {/* Timeline */}
                 <div className="relative">
                     {/* Timeline Line */}
-                    <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary to-secondary opacity-30" />
+                    <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-kidcore-blue to-kidcore-pink opacity-30" />
 
                     {/* Timeline Events */}
                     <div className="space-y-12">
@@ -204,11 +206,11 @@ const History = () => {
                             <div key={event.id} className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
                                 {/* Event Card */}
                                 <div className={`w-5/12 ${index % 2 === 0 ? 'pr-8' : 'pl-8'}`}>
-                                    <Card className="group relative overflow-hidden border-secondary/30 bg-card/80 backdrop-blur-sm hover:border-primary/50 transition-all duration-300">
+                                    <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl group relative overflow-hidden hover:border-kidcore-pink/50 transition-all duration-300">
                                         <div className="p-6">
                                             {/* Year and Icon */}
                                             <div className="flex items-center justify-between mb-4">
-                                                <Badge className="bg-primary text-white font-orbitron">
+                                                <Badge className="bg-kidcore-yellow text-kidcore-black font-orbitron font-bold">
                                                     {event.year}
                                                 </Badge>
                                                 <div className="text-2xl">{event.icon}</div>
@@ -217,34 +219,34 @@ const History = () => {
                                             {/* Impact Indicator */}
                                             <div className="mb-4">
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-xs font-mono text-muted-foreground">IMPACT:</span>
+                                                    <span className="text-xs font-mono text-kidcore-orange">IMPACT:</span>
                                                     <div className={`w-3 h-3 rounded-full ${getImpactColor(event.impact)}`} />
-                                                    <span className="text-xs font-mono uppercase">{event.impact}</span>
+                                                    <span className="text-xs font-mono uppercase text-kidcore-orange">{event.impact}</span>
                                                 </div>
                                             </div>
 
                                             {/* Title and Description */}
-                                            <h3 className="text-lg font-orbitron text-primary mb-3">
+                                            <h3 className="text-lg font-orbitron text-kidcore-yellow mb-3">
                                                 {event.title}
                                             </h3>
-                                            <p className="text-muted-foreground font-rajdhani text-sm mb-4">
+                                            <p className="text-kidcore-cream font-rajdhani text-sm mb-4">
                                                 {event.description}
                                             </p>
 
                                             {/* Category */}
-                                            <Badge variant="outline" className="font-mono text-xs">
+                                            <Badge variant="outline" className="font-mono text-xs text-kidcore-green border-kidcore-green/50">
                                                 {event.category.toUpperCase()}
                                             </Badge>
                                         </div>
 
                                         {/* Hover effect */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-kidcore-pink/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                                     </Card>
                                 </div>
 
                                 {/* Timeline Dot */}
                                 <div className="relative z-10">
-                                    <div className="w-6 h-6 rounded-full bg-primary border-4 border-background shadow-lg shadow-primary/50" />
+                                    <div className="w-6 h-6 rounded-full bg-kidcore-yellow border-4 border-background shadow-lg shadow-kidcore-yellow/50" />
                                 </div>
 
                                 {/* Spacer */}
@@ -258,10 +260,10 @@ const History = () => {
                 {filteredEvents.length === 0 && (
                     <div className="text-center py-16">
                         <div className="text-6xl mb-4 opacity-30">⏳</div>
-                        <h3 className="text-2xl font-orbitron text-muted-foreground mb-2">
+                        <h3 className="text-2xl font-orbitron text-kidcore-yellow mb-2">
                             No Events Found
                         </h3>
-                        <p className="text-muted-foreground font-rajdhani">
+                        <p className="text-kidcore-cream font-rajdhani">
                             Try selecting a different era or explore other time periods.
                         </p>
                     </div>
@@ -269,32 +271,32 @@ const History = () => {
 
                 {/* Historical Statistics */}
                 <div className="mt-16">
-                    <h2 className="text-3xl font-orbitron font-bold text-center mb-12 text-primary">
+                    <h2 className="text-3xl font-orbitron font-bold text-center mb-12 bg-gradient-to-r from-kidcore-blue to-kidcore-pink bg-clip-text text-transparent">
                         BY THE NUMBERS
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <Card className="border-secondary/30 bg-card/80 backdrop-blur-sm text-center">
+                        <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl text-center floating-sticker">
                             <CardContent className="pt-6">
-                                <div className="text-3xl font-orbitron text-primary mb-2">10+</div>
-                                <div className="text-muted-foreground font-rajdhani text-sm">Major Milestones</div>
+                                <div className="text-3xl font-orbitron text-kidcore-yellow mb-2">10+</div>
+                                <div className="text-kidcore-cream font-rajdhani text-sm">Major Milestones</div>
                             </CardContent>
                         </Card>
-                        <Card className="border-secondary/30 bg-card/80 backdrop-blur-sm text-center">
+                        <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl text-center floating-sticker">
                             <CardContent className="pt-6">
-                                <div className="text-3xl font-orbitron text-primary mb-2">30+</div>
-                                <div className="text-muted-foreground font-rajdhani text-sm">Years of Innovation</div>
+                                <div className="text-3xl font-orbitron text-kidcore-yellow mb-2">30+</div>
+                                <div className="text-kidcore-cream font-rajdhani text-sm">Years of Innovation</div>
                             </CardContent>
                         </Card>
-                        <Card className="border-secondary/30 bg-card/80 backdrop-blur-sm text-center">
+                        <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl text-center floating-sticker">
                             <CardContent className="pt-6">
-                                <div className="text-3xl font-orbitron text-primary mb-2">8</div>
-                                <div className="text-muted-foreground font-rajdhani text-sm">Categories of Events</div>
+                                <div className="text-3xl font-orbitron text-kidcore-yellow mb-2">8</div>
+                                <div className="text-kidcore-cream font-rajdhani text-sm">Categories of Events</div>
                             </CardContent>
                         </Card>
-                        <Card className="border-secondary/30 bg-card/80 backdrop-blur-sm text-center">
+                        <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl text-center floating-sticker">
                             <CardContent className="pt-6">
-                                <div className="text-3xl font-orbitron text-primary mb-2">∞</div>
-                                <div className="text-muted-foreground font-rajdhani text-sm">Possibilities Ahead</div>
+                                <div className="text-3xl font-orbitron text-kidcore-yellow mb-2">∞</div>
+                                <div className="text-kidcore-cream font-rajdhani text-sm">Possibilities Ahead</div>
                             </CardContent>
                         </Card>
                     </div>
@@ -302,10 +304,10 @@ const History = () => {
             </div>
 
             {/* Footer decoration */}
-            <div className="fixed bottom-6 left-6 w-20 h-0.5 bg-gradient-to-r from-primary to-transparent" />
-            <div className="fixed bottom-6 left-6 w-0.5 h-20 bg-gradient-to-t from-primary to-transparent" />
-            <div className="fixed bottom-6 right-6 w-20 h-0.5 bg-gradient-to-l from-secondary to-transparent" />
-            <div className="fixed bottom-6 right-6 w-0.5 h-20 bg-gradient-to-t from-secondary to-transparent" />
+            <div className="fixed bottom-6 left-6 w-20 h-0.5 bg-gradient-to-r from-kidcore-blue to-transparent" />
+            <div className="fixed bottom-6 left-6 w-0.5 h-20 bg-gradient-to-t from-kidcore-blue to-transparent" />
+            <div className="fixed bottom-6 right-6 w-20 h-0.5 bg-gradient-to-l from-kidcore-pink to-transparent" />
+            <div className="fixed bottom-6 right-6 w-0.5 h-20 bg-gradient-to-t from-kidcore-pink to-transparent" />
         </div>
     );
 };

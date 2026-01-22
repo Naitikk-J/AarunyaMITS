@@ -77,13 +77,13 @@ const Headliners = () => {
             <MainNavigation />
 
             {/* Header */}
-            <div className="relative overflow-hidden bg-gradient-to-b from-primary/20 to-transparent py-16">
+            <div className="relative overflow-hidden bg-gradient-to-b from-kidcore-blue/20 via-kidcore-pink/10 to-transparent py-16">
                 <div className="absolute inset-0 scanlines opacity-10" />
                 <div className="container mx-auto px-6 relative z-10">
-                    <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-kidcore-blue via-kidcore-pink to-kidcore-orange bg-clip-text text-transparent animate-rainbow">
                         CAMPUS HEADLINERS
                     </h1>
-                    <p className="text-xl text-center text-muted-foreground font-rajdhani max-w-3xl mx-auto">
+                    <p className="text-xl text-center text-kidcore-cream font-rajdhani max-w-3xl mx-auto">
                         Discover the most exciting events, achievements, and milestones happening across our campus
                     </p>
                 </div>
@@ -96,9 +96,11 @@ const Headliners = () => {
                         <Button
                             key={category.id}
                             onClick={() => setSelectedCategory(category.id)}
-                            variant={selectedCategory === category.id ? 'default' : 'outline'}
-                            className={`font-orbitron text-sm tracking-wider ${selectedCategory === category.id ? 'animate-neon-pulse' : ''
-                                }`}
+                            className={`font-orbitron text-sm tracking-wider transition-all ${
+                                selectedCategory === category.id
+                                    ? 'kidcore-btn'
+                                    : 'border-kidcore-blue/40 text-kidcore-yellow hover:text-kidcore-orange hover:bg-kidcore-blue/20'
+                            }`}
                         >
                             {category.label}
                         </Button>
@@ -110,41 +112,42 @@ const Headliners = () => {
                     {filteredHeadliners.map((event) => {
                         const statusBadge = getStatusBadge(event.status);
                         return (
-                            <Card key={event.id} className="group relative overflow-hidden border-secondary/30 bg-card/80 backdrop-blur-sm hover:border-primary/50 transition-all duration-300">
+                            <Card key={event.id} className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl group relative overflow-hidden hover:border-kidcore-pink/50 transition-all duration-300 floating-sticker">
                                 <div className="absolute top-4 right-4 z-10">
-                                    <Badge className={`${statusBadge.color} text-white font-rajdhani`}>
+                                    <Badge className="bg-kidcore-yellow text-kidcore-black font-rajdhani font-bold">
                                         {statusBadge.label}
                                     </Badge>
                                 </div>
 
-                                <div className="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center relative overflow-hidden">
+                                <div className="h-48 bg-gradient-to-br from-kidcore-blue/20 to-kidcore-pink/20 flex items-center justify-center relative overflow-hidden">
                                     <div className="absolute inset-0 scanlines opacity-20" />
                                     <div className="text-6xl opacity-30">🎪</div>
                                 </div>
 
                                 <CardHeader>
-                                    <CardTitle className="font-orbitron text-lg text-primary">
+                                    <CardTitle className="font-orbitron text-lg text-kidcore-yellow">
                                         {event.title}
                                     </CardTitle>
-                                    <CardDescription className="font-rajdhani text-sm">
+                                    <CardDescription className="font-rajdhani text-sm text-kidcore-cream">
                                         {event.date} • {event.attendees} attendees
                                     </CardDescription>
                                 </CardHeader>
 
                                 <CardContent>
-                                    <p className="text-muted-foreground font-rajdhani text-sm mb-4 line-clamp-3">
+                                    <p className="text-kidcore-green font-rajdhani text-sm mb-4 line-clamp-3">
                                         {event.description}
                                     </p>
 
                                     <div className="flex items-center justify-between">
-                                        <Badge variant="outline" className="font-mono text-xs">
+                                        <Badge variant="outline" className="font-mono text-xs text-kidcore-orange border-kidcore-orange/50">
                                             {event.category.toUpperCase()}
                                         </Badge>
 
                                         <Button
                                             size="sm"
-                                            className="font-orbitron text-xs tracking-wider"
-                                            variant={event.status === 'registration' ? 'default' : 'outline'}
+                                            className={`font-orbitron text-xs tracking-wider ${
+                                                event.status === 'registration' ? 'kidcore-btn' : 'border-kidcore-blue/40 text-kidcore-yellow hover:text-kidcore-orange'
+                                            }`}
                                         >
                                             {event.status === 'registration' ? 'REGISTER NOW' : 'LEARN MORE'}
                                         </Button>
@@ -152,7 +155,7 @@ const Headliners = () => {
                                 </CardContent>
 
                                 {/* Hover effect */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-kidcore-pink/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                             </Card>
                         );
                     })}
@@ -162,10 +165,10 @@ const Headliners = () => {
                 {filteredHeadliners.length === 0 && (
                     <div className="text-center py-16">
                         <div className="text-6xl mb-4 opacity-30">🎭</div>
-                        <h3 className="text-2xl font-orbitron text-muted-foreground mb-2">
+                        <h3 className="text-2xl font-orbitron text-kidcore-yellow mb-2">
                             No Events Found
                         </h3>
-                        <p className="text-muted-foreground font-rajdhani">
+                        <p className="text-kidcore-cream font-rajdhani">
                             Try selecting a different category or check back later for new events.
                         </p>
                     </div>
@@ -173,10 +176,10 @@ const Headliners = () => {
             </div>
 
             {/* Footer decoration */}
-            <div className="fixed bottom-6 left-6 w-20 h-0.5 bg-gradient-to-r from-primary to-transparent" />
-            <div className="fixed bottom-6 left-6 w-0.5 h-20 bg-gradient-to-t from-primary to-transparent" />
-            <div className="fixed bottom-6 right-6 w-20 h-0.5 bg-gradient-to-l from-secondary to-transparent" />
-            <div className="fixed bottom-6 right-6 w-0.5 h-20 bg-gradient-to-t from-secondary to-transparent" />
+            <div className="fixed bottom-6 left-6 w-20 h-0.5 bg-gradient-to-r from-kidcore-blue to-transparent" />
+            <div className="fixed bottom-6 left-6 w-0.5 h-20 bg-gradient-to-t from-kidcore-blue to-transparent" />
+            <div className="fixed bottom-6 right-6 w-20 h-0.5 bg-gradient-to-l from-kidcore-pink to-transparent" />
+            <div className="fixed bottom-6 right-6 w-0.5 h-20 bg-gradient-to-t from-kidcore-pink to-transparent" />
         </div>
     );
 };

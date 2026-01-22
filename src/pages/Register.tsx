@@ -140,10 +140,10 @@ const Register = () => {
 
             <div className="container mx-auto px-6 py-12">
                 <div className="max-w-2xl mx-auto">
-                    <Card className="border-secondary/30 bg-card/80 backdrop-blur-sm">
+                    <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-3xl">
                         <CardHeader className="text-center">
-                            <CardTitle className="font-orbitron text-2xl text-primary">CREATE ACCOUNT</CardTitle>
-                            <CardDescription className="font-rajdhani">
+                            <CardTitle className="font-orbitron text-3xl font-bold bg-gradient-to-r from-kidcore-blue via-kidcore-pink to-kidcore-orange bg-clip-text text-transparent">CREATE ACCOUNT</CardTitle>
+                            <CardDescription className="font-rajdhani text-kidcore-cream mt-2">
                                 Register to unlock festival features
                             </CardDescription>
                         </CardHeader>
@@ -177,84 +177,84 @@ const Register = () => {
                                 <>
                                     <form onSubmit={handleEmailRegister} className="space-y-4">
                                         <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
+                                            <label className="block text-sm font-mono text-kidcore-yellow mb-2 uppercase tracking-wider">
                                                 Name
                                             </label>
                                             <input
                                                 type="text"
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
+                                                className="w-full px-3 py-2 bg-background/60 border-2 border-kidcore-blue/40 rounded-md text-kidcore-cream placeholder:text-kidcore-green/60 focus:outline-none focus:ring-2 focus:ring-kidcore-yellow focus:border-kidcore-yellow font-rajdhani"
                                                 placeholder="Enter your name"
                                                 required
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
+                                            <label className="block text-sm font-mono text-kidcore-yellow mb-2 uppercase tracking-wider">
                                                 Email
                                             </label>
                                             <input
                                                 type="email"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
+                                                className="w-full px-3 py-2 bg-background/60 border-2 border-kidcore-blue/40 rounded-md text-kidcore-cream placeholder:text-kidcore-green/60 focus:outline-none focus:ring-2 focus:ring-kidcore-yellow focus:border-kidcore-yellow font-rajdhani"
                                                 placeholder="your@email.com"
                                                 required
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
+                                            <label className="block text-sm font-mono text-kidcore-yellow mb-2 uppercase tracking-wider">
                                                 Password
                                             </label>
                                             <input
                                                 type="password"
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
+                                                className="w-full px-3 py-2 bg-background/60 border-2 border-kidcore-blue/40 rounded-md text-kidcore-cream placeholder:text-kidcore-green/60 focus:outline-none focus:ring-2 focus:ring-kidcore-yellow focus:border-kidcore-yellow font-rajdhani"
                                                 placeholder="••••••••••"
                                                 required
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
+                                            <label className="block text-sm font-mono text-kidcore-yellow mb-2 uppercase tracking-wider">
                                                 Confirm Password
                                             </label>
                                             <input
                                                 type="password"
                                                 value={confirmPassword}
                                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
+                                                className="w-full px-3 py-2 bg-background/60 border-2 border-kidcore-blue/40 rounded-md text-kidcore-cream placeholder:text-kidcore-green/60 focus:outline-none focus:ring-2 focus:ring-kidcore-yellow focus:border-kidcore-yellow font-rajdhani"
                                                 placeholder="••••••••••"
                                                 required
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
+                                            <label className="block text-sm font-mono text-kidcore-yellow mb-2 uppercase tracking-wider">
                                                 Mobile Number
                                             </label>
                                             <input
                                                 type="tel"
                                                 value={mobileNumber}
                                                 onChange={(e) => setMobileNumber(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
+                                                className="w-full px-3 py-2 bg-background/60 border-2 border-kidcore-blue/40 rounded-md text-kidcore-cream placeholder:text-kidcore-green/60 focus:outline-none focus:ring-2 focus:ring-kidcore-yellow focus:border-kidcore-yellow font-rajdhani"
                                                 placeholder="+91-XXXXXXXXXX"
                                                 required
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
+                                            <label className="block text-sm font-mono text-kidcore-yellow mb-2 uppercase tracking-wider">
                                                 College Name
                                             </label>
                                             <input
                                                 type="text"
                                                 value={collegeName}
                                                 onChange={(e) => setCollegeName(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
+                                                className="w-full px-3 py-2 bg-background/60 border-2 border-kidcore-blue/40 rounded-md text-kidcore-cream placeholder:text-kidcore-green/60 focus:outline-none focus:ring-2 focus:ring-kidcore-yellow focus:border-kidcore-yellow font-rajdhani"
                                                 placeholder="Your college/university"
                                                 required
                                             />
@@ -267,7 +267,7 @@ const Register = () => {
                                             <select
                                                 value={category}
                                                 onChange={(e) => setCategory(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
+                                                className="w-full px-3 py-2 bg-background/60 border-2 border-kidcore-blue/40 rounded-md text-kidcore-cream focus:outline-none focus:ring-2 focus:ring-kidcore-yellow focus:border-kidcore-yellow font-rajdhani"
                                                 required
                                             >
                                                 <option value="student">Student</option>
@@ -277,14 +277,14 @@ const Register = () => {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
+                                            <label className="block text-sm font-mono text-kidcore-yellow mb-2 uppercase tracking-wider">
                                                 City
                                             </label>
                                             <input
                                                 type="text"
                                                 value={city}
                                                 onChange={(e) => setCity(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
+                                                className="w-full px-3 py-2 bg-background/60 border-2 border-kidcore-blue/40 rounded-md text-kidcore-cream placeholder:text-kidcore-green/60 focus:outline-none focus:ring-2 focus:ring-kidcore-yellow focus:border-kidcore-yellow font-rajdhani"
                                                 placeholder="Your city"
                                                 required
                                             />
@@ -306,7 +306,7 @@ const Register = () => {
 
                                         <Button
                                             type="submit"
-                                            className="w-full font-orbitron tracking-wider"
+                                            className="w-full font-orbitron tracking-wider kidcore-btn text-sm py-2"
                                             disabled={isLoading}
                                         >
                                             {isLoading ? 'REGISTERING...' : 'REGISTER'}
@@ -327,7 +327,7 @@ const Register = () => {
                                     <Button
                                         variant="outline"
                                         onClick={handleGoogleRegister}
-                                        className="w-full font-orbitron tracking-wider border-secondary/30 hover:bg-secondary/10"
+                                        className="w-full font-orbitron tracking-wider border-kidcore-blue/40 hover:bg-kidcore-blue/10 text-kidcore-yellow hover:text-kidcore-orange"
                                         disabled={isLoading}
                                     >
                                         <span className="flex items-center justify-center gap-2">
@@ -342,10 +342,10 @@ const Register = () => {
                                     </Button>
 
                                     {/* Login Link */}
-                                    <div className="text-center pt-4 border-t border-secondary/30">
-                                        <p className="text-sm text-muted-foreground font-rajdhani">
+                                    <div className="text-center pt-4 border-t border-kidcore-blue/30">
+                                        <p className="text-sm text-kidcore-cream font-rajdhani">
                                             Already have an account?{' '}
-                                            <a href="/login" className="text-primary hover:text-primary-glow transition-colors font-mono">
+                                            <a href="/login" className="text-kidcore-yellow hover:text-kidcore-orange transition-colors font-mono font-bold">
                                                 LOGIN
                                             </a>
                                         </p>

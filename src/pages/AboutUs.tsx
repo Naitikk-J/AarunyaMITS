@@ -76,13 +76,13 @@ const AboutUs = () => {
             <MainNavigation />
 
             {/* Header */}
-            <div className="relative overflow-hidden bg-gradient-to-b from-primary/20 to-transparent py-16">
+            <div className="relative overflow-hidden bg-gradient-to-b from-kidcore-blue/20 via-kidcore-pink/10 to-transparent py-16">
                 <div className="absolute inset-0 scanlines opacity-10" />
                 <div className="container mx-auto px-6 relative z-10">
-                    <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-kidcore-blue via-kidcore-pink to-kidcore-orange bg-clip-text text-transparent animate-rainbow">
                         ABOUT US
                     </h1>
-                    <p className="text-xl text-center text-muted-foreground font-rajdhani max-w-3xl mx-auto">
+                    <p className="text-xl text-center text-kidcore-cream font-rajdhani max-w-3xl mx-auto">
                         Meet the team behind Euphoria Campus Explorer and discover our mission to create immersive digital experiences
                     </p>
                 </div>
@@ -91,14 +91,14 @@ const AboutUs = () => {
             <div className="container mx-auto px-6 py-12">
                 {/* Mission Statement */}
                 <div className="mb-16">
-                    <Card className="border-secondary/30 bg-card/80 backdrop-blur-sm">
+                    <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl">
                         <CardHeader>
-                            <CardTitle className="font-orbitron text-2xl text-primary text-center">
+                            <CardTitle className="font-orbitron text-2xl text-kidcore-yellow text-center">
                                 Our Mission
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-center text-lg text-muted-foreground font-rajdhani max-w-4xl mx-auto leading-relaxed">
+                            <p className="text-center text-lg text-kidcore-cream font-rajdhani max-w-4xl mx-auto leading-relaxed">
                                 We believe in pushing the boundaries of digital interaction by creating immersive,
                                 accessible, and engaging experiences that bring campus life to life. Our goal is to
                                 bridge the gap between physical and digital spaces, making exploration intuitive and fun.
@@ -109,37 +109,37 @@ const AboutUs = () => {
 
                 {/* Team Section */}
                 <div className="mb-16">
-                    <h2 className="text-3xl font-orbitron font-bold text-center mb-12 text-primary">
+                    <h2 className="text-3xl font-orbitron font-bold text-center mb-12 bg-gradient-to-r from-kidcore-blue to-kidcore-pink bg-clip-text text-transparent">
                         MEET THE TEAM
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {teamMembers.map((member, index) => (
-                            <Card key={index} className="group relative overflow-hidden border-secondary/30 bg-card/80 backdrop-blur-sm hover:border-primary/50 transition-all duration-300">
-                                <div className="h-32 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center relative overflow-hidden">
+                            <Card key={index} className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl group relative overflow-hidden hover:border-kidcore-pink/50 transition-all duration-300 floating-sticker">
+                                <div className="h-32 bg-gradient-to-br from-kidcore-blue/20 to-kidcore-pink/20 flex items-center justify-center relative overflow-hidden">
                                     <div className="absolute inset-0 scanlines opacity-20" />
                                     <div className="text-6xl">{member.avatar}</div>
                                 </div>
 
                                 <CardHeader>
-                                    <CardTitle className="font-orbitron text-lg text-primary">
+                                    <CardTitle className="font-orbitron text-lg text-kidcore-yellow">
                                         {member.name}
                                     </CardTitle>
-                                    <CardDescription className="font-rajdhani">
+                                    <CardDescription className="font-rajdhani text-kidcore-cream">
                                         {member.role}
                                     </CardDescription>
-                                    <div className="text-sm text-muted-foreground font-mono">
+                                    <div className="text-sm text-kidcore-green font-mono">
                                         {member.department} • {member.year}
                                     </div>
                                 </CardHeader>
 
                                 <CardContent>
-                                    <p className="text-muted-foreground font-rajdhani text-sm mb-4">
+                                    <p className="text-kidcore-cream font-rajdhani text-sm mb-4">
                                         {member.bio}
                                     </p>
 
                                     <div className="flex flex-wrap gap-1">
                                         {member.skills.map((skill, skillIndex) => (
-                                            <Badge key={skillIndex} variant="outline" className="font-mono text-xs">
+                                            <Badge key={skillIndex} variant="outline" className="font-mono text-xs text-kidcore-orange border-kidcore-orange/50">
                                                 {skill}
                                             </Badge>
                                         ))}
@@ -147,7 +147,7 @@ const AboutUs = () => {
                                 </CardContent>
 
                                 {/* Hover effect */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-kidcore-pink/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                             </Card>
                         ))}
                     </div>
@@ -155,22 +155,22 @@ const AboutUs = () => {
 
                 {/* Technologies Used */}
                 <div className="mb-16">
-                    <h2 className="text-3xl font-orbitron font-bold text-center mb-12 text-primary">
+                    <h2 className="text-3xl font-orbitron font-bold text-center mb-12 bg-gradient-to-r from-kidcore-blue to-kidcore-pink bg-clip-text text-transparent">
                         TECHNOLOGIES WE USE
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {technologies.map((tech, index) => (
-                            <Card key={index} className="border-secondary/30 bg-card/80 backdrop-blur-sm hover:border-primary/50 transition-all duration-300">
+                            <Card key={index} className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl hover:border-kidcore-pink/50 transition-all duration-300 floating-sticker">
                                 <CardHeader>
-                                    <CardTitle className="font-orbitron text-lg text-primary">
+                                    <CardTitle className="font-orbitron text-lg text-kidcore-yellow">
                                         {tech.name}
                                     </CardTitle>
-                                    <Badge variant="outline" className="font-mono text-xs">
+                                    <Badge variant="outline" className="font-mono text-xs text-kidcore-green border-kidcore-green/50">
                                         {tech.category}
                                     </Badge>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="text-muted-foreground font-rajdhani text-sm">
+                                    <p className="text-kidcore-cream font-rajdhani text-sm">
                                         {tech.description}
                                     </p>
                                 </CardContent>
@@ -181,24 +181,24 @@ const AboutUs = () => {
 
                 {/* Achievements */}
                 <div className="mb-16">
-                    <h2 className="text-3xl font-orbitron font-bold text-center mb-12 text-primary">
+                    <h2 className="text-3xl font-orbitron font-bold text-center mb-12 bg-gradient-to-r from-kidcore-blue to-kidcore-pink bg-clip-text text-transparent">
                         ACHIEVEMENTS
                     </h2>
                     <div className="space-y-6">
                         {achievements.map((achievement, index) => (
-                            <Card key={index} className="border-secondary/30 bg-card/80 backdrop-blur-sm">
+                            <Card key={index} className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl floating-sticker">
                                 <CardHeader>
                                     <div className="flex items-center justify-between">
-                                        <CardTitle className="font-orbitron text-lg text-primary">
+                                        <CardTitle className="font-orbitron text-lg text-kidcore-yellow">
                                             {achievement.title}
                                         </CardTitle>
-                                        <Badge variant="outline" className="font-mono text-sm">
+                                        <Badge variant="outline" className="font-mono text-sm text-kidcore-yellow border-kidcore-yellow/50">
                                             {achievement.year}
                                         </Badge>
                                     </div>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="text-muted-foreground font-rajdhani">
+                                    <p className="text-kidcore-cream font-rajdhani">
                                         {achievement.description}
                                     </p>
                                 </CardContent>
@@ -209,26 +209,26 @@ const AboutUs = () => {
 
                 {/* Contact & Collaboration */}
                 <div className="mb-16">
-                    <Card className="border-secondary/30 bg-card/80 backdrop-blur-sm">
+                    <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl">
                         <CardHeader>
-                            <CardTitle className="font-orbitron text-2xl text-primary text-center">
+                            <CardTitle className="font-orbitron text-2xl text-kidcore-yellow text-center">
                                 Let's Collaborate
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-center">
-                                <p className="text-muted-foreground font-rajdhani mb-6 max-w-3xl mx-auto">
+                                <p className="text-kidcore-cream font-rajdhani mb-6 max-w-3xl mx-auto">
                                     Interested in joining our team or have an idea for collaboration?
                                     We're always looking for passionate individuals who want to create amazing digital experiences.
                                 </p>
                                 <div className="flex flex-wrap justify-center gap-4">
-                                    <Button className="font-orbitron text-sm tracking-wider">
+                                    <Button className="font-orbitron text-sm tracking-wider kidcore-btn">
                                         JOIN THE TEAM
                                     </Button>
-                                    <Button variant="outline" className="font-orbitron text-sm tracking-wider">
+                                    <Button variant="outline" className="font-orbitron text-sm tracking-wider border-kidcore-blue/40 text-kidcore-yellow hover:text-kidcore-orange">
                                         COLLABORATE
                                     </Button>
-                                    <Button variant="outline" className="font-orbitron text-sm tracking-wider">
+                                    <Button variant="outline" className="font-orbitron text-sm tracking-wider border-kidcore-blue/40 text-kidcore-yellow hover:text-kidcore-orange">
                                         GIVE FEEDBACK
                                     </Button>
                                 </div>
@@ -239,10 +239,10 @@ const AboutUs = () => {
             </div>
 
             {/* Footer decoration */}
-            <div className="fixed bottom-6 left-6 w-20 h-0.5 bg-gradient-to-r from-primary to-transparent" />
-            <div className="fixed bottom-6 left-6 w-0.5 h-20 bg-gradient-to-t from-primary to-transparent" />
-            <div className="fixed bottom-6 right-6 w-20 h-0.5 bg-gradient-to-l from-secondary to-transparent" />
-            <div className="fixed bottom-6 right-6 w-0.5 h-20 bg-gradient-to-t from-secondary to-transparent" />
+            <div className="fixed bottom-6 left-6 w-20 h-0.5 bg-gradient-to-r from-kidcore-blue to-transparent" />
+            <div className="fixed bottom-6 left-6 w-0.5 h-20 bg-gradient-to-t from-kidcore-blue to-transparent" />
+            <div className="fixed bottom-6 right-6 w-20 h-0.5 bg-gradient-to-l from-kidcore-pink to-transparent" />
+            <div className="fixed bottom-6 right-6 w-0.5 h-20 bg-gradient-to-t from-kidcore-pink to-transparent" />
         </div>
     );
 };

@@ -21,28 +21,28 @@ export const MainNavigation = () => {
     const location = useLocation();
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-secondary/20">
+        <nav className="fixed top-0 left-0 right-0 z-50 glass-card bg-background/85 backdrop-blur-xl border-b border-secondary/40 m-0 rounded-none">
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <Link
                         to="/"
-                        className="font-orbitron text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+                        className="font-orbitron text-2xl font-bold bg-gradient-to-r from-kidcore-blue via-kidcore-pink to-kidcore-orange bg-clip-text text-transparent animate-rainbow"
                     >
                         AARUNYA
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden lg:flex items-center gap-1">
+                    <div className="hidden lg:flex items-center gap-2">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.path}
                                 to={link.path}
                                 className={cn(
-                                    "px-3 py-2 text-xs font-mono tracking-wider transition-colors",
+                                    "px-4 py-2 text-xs font-orbitron tracking-wider transition-all duration-300 rounded-lg",
                                     location.pathname === link.path
-                                        ? "text-primary"
-                                        : "text-muted-foreground hover:text-primary"
+                                        ? "text-kidcore-black bg-kidcore-yellow shadow-lg scale-105"
+                                        : "text-foreground hover:text-kidcore-yellow hover:bg-kidcore-blue/20 hover:scale-105"
                                 )}
                             >
                                 {link.name}
@@ -77,7 +77,7 @@ export const MainNavigation = () => {
 
             {/* Mobile Navigation */}
             {isOpen && (
-                <div className="lg:hidden absolute top-16 left-0 right-0 bg-background/95 backdrop-blur-md border-b border-secondary/20">
+                <div className="lg:hidden absolute top-16 left-0 right-0 glass-card bg-background/95 backdrop-blur-xl border-b border-secondary/40 m-0 rounded-none">
                     <div className="container mx-auto px-4 py-4 flex flex-col gap-2">
                         {navLinks.map((link) => (
                             <Link
@@ -85,23 +85,23 @@ export const MainNavigation = () => {
                                 to={link.path}
                                 onClick={() => setIsOpen(false)}
                                 className={cn(
-                                    "px-3 py-2 text-sm font-mono tracking-wider transition-colors",
+                                    "px-4 py-2 text-sm font-orbitron tracking-wider transition-all duration-300 rounded-lg",
                                     location.pathname === link.path
-                                        ? "text-primary"
-                                        : "text-muted-foreground hover:text-primary"
+                                        ? "text-kidcore-black bg-kidcore-yellow"
+                                        : "text-foreground hover:text-kidcore-yellow hover:bg-kidcore-blue/20"
                                 )}
                             >
                                 {link.name}
                             </Link>
                         ))}
-                        <div className="flex gap-2 mt-4 pt-4 border-t border-secondary/20">
+                        <div className="flex gap-2 mt-4 pt-4 border-t border-kidcore-blue/30">
                             <Link to="/login" className="flex-1" onClick={() => setIsOpen(false)}>
-                                <Button variant="ghost" size="sm" className="w-full font-mono text-xs tracking-wider">
+                                <Button variant="ghost" size="sm" className="w-full font-orbitron text-xs tracking-wider hover:bg-kidcore-blue/30 hover:text-kidcore-yellow">
                                     LOGIN
                                 </Button>
                             </Link>
                             <Link to="/register" className="flex-1" onClick={() => setIsOpen(false)}>
-                                <Button size="sm" className="w-full font-mono text-xs tracking-wider">
+                                <Button size="sm" className="w-full font-orbitron text-xs tracking-wider kidcore-btn">
                                     REGISTER
                                 </Button>
                             </Link>

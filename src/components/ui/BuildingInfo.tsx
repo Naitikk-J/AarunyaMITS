@@ -45,16 +45,16 @@ export const BuildingInfo = ({ buildingId }: BuildingInfoProps) => {
     };
 
     return (
-        <div className="fixed bottom-24 left-6 z-40 max-w-xs">
-            <Card className="border-secondary/30 bg-background/80 backdrop-blur-md">
+        <div className="fixed bottom-24 left-6 z-40 max-w-xs floating-sticker">
+            <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-3xl">
                 <CardHeader className="pb-2">
-                    <CardTitle className="font-orbitron text-sm text-primary flex items-center gap-2">
-                        <MapPin size={14} />
+                    <CardTitle className="font-orbitron text-lg text-kidcore-yellow flex items-center gap-2 animate-playful-bounce">
+                        <MapPin size={18} className="text-kidcore-pink" />
                         {building.name}
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-xs text-muted-foreground font-rajdhani">
+                    <p className="text-sm text-kidcore-cream font-rajdhani leading-relaxed">
                         {building.description}
                     </p>
                 </CardContent>
