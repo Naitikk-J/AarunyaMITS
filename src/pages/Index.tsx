@@ -6,6 +6,7 @@ import { BottomActions } from '@/components/ui/BottomActions';
 import { BuildingInfo } from '@/components/ui/BuildingInfo';
 import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import { EventModal } from '@/components/ui/EventModal';
+import { KidcoreDecorations } from '@/components/ui/KidcoreDecorations';
 
 const Index = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -13,6 +14,7 @@ const Index = () => {
     const [selectedBuilding, setSelectedBuilding] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [webglSupported, setWebglSupported] = useState(true);
+
 
     useEffect(() => {
         const canvas = document.createElement('canvas');
@@ -58,6 +60,7 @@ const Index = () => {
     return (
         <div className="relative w-full h-screen overflow-hidden bg-background">
             {isLoading && <LoadingScreen />}
+            <KidcoreDecorations />
             <MainNavigation />
             <ControlsGuide />
             {!isLoading && <BuildingInfo buildingId={hoveredBuilding} />}
@@ -67,6 +70,7 @@ const Index = () => {
                         onBuildingHover={handleBuildingHover}
                         onBuildingClick={handleBuildingClick}
                         isLoading={isLoading}
+                        selectedBuilding={selectedBuilding}
                     />
                 ) : (
                     <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#0a1a2a] to-[#050c15] text-center">

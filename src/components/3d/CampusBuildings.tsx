@@ -21,7 +21,7 @@ const CAMPUS_BUILDINGS: Building[] = [
         name: 'MITS Main Gate',
         hindiName: 'एमआईटीएस मेन गेट',
         position: [0, 2, 15],
-        scale: [6, 4, 2],
+        scale: [6, 9, 2],
         color: '#00f3ff',
         glowColor: '#00f3ff',
         section: 'schedule'

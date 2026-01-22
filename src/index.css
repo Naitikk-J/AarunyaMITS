@@ -1,5 +1,5 @@
 /* Google Fonts import for Kidcore typography */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Fredoka+One&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -95,6 +95,19 @@
     .font-share-tech {
         font-family: 'Share Tech Mono', monospace;
     }
+
+    .font-playful {
+        font-family: 'Comic Sans MS', 'Marker Felt', 'Fredoka One', cursive, sans-serif;
+        font-weight: 700;
+    }
+
+    /* Gritty texture background */
+    .gritty-texture {
+        background-image:
+            url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="dust"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="6" result="noise" /><feDisplacementMap in="SourceGraphic" in2="noise" scale="20"/></filter><rect width="200" height="200" fill="%231A1A1A" filter="url(%23dust)" opacity="0.15"/></svg>'),
+            url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="none" stroke="%23FF5E1F" stroke-width="0.5" opacity="0.1"/></svg>');
+        background-size: 100%, 100%;
+    }
 }
 
 @layer components {
@@ -139,38 +152,85 @@
 
     /* Glass-morphism Card Effect - Dark Theme */
     .glass-card {
-        background: rgba(10, 14, 39, 0.6) !important;
-        backdrop-filter: blur(12px) !important;
+        background: rgba(10, 14, 39, 0.65) !important;
+        backdrop-filter: blur(15px) !important;
         border: 3px dashed hsl(210 100% 50%) !important;
         border-radius: 25px !important;
-        box-shadow: 10px 10px 0 hsl(330 100% 70%), -2px -2px 0 hsl(48 100% 60%) !important;
+        box-shadow: 10px 10px 0 hsl(330 100% 70%), -2px -2px 0 hsl(48 100% 60%), 0 0 25px hsl(210 100% 50% / 0.3) !important;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .glass-card::before {
+        content: '';
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        right: -1px;
+        bottom: -1px;
+        background: repeating-linear-gradient(90deg,
+            transparent,
+            transparent 10px,
+            hsl(210 100% 50% / 0.1) 10px,
+            hsl(210 100% 50% / 0.1) 20px);
+        border-radius: 25px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
 
     .glass-card:hover {
-        transform: rotate(-1deg) scale(1.02);
-        transition: all 0.3s ease;
-        background: rgba(26, 31, 58, 0.8) !important;
+        transform: rotate(-2deg) scale(1.03) translateY(-5px);
+        background: rgba(26, 31, 58, 0.85) !important;
+        box-shadow: 12px 12px 0 hsl(330 100% 70%), -3px -3px 0 hsl(48 100% 60%), 0 0 35px hsl(210 100% 50% / 0.5) !important;
+    }
+
+    .glass-card:hover::before {
+        opacity: 1;
     }
 
     /* Kidcore Button Styles - Dark Theme */
     .kidcore-btn {
-        background: hsl(210 100% 50%);
+        background: linear-gradient(135deg, hsl(48 100% 60%), hsl(210 100% 50%));
         border: 3px solid hsl(330 100% 70%);
         padding: 15px 30px;
         font-size: 1.2rem;
         cursor: pointer;
-        transition: all 0.3s;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         font-weight: bold;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        box-shadow: 5px 5px 0 hsl(48 100% 60%), 0 0 15px hsl(210 100% 50% / 0.5);
+        letter-spacing: 2px;
+        box-shadow: 6px 6px 0 hsl(330 100% 70%), 0 0 20px hsl(210 100% 50% / 0.6);
         color: hsl(240 20% 5%);
+        position: relative;
+        overflow: hidden;
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .kidcore-btn::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(135deg, hsl(100 100% 65%), hsl(15 100% 50%));
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: -1;
     }
 
     .kidcore-btn:hover {
-        background: hsl(100 100% 65%);
-        transform: rotate(-3deg) scale(1.05) translate(-2px, -2px);
-        box-shadow: 8px 8px 0 hsl(15 100% 50%), 0 0 20px hsl(100 100% 65% / 0.6);
+        background: linear-gradient(135deg, hsl(100 100% 65%), hsl(15 100% 50%));
+        transform: rotate(-4deg) scale(1.08) translate(-3px, -4px);
+        box-shadow: 10px 10px 0 hsl(15 100% 50%), 0 0 30px hsl(100 100% 65% / 0.8);
+        letter-spacing: 3px;
+    }
+
+    .kidcore-btn:active {
+        transform: rotate(-4deg) scale(0.98) translate(-1px, -1px);
+        box-shadow: 3px 3px 0 hsl(15 100% 50%), 0 0 15px hsl(100 100% 65% / 0.5);
     }
 
     /* Playful shadow effects */
@@ -305,47 +365,116 @@
 
     /* Floating sticker decoration */
     .floating-sticker {
-        animation: sticker-float 3s ease-in-out infinite;
-        filter: drop-shadow(3px 3px 0 hsl(330 100% 70%));
+        animation: sticker-float 4s ease-in-out infinite;
+        filter: drop-shadow(4px 4px 0 hsl(330 100% 70%)) drop-shadow(-2px -2px 0 hsl(48 100% 60%));
+        transform-origin: center;
+        transition: transform 0.3s ease;
+    }
+
+    .floating-sticker:hover {
+        animation-play-state: paused;
+        filter: drop-shadow(6px 6px 0 hsl(330 100% 70%)) drop-shadow(-3px -3px 0 hsl(48 100% 60%)) brightness(1.1);
+        transform: scale(1.1);
     }
 
     @keyframes sticker-float {
-
         0%,
         100% {
-            transform: translateY(0px) rotate(0deg);
+            transform: translateY(0px) rotate(0deg) translateX(0px);
         }
 
         25% {
-            transform: translateY(-5px) rotate(-2deg);
+            transform: translateY(-8px) rotate(-3deg) translateX(2px);
         }
 
         50% {
-            transform: translateY(-10px) rotate(2deg);
+            transform: translateY(-15px) rotate(4deg) translateX(-2px);
         }
 
         75% {
-            transform: translateY(-5px) rotate(-2deg);
+            transform: translateY(-8px) rotate(-2deg) translateX(3px);
         }
+    }
+
+    /* Hand-drawn border effect */
+    .hand-drawn-border {
+        border: 2px solid hsl(210 100% 50%);
+        box-shadow: 0 0 0 3px hsl(240 20% 5%), 0 0 0 6px hsl(210 100% 50%);
+        border-radius: 0;
+    }
+
+    /* Sticker label style */
+    .sticker-label {
+        background: linear-gradient(135deg, hsl(48 100% 60%), hsl(100 100% 65%));
+        border: 3px solid hsl(240 20% 5%);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-family: 'Fredoka One', 'Comic Sans MS', cursive;
+        font-weight: bold;
+        color: hsl(240 20% 5%);
+        box-shadow: 4px 4px 0 hsl(330 100% 70%);
+        transform: rotate(-2deg);
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .sticker-label:hover {
+        transform: rotate(2deg) scale(1.05);
+        box-shadow: 6px 6px 0 hsl(330 100% 70%), 0 0 15px hsl(48 100% 60% / 0.6);
     }
 
     /* Neon pulse animation */
     @keyframes kidcore-pulse {
-
         0%,
         100% {
             opacity: 1;
             transform: scale(1);
+            filter: drop-shadow(0 0 10px hsl(210 100% 50% / 0.5));
         }
 
         50% {
-            opacity: 0.85;
-            transform: scale(1.02);
+            opacity: 0.9;
+            transform: scale(1.03);
+            filter: drop-shadow(0 0 20px hsl(210 100% 50% / 0.8));
         }
     }
 
     .animate-kidcore-pulse {
         animation: kidcore-pulse 2s ease-in-out infinite;
+    }
+
+    /* Rainbow color shift */
+    @keyframes rainbow-shift {
+        0% {
+            color: hsl(210 100% 50%);
+            text-shadow: 2px 2px hsl(100 100% 65%), 4px 4px hsl(48 100% 60%);
+        }
+
+        25% {
+            color: hsl(15 100% 50%);
+            text-shadow: 2px 2px hsl(330 100% 70%), 4px 4px hsl(210 100% 50%);
+        }
+
+        50% {
+            color: hsl(330 100% 70%);
+            text-shadow: 2px 2px hsl(48 100% 60%), 4px 4px hsl(15 100% 50%);
+        }
+
+        75% {
+            color: hsl(100 100% 65%);
+            text-shadow: 2px 2px hsl(210 100% 50%), 4px 4px hsl(330 100% 70%);
+        }
+
+        100% {
+            color: hsl(210 100% 50%);
+            text-shadow: 2px 2px hsl(100 100% 65%), 4px 4px hsl(48 100% 60%);
+        }
+    }
+
+    .animate-rainbow {
+        animation: rainbow-shift 4s ease-in-out infinite;
+        font-weight: bold;
+        font-family: 'Orbitron', monospace;
     }
 
     /* Kidcore shift animation */
@@ -406,6 +535,106 @@
 
     .animate-scale-pulse {
         animation: scale-pulse 2s ease-in-out infinite;
+    }
+
+    /* Grunge border corners */
+    .grunge-corners {
+        position: relative;
+    }
+
+    .grunge-corners::before,
+    .grunge-corners::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 3px solid hsl(210 100% 50%);
+    }
+
+    .grunge-corners::before {
+        top: 10px;
+        left: 10px;
+        border-right: none;
+        border-bottom: none;
+        border-radius: 50% 0 0 0;
+    }
+
+    .grunge-corners::after {
+        bottom: 10px;
+        right: 10px;
+        border-left: none;
+        border-top: none;
+        border-radius: 0 0 0 50%;
+    }
+
+    /* Playful highlight */
+    .playful-highlight {
+        background: linear-gradient(to right,
+            transparent 0%,
+            hsl(48 100% 60% / 0.4) 25%,
+            hsl(100 100% 65% / 0.4) 75%,
+            transparent 100%);
+        padding: 4px 8px;
+        border-radius: 8px;
+        animation: highlight-flicker 0.3s ease;
+    }
+
+    @keyframes highlight-flicker {
+        0%, 100% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        50% {
+            opacity: 0.8;
+            transform: scaleX(1.05);
+        }
+    }
+
+    /* Color burst effect */
+    .color-burst {
+        position: relative;
+    }
+
+    .color-burst::after {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        background: conic-gradient(from 0deg, hsl(210 100% 50%), hsl(15 100% 50%), hsl(330 100% 70%), hsl(100 100% 65%), hsl(48 100% 60%), hsl(210 100% 50%));
+        border-radius: inherit;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .color-burst:hover::after {
+        opacity: 0.5;
+        animation: color-burst-spin 2s linear infinite;
+    }
+
+    @keyframes color-burst-spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Playful bounce */
+    @keyframes playful-bounce {
+        0%, 100% {
+            transform: translateY(0) scaleY(1);
+        }
+
+        50% {
+            transform: translateY(-8px) scaleY(1.02);
+        }
+    }
+
+    .animate-playful-bounce {
+        animation: playful-bounce 0.6s ease-in-out infinite;
     }
 }
 

@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Event, events } from '@/data/events';
+import { BUILDINGS } from '@/components/3d/HolographicMap';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -9,14 +10,16 @@ interface EventModalProps {
 }
 
 export const EventModal = ({ isOpen, onClose, building }: EventModalProps) => {
+  const buildingData = BUILDINGS.find(b => b.id === building);
+  const buildingName = buildingData?.name || building.replace(/_/g, ' ');
   const buildingEvents = events.filter((event) => event.building === building);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{building.replace('_', ' ')}</DialogTitle>
-          <DialogDescription>Events happening in this building.</DialogDescription>
+          <DialogTitle>{buildingName}</DialogTitle>
+          <DialogDescription>Events happening in this location.</DialogDescription>
         </DialogHeader>
         <ScrollArea className="h-[400px]">
           <div className="grid gap-4 py-4">

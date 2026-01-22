@@ -77,10 +77,10 @@ const Login = () => {
 
             <div className="container mx-auto px-6 py-12">
                 <div className="max-w-md mx-auto">
-                    <Card className="border-secondary/30 bg-card/80 backdrop-blur-sm">
+                    <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-3xl">
                         <CardHeader className="text-center">
-                            <CardTitle className="font-orbitron text-2xl text-primary">ENTER FESTIVAL</CardTitle>
-                            <CardDescription className="font-rajdhani">
+                            <CardTitle className="font-orbitron text-3xl font-bold bg-gradient-to-r from-kidcore-blue via-kidcore-pink to-kidcore-orange bg-clip-text text-transparent">ENTER FESTIVAL</CardTitle>
+                            <CardDescription className="font-rajdhani text-kidcore-cream mt-2">
                                 Login to unlock exclusive features
                             </CardDescription>
                         </CardHeader>
@@ -88,42 +88,42 @@ const Login = () => {
                             {/* Email Login Form */}
                             <form onSubmit={handleEmailLogin} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
+                                    <label className="block text-sm font-mono text-kidcore-yellow mb-2 uppercase tracking-wider">
                                         Email or AARUNYA ID *
                                     </label>
                                     <input
                                         type="text"
                                         value={loginInput}
                                         onChange={(e) => setLoginInput(e.target.value)}
-                                        className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
+                                        className="w-full px-3 py-2 bg-background/60 border-2 border-kidcore-blue/40 rounded-md text-kidcore-cream placeholder:text-kidcore-green/60 focus:outline-none focus:ring-2 focus:ring-kidcore-yellow focus:border-kidcore-yellow font-rajdhani"
                                         placeholder="your@email.com or AAR-XXXXX-XXXXX"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
+                                    <label className="block text-sm font-mono text-kidcore-yellow mb-2 uppercase tracking-wider">
                                         Password
                                     </label>
                                     <input
                                         type="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
+                                        className="w-full px-3 py-2 bg-background/60 border-2 border-kidcore-blue/40 rounded-md text-kidcore-cream placeholder:text-kidcore-green/60 focus:outline-none focus:ring-2 focus:ring-kidcore-yellow focus:border-kidcore-yellow font-rajdhani"
                                         placeholder="••••••••••"
                                         required
                                     />
                                 </div>
 
                                 <div className="text-right">
-                                    <a href="#" className="text-xs text-primary hover:text-primary-glow transition-colors font-mono uppercase tracking-wider">
+                                    <a href="#" className="text-xs text-kidcore-pink hover:text-kidcore-orange transition-colors font-mono uppercase tracking-wider font-bold">
                                         Forgot password?
                                     </a>
                                 </div>
 
                                 <Button
                                     type="submit"
-                                    className="w-full font-orbitron tracking-wider"
+                                    className="w-full font-orbitron tracking-wider kidcore-btn text-sm py-2"
                                     disabled={isLoading}
                                 >
                                     {isLoading ? 'LOGGING IN...' : 'LOGIN'}
@@ -144,7 +144,7 @@ const Login = () => {
                             <Button
                                 variant="outline"
                                 onClick={handleGoogleLogin}
-                                className="w-full font-orbitron tracking-wider border-secondary/30 hover:bg-secondary/10"
+                                className="w-full font-orbitron tracking-wider border-kidcore-blue/40 hover:bg-kidcore-blue/10 text-kidcore-yellow hover:text-kidcore-orange"
                                 disabled={isLoading}
                             >
                                 <span className="flex items-center justify-center gap-2">
@@ -159,10 +159,10 @@ const Login = () => {
                             </Button>
 
                             {/* Register Link */}
-                            <div className="text-center pt-4 border-t border-secondary/30">
-                                <p className="text-sm text-muted-foreground font-rajdhani">
+                            <div className="text-center pt-4 border-t border-kidcore-blue/30">
+                                <p className="text-sm text-kidcore-cream font-rajdhani">
                                     Don't have an account?{' '}
-                                    <a href="/register" className="text-primary hover:text-primary-glow transition-colors font-mono">
+                                    <a href="/register" className="text-kidcore-yellow hover:text-kidcore-orange transition-colors font-mono font-bold">
                                         REGISTER
                                     </a>
                                 </p>
