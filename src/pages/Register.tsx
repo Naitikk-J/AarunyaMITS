@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 import { MainNavigation } from '@/components/ui/MainNavigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -77,12 +79,47 @@ const Register = () => {
         }
     };
 
+    const login = useGoogleLogin({
+      onSuccess: async (tokenResponse) => {
+        try {
+          const userInfo = await axios.get('https://www.googleapis.com/oauth2/v1/userinfo', {
+            headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+          });
+
+          const { id, email, name } = userInfo.data;
+
+          const response = await fetch('/api/auth/google', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ googleId: id, email, name }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            localStorage.setItem('token', data.token);
+            window.location.href = '/payment';
+          } else {
+            alert(data.message || 'Google registration failed');
+          }
+        } catch (error) {
+          console.error('Google registration error:', error);
+          alert('An error occurred during Google registration');
+        } finally {
+          setIsLoading(false);
+        }
+      },
+      onError: () => {
+        console.log('Login Failed');
+        setIsLoading(false);
+      },
+    });
+
     const handleGoogleRegister = () => {
         setIsLoading(true);
-        setTimeout(() => {
-            console.log('Google registration initiated');
-            setIsLoading(false);
-        }, 1500);
+        login();
     };
 
     return (

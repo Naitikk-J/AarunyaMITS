@@ -18,6 +18,8 @@ import Hierarchy from "./pages/Hierarchy";
 import ContactUs from "./pages/ContactUs";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Payment from "./pages/Payment";
+import Confirmation from "./pages/Confirmation";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +44,8 @@ const App = () => (
                     <Route path="/history" element={<History />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/payment" element={<Payment />} />
+                    <Route path="/confirmation" element={<Confirmation />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                 </Routes>
