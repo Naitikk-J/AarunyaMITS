@@ -3,6 +3,9 @@ import { OrbitControls, PerspectiveCamera, Stars } from '@react-three/drei';
 import { Suspense, useRef, useEffect, useState } from 'react';
 import { HolographicMap, BUILDINGS } from './HolographicMap';
 import { NeonParticles } from './NeonParticles';
+import { WalkingCharacters } from './WalkingCharacters';
+import { FloatingShapes } from './FloatingShapes';
+import { useDeviceCapability } from '@/hooks/useDeviceCapability';
 import * as THREE from 'three';
 
 interface CampusSceneProps {
@@ -11,16 +14,49 @@ interface CampusSceneProps {
     isLoading?: boolean;
     selectedBuilding?: string | null;
     onZoomComplete?: () => void;
+    isDayMode?: boolean;
+    onDayNightToggle?: (isDayMode: boolean) => void;
+    visualMode?: 'normal' | 'wireframe' | 'neon';
 }
 
 function CameraController({ selectedBuilding, onZoomComplete }: { selectedBuilding?: string | null; onZoomComplete?: () => void }) {
     const controlsRef = useRef<any>(null);
     const camera = useThree((state) => state.camera);
     const [isZooming, setIsZooming] = useState(false);
-    const initialPositionRef = useRef({ pos: new THREE.Vector3(35, 45, 35), target: new THREE.Vector3(0, 0, 0) });
+    const centerPoint = new THREE.Vector3(0, 0.5, 0); // Center of the campus model
+    const velocityRef = useRef(new THREE.Vector3(0, 0, 0)); // For momentum physics
+
+    // Initialize camera and controls to look at center
+    useEffect(() => {
+        if (controlsRef.current) {
+            controlsRef.current.target.copy(centerPoint);
+            controlsRef.current.update();
+            controlsRef.current.enableDamping = true;
+            controlsRef.current.dampingFactor = 0.05;
+            controlsRef.current.autoRotateSpeed = 0.3;
+        }
+
+        // Enhanced mouse wheel zoom with momentum
+        const handleMouseWheel = (event: WheelEvent) => {
+            if (!controlsRef.current) return;
+            event.preventDefault();
+
+            const zoomSpeed = 0.3;
+            const direction = event.deltaY > 0 ? 1 : -1;
+
+            controlsRef.current.object.position.multiplyScalar(
+                1 + direction * zoomSpeed * 0.05
+            );
+        };
+
+        window.addEventListener('wheel', handleMouseWheel, { passive: false });
+        return () => window.removeEventListener('wheel', handleMouseWheel);
+    }, []);
 
     useFrame(() => {
         if (!controlsRef.current) return;
+        // Ensure target stays at center point
+        controlsRef.current.target.copy(centerPoint);
         controlsRef.current.update();
     });
 
@@ -48,7 +84,7 @@ function CameraController({ selectedBuilding, onZoomComplete }: { selectedBuildi
             rotatedZ + zoomDistance * 0.7
         );
 
-        const newTarget = new THREE.Vector3(rotatedX, building.height / 2, rotatedZ);
+        const newTarget = new THREE.Vector3(rotatedX, 0.5 + building.height / 2, rotatedZ);
 
         // Animate camera over time
         const startPos = new THREE.Vector3().copy(camera.position);
@@ -70,13 +106,16 @@ function CameraController({ selectedBuilding, onZoomComplete }: { selectedBuildi
             if (progress < 1) {
                 requestAnimationFrame(animate);
             } else {
+                // Return to center point after zoom completes
+                controlsRef.current.target.copy(centerPoint);
+                controlsRef.current.update();
                 setIsZooming(false);
                 onZoomComplete?.();
             }
         };
 
         animate();
-    }, [selectedBuilding, camera, onZoomComplete]);
+    }, [selectedBuilding, camera, onZoomComplete, centerPoint]);
 
     return (
         <>
@@ -90,7 +129,7 @@ function CameraController({ selectedBuilding, onZoomComplete }: { selectedBuildi
                 maxDistance={100}
                 minPolarAngle={Math.PI / 6}
                 maxPolarAngle={Math.PI / 2.5}
-                target={[0, 0, 0]}
+                target={[0, 0.5, 0]}
                 autoRotate={!isZooming}
                 autoRotateSpeed={0.3}
             />
@@ -98,20 +137,100 @@ function CameraController({ selectedBuilding, onZoomComplete }: { selectedBuildi
     );
 }
 
-export function CampusScene({ onBuildingHover, onBuildingClick, isLoading = false, selectedBuilding, onZoomComplete }: CampusSceneProps) {
+export function CampusScene({
+    onBuildingHover,
+    onBuildingClick,
+    isLoading = false,
+    selectedBuilding,
+    onZoomComplete,
+    isDayMode = false,
+    onDayNightToggle,
+    visualMode = 'normal'
+}: CampusSceneProps) {
+    const ambientRef1 = useRef<THREE.Light>(null);
+    const ambientRef2 = useRef<THREE.Light>(null);
+    const directionalRef = useRef<THREE.Light>(null);
+    const point1Ref = useRef<THREE.Light>(null);
+    const point2Ref = useRef<THREE.Light>(null);
+    const point3Ref = useRef<THREE.Light>(null);
+    const point4Ref = useRef<THREE.Light>(null);
+    const groundShine1Ref = useRef<THREE.Light>(null);
+    const groundShine2Ref = useRef<THREE.Light>(null);
+    const groundShine3Ref = useRef<THREE.Light>(null);
+    const groundShine4Ref = useRef<THREE.Light>(null);
+    const starsRef = useRef<THREE.Points>(null);
+    const deviceCapability = useDeviceCapability();
+
+    // Animate lighting transition when day/night changes
+    useEffect(() => {
+        if (!ambientRef1.current) return;
+
+        const lights = {
+            ambient1: ambientRef1.current as THREE.Light,
+            ambient2: ambientRef2.current as THREE.Light,
+            directional: directionalRef.current as THREE.Light,
+            point1: point1Ref.current as THREE.Light,
+            point2: point2Ref.current as THREE.Light,
+            point3: point3Ref.current as THREE.Light,
+            point4: point4Ref.current as THREE.Light,
+            groundShine1: groundShine1Ref.current as THREE.Light,
+            groundShine2: groundShine2Ref.current as THREE.Light,
+            groundShine3: groundShine3Ref.current as THREE.Light,
+            groundShine4: groundShine4Ref.current as THREE.Light,
+        };
+
+        if (isDayMode) {
+            // Day mode - bright sunlight
+            import('gsap').then(({ default: gsap }) => {
+                gsap.to(lights.ambient1, { intensity: 0.7, duration: 1 });
+                gsap.to(lights.ambient2, { intensity: 0.5, duration: 1 });
+                gsap.to(lights.directional, { intensity: 1.8, duration: 1 });
+                gsap.to(lights.point1, { intensity: 0.4, duration: 1 });
+                gsap.to(lights.point2, { intensity: 0.2, duration: 1 });
+                gsap.to(lights.point3, { intensity: 0.2, duration: 1 });
+                gsap.to(lights.point4, { intensity: 0.1, duration: 1 });
+                gsap.to(lights.groundShine1, { intensity: 1.2, duration: 1 });
+                gsap.to(lights.groundShine2, { intensity: 1.2, duration: 1 });
+                gsap.to(lights.groundShine3, { intensity: 1.2, duration: 1 });
+                gsap.to(lights.groundShine4, { intensity: 1.2, duration: 1 });
+                if (starsRef.current) {
+                    gsap.to(starsRef.current.material as any, { opacity: 0.2, duration: 1 });
+                }
+            });
+        } else {
+            // Night mode - neon glow
+            import('gsap').then(({ default: gsap }) => {
+                gsap.to(lights.ambient1, { intensity: 0.4, duration: 1 });
+                gsap.to(lights.ambient2, { intensity: 0.2, duration: 1 });
+                gsap.to(lights.directional, { intensity: 0.6, duration: 1 });
+                gsap.to(lights.point1, { intensity: 1.4, duration: 1 });
+                gsap.to(lights.point2, { intensity: 0.9, duration: 1 });
+                gsap.to(lights.point3, { intensity: 0.9, duration: 1 });
+                gsap.to(lights.point4, { intensity: 0.6, duration: 1 });
+                gsap.to(lights.groundShine1, { intensity: 1.6, duration: 1 });
+                gsap.to(lights.groundShine2, { intensity: 1.6, duration: 1 });
+                gsap.to(lights.groundShine3, { intensity: 1.6, duration: 1 });
+                gsap.to(lights.groundShine4, { intensity: 1.6, duration: 1 });
+                if (starsRef.current) {
+                    gsap.to(starsRef.current.material as any, { opacity: 0.8, duration: 1 });
+                }
+            });
+        }
+    }, [isDayMode]);
+
     return (
         <Canvas
             className="w-full h-full"
             gl={{
-                antialias: true,
+                antialias: deviceCapability.lodLevel === 'high',
                 alpha: true,
-                powerPreference: 'high-performance',
-                shadows: false,
+                powerPreference: deviceCapability.hasGPU ? 'high-performance' : 'low-power',
+                shadows: deviceCapability.lodLevel === 'high',
                 stencil: false,
                 depth: true,
                 toneMappingExposure: 1.2
             }}
-            dpr={[1, 2]}
+            dpr={deviceCapability.lodLevel === 'high' ? [1, 2] : 1}
         >
             <Suspense fallback={null}>
                 {/* Camera with Zoom Controller */}
@@ -119,62 +238,133 @@ export function CampusScene({ onBuildingHover, onBuildingClick, isLoading = fals
 
                 {/* Enhanced Kidcore Lighting Theme */}
                 {/* Primary Ambient Light - Electric Blue */}
-                <ambientLight intensity={0.5} color="#00A6FF" />
+                <ambientLight
+                    ref={ambientRef1}
+                    intensity={isDayMode ? 0.7 : 0.5}
+                    color="#00A6FF"
+                />
 
                 {/* Secondary Ambient Light - Lime Green for depth */}
-                <ambientLight intensity={0.3} color="#B0FF57" />
+                <ambientLight
+                    ref={ambientRef2}
+                    intensity={isDayMode ? 0.5 : 0.3}
+                    color="#B0FF57"
+                />
 
                 {/* Main Directional Light - Safety Orange */}
                 <directionalLight
+                    ref={directionalRef}
                     position={[40, 50, 30]}
-                    intensity={1.2}
-                    color="#FF5E1F"
+                    intensity={isDayMode ? 1.8 : 0.6}
+                    color={isDayMode ? "#FFEB3B" : "#e073d0"}
                 />
 
                 {/* Top Center Point Light - Bubblegum Pink */}
                 <pointLight
+                    ref={point1Ref}
                     position={[0, 35, 0]}
-                    intensity={1.4}
+                    intensity={isDayMode ? 0.4 : 1.4}
                     color="#FF85C0"
                     distance={100}
                 />
 
                 {/* Back Left Point Light - Lime Green */}
                 <pointLight
+                    ref={point2Ref}
                     position={[-40, 25, -40]}
-                    intensity={0.9}
+                    intensity={isDayMode ? 0.2 : 0.9}
                     color="#B0FF57"
                     distance={80}
                 />
 
                 {/* Front Right Point Light - Electric Blue */}
                 <pointLight
+                    ref={point3Ref}
                     position={[40, 25, 40]}
-                    intensity={0.9}
+                    intensity={isDayMode ? 0.2 : 0.9}
                     color="#00A6FF"
                     distance={80}
                 />
 
                 {/* Additional accent light - Sun Yellow */}
                 <pointLight
+                    ref={point4Ref}
                     position={[0, 20, -40]}
-                    intensity={0.6}
+                    intensity={isDayMode ? 0.1 : 0.6}
                     color="#FFDD33"
                     distance={60}
                 />
 
+                {/* Ground Shine Lights - Metallic reflection from all angles */}
+                {/* Front Right Ground Shine - White */}
+                <pointLight
+                    ref={groundShine1Ref}
+                    position={[30, 15, 30]}
+                    intensity={isDayMode ? 1.2 : 1.6}
+                    color="#FFFFFF"
+                    distance={70}
+                    decay={2}
+                />
+
+                {/* Front Left Ground Shine - White */}
+                <pointLight
+                    ref={groundShine2Ref}
+                    position={[-30, 15, 30]}
+                    intensity={isDayMode ? 1.2 : 1.6}
+                    color="#FFFFFF"
+                    distance={70}
+                    decay={2}
+                />
+
+                {/* Back Left Ground Shine - Cyan */}
+                <pointLight
+                    ref={groundShine3Ref}
+                    position={[-30, 15, -30]}
+                    intensity={isDayMode ? 1.2 : 1.6}
+                    color="#00FFFF"
+                    distance={70}
+                    decay={2}
+                />
+
+                {/* Back Right Ground Shine - Cyan */}
+                <pointLight
+                    ref={groundShine4Ref}
+                    position={[30, 15, -30]}
+                    intensity={isDayMode ? 1.2 : 1.6}
+                    color="#00FFFF"
+                    distance={70}
+                    decay={2}
+                />
+
                 {/* Stars background */}
-                <Stars radius={150} depth={80} count={3000} factor={4} saturation={0.7} fade speed={0.5} />
+                <Stars
+                    ref={starsRef}
+                    radius={150}
+                    depth={80}
+                    count={3000}
+                    factor={4}
+                    saturation={0.7}
+                    fade
+                    speed={0.5}
+                />
 
                 {/* Enhanced Dark background fog with Kidcore colors */}
-                <fog attach="fog" args={['#0A0E27', 50, 150]} />
+                <fog attach="fog" args={[isDayMode ? '#87CEEB' : '#0A0E27', 50, 150]} />
 
                 {/* Holographic Map */}
                 <HolographicMap
                     onBuildingHover={onBuildingHover}
                     onBuildingClick={onBuildingClick}
                     isLoading={isLoading}
+                    isDayMode={isDayMode}
+                    visualMode={visualMode}
                 />
+
+                {/* Walking Characters - Only on medium/high LOD */}
+                {deviceCapability.lodLevel !== 'low' && <WalkingCharacters />}
+
+                {/* Floating 3D Shapes - Only on high LOD */}
+                {deviceCapability.lodLevel === 'high' && <FloatingShapes />}
 
                 {/* Floating Particles */}
                 <NeonParticles />

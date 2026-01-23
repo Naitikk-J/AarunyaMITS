@@ -114,7 +114,7 @@ const AboutUs = () => {
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {teamMembers.map((member, index) => (
-                            <Card key={index} className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl group relative overflow-hidden hover:border-kidcore-pink/50 transition-all duration-300 floating-sticker">
+                            <Card key={index} className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl group relative overflow-hidden hover:border-kidcore-pink/50 transition-all duration-3000 floating-sticker">
                                 <div className="h-32 bg-gradient-to-br from-kidcore-blue/20 to-kidcore-pink/20 flex items-center justify-center relative overflow-hidden">
                                     <div className="absolute inset-0 scanlines opacity-20" />
                                     <div className="text-6xl">{member.avatar}</div>

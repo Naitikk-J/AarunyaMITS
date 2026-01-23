@@ -112,7 +112,7 @@ const Headliners = () => {
                     {filteredHeadliners.map((event) => {
                         const statusBadge = getStatusBadge(event.status);
                         return (
-                            <Card key={event.id} className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl group relative overflow-hidden hover:border-kidcore-pink/50 transition-all duration-300 floating-sticker">
+                            <Card key={event.id} className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl group relative overflow-hidden hover:border-kidcore-pink/50 transition-all duration-3000 floating-sticker">
                                 <div className="absolute top-4 right-4 z-10">
                                     <Badge className="bg-kidcore-yellow text-kidcore-black font-rajdhani font-bold">
                                         {statusBadge.label}
