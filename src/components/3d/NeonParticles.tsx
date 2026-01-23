@@ -7,7 +7,7 @@ export function NeonParticles() {
     const particlesRef2 = useRef<THREE.Points>(null);
 
     const [positions, colors] = useMemo(() => {
-        const count = 150; // Further reduced particle count for minimal aesthetic
+        const count = 15; // Further reduced particle count for minimal aesthetic
         const positions = new Float32Array(count * 3);
         const colors = new Float32Array(count * 3);
 
@@ -32,8 +32,8 @@ export function NeonParticles() {
             // Random color from palette with bias towards blue and pink
             const colorChoice = Math.random();
             const color = colorChoice < 0.3 ? colorPalette[0] : // More blue
-                          colorChoice < 0.6 ? colorPalette[2] : // More pink
-                          colorPalette[Math.floor(Math.random() * colorPalette.length)];
+                colorChoice < 0.6 ? colorPalette[2] : // More pink
+                    colorPalette[Math.floor(Math.random() * colorPalette.length)];
             colors[i * 3] = color.r;
             colors[i * 3 + 1] = color.g;
             colors[i * 3 + 2] = color.b;

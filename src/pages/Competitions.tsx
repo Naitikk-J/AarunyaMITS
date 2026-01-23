@@ -46,7 +46,7 @@ const Competitions = () => {
             <div className="container mx-auto px-6 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {competitions.map((c) => (
-                        <Card key={c.name} className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl overflow-hidden group hover:shadow-lg hover:shadow-kidcore-pink/30 transition-all duration-300 floating-sticker">
+                        <Card key={c.name} className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl overflow-hidden group hover:shadow-lg hover:shadow-kidcore-pink/30 transition-all duration-3000 floating-sticker">
                             <div className="h-48 relative overflow-hidden">
                                 <img
                                     src={c.image}

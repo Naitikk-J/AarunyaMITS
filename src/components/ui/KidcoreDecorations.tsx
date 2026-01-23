@@ -4,23 +4,58 @@ export const KidcoreDecorations = () => {
     return (
         <>
             {/* Floating sticker decorations */}
-            <div className="fixed top-32 right-10 z-10 floating-sticker animate-float">
+            <div
+                className="fixed top-32 right-10 z-10 floating-sticker animate-float"
+                style={{
+                    animationDelay: '0s',
+                    willChange: 'transform',
+                    transform: 'translateZ(0)'
+                }}
+            >
                 <div className="sticker-label text-lg">POWER</div>
             </div>
 
-            <div className="fixed top-1/3 left-4 z-10 floating-sticker animate-float" style={{ animationDelay: '1s' }}>
+            <div
+                className="fixed top-1/3 left-4 z-10 floating-sticker animate-float"
+                style={{
+                    animationDelay: '1s',
+                    willChange: 'transform',
+                    transform: 'translateZ(0)'
+                }}
+            >
                 <div className="sticker-label text-xl">⚡</div>
             </div>
 
-            <div className="fixed bottom-40 right-12 z-10 floating-sticker animate-float" style={{ animationDelay: '2s' }}>
+            <div
+                className="fixed bottom-40 right-12 z-10 floating-sticker animate-float"
+                style={{
+                    animationDelay: '2s',
+                    willChange: 'transform',
+                    transform: 'translateZ(0)'
+                }}
+            >
                 <div className="sticker-label">COOL</div>
             </div>
 
-            <div className="fixed top-1/4 right-1/4 z-10 floating-sticker animate-float" style={{ animationDelay: '0.5s' }}>
+            <div
+                className="fixed top-1/4 left-1/4 z-10 floating-sticker"
+                style={{
+                    animationDelay: '0.5s',
+                    willChange: 'transform',
+                    transform: 'translateZ(0)'
+                }}
+            >
                 <div className="sticker-label text-sm">✨</div>
             </div>
 
-            <div className="fixed bottom-1/3 left-1/2 z-10 floating-sticker animate-float" style={{ animationDelay: '1.5s' }}>
+            <div
+                className="fixed bottom-1/3 left-1/2 z-10 floating-sticker animate-float"
+                style={{
+                    animationDelay: '1.5s',
+                    willChange: 'transform',
+                    transform: 'translateZ(0)'
+                }}
+            >
                 <div className="sticker-label text-xs">GLITCH</div>
             </div>
 
