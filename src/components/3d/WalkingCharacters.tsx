@@ -2,6 +2,7 @@ import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import gsap from 'gsap';
+import { useDeviceCapability } from '@/hooks/useDeviceCapability';
 
 interface CharacterData {
     id: string;
@@ -12,16 +13,16 @@ interface CharacterData {
 }
 
 const CHARACTER_SPAWNS = [
-    { position: [-5, 0, -20], color: '#FF85C0' },
-    { position: [10, 0, -10], color: '#00A6FF' },
-    { position: [-15, 0, 5], color: '#B0FF57' },
-    { position: [8, 0, 15], color: '#FFDD33' },
-    { position: [-10, 0, -5], color: '#FF5E1F' },
-    { position: [-5, 0, -20], color: '#15d929' },
-    { position: [10, 0, -10], color: '#00A6FF' },
-    { position: [-15, 0, 5], color: '#B0FF57' },
-    { position: [8, 0, 15], color: '#e2e607' },
-    { position: [-10, 0, -5], color: '#FF5E1F' },
+    { position: [-5, 0.4, -20], color: '#FF85C0' },
+    { position: [10, 0.4, -10], color: '#00A6FF' },
+    { position: [-15, 0.4, 5], color: '#B0FF57' },
+    { position: [8, 0.4, 15], color: '#FFDD33' },
+    { position: [-10, 0.4, -5], color: '#FF5E1F' },
+    { position: [-5, 0.4, -20], color: '#15d929' },
+    { position: [10, 0.4, -10], color: '#00A6FF' },
+    { position: [-15, 0.4, 5], color: '#B0FF57' },
+    { position: [8, 0.4, 15], color: '#e2e607' },
+    { position: [-10, 0.4, -5], color: '#FF5E1F' },
 ];
 
 const WAYPOINTS = [
@@ -37,7 +38,7 @@ const WAYPOINTS = [
     new THREE.Vector3(-12, 0, 12),
 ];
 
-const Character = ({ data }: { data: CharacterData }) => {
+const Character = ({ data, isMobile = false }: { data: CharacterData; isMobile?: boolean }) => {
     const meshRef = useRef<THREE.Group>(null);
     const currentWaypoint = useRef(0);
 
@@ -75,7 +76,7 @@ const Character = ({ data }: { data: CharacterData }) => {
         <group ref={meshRef} position={[data.position.x, data.position.y, data.position.z]}>
             {/* Body - Capsule shape */}
             <mesh position={[0, 0.4, 0]}>
-                <capsuleGeometry args={[0.25, 0.8, 4, 8]} />
+                <capsuleGeometry args={[0.25, 0.8, 8, 7]} />
                 <meshStandardMaterial
                     color={data.color}
                     emissive={data.color}
@@ -97,7 +98,7 @@ const Character = ({ data }: { data: CharacterData }) => {
 
             {/* Glow effect */}
             <mesh rotation={[-Math.PI / 2, 0, 0]}>
-                <circleGeometry args={[0.4, 32]} />
+                <circleGeometry args={[0.44, 55]} />
                 <meshBasicMaterial
                     color={data.color}
                     transparent
@@ -108,8 +109,8 @@ const Character = ({ data }: { data: CharacterData }) => {
             {/* Floating glow light */}
             <pointLight
                 position={[0, 0.5, 0]}
-                intensity={1.2}
-                distance={4}
+                intensity={isMobile ? 0.6 : 1.2}
+                distance={isMobile ? 2 : 4}
                 color={data.color}
             />
         </group>
@@ -117,6 +118,7 @@ const Character = ({ data }: { data: CharacterData }) => {
 };
 
 export function WalkingCharacters() {
+    const deviceCapability = useDeviceCapability();
     const characters = useMemo(() => {
         return CHARACTER_SPAWNS.map((spawn, idx) => ({
             id: `char-${idx}`,
@@ -130,7 +132,7 @@ export function WalkingCharacters() {
     return (
         <group>
             {characters.map((char) => (
-                <Character key={char.id} data={char} />
+                <Character key={char.id} data={char} isMobile={deviceCapability.isMobile} />
             ))}
         </group>
     );

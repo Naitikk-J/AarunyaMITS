@@ -8,7 +8,7 @@ export function HolographicGrid() {
     // Create grid lines
     const gridLines = useMemo(() => {
         const lines: JSX.Element[] = [];
-        const gridSize = 20000;
+        const gridSize = 200000;
         const gridDivisions = 8000;
         const spacing = gridSize / gridDivisions;
 
@@ -83,7 +83,7 @@ export function HolographicGrid() {
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]} receiveShadow castShadow>
                 <planeGeometry args={[20000, 20000]} />
                 <meshStandardMaterial
-                    color="#0A0E27"
+                    color="#1d270a"
                     transparent
                     opacity={0.6}
                     metalness={0.2}

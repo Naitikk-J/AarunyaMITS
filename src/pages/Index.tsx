@@ -134,12 +134,49 @@ const Index = () => {
             <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2">
                 <div className="glass-nav-block px-4 py-2 rounded-lg text-xs font-orbitron tracking-wider text-center">
                     <div className="text-kidcore-yellow mb-1">Visual Mode: {visualMode.toUpperCase()}</div>
-                    <div className="text-muted-foreground text-[10px]">
+                    <div className="text-muted-foreground text-[10px] hidden md:block">
                         <div>Press 1: Normal</div>
                         <div>Press 2: Wireframe</div>
                         <div>Press 3: Neon</div>
                     </div>
                 </div>
+            </div>
+
+            {/* Mobile Visual Mode Buttons */}
+            <div className="fixed bottom-6 left-6 z-50 md:hidden flex flex-col gap-2">
+                <button
+                    onClick={() => setVisualMode('normal')}
+                    className={`px-4 py-2 rounded-lg font-orbitron text-xs transition-all duration-200 ${
+                        visualMode === 'normal'
+                            ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/50'
+                            : 'glass-nav-block text-muted-foreground hover:text-primary'
+                    }`}
+                    title="Normal View"
+                >
+                    Normal
+                </button>
+                <button
+                    onClick={() => setVisualMode('wireframe')}
+                    className={`px-4 py-2 rounded-lg font-orbitron text-xs transition-all duration-200 ${
+                        visualMode === 'wireframe'
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/50'
+                            : 'glass-nav-block text-muted-foreground hover:text-primary'
+                    }`}
+                    title="Wireframe View"
+                >
+                    Wireframe
+                </button>
+                <button
+                    onClick={() => setVisualMode('neon')}
+                    className={`px-4 py-2 rounded-lg font-orbitron text-xs transition-all duration-200 ${
+                        visualMode === 'neon'
+                            ? 'bg-gradient-to-r from-lime-400 to-green-500 text-black shadow-lg shadow-lime-400/50'
+                            : 'glass-nav-block text-muted-foreground hover:text-primary'
+                    }`}
+                    title="Neon View"
+                >
+                    Neon
+                </button>
             </div>
 
             <div className="fixed top-20 left-6 w-20 h-0.5 bg-gradient-to-r from-primary to-transparent" />
