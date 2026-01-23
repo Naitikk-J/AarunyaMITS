@@ -12,7 +12,7 @@ export const KidcoreDecorations = () => {
                     transform: 'translateZ(0)'
                 }}
             >
-                <div className="sticker-label text-lg">POWER</div>
+               
             </div>
 
             <div
@@ -23,7 +23,7 @@ export const KidcoreDecorations = () => {
                     transform: 'translateZ(0)'
                 }}
             >
-                <div className="sticker-label text-xl">⚡</div>
+            
             </div>
 
             <div
@@ -34,7 +34,7 @@ export const KidcoreDecorations = () => {
                     transform: 'translateZ(0)'
                 }}
             >
-                <div className="sticker-label">COOL</div>
+               
             </div>
 
             <div
@@ -45,7 +45,7 @@ export const KidcoreDecorations = () => {
                     transform: 'translateZ(0)'
                 }}
             >
-                <div className="sticker-label text-sm">✨</div>
+          
             </div>
 
             <div
@@ -56,7 +56,7 @@ export const KidcoreDecorations = () => {
                     transform: 'translateZ(0)'
                 }}
             >
-                <div className="sticker-label text-xs">GLITCH</div>
+              
             </div>
 
             {/* Decorative corner elements */}
