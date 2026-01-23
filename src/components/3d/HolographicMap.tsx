@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { Html, Text, Float, Instance, Instances } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
+import { useDeviceCapability } from '@/hooks/useDeviceCapability';
 
 // --- Types ---
 interface BuildingData {
@@ -747,7 +748,7 @@ const SciFiBase = ({ bulbColor = THEME.primary }: { bulbColor?: string }) => {
             <HangingBulb bulbColor={bulbColor} />
 
             {/* Inner Grid Floor */}
-            <gridHelper args={[60, 60, THEME.secondary, '#022026']} position={[0, 2.05, 0]} />
+            <gridHelper args={[1000, 1000, '#8B00FF', '#1a0033']} position={[0, 2.05, 0]} />
 
             {/* Decorative Outer Rings */}
             <mesh position={[0, 0.5, 0]}>
@@ -758,9 +759,19 @@ const SciFiBase = ({ bulbColor = THEME.primary }: { bulbColor?: string }) => {
     );
 };
 
-const HolographicTrees = ({ visualMode = 'normal' }: { visualMode?: 'normal' | 'wireframe' | 'neon' }) => {
+const HolographicTrees = ({ visualMode = 'normal', isMobile = false }: { visualMode?: 'normal' | 'wireframe' | 'neon', isMobile?: boolean }) => {
     // Arrange trees along the circumference of the circular base
-    const count = visualMode === 'neon' ? 100 : (visualMode === 'wireframe' ? 60 : 80);
+    // Reduce tree count on mobile for better performance
+    let count: number;
+    if (isMobile) {
+        count = 30; // Significantly reduced for mobile
+    } else if (visualMode === 'neon') {
+        count = 100;
+    } else if (visualMode === 'wireframe') {
+        count = 60;
+    } else {
+        count = 80;
+    }
     const circumferenceRadius = 27.5; // Radius of the circular base
     const trees = useMemo(() => {
         const temp = [];
@@ -883,6 +894,8 @@ const HolographicTrees = ({ visualMode = 'normal' }: { visualMode?: 'normal' | '
 };
 
 const GrassBlades = () => {
+    const deviceCapability = useDeviceCapability();
+
     // Define ground areas where grass should be rendered
     const groundAreas = [
         { center: [-5, -22], size: [15, 6], name: 'stage ground' },
@@ -904,7 +917,7 @@ const GrassBlades = () => {
 
     const grassBlades = useMemo(() => {
         const temp = [];
-        const grassPerArea = 80; // Grass blades per ground area
+        const grassPerArea = deviceCapability.isMobile ? 20 : 80; // Reduce for mobile
 
         for (let area of groundAreas) {
             const [cx, cz] = area.center;
@@ -965,6 +978,7 @@ export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading = f
     // The reference image is isometric (Diamond shape).
     // We rotate the whole content by 45 degrees (Math.PI / 4)
 
+    const deviceCapability = useDeviceCapability();
     const [showLabels, setShowLabels] = useState(false);
     const grassTexture = useMemo(() => generateGrassTexture(), []);
     const metallicTexture = useMemo(() => generateMetallicGroundTexture(), []);
@@ -990,13 +1004,19 @@ export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading = f
             {/* Adjust lighting for Hologram effect */}
             <ambientLight intensity={visualMode === 'neon' ? 0.35 : 0.2} color={visualMode === 'neon' ? '#FFFFFF' : '#FFFFFF'} />
             <pointLight position={[10, 20, 10]} intensity={visualMode === 'neon' ? 1.5 : 1} color={THEME.primary} distance={60} />
-            <pointLight position={[-10, 20, -10]} intensity={visualMode === 'neon' ? 1.2 : 0.5} color="#00ffaa" distance={60} />
+            {!deviceCapability.isMobile && (
+                <pointLight position={[-10, 20, -10]} intensity={visualMode === 'neon' ? 1.2 : 0.5} color="#00ffaa" distance={60} />
+            )}
 
-            {/* Enhanced ground reflection lighting - 360 degree shine */}
-            <pointLight position={[20, 12, 20]} intensity={visualMode === 'neon' ? 1.5 : 1.0} color="#FFFFFF" distance={80} />
-            <pointLight position={[-20, 12, 20]} intensity={visualMode === 'neon' ? 1.5 : 1.0} color="#FFFFFF" distance={80} />
-            <pointLight position={[20, 12, -20]} intensity={visualMode === 'neon' ? 1.3 : 1.0} color="#00DDDD" distance={80} />
-            <pointLight position={[-20, 12, -20]} intensity={visualMode === 'neon' ? 1.3 : 1.0} color="#00DDDD" distance={80} />
+            {/* Enhanced ground reflection lighting - 360 degree shine (only on non-mobile) */}
+            {!deviceCapability.isMobile && (
+                <>
+                    <pointLight position={[20, 12, 20]} intensity={visualMode === 'neon' ? 1.5 : 1.0} color="#FFFFFF" distance={80} />
+                    <pointLight position={[-20, 12, 20]} intensity={visualMode === 'neon' ? 1.5 : 1.0} color="#FFFFFF" distance={80} />
+                    <pointLight position={[20, 12, -20]} intensity={visualMode === 'neon' ? 1.3 : 1.0} color="#00DDDD" distance={80} />
+                    <pointLight position={[-20, 12, -20]} intensity={visualMode === 'neon' ? 1.3 : 1.0} color="#00DDDD" distance={80} />
+                </>
+            )}
 
             {/* Projector Base */}
             <SciFiBase bulbColor={bulbColor} />
@@ -1044,7 +1064,7 @@ export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading = f
                 </mesh>
 
                 <HoloRoads />
-                <HolographicTrees visualMode={visualMode} />
+                <HolographicTrees visualMode={visualMode} isMobile={deviceCapability.isMobile} />
 
                 {BUILDINGS.map((building) => (
                     <Building

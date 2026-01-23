@@ -148,16 +148,16 @@ export function CampusScene({
     visualMode = 'normal'
 }: CampusSceneProps) {
     const ambientRef1 = useRef<THREE.Light>(null);
-    const ambientRef2 = useRef<THREE.Light>(null);
+    const ambientRef2 = useRef<THREE.Light | null>(null);
     const directionalRef = useRef<THREE.Light>(null);
-    const point1Ref = useRef<THREE.Light>(null);
-    const point2Ref = useRef<THREE.Light>(null);
-    const point3Ref = useRef<THREE.Light>(null);
-    const point4Ref = useRef<THREE.Light>(null);
-    const groundShine1Ref = useRef<THREE.Light>(null);
-    const groundShine2Ref = useRef<THREE.Light>(null);
-    const groundShine3Ref = useRef<THREE.Light>(null);
-    const groundShine4Ref = useRef<THREE.Light>(null);
+    const point1Ref = useRef<THREE.Light | null>(null);
+    const point2Ref = useRef<THREE.Light | null>(null);
+    const point3Ref = useRef<THREE.Light | null>(null);
+    const point4Ref = useRef<THREE.Light | null>(null);
+    const groundShine1Ref = useRef<THREE.Light | null>(null);
+    const groundShine2Ref = useRef<THREE.Light | null>(null);
+    const groundShine3Ref = useRef<THREE.Light | null>(null);
+    const groundShine4Ref = useRef<THREE.Light | null>(null);
     const starsRef = useRef<THREE.Points>(null);
     const deviceCapability = useDeviceCapability();
 
@@ -165,57 +165,55 @@ export function CampusScene({
     useEffect(() => {
         if (!ambientRef1.current) return;
 
-        const lights = {
-            ambient1: ambientRef1.current as THREE.Light,
-            ambient2: ambientRef2.current as THREE.Light,
-            directional: directionalRef.current as THREE.Light,
-            point1: point1Ref.current as THREE.Light,
-            point2: point2Ref.current as THREE.Light,
-            point3: point3Ref.current as THREE.Light,
-            point4: point4Ref.current as THREE.Light,
-            groundShine1: groundShine1Ref.current as THREE.Light,
-            groundShine2: groundShine2Ref.current as THREE.Light,
-            groundShine3: groundShine3Ref.current as THREE.Light,
-            groundShine4: groundShine4Ref.current as THREE.Light,
-        };
+        import('gsap').then(({ default: gsap }) => {
+            const lights: Record<string, THREE.Light | null> = {
+                ambient1: ambientRef1.current,
+                ambient2: ambientRef2.current,
+                directional: directionalRef.current,
+                point1: point1Ref.current,
+                point2: point2Ref.current,
+                point3: point3Ref.current,
+                point4: point4Ref.current,
+                groundShine1: groundShine1Ref.current,
+                groundShine2: groundShine2Ref.current,
+                groundShine3: groundShine3Ref.current,
+                groundShine4: groundShine4Ref.current,
+            };
 
-        if (isDayMode) {
-            // Day mode - bright sunlight
-            import('gsap').then(({ default: gsap }) => {
+            if (isDayMode) {
+                // Day mode - bright sunlight
                 gsap.to(lights.ambient1, { intensity: 0.7, duration: 1 });
-                gsap.to(lights.ambient2, { intensity: 0.5, duration: 1 });
+                if (lights.ambient2) gsap.to(lights.ambient2, { intensity: 0.5, duration: 1 });
                 gsap.to(lights.directional, { intensity: 1.8, duration: 1 });
-                gsap.to(lights.point1, { intensity: 0.4, duration: 1 });
-                gsap.to(lights.point2, { intensity: 0.2, duration: 1 });
-                gsap.to(lights.point3, { intensity: 0.2, duration: 1 });
-                gsap.to(lights.point4, { intensity: 0.1, duration: 1 });
-                gsap.to(lights.groundShine1, { intensity: 1.2, duration: 1 });
-                gsap.to(lights.groundShine2, { intensity: 1.2, duration: 1 });
-                gsap.to(lights.groundShine3, { intensity: 1.2, duration: 1 });
-                gsap.to(lights.groundShine4, { intensity: 1.2, duration: 1 });
+                if (lights.point1) gsap.to(lights.point1, { intensity: 0.4, duration: 1 });
+                if (lights.point2) gsap.to(lights.point2, { intensity: 0.2, duration: 1 });
+                if (lights.point3) gsap.to(lights.point3, { intensity: 0.2, duration: 1 });
+                if (lights.point4) gsap.to(lights.point4, { intensity: 0.1, duration: 1 });
+                if (lights.groundShine1) gsap.to(lights.groundShine1, { intensity: 1.2, duration: 1 });
+                if (lights.groundShine2) gsap.to(lights.groundShine2, { intensity: 1.2, duration: 1 });
+                if (lights.groundShine3) gsap.to(lights.groundShine3, { intensity: 1.2, duration: 1 });
+                if (lights.groundShine4) gsap.to(lights.groundShine4, { intensity: 1.2, duration: 1 });
                 if (starsRef.current) {
                     gsap.to(starsRef.current.material as any, { opacity: 0.2, duration: 1 });
                 }
-            });
-        } else {
-            // Night mode - neon glow
-            import('gsap').then(({ default: gsap }) => {
+            } else {
+                // Night mode - neon glow
                 gsap.to(lights.ambient1, { intensity: 0.4, duration: 1 });
-                gsap.to(lights.ambient2, { intensity: 0.2, duration: 1 });
+                if (lights.ambient2) gsap.to(lights.ambient2, { intensity: 0.2, duration: 1 });
                 gsap.to(lights.directional, { intensity: 0.6, duration: 1 });
-                gsap.to(lights.point1, { intensity: 1.4, duration: 1 });
-                gsap.to(lights.point2, { intensity: 0.9, duration: 1 });
-                gsap.to(lights.point3, { intensity: 0.9, duration: 1 });
-                gsap.to(lights.point4, { intensity: 0.6, duration: 1 });
-                gsap.to(lights.groundShine1, { intensity: 1.6, duration: 1 });
-                gsap.to(lights.groundShine2, { intensity: 1.6, duration: 1 });
-                gsap.to(lights.groundShine3, { intensity: 1.6, duration: 1 });
-                gsap.to(lights.groundShine4, { intensity: 1.6, duration: 1 });
+                if (lights.point1) gsap.to(lights.point1, { intensity: 1.4, duration: 1 });
+                if (lights.point2) gsap.to(lights.point2, { intensity: 0.9, duration: 1 });
+                if (lights.point3) gsap.to(lights.point3, { intensity: 0.9, duration: 1 });
+                if (lights.point4) gsap.to(lights.point4, { intensity: 0.6, duration: 1 });
+                if (lights.groundShine1) gsap.to(lights.groundShine1, { intensity: 1.6, duration: 1 });
+                if (lights.groundShine2) gsap.to(lights.groundShine2, { intensity: 1.6, duration: 1 });
+                if (lights.groundShine3) gsap.to(lights.groundShine3, { intensity: 1.6, duration: 1 });
+                if (lights.groundShine4) gsap.to(lights.groundShine4, { intensity: 1.6, duration: 1 });
                 if (starsRef.current) {
                     gsap.to(starsRef.current.material as any, { opacity: 0.8, duration: 1 });
                 }
-            });
-        }
+            }
+        });
     }, [isDayMode]);
 
     return (
@@ -225,12 +223,15 @@ export function CampusScene({
                 antialias: deviceCapability.lodLevel === 'high',
                 alpha: true,
                 powerPreference: deviceCapability.hasGPU ? 'high-performance' : 'low-power',
-                shadows: deviceCapability.lodLevel === 'high',
+                shadows: false,
                 stencil: false,
                 depth: true,
-                toneMappingExposure: 1.2
+                toneMappingExposure: 1.2,
+                precision: deviceCapability.isMobile ? 'lowp' : 'highp'
             }}
-            dpr={deviceCapability.lodLevel === 'high' ? [1, 2] : 1}
+            dpr={deviceCapability.isMobile ? 1 : (deviceCapability.lodLevel === 'high' ? [1, 2] : 1)}
+            frameloop={deviceCapability.isMobile ? 'always' : 'always'}
+            performance={{ min: 0.6 }}
         >
             <Suspense fallback={null}>
                 {/* Camera with Zoom Controller */}
@@ -244,12 +245,13 @@ export function CampusScene({
                     color="#00A6FF"
                 />
 
-                {/* Secondary Ambient Light - Lime Green for depth */}
-                <ambientLight
-                    ref={ambientRef2}
-                    intensity={isDayMode ? 0.5 : 0.3}
-                    color="#B0FF57"
-                />
+                {!deviceCapability.isMobile && (
+                    <ambientLight
+                        ref={ambientRef2}
+                        intensity={isDayMode ? 0.5 : 0.3}
+                        color="#B0FF57"
+                    />
+                )}
 
                 {/* Main Directional Light - Safety Orange */}
                 <directionalLight
@@ -260,81 +262,93 @@ export function CampusScene({
                 />
 
                 {/* Top Center Point Light - Bubblegum Pink */}
-                <pointLight
-                    ref={point1Ref}
-                    position={[0, 35, 0]}
-                    intensity={isDayMode ? 0.4 : 1.4}
-                    color="#FF85C0"
-                    distance={100}
-                />
+                {deviceCapability.lodLevel === 'high' && (
+                    <pointLight
+                        ref={point1Ref}
+                        position={[0, 35, 0]}
+                        intensity={isDayMode ? 0.4 : 1.4}
+                        color="#FF85C0"
+                        distance={100}
+                    />
+                )}
 
                 {/* Back Left Point Light - Lime Green */}
-                <pointLight
-                    ref={point2Ref}
-                    position={[-40, 25, -40]}
-                    intensity={isDayMode ? 0.2 : 0.9}
-                    color="#B0FF57"
-                    distance={80}
-                />
+                {deviceCapability.lodLevel === 'high' && (
+                    <pointLight
+                        ref={point2Ref}
+                        position={[-40, 25, -40]}
+                        intensity={isDayMode ? 0.2 : 0.9}
+                        color="#B0FF57"
+                        distance={80}
+                    />
+                )}
 
                 {/* Front Right Point Light - Electric Blue */}
-                <pointLight
-                    ref={point3Ref}
-                    position={[40, 25, 40]}
-                    intensity={isDayMode ? 0.2 : 0.9}
-                    color="#00A6FF"
-                    distance={80}
-                />
+                {deviceCapability.lodLevel === 'high' && (
+                    <pointLight
+                        ref={point3Ref}
+                        position={[40, 25, 40]}
+                        intensity={isDayMode ? 0.2 : 0.9}
+                        color="#00A6FF"
+                        distance={80}
+                    />
+                )}
 
                 {/* Additional accent light - Sun Yellow */}
-                <pointLight
-                    ref={point4Ref}
-                    position={[0, 20, -40]}
-                    intensity={isDayMode ? 0.1 : 0.6}
-                    color="#FFDD33"
-                    distance={60}
-                />
+                {deviceCapability.lodLevel === 'high' && (
+                    <pointLight
+                        ref={point4Ref}
+                        position={[0, 20, -40]}
+                        intensity={isDayMode ? 0.1 : 0.6}
+                        color="#FFDD33"
+                        distance={60}
+                    />
+                )}
 
-                {/* Ground Shine Lights - Metallic reflection from all angles */}
-                {/* Front Right Ground Shine - White */}
-                <pointLight
-                    ref={groundShine1Ref}
-                    position={[30, 15, 30]}
-                    intensity={isDayMode ? 1.2 : 1.6}
-                    color="#FFFFFF"
-                    distance={70}
-                    decay={2}
-                />
+                {/* Ground Shine Lights - Metallic reflection from all angles (Only on High LOD) */}
+                {deviceCapability.lodLevel === 'high' && (
+                    <>
+                        {/* Front Right Ground Shine - White */}
+                        <pointLight
+                            ref={groundShine1Ref}
+                            position={[30, 15, 30]}
+                            intensity={isDayMode ? 1.2 : 1.6}
+                            color="#FFFFFF"
+                            distance={70}
+                            decay={2}
+                        />
 
-                {/* Front Left Ground Shine - White */}
-                <pointLight
-                    ref={groundShine2Ref}
-                    position={[-30, 15, 30]}
-                    intensity={isDayMode ? 1.2 : 1.6}
-                    color="#FFFFFF"
-                    distance={70}
-                    decay={2}
-                />
+                        {/* Front Left Ground Shine - White */}
+                        <pointLight
+                            ref={groundShine2Ref}
+                            position={[-30, 15, 30]}
+                            intensity={isDayMode ? 1.2 : 1.6}
+                            color="#FFFFFF"
+                            distance={70}
+                            decay={2}
+                        />
 
-                {/* Back Left Ground Shine - Cyan */}
-                <pointLight
-                    ref={groundShine3Ref}
-                    position={[-30, 15, -30]}
-                    intensity={isDayMode ? 1.2 : 1.6}
-                    color="#00FFFF"
-                    distance={70}
-                    decay={2}
-                />
+                        {/* Back Left Ground Shine - Cyan */}
+                        <pointLight
+                            ref={groundShine3Ref}
+                            position={[-30, 15, -30]}
+                            intensity={isDayMode ? 1.2 : 1.6}
+                            color="#00FFFF"
+                            distance={70}
+                            decay={2}
+                        />
 
-                {/* Back Right Ground Shine - Cyan */}
-                <pointLight
-                    ref={groundShine4Ref}
-                    position={[30, 15, -30]}
-                    intensity={isDayMode ? 1.2 : 1.6}
-                    color="#00FFFF"
-                    distance={70}
-                    decay={2}
-                />
+                        {/* Back Right Ground Shine - Cyan */}
+                        <pointLight
+                            ref={groundShine4Ref}
+                            position={[30, 15, -30]}
+                            intensity={isDayMode ? 1.2 : 1.6}
+                            color="#00FFFF"
+                            distance={70}
+                            decay={2}
+                        />
+                    </>
+                )}
 
                 {/* Stars background */}
                 <Stars
@@ -360,8 +374,8 @@ export function CampusScene({
                     visualMode={visualMode}
                 />
 
-                {/* Walking Characters - Only on medium/high LOD */}
-                {deviceCapability.lodLevel !== 'low' && <WalkingCharacters />}
+                {/* Walking Characters - Show on all devices */}
+                <WalkingCharacters />
 
                 {/* Floating 3D Shapes - Only on high LOD */}
                 {deviceCapability.lodLevel === 'high' && <FloatingShapes />}

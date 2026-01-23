@@ -1,13 +1,15 @@
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useDeviceCapability } from '@/hooks/useDeviceCapability';
 
 export function NeonParticles() {
     const particlesRef = useRef<THREE.Points>(null);
     const particlesRef2 = useRef<THREE.Points>(null);
+    const deviceCapability = useDeviceCapability();
 
     const [positions, colors] = useMemo(() => {
-        const count = 15; // Further reduced particle count for minimal aesthetic
+        const count = deviceCapability.isMobile ? 8 : 15; // Reduce for mobile
         const positions = new Float32Array(count * 3);
         const colors = new Float32Array(count * 3);
 
@@ -44,7 +46,7 @@ export function NeonParticles() {
 
     // Create a second set of particles for layered effect
     const [positions2, colors2] = useMemo(() => {
-        const count = 75; // Further reduced for minimal appearance
+        const count = deviceCapability.isMobile ? 30 : 75; // Reduce for mobile
         const positions = new Float32Array(count * 3);
         const colors = new Float32Array(count * 3);
 

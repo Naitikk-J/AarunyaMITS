@@ -79,45 +79,53 @@ export const MainNavigation = () => {
 
             {/* Mobile Navigation Dropdown */}
             {isOpen && (
-                <div className="fixed top-16 left-0 right-0 z-40 lg:hidden w-full bg-background/95 backdrop-blur-xl border-b border-secondary/40 shadow-lg">
-                    <div className="container mx-auto px-4 py-4 flex flex-col gap-1 max-h-[calc(100vh-64px)] overflow-y-auto">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.path}
-                                to={link.path}
-                                onClick={() => setIsOpen(false)}
-                                className={cn(
-                                    "px-4 py-3 text-sm font-orbitron tracking-wider transition-all duration-300 rounded-lg block",
-                                    location.pathname === link.path
-                                        ? "text-kidcore-black bg-kidcore-yellow font-bold"
-                                        : "text-foreground hover:text-kidcore-yellow hover:bg-kidcore-blue/20"
-                                )}
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
+                <>
+                    {/* Backdrop */}
+                    <div
+                        className="fixed inset-0 z-30 lg:hidden bg-black/40 backdrop-blur-sm"
+                        onClick={() => setIsOpen(false)}
+                    />
+                    {/* Menu */}
+                    <div className="fixed top-16 left-0 right-0 z-40 lg:hidden w-full bg-background/95 backdrop-blur-xl border-b border-secondary/40 shadow-lg animate-in slide-in-from-top-2 duration-300">
+                        <div className="container mx-auto px-4 py-4 flex flex-col gap-1 max-h-[calc(100vh-64px)] overflow-y-auto">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.path}
+                                    to={link.path}
+                                    onClick={() => setIsOpen(false)}
+                                    className={cn(
+                                        "px-4 py-3 text-sm font-orbitron tracking-wider transition-all duration-300 rounded-lg block",
+                                        location.pathname === link.path
+                                            ? "text-kidcore-black bg-kidcore-yellow font-bold"
+                                            : "text-foreground hover:text-kidcore-yellow hover:bg-kidcore-blue/20"
+                                    )}
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
 
-                        <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-kidcore-blue/30">
-                            <Link to="/login" onClick={() => setIsOpen(false)} className="w-full">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="w-full font-orbitron text-xs tracking-wider hover:bg-kidcore-blue/30 hover:text-kidcore-yellow transition-colors"
-                                >
-                                    LOGIN
-                                </Button>
-                            </Link>
-                            <Link to="/register" onClick={() => setIsOpen(false)} className="w-full">
-                                <Button
-                                    size="sm"
-                                    className="w-full font-orbitron text-xs tracking-wider kidcore-btn"
-                                >
-                                    REGISTER
-                                </Button>
-                            </Link>
+                            <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-kidcore-blue/30">
+                                <Link to="/login" onClick={() => setIsOpen(false)} className="w-full">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="w-full font-orbitron text-xs tracking-wider hover:bg-kidcore-blue/30 hover:text-kidcore-yellow transition-colors"
+                                    >
+                                        LOGIN
+                                    </Button>
+                                </Link>
+                                <Link to="/register" onClick={() => setIsOpen(false)} className="w-full">
+                                    <Button
+                                        size="sm"
+                                        className="w-full font-orbitron text-xs tracking-wider kidcore-btn"
+                                    >
+                                        REGISTER
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </>
             )}
         </>
     );

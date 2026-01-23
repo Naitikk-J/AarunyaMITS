@@ -54,13 +54,13 @@ export function useDeviceCapability(): DeviceCapability {
 
         if (isMobile) {
             lodLevel = 'low';
-            maxParticles = 500;
+            maxParticles = 200; // Reduced for 60 FPS on mobile
         } else if (isTablet) {
             lodLevel = 'medium';
-            maxParticles = 1500;
+            maxParticles = 800; // Reduced for better performance
         } else if (isDesktop && !hasGPU) {
             lodLevel = 'medium';
-            maxParticles = 2000;
+            maxParticles = 1500; // Reduced from 2000
         }
 
         // Check frame rate capability
