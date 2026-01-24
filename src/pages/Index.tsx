@@ -48,19 +48,47 @@ const Index = () => {
 
         window.addEventListener('scroll', updateVelocity, { passive: true });
 
-        // Scroll Flow Animations for Arcade Challenge
         const ctx = gsap.context(() => {
-            gsap.from("#games h2, #games p, #games .space-y-4 > div", {
+            // Arcade Challenge section
+            gsap.from("#games h2, #games p, #games .space-y-4 > div, #games .grid > div", {
                 scrollTrigger: {
                     trigger: "#games",
                     start: "top 80%",
                     toggleActions: "play none none none"
                 },
+                y: 60,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: "power3.out"
+            });
+
+            // Timeline section
+            gsap.from("#timeline-section h2, #timeline-section .container > div", {
+                scrollTrigger: {
+                    trigger: "#timeline-section",
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
                 y: 50,
                 opacity: 0,
-                duration: 1,
+                duration: 0.8,
                 stagger: 0.2,
                 ease: "power3.out"
+            });
+
+            // Footer section
+            gsap.from("#contact > div, #contact .flex > div, #contact a, #contact p", {
+                scrollTrigger: {
+                    trigger: "#contact",
+                    start: "top 85%",
+                    toggleActions: "play none none none"
+                },
+                y: 40,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: "power2.out"
             });
         }, mainRef);
 
@@ -86,6 +114,7 @@ const Index = () => {
         return () => {
             window.removeEventListener('scroll', updateVelocity);
             timelineTrigger.kill();
+            ctx.revert();
         };
     }, []);
 
