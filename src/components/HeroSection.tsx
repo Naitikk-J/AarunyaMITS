@@ -75,12 +75,12 @@ const HeroSection = () => {
         }}
       >
         {/* Pixel art floating decorations */}
-        <PixelStar className="absolute top-24 left-12 w-10 h-10 animate-float" color="electric-yellow" />
-        <PixelHeart className="absolute top-36 right-24 w-8 h-8 animate-float" color="radical-red" />
-        <PixelMusicNote className="absolute bottom-44 left-24 w-8 h-10 animate-float" color="neon-magenta" />
-        <PixelGhost className="absolute bottom-36 right-20 w-10 h-12 animate-float" color="cyber-blue" />
+        <PixelStar className="absolute top-24 left-12 w-10 h-10 animate-float" color="primary" />
+        <PixelHeart className="absolute top-36 right-24 w-8 h-8 animate-float" color="secondary" />
+        <PixelMusicNote className="absolute bottom-44 left-24 w-8 h-10 animate-float" color="secondary" />
+        <PixelGhost className="absolute bottom-36 right-20 w-10 h-12 animate-float" color="accent" />
         <PixelController className="absolute top-1/3 left-8 w-16 h-10 animate-float hidden lg:block" />
-        <PixelStar className="absolute top-1/2 right-8 w-6 h-6 animate-float" color="lime-green" />
+        <PixelStar className="absolute top-1/2 right-8 w-6 h-6 animate-float" color="accent" />
       </div>
 
       {/* CRT TV Container */}
@@ -107,7 +107,7 @@ const HeroSection = () => {
                     alt="Aarunya 2026"
                     className="w-48 md:w-64 mb-8 animate-pulse-glow transition-opacity duration-500"
                     style={{
-                      filter: "drop-shadow(0 0 20px hsl(var(--neon-magenta)))",
+                      filter: "drop-shadow(0 0 20px hsl(var(--primary)))",
                       imageRendering: 'pixelated',
                     } as React.CSSProperties}
                   />
@@ -128,8 +128,8 @@ const HeroSection = () => {
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-20">
         <span className="font-pixel text-[8px] text-muted-foreground tracking-widest">SCROLL</span>
-        <div className="w-6 h-10 border-4 border-electric-yellow p-1" style={{ imageRendering: 'pixelated' }}>
-          <div className="w-2 h-2 bg-electric-yellow mx-auto animate-bounce" />
+        <div className="w-6 h-10 border-4 border-primary p-1" style={{ imageRendering: 'pixelated' }}>
+          <div className="w-2 h-2 bg-primary mx-auto animate-bounce" />
         </div>
       </div>
     </section>
