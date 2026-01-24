@@ -48,21 +48,19 @@ const Index = () => {
 
         window.addEventListener('scroll', updateVelocity, { passive: true });
 
-        const ctx = gsap.context(() => {
-            ScrollTrigger.create({
-                trigger: "#games",
-                start: "top center",
-                onEnter: () => {
-                    setAchievement({
-                        id: 'secret-arcade',
-                        title: 'Arcade Master',
-                        description: 'You found the hidden games zone!',
-                        icon: '🎮'
-                    });
-                },
-                once: true
-            });
-        }, mainRef);
+        ScrollTrigger.create({
+            trigger: "#games",
+            start: "top center",
+            onEnter: () => {
+                setAchievement({
+                    id: 'secret-arcade',
+                    title: 'Arcade Master',
+                    description: 'You found the hidden games zone!',
+                    icon: '🎮'
+                });
+            },
+            once: true
+        });
 
         const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
         if (mediaQuery.matches) {
@@ -71,7 +69,7 @@ const Index = () => {
 
         return () => {
             window.removeEventListener('scroll', updateVelocity);
-            ctx.revert();
+            ScrollTrigger.getAll().forEach(t => t.kill());
         };
     }, []);
 
@@ -82,7 +80,16 @@ const Index = () => {
     ];
 
     return (
-        <div ref={mainRef} className="relative w-full bg-background overflow-x-hidden">
+        <div 
+            ref={mainRef} 
+            className="relative w-full overflow-x-hidden"
+            style={{
+                backgroundImage: 'url(/Loadingscreen.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundAttachment: 'fixed',
+            }}
+        >
             <MainNavigation />
 
             <ArcadeLoadingScreen 
@@ -115,7 +122,7 @@ const Index = () => {
                 </div>
 
                 {/* Timeline Section - Optimized Scroll Length */}
-                <div id="timeline-section" className="relative bg-background/50 pt-8 pb-4">
+                <div id="timeline-section" className="relative bg-transparent pt-8 pb-4">
                     <div className="container mx-auto px-4">
                         <div className="max-w-4xl mx-auto">
                             <h2 className="font-pixel text-2xl text-secondary mb-6 text-center">MISSION: COIN COLLECTOR</h2>
@@ -125,7 +132,7 @@ const Index = () => {
                     <PacManTimeline />
                 </div>
 
-                <div id="games" className="py-20 bg-background relative overflow-hidden">
+                <div id="games" className="py-20 bg-transparent relative overflow-hidden">
                     <div className="container mx-auto px-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                             <div>
