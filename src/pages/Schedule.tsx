@@ -1,120 +1,179 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MainNavigation } from '@/components/ui/MainNavigation';
-import { Badge } from '@/components/ui/badge';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const FEST_START_DATE = new Date();
+gsap.registerPlugin(ScrollTrigger);
 
 const Schedule = () => {
-  const todayIndex = 0; // Fixed for demo
-
-  const [openDay, setOpenDay] = useState<number>(0);
-
   const days = [
     {
-      day: 'DAY_01',
+      id: 1,
+      day: 'DAY 1',
       date: 'FRIDAY',
       items: [
-        { time: '10:00', title: 'CAMPUS_CHECK_IN', type: 'INFO' },
-        { time: '12:00', title: 'OPENING_CEREMONY', type: 'MAIN' },
-        { time: '16:00', title: 'WORKSHOP_BLOCKS', type: 'SKILL' },
+        { time: '10:00 AM', title: 'Campus Check-in', type: 'INFO', location: 'Main Gate' },
+        { time: '12:00 PM', title: 'Opening Ceremony', type: 'MAIN', location: 'Auditorium' },
+        { time: '04:00 PM', title: 'Workshop Blocks', type: 'SKILL', location: 'Lab A' },
       ],
     },
     {
-      day: 'DAY_02',
+      id: 2,
+      day: 'DAY 2',
       date: 'SATURDAY',
       items: [
-        { time: '11:00', title: 'COMPETITIONS_R1', type: 'BATTLE' },
-        { time: '15:00', title: 'CULTURAL_SHOWS', type: 'EVENT' },
-        { time: '19:00', title: 'NEON_HEADLINERS', type: 'LIVE' },
+        { time: '11:00 AM', title: 'Competitions R1', type: 'BATTLE', location: 'Arena' },
+        { time: '03:00 PM', title: 'Cultural Shows', type: 'EVENT', location: 'Main Stage' },
+        { time: '07:00 PM', title: 'Neon Headliners', type: 'LIVE', location: 'Open Grounds' },
       ],
     },
     {
-      day: 'DAY_03',
+      id: 3,
+      day: 'DAY 3',
       date: 'SUNDAY',
       items: [
-        { time: '10:30', title: 'BATTLE_FINALS', type: 'BATTLE' },
-        { time: '14:00', title: 'REWARD_CEREMONY', type: 'REWARD' },
-        { time: '17:00', title: 'SYSTEM_SHUTDOWN', type: 'MAIN' },
+        { time: '10:30 AM', title: 'Battle Finals', type: 'BATTLE', location: 'Arena' },
+        { time: '02:00 PM', title: 'Reward Ceremony', type: 'REWARD', location: 'Auditorium' },
+        { time: '05:00 PM', title: 'System Shutdown', type: 'MAIN', location: 'Campus' },
       ],
     },
   ];
 
+  const [activeDay, setActiveDay] = useState<number | null>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      cardsRef.current.forEach((card, index) => {
+        if (!card) return;
+        
+        gsap.from(card, {
+          scrollTrigger: {
+            trigger: card,
+            start: "top bottom-=100",
+            toggleActions: "play none none reverse",
+          },
+          y: 50,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          delay: index * 0.1,
+        });
+
+        const node = card.parentElement?.querySelector('.timeline-node');
+        if (node) {
+          gsap.from(node, {
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom-=100",
+            },
+            scale: 0,
+            duration: 0.5,
+            ease: "back.out(1.7)",
+          });
+        }
+      });
+    }, timelineRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-black font-pixel">
+    <div className="min-h-screen bg-[#05010D] text-white font-orbitron overflow-x-hidden selection:bg-primary selection:text-black">
       <MainNavigation />
 
-      {/* Header */}
-      <div className="relative pt-32 pb-16 overflow-hidden border-b-4 border-primary/20 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.05)_0%,transparent_100%)]">
-        <div className="container mx-auto px-6 relative z-10 text-center">
-          <h1 className="text-4xl md:text-6xl text-primary mb-4 glow-pink uppercase tracking-tighter">
-            QUEST_TIMELINE
-          </h1>
-          <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-[0.3em] max-w-2xl mx-auto">
-            Track your progress through the three-day circuit.
-          </p>
-        </div>
+      {/* Hero Section */}
+      <div className="pt-40 pb-20 text-center relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
+        <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
+          SCHEDULE
+        </h1>
+        <div className="h-1 w-[120px] bg-primary mx-auto shadow-neon" />
       </div>
 
-      {/* Timeline Grid */}
-      <div className="container mx-auto px-6 py-20">
-        <div className="max-w-4xl mx-auto space-y-12">
+      {/* Timeline Container */}
+      <div ref={timelineRef} className="relative max-w-6xl mx-auto px-6 pb-40">
+        
+        {/* SVG Dashed Path - Matching the image's S-curve */}
+        <div className="absolute inset-0 flex justify-center pointer-events-none">
+          <svg width="200" height="100%" viewBox="0 0 200 1200" preserveAspectRatio="none" className="opacity-40 overflow-visible">
+            <path
+              d="M 100 0 Q 150 150 100 300 Q 50 450 100 600 Q 150 750 100 900 Q 50 1050 100 1200"
+              fill="none"
+              stroke="#BC13FE"
+              strokeWidth="2"
+              strokeDasharray="10 10"
+              className="drop-shadow-[0_0_8px_rgba(188,19,254,0.5)]"
+            />
+          </svg>
+        </div>
+
+        {/* Days List */}
+        <div className="relative space-y-48">
           {days.map((d, index) => (
-            <div key={d.day} className="relative group">
-              {/* Vertical Connector */}
-              {index !== days.length - 1 && (
-                <div className="absolute left-6 top-16 bottom-0 w-1 bg-gradient-to-b from-primary/40 to-transparent z-0" />
-              )}
+            <div key={d.id} className="relative flex flex-col items-center">
               
-              <div className="relative z-10 flex gap-8 items-start">
-                {/* Date Marker */}
-                <div className={`
-                  w-12 h-12 flex-shrink-0 flex items-center justify-center border-4
-                  ${index === todayIndex ? 'bg-primary border-black shadow-[0_0_15px_rgba(188,19,254,0.5)]' : 'bg-black border-white/20'}
-                `}>
-                  <span className={`text-xs ${index === todayIndex ? 'text-black font-bold' : 'text-white/40'}`}>
-                    0{index + 1}
-                  </span>
-                </div>
+              {/* Timeline Node - Circular marker on the path */}
+              <div className="timeline-node absolute top-[-24px] z-20 w-8 h-8 rounded-full bg-[#05010D] border-2 border-primary shadow-[0_0_15px_rgba(188,19,254,0.8)] flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full bg-primary animate-pulse shadow-neon" />
+              </div>
 
-                {/* Day Content */}
-                <div className="flex-1">
-                  <div 
-                    className={`
-                      p-6 border-4 transition-all cursor-pointer
-                      ${openDay === index ? 'border-primary bg-white/5' : 'border-white/5 bg-transparent hover:border-white/20'}
-                    `}
-                    onClick={() => setOpenDay(index)}
+              {/* Day Card - Matching image layout */}
+              <div
+                ref={el => cardsRef.current[index] = el}
+                className="w-full max-w-2xl group"
+              >
+                <div 
+                  onClick={() => setActiveDay(activeDay === index ? null : index)}
+                  className={`
+                    relative cursor-pointer transition-all duration-500
+                    bg-[#0D0221]/60 backdrop-blur-xl border-2 rounded-xl overflow-hidden
+                    ${activeDay === index 
+                      ? 'border-primary shadow-[0_0_30px_rgba(188,19,254,0.2)]' 
+                      : 'border-white/5 hover:border-primary/40'}
+                  `}
+                >
+                  <div className="p-10 text-center relative z-10">
+                    <h2 
+                      className={`text-4xl md:text-5xl font-black mb-2 tracking-widest transition-colors duration-500 ${activeDay === index ? 'text-primary' : 'text-white/80'}`}
+                    >
+                      {d.day}
+                    </h2>
+                    <p className="text-sm md:text-base font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60">
+                      {d.date}
+                    </p>
+                  </div>
+
+                  {/* Expanded Schedule Details */}
+                  <div
+                    className={`overflow-hidden transition-all duration-500 ease-in-out bg-black/40 ${activeDay === index ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}
                   >
-                    <div className="flex justify-between items-center mb-4">
-                      <h2 className={`text-2xl tracking-tighter uppercase ${openDay === index ? 'text-primary' : 'text-white/60'}`}>
-                        {d.day} <span className="text-xs ml-2 opacity-40">({d.date})_</span>
-                      </h2>
-                      <div className={`text-[10px] uppercase ${openDay === index ? 'text-primary animate-pulse' : 'text-white/20'}`}>
-                        {openDay === index ? 'NODE_ACTIVE' : 'EXPAND_NODE+'}
-                      </div>
-                    </div>
-
-                    {openDay === index && (
-                      <div className="space-y-4 pt-4 border-t-2 border-white/5">
-                        {d.items.map((item) => (
-                          <div 
-                            key={item.title}
-                            className="flex items-center gap-6 p-3 group/item hover:bg-primary/5 transition-colors"
-                          >
-                            <span className="text-[10px] text-primary/60 group-hover/item:text-primary w-12">
-                              {item.time}
-                            </span>
-                            <div className="flex-1 text-xs uppercase tracking-wider group-hover/item:translate-x-1 transition-transform">
-                              {item.title}
-                            </div>
-                            <div className="px-2 py-0.5 border border-white/20 text-[8px] text-muted-foreground group-hover/item:border-primary/40 group-hover/item:text-primary transition-colors">
-                              {item.type}
+                    <div className="p-8 space-y-4 border-t border-white/10">
+                      {d.items.map((item, i) => (
+                        <div 
+                          key={i}
+                          className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-lg bg-white/5 hover:bg-primary/10 transition-colors border border-transparent hover:border-primary/20"
+                        >
+                          <div className="flex items-center gap-6">
+                            <span className="text-lg font-share-tech text-primary font-bold min-w-[100px]">{item.time}</span>
+                            <div>
+                              <h3 className="text-lg font-bold tracking-wide uppercase">{item.title}</h3>
+                              <span className="text-xs text-muted-foreground uppercase tracking-widest">{item.location}</span>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    )}
+                          <div className="mt-4 md:mt-0 flex items-center">
+                            <span className="px-3 py-1 text-[10px] border border-primary/30 rounded-full text-primary/80 uppercase font-bold tracking-widest">
+                              {item.type}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
+
+                  {/* Background Accents */}
+                  <div className={`absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none ${activeDay === index ? 'opacity-100' : ''}`} />
                 </div>
               </div>
             </div>
@@ -122,10 +181,16 @@ const Schedule = () => {
         </div>
       </div>
 
-      {/* Footer Decoration */}
-      <div className="py-20 text-center">
-        <div className="inline-block px-4 py-2 border-2 border-dashed border-white/10 text-[10px] text-muted-foreground uppercase">
-          End of timeline. New events may appear at any time.
+      {/* Decorative Footer */}
+      <div className="py-20 border-t border-white/5 relative bg-black">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(188,19,254,0.05)_0%,transparent_100%)] pointer-events-none" />
+        <div className="container mx-auto px-6 text-center">
+          <div className="inline-flex items-center gap-4 text-[10px] tracking-[0.5em] text-muted-foreground uppercase mb-4">
+            <span className="w-12 h-[1px] bg-white/10" />
+            End of Current Data Stream
+            <span className="w-12 h-[1px] bg-white/10" />
+          </div>
+          <p className="text-xs text-white/20 font-share-tech">VERSION 2.0.26 // TIMELINE SYNCHRONIZED</p>
         </div>
       </div>
     </div>
