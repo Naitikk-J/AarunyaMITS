@@ -115,7 +115,7 @@ const PacManTimeline = () => {
   };
 
   return (
-    <section className="relative min-h-[200vh] py-20" ref={containerRef} id="timeline">
+    <section className="relative min-h-[120vh] py-20" ref={containerRef}>
       <div className="sticky top-20 mx-auto max-w-6xl px-4">
         <h2 className="font-pixel text-xl md:text-3xl text-electric-yellow text-center mb-4 glow-yellow tracking-wider">
           EVENT TIMELINE

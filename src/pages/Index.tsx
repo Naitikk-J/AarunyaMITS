@@ -22,22 +22,42 @@ const Index = () => {
     const [achievement, setAchievement] = useState<{ id: string; title: string; description: string; icon?: string } | null>(null);
     const [showDialogue, setShowDialogue] = useState(true);
     const mainRef = useRef<HTMLDivElement>(null);
-    const scrollVelocity = useRef(0);
 
     useEffect(() => {
-        // ... (existing velocity tracker code)
-        
-        // Horizontal Scroll for Timeline Maze (8.5)
+        // Horizontal Scroll for Timeline Maze (Optimized length)
         const timelineTrigger = ScrollTrigger.create({
-            trigger: "#timeline",
+            trigger: "#timeline-section",
             start: "top top",
-            end: () => `+=${document.querySelector('#timeline')?.scrollWidth || 2000}`,
+            end: "+=800", // Significantly reduced scroll length
             pin: true,
             scrub: 1,
             anticipatePin: 1,
         });
 
-        // Achievement for finding the secret arcade
+        // Track velocity safely
+        const velocityTracker = {
+            lastPos: window.scrollY,
+            lastTime: Date.now(),
+            velocity: 0
+        };
+
+        const updateVelocity = () => {
+            const currentPos = window.scrollY;
+            const currentTime = Date.now();
+            const distance = currentPos - velocityTracker.lastPos;
+            const time = currentTime - velocityTracker.lastTime;
+            
+            if (time > 0) {
+                velocityTracker.velocity = Math.abs(distance / time);
+                document.documentElement.style.setProperty('--scroll-velocity', velocityTracker.velocity.toString());
+            }
+            
+            velocityTracker.lastPos = currentPos;
+            velocityTracker.lastTime = currentTime;
+        };
+
+        window.addEventListener('scroll', updateVelocity, { passive: true });
+
         ScrollTrigger.create({
             trigger: "#games",
             start: "top center",
@@ -52,24 +72,17 @@ const Index = () => {
             once: true
         });
 
-        // prefers-reduced-motion safeguard
         const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
         if (mediaQuery.matches) {
             gsap.globalTimeline.pause();
         }
 
         return () => {
-            gsap.ticker.remove(trackVelocity);
             timelineTrigger.kill();
+            window.removeEventListener('scroll', updateVelocity);
             ScrollTrigger.getAll().forEach(t => t.kill());
         };
-    }, [currentLevel]);
-
-    const handleLevelTransition = (levelName: string) => {
-        setIsLoadingLevel(true);
-        setCurrentLevel(levelName);
-        // Play level complete jingle here if sound enabled
-    };
+    }, []);
 
     const dialogueSteps = [
         { speaker: 'SYSTEM', text: 'Welcome Player 1 to AARUNYA 2026.' },
@@ -79,37 +92,30 @@ const Index = () => {
 
     return (
         <div ref={mainRef} className="relative w-full bg-background overflow-x-hidden">
-            {/* Navigation */}
             <MainNavigation />
 
-            {/* Arcade Loading Screen */}
             <ArcadeLoadingScreen 
                 isVisible={isLoadingLevel} 
                 levelName={currentLevel}
                 onComplete={() => setIsLoadingLevel(false)}
             />
 
-            {/* Achievement Badge */}
             <AchievementBadge 
                 achievement={achievement} 
                 onClose={() => setAchievement(null)} 
             />
 
-            {/* Pixel Dialogue System */}
             <PixelDialogue 
                 steps={dialogueSteps} 
                 isVisible={showDialogue}
                 onComplete={() => setShowDialogue(false)}
             />
 
-            {/* Main Content */}
             <div className="relative">
-                {/* Hero Section */}
                 <div id="hero" className="min-h-screen">
                     <HeroSection />
                 </div>
 
-                {/* Welcome Section */}
                 <div id="welcome" className="relative">
                     <div className="absolute top-0 left-0 w-full z-10 pointer-events-none">
                         <PacManChaseGame />
@@ -117,9 +123,9 @@ const Index = () => {
                     <WelcomeSection />
                 </div>
 
-                {/* Timeline Section */}
-                <div id="timeline" className="relative bg-background/50 py-20">
-                    <div className="container mx-auto px-4 mb-20">
+                {/* Timeline Section - Optimized Scroll Length */}
+                <div id="timeline-section" className="relative bg-background/50 py-10">
+                    <div className="container mx-auto px-4 mb-10">
                         <div className="max-w-4xl mx-auto">
                             <h2 className="font-pixel text-2xl text-secondary mb-8 text-center">MISSION: COIN COLLECTOR</h2>
                             <CoinCollectorGame />
@@ -128,7 +134,6 @@ const Index = () => {
                     <PacManTimeline />
                 </div>
 
-                {/* Arcade Zone Section */}
                 <div id="games" className="py-20 bg-background relative overflow-hidden">
                     <div className="container mx-auto px-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -153,17 +158,14 @@ const Index = () => {
                     </div>
                 </div>
 
-                {/* Footer Section */}
                 <Footer />
-
-                {/* CRT Overlay Effects */}
                 <CRTOverlay />
             </div>
 
-            {/* Global level transition styles */}
             <style dangerouslySetInnerHTML={{ __html: `
                 :root {
                     --crt-distortion: 0;
+                    --scroll-velocity: 0;
                 }
                 .crt-distortion-effect {
                     filter: url(#crt-distort);
