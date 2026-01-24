@@ -17,45 +17,46 @@ const HeroSection = () => {
   const tvRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const roomRef = useRef<HTMLDivElement>(null);
-  const screenContentRef = useRef<HTMLDivElement>(null);
-  const [isPowered, setIsPowered] = useState(true);
+    const screenContentRef = useRef<HTMLDivElement>(null);
+    const innerScreenRef = useRef<HTMLDivElement>(null);
+    const [isPowered, setIsPowered] = useState(true);
 
-  useEffect(() => {
-    if (!sectionRef.current || !tvRef.current || !contentRef.current || !roomRef.current || !screenContentRef.current) return;
+    useEffect(() => {
+      if (!sectionRef.current || !tvRef.current || !contentRef.current || !roomRef.current || !screenContentRef.current || !innerScreenRef.current) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top top",
-        end: "+=60%",
-        scrub: 1,
-        pin: true,
-      },
-    });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "+=60%",
+          scrub: 1,
+          pin: true,
+        },
+      });
 
-    // Clean, direct zoom into TV screen starting immediately
-    tl.to(tvRef.current, {
-      scale: 6,
-      z: 500,
-      duration: 1,
-      ease: "power1.in",
-    })
-    .to(screenContentRef.current, {
-      opacity: 0,
-      duration: 0.3,
-      ease: "power2.out",
-    }, 0)
-    .to(roomRef.current, {
-      opacity: 0,
-      scale: 1.2,
-      duration: 0.5,
-    }, 0.1)
-    .to(contentRef.current, {
-      opacity: 1,
-      scale: 1,
-      duration: 0.4,
-      pointerEvents: "auto",
-    }, 0.6);
+      // Clean, direct zoom into TV screen starting immediately
+      tl.to(tvRef.current, {
+        scale: 6,
+        z: 500,
+        duration: 1,
+        ease: "power1.in",
+      })
+      .to(innerScreenRef.current, {
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.out",
+      }, 0)
+      .to(roomRef.current, {
+        opacity: 0,
+        scale: 1.2,
+        duration: 0.5,
+      }, 0.1)
+      .to(contentRef.current, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.4,
+        pointerEvents: "auto",
+      }, 0.6);
 
     return () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());
@@ -90,46 +91,52 @@ const HeroSection = () => {
 
       {/* CRT TV Container */}
       <div ref={tvRef} className="relative z-10 w-[90vw] max-w-2xl overflow-visible" style={{ transformOrigin: 'center' }}>
-        <TVFrame>
-          {/* Initial Insert Coin screen */}
-            <div
-              ref={screenContentRef}
-              className={`w-full h-full flex flex-col items-center justify-center p-8 transition-opacity duration-300 ${isPowered ? 'opacity-100' : 'opacity-0'}`}
-              style={{
-                backgroundImage: 'url(/Loadingscreen.png)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundColor: 'hsl(var(--crt-black))',
-              }}
-            >
-            <img
-              src={AarunyaLogo}
-              alt="Aarunya 2026"
-              className="w-48 md:w-64 mb-8 animate-pulse-glow transition-opacity duration-500"
-              style={{
-                filter: "drop-shadow(0 0 20px hsl(var(--neon-magenta)))",
-                imageRendering: 'pixelated',
-              } as React.CSSProperties}
+            <TVFrame>
+              {/* Initial Insert Coin screen */}
+              <div
+                ref={screenContentRef}
+                className={`w-full h-full relative transition-opacity duration-300 ${isPowered ? 'opacity-100' : 'opacity-0'}`}
+                style={{
+                  backgroundImage: 'url(/Loadingscreen.png)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundColor: 'hsl(var(--crt-black))',
+                }}
+              >
+                {/* Wrapper for content that SHOULD fade */}
+                <div 
+                  ref={innerScreenRef}
+                  className="w-full h-full flex flex-col items-center justify-center p-8"
+                >
+                  <img
+                    src={AarunyaLogo}
+                    alt="Aarunya 2026"
+                    className="w-48 md:w-64 mb-8 animate-pulse-glow transition-opacity duration-500"
+                    style={{
+                      filter: "drop-shadow(0 0 20px hsl(var(--neon-magenta)))",
+                      imageRendering: 'pixelated',
+                    } as React.CSSProperties}
+                  />
+                  <div className="transition-opacity duration-500">
+                    <InsertCoin />
+                  </div>
+                </div>
+              </div>
+            </TVFrame>
+    
+            {/* Interactive Controls */}
+            <InteractiveTVControls 
+              screenRef={screenContentRef} 
+              onPowerToggle={setIsPowered}
             />
-            <div className="transition-opacity duration-500">
-              <InsertCoin />
-            </div>
           </div>
-        </TVFrame>
-
-        {/* Interactive Controls */}
-        <InteractiveTVControls 
-          screenRef={screenContentRef} 
-          onPowerToggle={setIsPowered}
-        />
-      </div>
-
-      {/* Content revealed after zoom */}
-      <div 
-        ref={contentRef}
-        className="absolute inset-0 flex flex-col items-center justify-center opacity-0 scale-90 pointer-events-none"
-        style={{ zIndex: 5 }}
-      >
+    
+          {/* Content revealed after zoom */}
+          <div 
+            ref={contentRef}
+            className="absolute inset-0 flex flex-col items-center justify-center opacity-0 scale-90 pointer-events-none"
+            style={{ zIndex: 20 }}
+          >
         <div className="text-center px-4">
           <h1 
             className="font-pixel text-3xl md:text-5xl lg:text-6xl text-electric-yellow mb-6 glitch glow-yellow" 
