@@ -38,11 +38,14 @@ const HeroSection = () => {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top top",
-            end: "+=100%",
-            scrub: 0.5,
+            end: "+=150%",
+            scrub: true,
             pin: true,
             pinSpacing: true,
             anticipatePin: 1,
+            fastScrollEnd: true,
+            preventOverlaps: true,
+            invalidateOnRefresh: true,
           },
         });
 
