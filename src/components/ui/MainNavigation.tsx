@@ -23,36 +23,42 @@ export const MainNavigation = () => {
 
     return (
         <div className="w-full">
-            <nav className="fixed top-0 left-0 right-0 z-50 glass-card bg-background/85 backdrop-blur-xl border-b border-secondary/40 m-0 rounded-none">
+            <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b-4 border-kidcore-yellow m-0 rounded-none shadow-[0_4px_20px_rgba(255,214,51,0.3)]">
                 <div className="container mx-auto px-4">
-                    <div className="flex items-center justify-between h-16">
+                    <div className="flex items-center justify-between h-20">
                         {/* Logo */}
                         <Link
                             to="/"
-                            className="flex items-center"
+                            className="flex items-center gap-2 group"
                         >
-                            <img
-                                src="/aarunya-logo.svg"
-                                alt="Aarunya 2026"
-                                className="h-10 w-auto"
-                                style={{
-                                    filter: "drop-shadow(0 0 8px hsl(var(--neon-magenta)))",
-                                    imageRendering: 'pixelated',
-                                }}
-                            />
+                            <div className="relative">
+                                <img
+                                    src="/aarunya-logo.svg"
+                                    alt="Aarunya 2026"
+                                    className="h-12 w-auto transition-transform group-hover:scale-110 duration-300"
+                                    style={{
+                                        filter: "drop-shadow(0 0 8px hsl(var(--electric-yellow)))",
+                                        imageRendering: 'pixelated',
+                                    }}
+                                />
+                                <div className="absolute -top-1 -right-1 w-3 h-3 bg-neon-magenta animate-pulse rounded-full" />
+                            </div>
+                            <span className="font-pixel text-lg text-electric-yellow hidden sm:block glow-yellow tracking-widest ml-2">
+                                AARUNYA 2026
+                            </span>
                         </Link>
 
                         {/* Desktop Navigation */}
-                        <div className="hidden lg:flex items-center gap-2">
+                        <div className="hidden lg:flex items-center gap-1">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.path}
                                     to={link.path}
                                     className={cn(
-                                        "px-4 py-2 text-xs font-orbitron tracking-wider transition-all duration-300 rounded-lg",
+                                        "px-4 py-2 font-pixel text-[10px] tracking-wider transition-all duration-300 border-2 border-transparent",
                                         location.pathname === link.path
-                                            ? "text-kidcore-black bg-kidcore-yellow shadow-lg scale-105"
-                                            : "text-foreground hover:text-kidcore-yellow hover:bg-kidcore-blue/20 hover:scale-105"
+                                            ? "text-black bg-electric-yellow border-electric-yellow shadow-[4px_4px_0px_black] -translate-y-1"
+                                            : "text-foreground hover:text-electric-yellow hover:border-electric-yellow hover:-translate-y-1"
                                     )}
                                 >
                                     {link.name}
@@ -60,23 +66,9 @@ export const MainNavigation = () => {
                             ))}
                         </div>
 
-                        {/* Auth Buttons - Desktop */}
-                        <div className="hidden lg:flex items-center gap-2">
-                            <Link to="/login">
-                                <Button variant="ghost" size="sm" className="font-mono text-xs tracking-wider">
-                                    LOGIN
-                                </Button>
-                            </Link>
-                            <Link to="/register">
-                                <Button size="sm" className="font-mono text-xs tracking-wider">
-                                    REGISTER
-                                </Button>
-                            </Link>
-                        </div>
-
                         {/* Mobile Menu Button */}
                         <button
-                            className="lg:hidden p-2 text-foreground hover:text-kidcore-yellow transition-colors"
+                            className="lg:hidden p-2 text-electric-yellow hover:text-white transition-colors border-2 border-electric-yellow bg-black/50"
                             onClick={() => setIsOpen(!isOpen)}
                             aria-label="Toggle menu"
                         >
@@ -88,50 +80,30 @@ export const MainNavigation = () => {
 
             {/* Mobile Navigation Dropdown */}
             {isOpen && (
-                <div className="fixed inset-0 z-30 lg:hidden top-16 pointer-events-auto">
+                <div className="fixed inset-0 z-30 lg:hidden top-20 pointer-events-auto">
                     {/* Backdrop */}
                     <div
-                        className="fixed inset-0 z-30 lg:hidden bg-black/40 backdrop-blur-sm"
+                        className="fixed inset-0 z-30 lg:hidden bg-black/60 backdrop-blur-sm"
                         onClick={() => setIsOpen(false)}
                     />
                     {/* Menu */}
-                    <div className="fixed top-16 left-0 right-0 z-40 lg:hidden w-full bg-background/95 backdrop-blur-xl border-b border-secondary/40 shadow-lg animate-in slide-in-from-top-2 duration-300">
-                        <div className="container mx-auto px-4 py-4 flex flex-col gap-1 max-h-[calc(100vh-64px)] overflow-y-auto">
+                    <div className="fixed top-20 left-0 right-0 z-40 lg:hidden w-full bg-black/95 backdrop-blur-xl border-b-4 border-electric-yellow shadow-2xl animate-in slide-in-from-top-2 duration-300">
+                        <div className="container mx-auto px-4 py-6 flex flex-col gap-2 max-h-[calc(100vh-80px)] overflow-y-auto">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.path}
                                     to={link.path}
                                     onClick={() => setIsOpen(false)}
                                     className={cn(
-                                        "px-4 py-3 text-sm font-orbitron tracking-wider transition-all duration-300 rounded-lg block",
+                                        "px-6 py-4 font-pixel text-sm tracking-widest transition-all duration-300 border-2",
                                         location.pathname === link.path
-                                            ? "text-kidcore-black bg-kidcore-yellow font-bold"
-                                            : "text-foreground hover:text-kidcore-yellow hover:bg-kidcore-blue/20"
+                                            ? "text-black bg-electric-yellow border-electric-yellow font-bold shadow-[4px_4px_0px_white]"
+                                            : "text-foreground border-transparent hover:border-electric-yellow hover:text-electric-yellow"
                                     )}
                                 >
                                     {link.name}
                                 </Link>
                             ))}
-
-                            <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-kidcore-blue/30">
-                                <Link to="/login" onClick={() => setIsOpen(false)} className="w-full">
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="w-full font-orbitron text-xs tracking-wider hover:bg-kidcore-blue/30 hover:text-kidcore-yellow transition-colors"
-                                    >
-                                        LOGIN
-                                    </Button>
-                                </Link>
-                                <Link to="/register" onClick={() => setIsOpen(false)} className="w-full">
-                                    <Button
-                                        size="sm"
-                                        className="w-full font-orbitron text-xs tracking-wider kidcore-btn"
-                                    >
-                                        REGISTER
-                                    </Button>
-                                </Link>
-                            </div>
                         </div>
                     </div>
                 </div>
