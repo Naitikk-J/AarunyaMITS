@@ -92,13 +92,16 @@ const HeroSection = () => {
       <div ref={tvRef} className="relative z-10 w-[90vw] max-w-2xl overflow-visible" style={{ transformOrigin: 'center' }}>
         <TVFrame>
           {/* Initial Insert Coin screen */}
-          <div
-            ref={screenContentRef}
-            className={`w-full h-full flex flex-col items-center justify-center p-8 transition-opacity duration-300 ${isPowered ? 'opacity-100' : 'opacity-0'}`}
-            style={{
-              background: 'radial-gradient(ellipse at center, hsl(var(--crt-black)) 0%, hsl(0 0% 0%) 100%)',
-            }}
-          >
+            <div
+              ref={screenContentRef}
+              className={`w-full h-full flex flex-col items-center justify-center p-8 transition-opacity duration-300 ${isPowered ? 'opacity-100' : 'opacity-0'}`}
+              style={{
+                backgroundImage: 'url(/Loadingscreen.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundColor: 'hsl(var(--crt-black))',
+              }}
+            >
             <img
               src={AarunyaLogo}
               alt="Aarunya 2026"
