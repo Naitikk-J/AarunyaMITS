@@ -268,7 +268,7 @@ export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading, vi
                     />
                 ))}
 
-                <Text position={[-25, 0.1, 0]} rotation={[-Math.PI/2, 0, Math.PI/2]} fontSize={1.5} color={THEME.primary} font="/fonts/Orbitron-Bold.ttf">
+                <Text position={[-25, 0.1, 0]} rotation={[-Math.PI/2, 0, Math.PI/2]} fontSize={1.5} color={THEME.primary}>
                     MELA ROAD
                 </Text>
             </group>
