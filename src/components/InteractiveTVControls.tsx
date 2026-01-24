@@ -169,18 +169,19 @@ export const InteractiveTVControls = ({
     const btn = document.getElementById(btnId);
     if (!btn) return;
 
-    gsap.to(btn, {
+    const tl = gsap.timeline();
+    tl.to(btn, {
       scale: 0.85,
       duration: 0.1,
     })
-      .to(
-        btn,
-        {
-          scale: 1,
-          duration: 0.1,
-        },
-        '-=0.05'
-      );
+    .to(
+      btn,
+      {
+        scale: 1,
+        duration: 0.1,
+      },
+      '-=0.05'
+    );
   };
 
   // Easter egg trigger

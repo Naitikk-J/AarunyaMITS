@@ -19,52 +19,51 @@ const HeroSection = () => {
     const screenContentRef = useRef<HTMLDivElement>(null);
     const innerScreenRef = useRef<HTMLDivElement>(null);
     const [isPowered, setIsPowered] = useState(true);
-  
-    const handleStart = () => {
-      if (!sectionRef.current) return;
-      const scrollAmount = window.innerHeight * 0.8; // Scroll enough to trigger zoom
-      window.scrollTo({
-        top: scrollAmount,
-        behavior: "smooth",
-      });
-    };
 
     useEffect(() => {
       if (!sectionRef.current || !tvRef.current || !roomRef.current || !screenContentRef.current || !innerScreenRef.current) return;
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "+=60%",
-          scrub: 1,
-          pin: true,
-        },
-      });
+      const ctx = gsap.context(() => {
+        // Initial entrance flow for inner screen elements
+        gsap.from(innerScreenRef.current?.querySelectorAll('img, div'), {
+          y: 20,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.2,
+          ease: "power3.out",
+          delay: 0.5
+        });
 
-      // Clean, direct zoom into TV screen starting immediately
-      const isMobile = window.innerWidth < 768;
-      tl.to(tvRef.current, {
-        scale: isMobile ? 12 : 6,
-        z: 500,
-        duration: 1,
-        ease: "power1.in",
-      })
-      .to(innerScreenRef.current, {
-        opacity: 0,
-        duration: 0.3,
-        ease: "power2.out",
-      }, 0)
-      .to(roomRef.current, {
-        opacity: 0,
-        scale: 1.2,
-        duration: 0.5,
-      }, 0.1);
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "+=60%",
+            scrub: 1,
+            pin: true,
+          },
+        });
 
-      return () => {
-        tl.kill();
-        if (tl.scrollTrigger) tl.scrollTrigger.kill();
-      };
+        // Clean, direct zoom into TV screen starting immediately
+        tl.to(tvRef.current, {
+          scale: 6,
+          z: 500,
+          duration: 1,
+          ease: "power1.in",
+        })
+        .to(innerScreenRef.current, {
+          opacity: 0,
+          duration: 0.3,
+          ease: "power2.out",
+        }, 0)
+        .to(roomRef.current, {
+          opacity: 0,
+          scale: 1.2,
+          duration: 0.5,
+        }, 0.1);
+      }, sectionRef);
+
+      return () => ctx.revert();
   }, []);
 
     return (
@@ -96,13 +95,12 @@ const HeroSection = () => {
       {/* CRT TV Container */}
       <div ref={tvRef} className="relative z-10 w-[90vw] max-w-2xl overflow-visible" style={{ transformOrigin: 'center' }}>
             <TVFrame>
-                {/* Initial Insert Coin screen */}
-                <div
-                  ref={screenContentRef}
-                  onClick={handleStart}
-                  className={`w-full h-full relative transition-opacity duration-300 cursor-pointer ${isPowered ? 'opacity-100' : 'opacity-0'}`}
-                  style={{
-                    backgroundImage: 'url(/Loadingscreen.png)',
+              {/* Initial Insert Coin screen */}
+              <div
+                ref={screenContentRef}
+                className={`w-full h-full relative transition-opacity duration-300 ${isPowered ? 'opacity-100' : 'opacity-0'}`}
+                style={{
+                  backgroundImage: 'url(/Loadingscreen.png)',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   backgroundColor: 'hsl(var(--crt-black))',
