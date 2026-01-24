@@ -44,7 +44,7 @@ export const MainNavigation = () => {
                                 />
                                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-secondary animate-pulse rounded-full" />
                             </div>
-                            <span className="font-pixel text-lg text-primary hidden sm:block glow-pink tracking-widest ml-2">
+                            <span className="font-orbitron text-lg text-primary hidden sm:block glow-pink tracking-widest ml-2">
                                 AARUNYA 2026
                             </span>
                         </Link>
@@ -56,7 +56,7 @@ export const MainNavigation = () => {
                                     key={link.path}
                                     to={link.path}
                                     className={cn(
-                                        "px-4 py-2 font-pixel text-[10px] tracking-wider transition-all duration-300 border-2 border-transparent",
+                                        "px-4 py-2 font-orbitron text-[10px] tracking-wider transition-all duration-300 border-2 border-transparent",
                                         location.pathname === link.path
                                             ? "text-white bg-primary border-primary shadow-[4px_4px_0px_black] -translate-y-1"
                                             : "text-foreground hover:text-primary hover:border-primary hover:-translate-y-1"
@@ -96,7 +96,7 @@ export const MainNavigation = () => {
                                     to={link.path}
                                     onClick={() => setIsOpen(false)}
                                     className={cn(
-                                        "px-6 py-4 font-pixel text-sm tracking-widest transition-all duration-300 border-2",
+                                        "px-6 py-4 font-orbitron text-sm tracking-widest transition-all duration-300 border-2",
                                         location.pathname === link.path
                                             ? "text-white bg-primary border-primary font-bold shadow-[4px_4px_0px_white]"
                                             : "text-foreground border-transparent hover:border-primary hover:text-primary"

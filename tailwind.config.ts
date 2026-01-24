@@ -14,10 +14,11 @@ export default {
         },
         extend: {
             fontFamily: {
-                sans: ['Orbitron', 'sans-serif'],
-                orbitron: ['Orbitron', 'sans-serif'],
+                sans: ['Orbitron', 'monospace'],
+                orbitron: ['Orbitron', 'monospace'],
                 rajdhani: ['Rajdhani', 'sans-serif'],
                 mono: ['Share Tech Mono', 'monospace'],
+                'share-tech': ['Share Tech Mono', 'monospace'],
             },
             colors: {
                 border: "hsl(var(--border))",
