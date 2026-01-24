@@ -87,7 +87,6 @@ const Index = () => {
                 backgroundImage: 'url(/Loadingscreen.png)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                backgroundAttachment: 'fixed',
             }}
         >
             <MainNavigation />
@@ -110,9 +109,7 @@ const Index = () => {
             />
 
             <div className="relative">
-                <div id="hero" className="min-h-screen">
-                    <HeroSection />
-                </div>
+                <HeroSection />
 
                 <div id="welcome" className="relative">
                     <div className="absolute top-0 left-0 w-full z-10 pointer-events-none">
