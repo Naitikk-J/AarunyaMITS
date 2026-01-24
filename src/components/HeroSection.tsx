@@ -34,8 +34,9 @@ const HeroSection = () => {
       });
 
       // Clean, direct zoom into TV screen starting immediately
+      const isMobile = window.innerWidth < 768;
       tl.to(tvRef.current, {
-        scale: 6,
+        scale: isMobile ? 12 : 6,
         z: 500,
         duration: 1,
         ease: "power1.in",

@@ -29,7 +29,8 @@ export function CameraController({ selectedBuilding }: CameraControllerProps) {
                 const targetPos = new THREE.Vector3(worldX, worldY, worldZ);
                 
                 // Calculate camera offset for zoom
-                const offset = new THREE.Vector3(15, 10, 15);
+                const isMobile = window.innerWidth < 768;
+                const offset = isMobile ? new THREE.Vector3(8, 6, 8) : new THREE.Vector3(15, 10, 15);
                 const cameraPos = targetPos.clone().add(offset);
 
                 // Animate controls target
