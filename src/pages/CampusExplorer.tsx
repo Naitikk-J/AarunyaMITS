@@ -234,20 +234,17 @@ const DrivingCamera = ({ carPosition, carRotation }: { carPosition: [number, num
     const { camera } = useThree();
     
     useFrame(() => {
-        const offsetX = Math.sin(carRotation) * -5;
-        const offsetZ = Math.cos(carRotation) * -5;
-        
         camera.position.lerp(
             new THREE.Vector3(
-                carPosition[0] + offsetX,
-                carPosition[1] + 2.5,
-                carPosition[2] + offsetZ
+                carPosition[0],
+                carPosition[1] + 15,
+                carPosition[2]
             ),
             0.1
         );
         
-        const lookAtX = carPosition[0] + Math.sin(carRotation) * 10;
-        const lookAtZ = carPosition[2] + Math.cos(carRotation) * 10;
+        const lookAtX = carPosition[0];
+        const lookAtZ = carPosition[2];
         
         const target = new THREE.Vector3(lookAtX, carPosition[1] + 0.5, lookAtZ);
         camera.lookAt(target);
