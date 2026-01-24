@@ -58,6 +58,22 @@ const PacManTimeline = () => {
     const path = pathRef.current;
     const pathLength = path.getTotalLength();
 
+    // Scroll flow animations for timeline elements
+    const ctx = gsap.context(() => {
+      gsap.from(".pixel-border-8bit, .flex-1.grid > div", {
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 85%",
+          toggleActions: "play none none none"
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.15,
+        ease: "power2.out"
+      });
+    }, containerRef);
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
@@ -96,6 +112,7 @@ const PacManTimeline = () => {
     tl.to({}, { duration: 1 });
 
     return () => {
+      ctx.revert();
       tl.kill();
       if (tl.scrollTrigger) tl.scrollTrigger.kill();
     };
