@@ -13,22 +13,18 @@ const Footer = () => {
     if (!footerRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(".footer-item", 
-        { y: 30, opacity: 0 },
-        {
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: "top 90%",
-            end: "top 40%",
-            toggleActions: "play reverse play reverse"
-          },
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "power2.out"
-        }
-      );
+      gsap.from(".footer-item", {
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 90%",
+          toggleActions: "play none none none"
+        },
+        y: 30,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out"
+      });
     }, footerRef);
 
     return () => ctx.revert();
