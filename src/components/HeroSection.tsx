@@ -15,14 +15,13 @@ gsap.registerPlugin(ScrollTrigger);
 const HeroSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const tvRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const roomRef = useRef<HTMLDivElement>(null);
+    const roomRef = useRef<HTMLDivElement>(null);
     const screenContentRef = useRef<HTMLDivElement>(null);
     const innerScreenRef = useRef<HTMLDivElement>(null);
     const [isPowered, setIsPowered] = useState(true);
 
     useEffect(() => {
-      if (!sectionRef.current || !tvRef.current || !contentRef.current || !roomRef.current || !screenContentRef.current || !innerScreenRef.current) return;
+      if (!sectionRef.current || !tvRef.current || !roomRef.current || !screenContentRef.current || !innerScreenRef.current) return;
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -50,13 +49,7 @@ const HeroSection = () => {
         opacity: 0,
         scale: 1.2,
         duration: 0.5,
-      }, 0.1)
-      .to(contentRef.current, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.4,
-        pointerEvents: "auto",
-      }, 0.6);
+      }, 0.1);
 
     return () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());
@@ -127,34 +120,9 @@ const HeroSection = () => {
             {/* Interactive Controls */}
             <InteractiveTVControls 
               screenRef={screenContentRef} 
-              onPowerToggle={setIsPowered}
-            />
-          </div>
-    
-          {/* Content revealed after zoom */}
-          <div 
-            ref={contentRef}
-            className="absolute inset-0 flex flex-col items-center justify-center opacity-0 scale-90 pointer-events-none"
-            style={{ zIndex: 20 }}
-          >
-        <div className="text-center px-4">
-          <h1 
-            className="font-pixel text-3xl md:text-5xl lg:text-6xl text-electric-yellow mb-6 glitch glow-yellow" 
-            data-text="AARUNYA 2026"
-          >
-            AARUNYA 2026
-          </h1>
-          <p className="font-pixel text-sm md:text-lg text-foreground mb-2 tracking-wider">
-            THE FIRST RAYS OF A NEW DAWN
-          </p>
-          <p className="text-muted-foreground text-base mb-8">
-            MITS Gwalior's Annual Cultural Festival
-          </p>
-          <PixelButton variant="primary" size="lg">
-            ENTER THE GAME
-          </PixelButton>
+            onPowerToggle={setIsPowered}
+          />
         </div>
-      </div>
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-20">
