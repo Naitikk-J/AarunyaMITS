@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PageTransition } from "@/components/PageTransition";
 import Index from "./pages/Index";
+import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import Headliners from "./pages/Headliners";
 import Theme from "./pages/Theme";
@@ -31,6 +32,7 @@ const App = () => (
                 <PageTransition>
                     <Routes>
                         <Route path="/" element={<Index />} />
+                        <Route path="/register" element={<Register />} />
                         <Route path="/view-map" element={<ViewMap />} />
                         <Route path="/campus-explorer" element={<CampusExplorer />} />
                         <Route path="/schedule" element={<Schedule />} />

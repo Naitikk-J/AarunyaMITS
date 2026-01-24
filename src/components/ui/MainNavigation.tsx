@@ -11,6 +11,7 @@ const navLinks = [
     { name: 'HEADLINERS', path: '/headliners' },
     { name: 'EVENTS', path: '/events' },
     { name: 'SCHEDULE', path: '/schedule' },
+    { name: 'REGISTER', path: '/register' },
     { name: 'COMPETITIONS', path: '/competitions' },
     { name: 'SPONSORS', path: '/sponsors' },
     { name: 'ABOUT', path: '/about' },

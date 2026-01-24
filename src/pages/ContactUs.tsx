@@ -1,79 +1,118 @@
 import { MainNavigation } from '@/components/ui/MainNavigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 const ContactUs = () => {
     const contacts = [
         {
-            title: 'GENERAL',
-            description: 'Questions, passes, and info.',
-            image: '/contact-general.jpg',
-            items: ['help@aarunya.example', '+91 00000 00000'],
+            title: 'GENERAL_PASS',
+            description: 'QUESTIONS, CREDENTIALS, AND INFO.',
+            channel: 'CH_01',
+            items: ['HELP@AARUNYA.GAME', 'EXT_101'],
         },
         {
-            title: 'SPONSORSHIP',
-            description: 'Partnerships and collabs.',
-            image: '/contact-sponsorship.jpg',
-            items: ['sponsors@aarunya.example', '+91 00000 00001'],
+            title: 'GUILD_PARTNER',
+            description: 'SPONSORSHIPS AND ALLIANCES.',
+            channel: 'CH_02',
+            items: ['GUILD@AARUNYA.GAME', 'EXT_202'],
         },
         {
-            title: 'EVENTS',
-            description: 'Participation and rules.',
-            image: '/contact-events.jpg',
-            items: ['events@aarunya.example', '+91 00000 00002'],
+            title: 'ARENA_SUPPORT',
+            description: 'COMPETITION RULES AND DISPUTES.',
+            channel: 'CH_03',
+            items: ['ARENA@AARUNYA.GAME', 'EXT_303'],
         },
     ];
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen bg-black text-white font-pixel selection:bg-electric-yellow selection:text-black">
             <MainNavigation />
 
-            <div className="relative overflow-hidden bg-gradient-to-b from-kidcore-blue/20 via-kidcore-pink/10 to-transparent py-16">
-                <div className="absolute inset-0 scanlines opacity-10" />
-                <div className="container mx-auto px-6 relative z-10">
-                    <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-kidcore-blue via-kidcore-pink to-kidcore-orange bg-clip-text text-transparent animate-rainbow">
-                        CONTACT US
+            {/* Header */}
+            <div className="relative pt-32 pb-16 overflow-hidden border-b-4 border-electric-yellow/20">
+                <div className="container mx-auto px-6 relative z-10 text-center">
+                    <h1 className="text-4xl md:text-6xl text-electric-yellow mb-4 glow-yellow uppercase tracking-tighter">
+                        SIGNAL_RECEIVER
                     </h1>
-                    <p className="text-xl text-center text-kidcore-cream font-rajdhani max-w-3xl mx-auto">
-                        Reach the crew — we respond fast.
+                    <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-[0.3em] max-w-2xl mx-auto">
+                        Broadcast your message to the core team.
                     </p>
                 </div>
             </div>
 
-            <div className="container mx-auto px-6 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="container mx-auto px-6 py-20">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                     {contacts.map((c) => (
-                        <Card key={c.title} className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl overflow-hidden group hover:shadow-lg hover:shadow-kidcore-pink/30 transition-all duration-3000 floating-sticker">
-                            <div className="h-48 relative overflow-hidden">
-                                <img
-                                    src={c.image}
-                                    alt={`${c.title} contact`}
-                                    className="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity duration-300"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                        <div 
+                            key={c.title} 
+                            className="
+                                relative p-8 border-4 border-white/10 bg-white/5
+                                hover:border-electric-yellow hover:bg-white/10 
+                                transition-all group overflow-hidden
+                            "
+                        >
+                            {/* Channel Indicator */}
+                            <div className="absolute top-0 right-0 p-2 bg-electric-yellow text-black text-[8px] font-bold">
+                                {c.channel}
                             </div>
-                            <CardHeader>
-                                <CardTitle className="font-orbitron text-2xl text-kidcore-yellow">{c.title}</CardTitle>
-                                <CardDescription className="font-rajdhani text-kidcore-cream">{c.description}</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="flex flex-col gap-2">
+
+                            <div className="space-y-6">
+                                <h2 className="text-2xl text-electric-yellow uppercase tracking-tight group-hover:glow-yellow-sm">
+                                    {c.title}
+                                </h2>
+                                <p className="text-[10px] text-muted-foreground uppercase leading-relaxed">
+                                    {c.description}
+                                </p>
+                                
+                                <div className="space-y-2 pt-4 border-t-2 border-white/5">
                                     {c.items.map((item) => (
-                                        <Badge key={item} variant="outline" className="font-mono text-xs w-fit text-kidcore-orange border-kidcore-orange/50">
-                                            {item}
-                                        </Badge>
+                                        <div key={item} className="flex items-center gap-3">
+                                            <div className="w-1.5 h-1.5 bg-electric-yellow animate-pulse" />
+                                            <span className="text-[10px] text-white hover:text-electric-yellow transition-colors cursor-pointer uppercase">
+                                                {item}
+                                            </span>
+                                        </div>
                                     ))}
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                     ))}
+                </div>
+
+                {/* Contact Form */}
+                <div className="mt-20 max-w-2xl mx-auto p-10 border-4 border-electric-yellow/20 bg-black relative">
+                    <div className="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-electric-yellow" />
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-electric-yellow" />
+
+                    <h2 className="text-2xl text-center text-white mb-10 uppercase tracking-tighter">BROADCAST_MESSAGE</h2>
+                    
+                    <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <input 
+                                className="bg-black border-2 border-white/10 p-4 font-pixel text-[10px] focus:border-electric-yellow outline-none uppercase"
+                                placeholder="PLAYER_ID"
+                            />
+                            <input 
+                                className="bg-black border-2 border-white/10 p-4 font-pixel text-[10px] focus:border-electric-yellow outline-none uppercase"
+                                placeholder="COMM_NODE"
+                            />
+                        </div>
+                        <textarea 
+                            className="w-full bg-black border-2 border-white/10 p-4 font-pixel text-[10px] focus:border-electric-yellow outline-none min-h-[150px] uppercase"
+                            placeholder="TRANSMISSION_DATA..."
+                        />
+                        <button className="w-full py-4 bg-electric-yellow text-black font-bold text-xs uppercase hover:bg-white transition-colors shadow-[4px_4px_0px_#444]">
+                            SEND_SIGNAL
+                        </button>
+                    </form>
                 </div>
             </div>
 
-            <div className="fixed bottom-6 left-6 w-20 h-0.5 bg-gradient-to-r from-kidcore-blue to-transparent" />
-            <div className="fixed bottom-6 left-6 w-0.5 h-20 bg-gradient-to-t from-kidcore-blue to-transparent" />
-            <div className="fixed bottom-6 right-6 w-20 h-0.5 bg-gradient-to-l from-kidcore-pink to-transparent" />
-            <div className="fixed bottom-6 right-6 w-0.5 h-20 bg-gradient-to-t from-kidcore-pink to-transparent" />
+            {/* Footer Decoration */}
+            <div className="py-20 text-center">
+                <p className="text-[8px] text-muted-foreground uppercase tracking-[0.5em]">
+                    Signal strength: <span className="text-green-500">MAXIMUM</span> | Latency: 4ms
+                </p>
+            </div>
         </div>
     );
 };

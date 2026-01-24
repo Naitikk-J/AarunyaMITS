@@ -1,175 +1,133 @@
 import { useState } from 'react';
 import { MainNavigation } from '@/components/ui/MainNavigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
-const FEST_START_DATE = new Date(); // 🔁 adjust if needed
+const FEST_START_DATE = new Date();
 
 const Schedule = () => {
-  const todayIndex = Math.floor(
-    (new Date().getTime() - FEST_START_DATE.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  const todayIndex = 0; // Fixed for demo
 
-  const [openDay, setOpenDay] = useState<number>(todayIndex);
+  const [openDay, setOpenDay] = useState<number>(0);
 
   const days = [
     {
-      day: 'DAY 1',
+      day: 'DAY_01',
       date: 'FRIDAY',
       items: [
-        { time: '10:00', title: 'Campus Check-in', type: 'INFO' },
-        { time: '12:00', title: 'Opening Ceremony', type: 'MAIN' },
-        { time: '16:00', title: 'Workshop Blocks', type: 'WORKSHOP' },
+        { time: '10:00', title: 'CAMPUS_CHECK_IN', type: 'INFO' },
+        { time: '12:00', title: 'OPENING_CEREMONY', type: 'MAIN' },
+        { time: '16:00', title: 'WORKSHOP_BLOCKS', type: 'SKILL' },
       ],
     },
     {
-      day: 'DAY 2',
+      day: 'DAY_02',
       date: 'SATURDAY',
       items: [
-        { time: '11:00', title: 'Competitions Round 1', type: 'COMPETE' },
-        { time: '15:00', title: 'Cultural Events', type: 'EVENT' },
-        { time: '19:00', title: 'Headliners', type: 'LIVE' },
+        { time: '11:00', title: 'COMPETITIONS_R1', type: 'BATTLE' },
+        { time: '15:00', title: 'CULTURAL_SHOWS', type: 'EVENT' },
+        { time: '19:00', title: 'NEON_HEADLINERS', type: 'LIVE' },
       ],
     },
     {
-      day: 'DAY 3',
+      day: 'DAY_03',
       date: 'SUNDAY',
       items: [
-        { time: '10:30', title: 'Finals', type: 'COMPETE' },
-        { time: '14:00', title: 'Prize Distribution', type: 'MAIN' },
-        { time: '17:00', title: 'Closing Ceremony', type: 'MAIN' },
+        { time: '10:30', title: 'BATTLE_FINALS', type: 'BATTLE' },
+        { time: '14:00', title: 'REWARD_CEREMONY', type: 'REWARD' },
+        { time: '17:00', title: 'SYSTEM_SHUTDOWN', type: 'MAIN' },
       ],
     },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-black text-white selection:bg-electric-yellow selection:text-black font-pixel">
       <MainNavigation />
 
       {/* Header */}
-      <div className="relative overflow-hidden bg-gradient-to-b from-primary/20 via-accent/10 to-transparent py-20">
-        <div className="absolute inset-0 scanlines opacity-10" />
-        <div className="container mx-auto px-6 relative z-10">
-          <h1 className="text-5xl md:text-6xl font-orbitron font-bold text-center mb-4 kidcore-text animate-rainbow">
-            FEST TIMELINE
+      <div className="relative pt-32 pb-16 overflow-hidden border-b-4 border-electric-yellow/20 bg-[radial-gradient(circle_at_center,rgba(255,214,51,0.05)_0%,transparent_100%)]">
+        <div className="container mx-auto px-6 relative z-10 text-center">
+          <h1 className="text-4xl md:text-6xl text-electric-yellow mb-4 glow-yellow uppercase tracking-tighter">
+            QUEST_TIMELINE
           </h1>
-          <p className="text-xl text-center text-muted-foreground font-rajdhani max-w-3xl mx-auto">
-            Track the festival journey — day by day, beat by beat.
+          <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-[0.3em] max-w-2xl mx-auto">
+            Track your progress through the three-day circuit.
           </p>
         </div>
       </div>
 
-      {/* Timeline */}
-      <div className="container mx-auto px-6 py-24 relative">
-        {/* Curved Neon Path */}
-        <svg
-          className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-[300px] pointer-events-none"
-          viewBox="0 0 300 1000"
-          fill="none"
-        >
-          <path
-            d="
-              M150 0
-              C50 150, 50 250, 150 350
-              C250 450, 250 550, 150 650
-              C50 750, 50 850, 150 1000
-            "
-            stroke="url(#kidcoreGradient)"
-            strokeWidth="3"
-            strokeDasharray="6 10"
-            className="opacity-70"
-          />
-          <defs>
-            <linearGradient id="kidcoreGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="hsl(var(--primary))" />
-              <stop offset="100%" stopColor="hsl(var(--secondary))" />
-            </linearGradient>
-          </defs>
-        </svg>
+      {/* Timeline Grid */}
+      <div className="container mx-auto px-6 py-20">
+        <div className="max-w-4xl mx-auto space-y-12">
+          {days.map((d, index) => (
+            <div key={d.day} className="relative group">
+              {/* Vertical Connector */}
+              {index !== days.length - 1 && (
+                <div className="absolute left-6 top-16 bottom-0 w-1 bg-gradient-to-b from-electric-yellow/40 to-transparent z-0" />
+              )}
+              
+              <div className="relative z-10 flex gap-8 items-start">
+                {/* Date Marker */}
+                <div className={`
+                  w-12 h-12 flex-shrink-0 flex items-center justify-center border-4
+                  ${index === todayIndex ? 'bg-electric-yellow border-black shadow-[0_0_15px_rgba(255,214,51,0.5)]' : 'bg-black border-white/20'}
+                `}>
+                  <span className={`text-xs ${index === todayIndex ? 'text-black font-bold' : 'text-white/40'}`}>
+                    0{index + 1}
+                  </span>
+                </div>
 
-        {/* Timeline Cards */}
-        <div className="relative space-y-28">
-          {days.map((d, index) => {
-            const status =
-              index < todayIndex
-                ? 'completed'
-                : index === todayIndex
-                ? 'active'
-                : 'upcoming';
+                {/* Day Content */}
+                <div className="flex-1">
+                  <div 
+                    className={`
+                      p-6 border-4 transition-all cursor-pointer
+                      ${openDay === index ? 'border-electric-yellow bg-white/5' : 'border-white/5 bg-transparent hover:border-white/20'}
+                    `}
+                    onClick={() => setOpenDay(index)}
+                  >
+                    <div className="flex justify-between items-center mb-4">
+                      <h2 className={`text-2xl tracking-tighter uppercase ${openDay === index ? 'text-electric-yellow' : 'text-white/60'}`}>
+                        {d.day} <span className="text-xs ml-2 opacity-40">({d.date})_</span>
+                      </h2>
+                      <div className={`text-[10px] uppercase ${openDay === index ? 'text-electric-yellow animate-pulse' : 'text-white/20'}`}>
+                        {openDay === index ? 'NODE_ACTIVE' : 'EXPAND_NODE+'}
+                      </div>
+                    </div>
 
-            return (
-              <div
-                key={d.day}
-                className={`relative ${
-                  index % 2 === 0 ? '-translate-x-10' : 'translate-x-10'
-                }`}
-              >
-                {/* Timeline Node */}
-                <div
-                  className={`
-                    absolute left-1/2 -translate-x-1/2 -top-7 w-5 h-5 rounded-full
-                    ${status === 'completed' && 'bg-primary shadow-neon'}
-                    ${status === 'active' && 'bg-secondary animate-kidcore-pulse shadow-neon-secondary'}
-                    ${status === 'upcoming' && 'bg-background border-2 border-secondary'}
-                  `}
-                />
-
-                <Card
-                  onClick={() => setOpenDay(openDay === index ? -1 : index)}
-                  className="
-                    max-w-xl mx-auto cursor-pointer
-                    glass-card floating-sticker
-                  "
-                >
-                  <CardHeader className="text-center">
-                    <CardTitle className="font-orbitron text-2xl kidcore-text">
-                      {d.day}
-                    </CardTitle>
-                    <CardDescription className="font-rajdhani text-muted-foreground">
-                      {d.date}
-                    </CardDescription>
-                  </CardHeader>
-
-                  {openDay === index && (
-                    <CardContent className="space-y-5">
-                      {d.items.map((item) => (
-                        <div
-                          key={`${d.day}-${item.time}`}
-                          className="
-                            flex items-center gap-4 p-3 rounded-xl
-                            hover:bg-primary/10 transition
-                          "
-                        >
-                          <span className="font-mono text-sm text-primary min-w-[72px]">
-                            {item.time}
-                          </span>
-
-                          <div className="flex-1 font-rajdhani text-foreground">
-                            {item.title}
-                          </div>
-
-                          <Badge
-                            variant="outline"
-                            className="font-mono text-xs border-primary/50 text-primary"
+                    {openDay === index && (
+                      <div className="space-y-4 pt-4 border-t-2 border-white/5">
+                        {d.items.map((item) => (
+                          <div 
+                            key={item.title}
+                            className="flex items-center gap-6 p-3 group/item hover:bg-electric-yellow/5 transition-colors"
                           >
-                            {item.type}
-                          </Badge>
-                        </div>
-                      ))}
-                    </CardContent>
-                  )}
-                </Card>
+                            <span className="text-[10px] text-electric-yellow/60 group-hover/item:text-electric-yellow w-12">
+                              {item.time}
+                            </span>
+                            <div className="flex-1 text-xs uppercase tracking-wider group-hover/item:translate-x-1 transition-transform">
+                              {item.title}
+                            </div>
+                            <div className="px-2 py-0.5 border border-white/20 text-[8px] text-muted-foreground group-hover/item:border-electric-yellow/40 group-hover/item:text-electric-yellow transition-colors">
+                              {item.type}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Corner Decorations */}
-      <div className="fixed bottom-6 left-6 w-20 h-0.5 bg-gradient-to-r from-primary to-transparent" />
-      <div className="fixed bottom-6 left-6 w-0.5 h-20 bg-gradient-to-t from-primary to-transparent" />
-      <div className="fixed bottom-6 right-6 w-20 h-0.5 bg-gradient-to-l from-secondary to-transparent" />
-      <div className="fixed bottom-6 right-6 w-0.5 h-20 bg-gradient-to-t from-secondary to-transparent" />
+      {/* Footer Decoration */}
+      <div className="py-20 text-center">
+        <div className="inline-block px-4 py-2 border-2 border-dashed border-white/10 text-[10px] text-muted-foreground uppercase">
+          End of timeline. New events may appear at any time.
+        </div>
+      </div>
     </div>
   );
 };
