@@ -22,7 +22,7 @@ export const MainNavigation = () => {
     const location = useLocation();
 
     return (
-        <>
+        <div className="w-full">
             <nav className="fixed top-0 left-0 right-0 z-50 glass-card bg-background/85 backdrop-blur-xl border-b border-secondary/40 m-0 rounded-none">
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-between h-16">
@@ -88,7 +88,7 @@ export const MainNavigation = () => {
 
             {/* Mobile Navigation Dropdown */}
             {isOpen && (
-                <>
+                <div className="fixed inset-0 z-30 lg:hidden top-16 pointer-events-auto">
                     {/* Backdrop */}
                     <div
                         className="fixed inset-0 z-30 lg:hidden bg-black/40 backdrop-blur-sm"
@@ -134,8 +134,8 @@ export const MainNavigation = () => {
                             </div>
                         </div>
                     </div>
-                </>
+                </div>
             )}
-        </>
+        </div>
     );
 };
