@@ -40,13 +40,13 @@ const Schedule = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-electric-yellow selection:text-black font-pixel">
+    <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-black font-pixel">
       <MainNavigation />
 
       {/* Header */}
-      <div className="relative pt-32 pb-16 overflow-hidden border-b-4 border-electric-yellow/20 bg-[radial-gradient(circle_at_center,rgba(255,214,51,0.05)_0%,transparent_100%)]">
+      <div className="relative pt-32 pb-16 overflow-hidden border-b-4 border-primary/20 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.05)_0%,transparent_100%)]">
         <div className="container mx-auto px-6 relative z-10 text-center">
-          <h1 className="text-4xl md:text-6xl text-electric-yellow mb-4 glow-yellow uppercase tracking-tighter">
+          <h1 className="text-4xl md:text-6xl text-primary mb-4 glow-pink uppercase tracking-tighter">
             QUEST_TIMELINE
           </h1>
           <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-[0.3em] max-w-2xl mx-auto">
@@ -62,14 +62,14 @@ const Schedule = () => {
             <div key={d.day} className="relative group">
               {/* Vertical Connector */}
               {index !== days.length - 1 && (
-                <div className="absolute left-6 top-16 bottom-0 w-1 bg-gradient-to-b from-electric-yellow/40 to-transparent z-0" />
+                <div className="absolute left-6 top-16 bottom-0 w-1 bg-gradient-to-b from-primary/40 to-transparent z-0" />
               )}
               
               <div className="relative z-10 flex gap-8 items-start">
                 {/* Date Marker */}
                 <div className={`
                   w-12 h-12 flex-shrink-0 flex items-center justify-center border-4
-                  ${index === todayIndex ? 'bg-electric-yellow border-black shadow-[0_0_15px_rgba(255,214,51,0.5)]' : 'bg-black border-white/20'}
+                  ${index === todayIndex ? 'bg-primary border-black shadow-[0_0_15px_rgba(188,19,254,0.5)]' : 'bg-black border-white/20'}
                 `}>
                   <span className={`text-xs ${index === todayIndex ? 'text-black font-bold' : 'text-white/40'}`}>
                     0{index + 1}
@@ -81,15 +81,15 @@ const Schedule = () => {
                   <div 
                     className={`
                       p-6 border-4 transition-all cursor-pointer
-                      ${openDay === index ? 'border-electric-yellow bg-white/5' : 'border-white/5 bg-transparent hover:border-white/20'}
+                      ${openDay === index ? 'border-primary bg-white/5' : 'border-white/5 bg-transparent hover:border-white/20'}
                     `}
                     onClick={() => setOpenDay(index)}
                   >
                     <div className="flex justify-between items-center mb-4">
-                      <h2 className={`text-2xl tracking-tighter uppercase ${openDay === index ? 'text-electric-yellow' : 'text-white/60'}`}>
+                      <h2 className={`text-2xl tracking-tighter uppercase ${openDay === index ? 'text-primary' : 'text-white/60'}`}>
                         {d.day} <span className="text-xs ml-2 opacity-40">({d.date})_</span>
                       </h2>
-                      <div className={`text-[10px] uppercase ${openDay === index ? 'text-electric-yellow animate-pulse' : 'text-white/20'}`}>
+                      <div className={`text-[10px] uppercase ${openDay === index ? 'text-primary animate-pulse' : 'text-white/20'}`}>
                         {openDay === index ? 'NODE_ACTIVE' : 'EXPAND_NODE+'}
                       </div>
                     </div>
@@ -99,15 +99,15 @@ const Schedule = () => {
                         {d.items.map((item) => (
                           <div 
                             key={item.title}
-                            className="flex items-center gap-6 p-3 group/item hover:bg-electric-yellow/5 transition-colors"
+                            className="flex items-center gap-6 p-3 group/item hover:bg-primary/5 transition-colors"
                           >
-                            <span className="text-[10px] text-electric-yellow/60 group-hover/item:text-electric-yellow w-12">
+                            <span className="text-[10px] text-primary/60 group-hover/item:text-primary w-12">
                               {item.time}
                             </span>
                             <div className="flex-1 text-xs uppercase tracking-wider group-hover/item:translate-x-1 transition-transform">
                               {item.title}
                             </div>
-                            <div className="px-2 py-0.5 border border-white/20 text-[8px] text-muted-foreground group-hover/item:border-electric-yellow/40 group-hover/item:text-electric-yellow transition-colors">
+                            <div className="px-2 py-0.5 border border-white/20 text-[8px] text-muted-foreground group-hover/item:border-primary/40 group-hover/item:text-primary transition-colors">
                               {item.type}
                             </div>
                           </div>
