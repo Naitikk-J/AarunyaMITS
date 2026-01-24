@@ -11,7 +11,6 @@ const WelcomeSection = () => {
     if (!contentRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Animate children on scroll
       const items = contentRef.current?.querySelectorAll('.scroll-item');
       if (items) {
         items.forEach((item) => {
@@ -25,7 +24,8 @@ const WelcomeSection = () => {
               scrollTrigger: {
                 trigger: item,
                 start: "top 85%",
-                toggleActions: "play none none none"
+                end: "top 30%",
+                toggleActions: "play reverse play reverse"
               }
             }
           );
