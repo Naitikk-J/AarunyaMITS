@@ -24,16 +24,6 @@ const Index = () => {
     const mainRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Horizontal Scroll for Timeline Maze (Optimized length)
-        const timelineTrigger = ScrollTrigger.create({
-            trigger: "#timeline-section",
-            start: "top top",
-            end: "+=500", // Further reduced scroll length
-            pin: true,
-            scrub: 1,
-            anticipatePin: 1,
-        });
-
         // Track velocity safely
         const velocityTracker = {
             lastPos: window.scrollY,
@@ -78,7 +68,6 @@ const Index = () => {
         }
 
         return () => {
-            timelineTrigger.kill();
             window.removeEventListener('scroll', updateVelocity);
             ScrollTrigger.getAll().forEach(t => t.kill());
         };
