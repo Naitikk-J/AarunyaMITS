@@ -119,14 +119,6 @@ const Character = ({ data, isMobile = false }: { data: CharacterData; isMobile?:
                     opacity={0.3}
                 />
             </mesh>
-
-            {/* Floating glow light */}
-            <pointLight
-                position={[0, 0.5, 0]}
-                intensity={isMobile ? 0.6 : 1.2}
-                distance={isMobile ? 2 : 4}
-                color={data.color}
-            />
         </group>
     );
 };

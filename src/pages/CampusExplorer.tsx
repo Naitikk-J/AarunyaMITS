@@ -98,7 +98,6 @@ const CampusExplorer = () => {
                             stencil: false,
                             depth: true,
                             powerPreference: 'high-performance',
-                            logarithmicDepthBuffer: true,
                         }}
                         dpr={Math.min(window.devicePixelRatio, 2)}
                         style={{ width: '100%', height: '100%' }}

@@ -48,13 +48,13 @@ const Shape = ({ data }: { data: ShapeData }) => {
     const geometry = useMemo(() => {
         switch (data.type) {
             case 'cube':
-                return new THREE.BoxGeometry(1, 1, 1, 4, 4, 4);
+                return new THREE.BoxGeometry(1, 1, 1);
             case 'sphere':
-                return new THREE.IcosahedronGeometry(1, 4);
+                return new THREE.IcosahedronGeometry(1, 2);
             case 'tetrahedron':
-                return new THREE.TetrahedronGeometry(1, 3);
+                return new THREE.TetrahedronGeometry(1, 1);
             case 'star':
-                return new THREE.OctahedronGeometry(1, 2);
+                return new THREE.OctahedronGeometry(1, 1);
             default:
                 return new THREE.BoxGeometry(1, 1, 1);
         }
@@ -91,12 +91,12 @@ const Shape = ({ data }: { data: ShapeData }) => {
             position={[data.position[0], data.position[1], data.position[2]]}
             scale={data.scale}
         >
-            <meshPhysicalMaterial
+            <meshStandardMaterial
                 color={data.color}
                 emissive={data.color}
                 emissiveIntensity={0.3}
-                metalness={0.6}
-                roughness={0.3}
+                metalness={0.4}
+                roughness={0.5}
                 transparent
                 opacity={0.6}
                 wireframe={Math.random() > 0.7}

@@ -119,11 +119,11 @@ const Building = ({ data, onHover, onClick, showLabels, textures, visualMode }: 
                 {visualMode === 'wireframe' ? (
                     <meshBasicMaterial color={THEME.primary} wireframe />
                 ) : (
-                    <meshPhysicalMaterial
+                    <meshStandardMaterial
                         map={textures.window}
                         color={data.color || THEME.building}
-                        roughness={0.3}
-                        metalness={0.2}
+                        roughness={0.4}
+                        metalness={0.1}
                         emissive={hovered ? THEME.primary : '#000000'}
                         emissiveIntensity={0.2}
                     />
@@ -200,9 +200,7 @@ const Streetlights = ({ count = 12 }: { count?: number }) => {
     const lightMat = useMemo(() => new THREE.MeshBasicMaterial({ color: '#FFDD33' }), []);
 
     const positions = useMemo(() => [
-        [-18, 0, -18], [18, 0, -18], [18, 0, 18], [-18, 0, 18],
-        [0, 0, -22], [0, 0, 22], [-22, 0, 0], [22, 0, 0],
-        [-10, 0, -10], [10, 0, -10], [10, 0, 10], [-10, 0, 10]
+        [-18, 0, -18], [18, 0, 18], [0, 0, 22], [0, 0, -22]
     ], []);
 
     return (
@@ -216,7 +214,7 @@ const Streetlights = ({ count = 12 }: { count?: number }) => {
                 ))}
             </Instances>
             {positions.map((p, i) => (
-                <pointLight key={i} position={[p[0], 2.5, p[2]]} intensity={0.5} distance={5} color="#FFDD33" />
+                <pointLight key={i} position={[p[0], 2.5, p[2]]} intensity={0.8} distance={10} color="#FFDD33" />
             ))}
         </group>
     );
@@ -237,7 +235,16 @@ export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading, vi
         <group>
             <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
             <Environment preset="city" />
-            <ContactShadows position={[0, 0, 0]} opacity={0.4} scale={60} blur={2} far={10} resolution={256} color="#000000" />
+            <ContactShadows
+                position={[0, 0, 0]}
+                opacity={0.4}
+                scale={60}
+                blur={2.5}
+                far={10}
+                resolution={256}
+                color="#000000"
+                frames={1}
+            />
             
             <group rotation={[0, Math.PI / 4, 0]}>
                 {/* Ground */}
@@ -253,7 +260,7 @@ export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading, vi
                 </mesh>
 
                 <Roads textures={textures} />
-                <RealisticFoliage />
+                <RealisticFoliage count={50} />
                 <Streetlights />
 
                 {BUILDINGS.map((b) => (
