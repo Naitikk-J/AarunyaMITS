@@ -2,7 +2,7 @@ import { PixelStar, PixelCoin } from "./PixelDecorations";
 
 const WelcomeSection = () => {
   return (
-    <section className="relative min-h-screen py-20 flex items-center justify-center overflow-hidden bg-background">
+    <section className="relative min-h-screen py-20 flex items-center justify-center overflow-hidden bg-transparent">
       {/* Floating decorations */}
       <PixelStar className="absolute top-10 left-8 w-12 h-12 animate-float" color="electric-yellow" />
       <PixelStar className="absolute top-1/4 right-12 w-10 h-10 animate-float" color="lime-green" />

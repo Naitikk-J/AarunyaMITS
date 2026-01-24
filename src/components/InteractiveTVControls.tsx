@@ -18,7 +18,6 @@ export const InteractiveTVControls = ({
   const [isPowered, setIsPowered] = useState(true);
   const [channel, setChannel] = useState(1);
   const [volume, setVolume] = useState(5);
-  const [showEasterEgg, setShowEasterEgg] = useState(false);
   const [easterEggCounter, setEasterEggCounter] = useState(0);
 
   // Handle POWER button click with glitch effect
@@ -105,6 +104,11 @@ export const InteractiveTVControls = ({
       );
 
     // Apply color palette shift based on channel
+    const palettes = [
+      'hsl(var(--neon-magenta))',
+      'hsl(var(--cyber-blue))',
+      'hsl(var(--electric-yellow))',
+    ];
     gsap.to(screenRef.current, {
       filter: `hue-rotate(${newChannel * 120}deg)`,
       duration: 0.3,
@@ -112,9 +116,9 @@ export const InteractiveTVControls = ({
 
     animateControlButton('channel-btn');
 
-    // Easter egg logic
+    // Easter egg: channel 2 held for 3 seconds
     setEasterEggCounter((prev) => prev + 1);
-    if (easterEggCounter >= 2) {
+    if (easterEggCounter === 2) {
       triggerEasterEgg();
       setEasterEggCounter(0);
     }
@@ -138,7 +142,7 @@ export const InteractiveTVControls = ({
       ease: 'power2.inOut',
     });
 
-    animateControlButton('volume-btn-up');
+    animateControlButton('volume-btn');
   };
 
   const handleVolumeDown = () => {
@@ -157,7 +161,7 @@ export const InteractiveTVControls = ({
       ease: 'power2.inOut',
     });
 
-    animateControlButton('volume-btn-down');
+    animateControlButton('volume-btn');
   };
 
   // Animate button press
@@ -183,12 +187,7 @@ export const InteractiveTVControls = ({
   const triggerEasterEgg = () => {
     if (!screenRef?.current) return;
 
-    setShowEasterEgg(true);
-    
-    const tl = gsap.timeline({
-      onComplete: () => setShowEasterEgg(false)
-    });
-    
+    const tl = gsap.timeline();
     // Rainbow hue cycle
     tl.to(screenRef.current, {
       filter: 'hue-rotate(360deg)',
@@ -196,7 +195,22 @@ export const InteractiveTVControls = ({
       ease: 'power2.inOut',
     });
 
-    // We use React to render the text now to avoid removeChild errors
+    // Create floating pixel text
+    const easterEggText = document.createElement('div');
+    easterEggText.textContent = '✨ SECRET FOUND ✨';
+    easterEggText.className = 'font-pixel text-2xl text-electric-yellow animate-pulse absolute z-50';
+    easterEggText.style.pointerEvents = 'none';
+    screenRef.current.appendChild(easterEggText);
+
+    gsap.to(easterEggText, {
+      y: -100,
+      opacity: 0,
+      duration: 2,
+      ease: 'power2.out',
+      onComplete: () => {
+        easterEggText.remove();
+      },
+    });
   };
 
   return (
@@ -204,15 +218,6 @@ export const InteractiveTVControls = ({
       ref={containerRef}
       className="absolute right-0 top-1/4 flex flex-col gap-6 translate-x-16 z-20"
     >
-      {/* Easter Egg Overlay - Rendered via React */}
-      {showEasterEgg && screenRef?.current && (
-        <div className="fixed inset-0 pointer-events-none flex items-center justify-center z-50 overflow-hidden">
-           <div className="font-pixel text-2xl text-electric-yellow animate-pulse translate-y-[-50px]">
-            ✨ SECRET FOUND ✨
-           </div>
-        </div>
-      )}
-
       {/* POWER Button */}
       <div className="flex flex-col items-center gap-2">
         <button
@@ -259,7 +264,7 @@ export const InteractiveTVControls = ({
       <div className="flex flex-col items-center gap-2">
         {/* Volume Up */}
         <button
-          id="volume-btn-up"
+          id="volume-btn"
           onClick={handleVolumeUp}
           className={`
             w-10 h-10 rounded-full border-3 border-electric-yellow bg-electric-yellow/20
@@ -279,7 +284,6 @@ export const InteractiveTVControls = ({
 
         {/* Volume Down */}
         <button
-          id="volume-btn-down"
           onClick={handleVolumeDown}
           className={`
             w-10 h-10 rounded-full border-3 border-radical-red bg-radical-red/20
