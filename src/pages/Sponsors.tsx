@@ -34,7 +34,7 @@ const Sponsors = () => {
                     <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-kidcore-blue via-kidcore-pink to-kidcore-orange bg-clip-text text-transparent animate-rainbow">
                         SPONSORS
                     </h1>
-                    <p className="text-xl text-center text-kidcore-cream font-rajdhani max-w-3xl mx-auto">
+                    <p className="text-xl text-center text-kidcore-cream font-orbitron max-w-3xl mx-auto">
                         The alliances powering Aarunya 2.0.
                     </p>
                 </div>
@@ -54,7 +54,7 @@ const Sponsors = () => {
                             </div>
                             <CardHeader>
                                 <CardTitle className="font-orbitron text-2xl text-kidcore-yellow">{tier.title}</CardTitle>
-                                <CardDescription className="font-rajdhani text-kidcore-cream">{tier.description}</CardDescription>
+                                <CardDescription className="font-orbitron text-kidcore-cream">{tier.description}</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="flex flex-wrap gap-2">

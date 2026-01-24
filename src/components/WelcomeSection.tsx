@@ -45,7 +45,7 @@ const WelcomeSection = () => {
               <div className="font-pixel text-primary text-xl mb-4 border-b-2 border-primary pb-2 inline-block">
                 MISSION_BRIEF.TXT
               </div>
-              <p className="font-rajdhani text-lg text-white leading-relaxed">
+              <p className="font-orbitron text-lg text-white leading-relaxed">
                 Step into the electrifying world of AARUNYA 2026, where creativity meets chaos,
                 passion ignites stages, and memories are forged in the neon glow of innovation.
               </p>
@@ -55,7 +55,7 @@ const WelcomeSection = () => {
               <div className="font-pixel text-secondary text-xl mb-4 border-b-2 border-secondary pb-2 inline-block">
                 OBJECTIVES.EXE
               </div>
-              <p className="font-rajdhani text-lg text-white leading-relaxed">
+              <p className="font-orbitron text-lg text-white leading-relaxed">
                 MITS Gwalior's most awaited annual cultural festival is back with a bang.
                 Four days of non-stop entertainment, mind-bending competitions, and unforgettable performances.
               </p>
