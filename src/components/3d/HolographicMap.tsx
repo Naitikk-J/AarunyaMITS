@@ -1,241 +1,146 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Html, Text, Instance, Instances } from '@react-three/drei';
+import { Html, Text, Instance, Instances, ContactShadows, Environment, Stars, Float } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
-import { useDeviceCapability } from '@/hooks/useDeviceCapability';
 
 // --- Types ---
 interface BuildingData {
     id: string;
     name: string;
     hindiName: string;
-    // Position: [x, z], Size: [width, length], Height
     position: [number, number];
     size: [number, number];
     height: number;
     type?: 'complex' | 'simple' | 'landmark' | 'curved';
     icon?: string;
     color?: string;
-    rotationY?: number; // Y-axis rotation in radians
+    rotationY?: number;
 }
 
-// --- Configuration --- Kidcore Theme
+// --- Configuration --- Realistic & Tech Theme
 const THEME = {
-    primary: '#BC13FE',     // Neon Purple
-    secondary: '#00FFFF',   // Cyan
-    accent: '#FF0080',      // Hot Pink
-    lime: '#00FF00',        // Lime Green
-    yellow: '#FFDD33',      // Sunflower Yellow
-    ground: '#05010D',      // Grit Black
-    groundLight: '#1B065E', // Deep Purple
-    groundDark: '#0D0221',  // Near Black
-    black: '#05010D',       // Grit Black
-    glow: '#BC13FE',        // Purple Glow
-    glassOpacity: 0.2,
-    edgeOpacity: 0.9,
-    stoneBeige: '#1B065E',  // Deep Purple Base
-    stoneShadow: '#0D0221'  // Darker shadow
+    primary: '#BC13FE',     // Neon Purple (Accent)
+    secondary: '#00FFFF',   // Cyan (Accent)
+    building: '#F0F0F0',    // Concrete
+    roof: '#333333',        // Dark Roof
+    grass: '#2D5A27',       // Natural Green
+    road: '#1A1A1A',        // Asphalt
+    ground: '#050505',      // Dark Base
+    windowColor: '#FFDD33'  // Warm Window Light
 };
 
-// --- Data: Mapped to the Diamond Layout ---
+// --- Data: Campus Layout ---
 const BUILDINGS: BuildingData[] = [
-    // Top Corner
-    { id: 'main-gate', name: 'MITS Main Gate', hindiName: 'मुख्य द्वार', position: [5, -25], size: [4, 2], height: 2, type: 'landmark', icon: '🎓', color: '#BC13FE' },
-
-    // Left Wing
-    { id: 'old-building', name: 'Old Building', hindiName: 'सिविल विभाग', position: [-6, -10], size: [16, 7], height: 2.5, type: 'complex', color: '#1B065E' },
-    { id: 'canteen', name: 'Canteen', hindiName: 'कैंटीन', position: [-15, -12], size: [4, 4], height: 1.5, type: 'simple', icon: '🍽️', color: '#1B065E' },
-    { id: 'ai-department', name: 'AI department', hindiName: 'एआई विभाग', position: [-3, 4], size: [9, 5], height: 6, type: 'simple', icon: '🤖', color: '#BC13FE' },
-    { id: 'library', name: 'Central Library', hindiName: 'पुस्तकालय', position: [-7, -16], size: [4, 3], height: 3, type: 'complex', icon: '📚', color: '#1B065E' },
-
-    // Center Grounds
-    { id: 'stage-ground', name: 'stage ground', hindiName: 'स्टेज ग्राउंड', position: [-5, -22], size: [15, 6], height: 0.2, type: 'landmark', color: '#BC13FE' },
-    { id: 'ai-ground', name: 'AI ground', hindiName: 'एआई ग्राउंड', position: [-3, -2], size: [9, 7], height: 0.2, type: 'landmark', color: '#00FFFF' },
-    { id: 'statue-ground', name: 'statue ground', hindiName: 'स्टैच्यू ग्राउंड', position: [15, -18.5], size: [10, 10], height: 0.2, type: 'landmark', color: '#BC13FE' },
-    { id: 'football-ground', name: 'football ground', hindiName: 'फुटबॉल ग्राउंड', position: [-5, 22], size: [30, 15], height: 0.2, type: 'landmark', color: '#00FFFF' },
-
-    // Right Wing
-    { id: 'biotech', name: 'Biotech Dept', hindiName: 'जैव प्रौद्योगिकी', position: [15, -11], size: [5, 5], height: 2.5, type: 'simple', color: '#1B065E' },
-    { id: 'dispensary', name: 'Dispensary', hindiName: 'औषधालय', position: [15, -4], size: [4, 4], height: 1.5, type: 'simple', icon: 'H', color: '#FF0080' },
-
-    // Bottom Section
-    { id: 'architecture', name: 'Architecture Dept', hindiName: 'वास्तुकला', position: [-10, -3], size: [4, 4], height: 2.8, type: 'complex', color: '#1B065E' },
-    { id: 'mechanical-dept', name: 'Mechanical Dept', hindiName: 'मैकेनिकल विभाग', position: [0, -5.5], size: [4, 4], height: 2.8, type: 'complex', color: '#1B065E' },
-    { id: 'statue-base', name: 'statue base', hindiName: 'स्टैच्यू आधार', position: [15, -18.5], size: [2, 2], height: 1.5, type: 'simple', color: '#BC13FE' },
-    { id: 'statue', name: 'statue', hindiName: 'मूर्ति', position: [15, -18.5], size: [1, 1], height: 3, type: 'simple', color: '#00FFFF' },
-    { id: 'mits-main', name: 'mechanical workshop', hindiName: 'मैकेनिकल वर्कशॉप', position: [0, 15], size: [7, 5], height: 3.5, type: 'complex', icon: '⚙️', color: '#1B065E' },
-
-    // Bottom Corner
-    { id: 'diamond-gate', name: 'Diamond Jubilee Gate', hindiName: 'डायमंड गेट', position: [-20, 16], size: [4, 1], height: 2, type: 'landmark', color: '#BC13FE', rotationY: Math.PI / 2 },
+    { id: 'main-gate', name: 'MITS Main Gate', hindiName: 'मुख्य द्वार', position: [5, -25], size: [4, 2], height: 2, type: 'landmark', icon: '🎓' },
+    { id: 'old-building', name: 'Old Building', hindiName: 'सिविल विभाग', position: [-6, -10], size: [16, 7], height: 4, type: 'complex' },
+    { id: 'canteen', name: 'Canteen', hindiName: 'कैंटीन', position: [-15, -12], size: [4, 4], height: 2, type: 'simple', icon: '🍽️' },
+    { id: 'ai-department', name: 'AI department', hindiName: 'एआई विभाग', position: [-3, 4], size: [9, 5], height: 8, type: 'simple', icon: '🤖' },
+    { id: 'library', name: 'Central Library', hindiName: 'पुस्तकालय', position: [-7, -16], size: [4, 3], height: 5, type: 'complex', icon: '📚' },
+    { id: 'stage-ground', name: 'stage ground', hindiName: 'स्टेज ग्राउंड', position: [-5, -22], size: [15, 6], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'ai-ground', name: 'AI ground', hindiName: 'एआई ग्राउंड', position: [-3, -2], size: [9, 7], height: 0.1, type: 'landmark', color: '#3A6B35' },
+    { id: 'statue-ground', name: 'statue ground', hindiName: 'स्टैच्यू ग्राउंड', position: [15, -18.5], size: [10, 10], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'football-ground', name: 'football ground', hindiName: 'फुटबॉल ग्राउंड', position: [-5, 22], size: [30, 15], height: 0.1, type: 'landmark', color: '#1B4D17' },
+    { id: 'biotech', name: 'Biotech Dept', hindiName: 'जैव प्रौद्योगिकी', position: [15, -11], size: [5, 5], height: 3.5, type: 'simple' },
+    { id: 'dispensary', name: 'Dispensary', hindiName: 'औषधालय', position: [15, -4], size: [4, 4], height: 2, type: 'simple', icon: 'H' },
+    { id: 'architecture', name: 'Architecture Dept', hindiName: 'वास्तुकला', position: [-10, -3], size: [4, 4], height: 4, type: 'complex' },
+    { id: 'mechanical-dept', name: 'Mechanical Dept', hindiName: 'मैकेनिकल विभाग', position: [0, -5.5], size: [4, 4], height: 4, type: 'complex' },
+    { id: 'statue-base', name: 'statue base', hindiName: 'स्टैच्यू आधार', position: [15, -18.5], size: [2, 2], height: 1, type: 'simple', color: '#A9A9A9' },
+    { id: 'statue', name: 'statue', hindiName: 'मूर्ति', position: [15, -18.5], size: [0.5, 0.5], height: 3, type: 'simple', color: '#FFD700' },
+    { id: 'mits-main', name: 'mechanical workshop', hindiName: 'मैकेनिकल वर्कशॉप', position: [0, 15], size: [7, 5], height: 5, type: 'complex', icon: '⚙️' },
+    { id: 'diamond-gate', name: 'Diamond Jubilee Gate', hindiName: 'डायमंड गेट', position: [-20, 16], size: [4, 1], height: 3, type: 'landmark', rotationY: Math.PI / 2 },
 ];
 
 const ROADS = [
-    { points: [[-16, -20], [16, -20], [16, 20], [-16, 20], [-16, -20]] },
-    { points: [[-18, -18], [18, 18]] },
-    { points: [[-5, -5], [5, -5], [5, 5], [-5, 5], [-5, -5]] },
-    { points: [[5, -25], [5, -20], [0, -10]] },
+    { start: [-20, -20], end: [20, -20], width: 2 },
+    { start: [20, -20], end: [20, 20], width: 2 },
+    { start: [20, 20], end: [-20, 20], width: 2 },
+    { start: [-20, 20], end: [-20, -20], width: 2 },
+    { start: [0, -25], end: [0, 25], width: 1.5 },
+    { start: [-25, 0], end: [25, 0], width: 1.5 },
 ];
 
-// --- Textures Generation (Globalized for performance) ---
+// --- Helper: Texture Generation ---
+const generateTextures = () => {
+    const windowCanvas = document.createElement('canvas');
+    windowCanvas.width = 128; windowCanvas.height = 128;
+    const wctx = windowCanvas.getContext('2d')!;
+    wctx.fillStyle = '#FFFFFF'; wctx.fillRect(0,0,128,128);
+    wctx.fillStyle = '#222222';
+    for(let x=10; x<120; x+=25) for(let y=10; y<120; y+=25) wctx.fillRect(x,y,15,15);
+    const windowTexture = new THREE.CanvasTexture(windowCanvas);
+    windowTexture.wrapS = windowTexture.wrapT = THREE.RepeatWrapping;
+    windowTexture.repeat.set(2, 2);
 
-const generateStoneTexture = (color: string) => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 512;
-    const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = color;
-    ctx.fillRect(0, 0, 512, 512);
-    const imageData = ctx.getImageData(0, 0, 512, 512);
-    const data = imageData.data;
-    for (let i = 0; i < data.length; i += 4) {
-        const noise = Math.random() * 20;
-        data[i] += noise;
-        data[i + 1] += noise;
-        data[i + 2] += noise;
-    }
-    ctx.putImageData(imageData, 0, 0);
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    return texture;
+    const roadCanvas = document.createElement('canvas');
+    roadCanvas.width = 256; roadCanvas.height = 256;
+    const rctx = roadCanvas.getContext('2d')!;
+    rctx.fillStyle = '#1A1A1A'; rctx.fillRect(0,0,256,256);
+    rctx.strokeStyle = '#555555'; rctx.setLineDash([10, 10]); rctx.lineWidth = 4;
+    rctx.beginPath(); rctx.moveTo(128,0); rctx.lineTo(128,256); rctx.stroke();
+    const roadTexture = new THREE.CanvasTexture(roadCanvas);
+    roadTexture.wrapS = roadTexture.wrapT = THREE.RepeatWrapping;
+
+    return { window: windowTexture, road: roadTexture };
 };
 
-const generateMetallicGroundTexture = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 1024;
-    const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = '#05010D';
-    ctx.fillRect(0, 0, 1024, 1024);
-    const imageData = ctx.getImageData(0, 0, 1024, 1024);
-    const data = imageData.data;
-    for (let y = 0; y < 1024; y++) {
-        for (let x = 0; x < 1024; x++) {
-            const idx = (y * 1024 + x) * 4;
-            const brushNoise = Math.sin(x * 0.1) * 5;
-            const roughNoise = (Math.random() - 0.5) * 10;
-            data[idx] += brushNoise + roughNoise;
-            data[idx + 1] += brushNoise + roughNoise;
-            data[idx + 2] += brushNoise + roughNoise + 5;
-        }
-    }
-    ctx.putImageData(imageData, 0, 0);
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.repeat.set(4, 4);
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    return texture;
-};
+// --- Sub-Components ---
 
-// --- Components ---
-
-const NeonEdges = ({ geometry, color = THEME.primary }: { geometry: THREE.BufferGeometry, color?: string }) => {
-    return (
-        <lineSegments>
-            <edgesGeometry args={[geometry]} />
-            <lineBasicMaterial color={color} transparent opacity={0.6} linewidth={1} />
-        </lineSegments>
-    );
-};
-
-const Building = ({ data, onHover, onClick, showLabels = false, visualMode = 'normal', textures }: { data: BuildingData, onHover: any, onClick: any, showLabels?: boolean, visualMode?: 'normal' | 'wireframe' | 'neon', textures: any }) => {
+const Building = ({ data, onHover, onClick, showLabels, textures, visualMode }: any) => {
     const mesh = useRef<THREE.Mesh>(null);
     const [hovered, setHover] = useState(false);
-    const animationRef = useRef<gsap.core.Timeline | null>(null);
 
     const geometry = useMemo(() => {
         if (data.type === 'complex') {
             const shape = new THREE.Shape();
-            const w = data.size[0] / 2;
-            const h = data.size[1] / 2;
-            const bevel = 0.5;
-            shape.moveTo(-w + bevel, -h);
-            shape.lineTo(w - bevel, -h);
-            shape.quadraticCurveTo(w, -h, w, -h + bevel);
-            shape.lineTo(w, h - bevel);
-            shape.quadraticCurveTo(w, h, w - bevel, h);
-            shape.lineTo(-w + bevel, h);
-            shape.quadraticCurveTo(-w, h, -w, h - bevel);
-            shape.lineTo(-w, -h + bevel);
-            shape.quadraticCurveTo(-w, -h, -w + bevel, -h);
-
-            const holePath = new THREE.Path();
-            const pad = 1.5;
-            holePath.moveTo(-w + pad, -h + pad);
-            holePath.lineTo(w - pad, -h + pad);
-            holePath.lineTo(w - pad, h - pad);
-            holePath.lineTo(-w + pad, h - pad);
-            shape.holes.push(holePath);
-
-            return new THREE.ExtrudeGeometry(shape, { depth: data.height, bevelEnabled: true, bevelThickness: 0.2, bevelSize: 0.1 });
-        } else if (data.type === 'curved') {
-            return new THREE.CylinderGeometry(data.size[0] / 2, data.size[0] / 2, data.height, 32);
-        } else if (data.id.includes('gate')) {
-            return new THREE.TorusGeometry(data.size[0] / 2, 0.4, 16, 32, Math.PI);
+            const [w, h] = [data.size[0] / 2, data.size[1] / 2];
+            shape.moveTo(-w, -h); shape.lineTo(w, -h); shape.lineTo(w, h); shape.lineTo(-w, h);
+            const hole = new THREE.Path();
+            const p = 1.2; hole.moveTo(-w+p, -h+p); hole.lineTo(w-p, -h+p); hole.lineTo(w-p, h-p); hole.lineTo(-w+p, h-p);
+            shape.holes.push(hole);
+            return new THREE.ExtrudeGeometry(shape, { depth: data.height, bevelEnabled: true, bevelThickness: 0.05 });
         }
         return new THREE.BoxGeometry(data.size[0], data.height, data.size[1]);
     }, [data]);
-
-    useFrame((state) => {
-        if (!mesh.current) return;
-        if (!hovered) {
-            mesh.current.position.y = (data.height / 2) + Math.sin(state.clock.getElapsedTime() * 1.5 + data.position[0]) * 0.05;
-        }
-    });
-
-    const handlePointerOver = (e: any) => {
-        e.stopPropagation();
-        setHover(true);
-        onHover(data.id);
-        document.body.style.cursor = 'pointer';
-        if (animationRef.current) animationRef.current.kill();
-        animationRef.current = gsap.timeline();
-        animationRef.current.to(mesh.current!.position, { y: (data.height / 2) + 0.5, duration: 0.3, ease: 'back.out' });
-        animationRef.current.to(mesh.current!.scale, { x: 1.05, y: 1.05, z: 1.05, duration: 0.3, ease: 'back.out' }, 0);
-    };
-
-    const handlePointerOut = () => {
-        setHover(false);
-        onHover(null);
-        document.body.style.cursor = 'default';
-        if (animationRef.current) animationRef.current.kill();
-        animationRef.current = gsap.timeline();
-        animationRef.current.to(mesh.current!.position, { y: data.height / 2, duration: 0.4, ease: 'elastic.out' });
-        animationRef.current.to(mesh.current!.scale, { x: 1, y: 1, z: 1, duration: 0.4, ease: 'elastic.out' }, 0);
-    };
 
     return (
         <group position={[data.position[0], 0, data.position[1]]}>
             <mesh
                 ref={mesh}
                 geometry={geometry}
-                onPointerOver={handlePointerOver}
-                onPointerOut={handlePointerOut}
-                onClick={() => onClick(data.id)}
                 rotation={[data.type === 'complex' ? -Math.PI / 2 : 0, data.rotationY || 0, 0]}
+                position={[0, data.height / 2, 0]}
+                onPointerOver={(e) => { e.stopPropagation(); setHover(true); onHover(data.id); }}
+                onPointerOut={() => { setHover(false); onHover(null); }}
+                onClick={() => onClick(data.id)}
                 castShadow
                 receiveShadow
             >
                 {visualMode === 'wireframe' ? (
-                    <meshBasicMaterial color={data.color || THEME.primary} wireframe transparent opacity={0.6} />
+                    <meshBasicMaterial color={THEME.primary} wireframe />
                 ) : (
-                    <meshStandardMaterial
-                        map={textures.stone}
-                        color={data.color || THEME.stoneBeige}
-                        emissive={data.color || THEME.primary}
-                        emissiveIntensity={hovered ? 0.5 : 0.1}
-                        roughness={0.4}
+                    <meshPhysicalMaterial
+                        map={textures.window}
+                        color={data.color || THEME.building}
+                        roughness={0.3}
                         metalness={0.2}
-                        transparent
-                        opacity={0.85}
+                        emissive={hovered ? THEME.primary : '#000000'}
+                        emissiveIntensity={0.2}
                     />
                 )}
-                <NeonEdges geometry={geometry} color={data.color || THEME.primary} />
             </mesh>
+            
+            {data.type === 'complex' && visualMode !== 'wireframe' && (
+                <mesh position={[0, data.height, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <planeGeometry args={[data.size[0], data.size[1]]} />
+                    <meshStandardMaterial color={THEME.roof} roughness={0.9} />
+                </mesh>
+            )}
 
             {showLabels && (
-                <Html position={[0, data.height + 1, 0]} center distanceFactor={15}>
-                    <div className="bg-black/80 border border-primary px-3 py-1 rounded text-[10px] font-orbitron text-white whitespace-nowrap pointer-events-none shadow-[0_0_10px_rgba(188,19,254,0.5)]">
-                        {data.name}
+                <Html position={[0, data.height + 1.5, 0]} center distanceFactor={15}>
+                    <div className="px-3 py-1 bg-black/80 backdrop-blur-md border border-white/20 rounded-full text-[10px] text-white whitespace-nowrap font-orbitron shadow-xl pointer-events-none">
+                        <span className="text-primary mr-1">●</span> {data.name}
                     </div>
                 </Html>
             )}
@@ -243,160 +148,139 @@ const Building = ({ data, onHover, onClick, showLabels = false, visualMode = 'no
     );
 };
 
-const HoloRoads = () => {
-    const lines = useMemo(() => {
-        return ROADS.map(road => {
-            const points = road.points.map(p => new THREE.Vector3(p[0], 0.02, p[1]));
-            return new THREE.BufferGeometry().setFromPoints(points);
+const RealisticFoliage = ({ count = 80 }: { count?: number }) => {
+    const trunkGeo = useMemo(() => new THREE.CylinderGeometry(0.1, 0.15, 0.8), []);
+    const leafGeo = useMemo(() => new THREE.SphereGeometry(0.6, 8, 8), []);
+    const trunkMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#402905' }), []);
+    const leafMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#1B4D17', roughness: 0.9 }), []);
+
+    const positions = useMemo(() => {
+        return Array.from({ length: count }, () => {
+            const angle = Math.random() * Math.PI * 2;
+            const r = 22 + Math.random() * 8;
+            return [Math.cos(angle) * r, 0, Math.sin(angle) * r];
         });
-    }, []);
+    }, [count]);
 
     return (
         <group>
-            {lines.map((geo, i) => (
-                <line key={i} geometry={geo}>
-                    <lineBasicMaterial color={THEME.secondary} transparent opacity={0.4} />
-                </line>
+            <Instances geometry={trunkGeo} material={trunkMat}>
+                {positions.map((p, i) => <Instance key={i} position={[p[0], 0.4, p[2]]} />)}
+            </Instances>
+            <Instances geometry={leafGeo} material={leafMat}>
+                {positions.map((p, i) => <Instance key={i} position={[p[0], 1.2, p[2]]} scale={[1, 1.2, 1]} />)}
+            </Instances>
+        </group>
+    );
+};
+
+const Roads = ({ textures }: any) => {
+    return (
+        <group>
+            {ROADS.map((r, i) => {
+                const dx = r.end[0] - r.start[0];
+                const dz = r.end[1] - r.start[1];
+                const len = Math.sqrt(dx*dx + dz*dz);
+                const angle = Math.atan2(dz, dx);
+                return (
+                    <mesh key={i} position={[(r.start[0]+r.end[0])/2, 0.02, (r.start[1]+r.end[1])/2]} rotation={[-Math.PI/2, 0, -angle]} receiveShadow>
+                        <planeGeometry args={[len, r.width]} />
+                        <meshStandardMaterial map={textures.road} transparent opacity={0.9} />
+                    </mesh>
+                );
+            })}
+        </group>
+    );
+};
+
+const Streetlights = ({ count = 12 }: { count?: number }) => {
+    const poleGeo = useMemo(() => new THREE.CylinderGeometry(0.05, 0.05, 2.5), []);
+    const lightGeo = useMemo(() => new THREE.SphereGeometry(0.15, 8, 8), []);
+    const poleMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#333333' }), []);
+    const lightMat = useMemo(() => new THREE.MeshBasicMaterial({ color: '#FFDD33' }), []);
+
+    const positions = useMemo(() => [
+        [-18, 0, -18], [18, 0, -18], [18, 0, 18], [-18, 0, 18],
+        [0, 0, -22], [0, 0, 22], [-22, 0, 0], [22, 0, 0],
+        [-10, 0, -10], [10, 0, -10], [10, 0, 10], [-10, 0, 10]
+    ], []);
+
+    return (
+        <group>
+            <Instances geometry={poleGeo} material={poleMat}>
+                {positions.map((p, i) => <Instance key={i} position={[p[0], 1.25, p[2]]} />)}
+            </Instances>
+            <Instances geometry={lightGeo} material={lightMat}>
+                {positions.map((p, i) => (
+                    <Instance key={i} position={[p[0], 2.5, p[2]]} />
+                ))}
+            </Instances>
+            {positions.map((p, i) => (
+                <pointLight key={i} position={[p[0], 2.5, p[2]]} intensity={0.5} distance={5} color="#FFDD33" />
             ))}
         </group>
     );
 };
 
-const HolographicTrees = ({ count = 50 }: { count?: number }) => {
-    const treeGeometry = useMemo(() => new THREE.ConeGeometry(0.5, 1.5, 8), []);
-    const treeMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-        color: THEME.primary,
-        emissive: THEME.primary,
-        emissiveIntensity: 0.5,
-        transparent: true,
-        opacity: 0.7
-    }), []);
+// --- Main Component ---
 
-    const positions = useMemo(() => {
-        const temp = [];
-        for (let i = 0; i < count; i++) {
-            const angle = (i / count) * Math.PI * 2;
-            const r = 26 + Math.random() * 2;
-            temp.push([Math.cos(angle) * r, 0.75, Math.sin(angle) * r]);
-        }
-        return temp;
-    }, [count]);
-
-    return (
-        <Instances geometry={treeGeometry} material={treeMaterial}>
-            {positions.map((pos, i) => (
-                <Instance key={i} position={pos as [number, number, number]} />
-            ))}
-        </Instances>
-    );
-};
-
-const GrassInstances = () => {
-    const grassGeometry = useMemo(() => new THREE.PlaneGeometry(0.2, 0.5), []);
-    const grassMaterial = useMemo(() => new THREE.MeshBasicMaterial({
-        color: THEME.secondary,
-        transparent: true,
-        opacity: 0.4,
-        side: THREE.DoubleSide
-    }), []);
-
-    const groundAreas = [
-        { center: [-5, -22], size: [15, 6] },
-        { center: [-3, -2], size: [9, 7] },
-        { center: [15, -18.5], size: [10, 10] },
-        { center: [-5, 22], size: [30, 15] }
-    ];
-
-    const instances = useMemo(() => {
-        const temp = [];
-        for (const area of groundAreas) {
-            for (let i = 0; i < 40; i++) {
-                const x = area.center[0] + (Math.random() - 0.5) * area.size[0];
-                const z = area.center[1] + (Math.random() - 0.5) * area.size[1];
-                temp.push({ position: [x, 0.25, z], rotation: [0, Math.random() * Math.PI, 0] });
-            }
-        }
-        return temp;
-    }, []);
-
-    return (
-        <Instances geometry={grassGeometry} material={grassMaterial}>
-            {instances.map((props, i) => (
-                <Instance key={i} {...props as any} />
-            ))}
-        </Instances>
-    );
-};
-
-export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading = false, visualMode = 'normal' }: { onBuildingHover: (id: string | null) => void, onBuildingClick: (id: string) => void, isLoading?: boolean, visualMode?: 'normal' | 'wireframe' | 'neon' }) {
+export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading, visualMode = 'normal' }: any) {
     const [showLabels, setShowLabels] = useState(false);
-    const textures = useMemo(() => ({
-        stone: generateStoneTexture(THEME.stoneBeige),
-        ground: generateMetallicGroundTexture()
-    }), []);
+    const textures = useMemo(() => generateTextures(), []);
 
     useEffect(() => {
-        if (!isLoading) {
-            const timer = setTimeout(() => setShowLabels(true), 1000);
-            return () => clearTimeout(timer);
-        }
-        setShowLabels(false);
+        const timer = setTimeout(() => setShowLabels(!isLoading), 1500);
+        return () => clearTimeout(timer);
     }, [isLoading]);
 
     return (
         <group>
-            <ambientLight intensity={0.5} />
-            <pointLight position={[20, 30, 20]} intensity={1} color={THEME.primary} />
-            <pointLight position={[-20, 30, -20]} intensity={0.5} color={THEME.secondary} />
-
+            <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+            <Environment preset="city" />
+            <ContactShadows position={[0, 0, 0]} opacity={0.4} scale={60} blur={2} far={10} resolution={256} color="#000000" />
+            
             <group rotation={[0, Math.PI / 4, 0]}>
                 {/* Ground */}
                 <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                    <circleGeometry args={[30, 64]} />
-                    <meshStandardMaterial
-                        map={textures.ground}
-                        color="#05010D"
-                        metalness={0.8}
-                        roughness={0.2}
-                        transparent
-                        opacity={0.9}
-                    />
+                    <circleGeometry args={[35, 64]} />
+                    <meshStandardMaterial color={THEME.ground} roughness={0.8} metalness={0.1} />
                 </mesh>
 
-                <HoloRoads />
-                <HolographicTrees />
-                <GrassInstances />
+                {/* Grass Areas */}
+                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+                    <circleGeometry args={[34.8, 64]} />
+                    <meshStandardMaterial color={THEME.grass} roughness={1} />
+                </mesh>
 
-                {BUILDINGS.map((building) => (
+                <Roads textures={textures} />
+                <RealisticFoliage />
+                <Streetlights />
+
+                {BUILDINGS.map((b) => (
                     <Building
-                        key={building.id}
-                        data={building}
+                        key={b.id}
+                        data={b}
                         onHover={onBuildingHover}
                         onClick={onBuildingClick}
                         showLabels={showLabels}
-                        visualMode={visualMode}
                         textures={textures}
+                        visualMode={visualMode}
                     />
                 ))}
 
-                <Text
-                    position={[-22, 0.5, 0]}
-                    rotation={[-Math.PI / 2, 0, Math.PI / 2]}
-                    fontSize={1.2}
-                    color={THEME.primary}
-                >
+                <Text position={[-25, 0.1, 0]} rotation={[-Math.PI/2, 0, Math.PI/2]} fontSize={1.5} color={THEME.primary} font="/fonts/Orbitron-Bold.ttf">
                     MELA ROAD
                 </Text>
             </group>
 
-            {/* Projector Base Look */}
-            <mesh position={[0, -0.5, 0]}>
-                <cylinderGeometry args={[31, 28, 1, 64]} />
-                <meshStandardMaterial color="#05010D" metalness={0.9} roughness={0.1} />
+            {/* Base Design */}
+            <mesh position={[0, -0.6, 0]}>
+                <cylinderGeometry args={[36, 35, 1, 64]} />
+                <meshStandardMaterial color="#111111" metalness={0.9} roughness={0.1} />
             </mesh>
             <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                <ringGeometry args={[30, 30.5, 64]} />
-                <meshBasicMaterial color={THEME.primary} transparent opacity={0.5} />
+                <ringGeometry args={[35.1, 35.5, 64]} />
+                <meshBasicMaterial color={THEME.primary} transparent opacity={0.3} />
             </mesh>
         </group>
     );
