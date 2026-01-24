@@ -97,7 +97,7 @@ const PacManTimeline = () => {
 
     return () => {
       tl.kill();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      if (tl.scrollTrigger) tl.scrollTrigger.kill();
     };
   }, []);
 

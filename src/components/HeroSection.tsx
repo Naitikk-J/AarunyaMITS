@@ -51,9 +51,10 @@ const HeroSection = () => {
         duration: 0.5,
       }, 0.1);
 
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
+      return () => {
+        tl.kill();
+        if (tl.scrollTrigger) tl.scrollTrigger.kill();
+      };
   }, []);
 
     return (
