@@ -1,10 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TVFrame from "./TVFrame";
 import InsertCoin from "./InsertCoin";
 import PixelButton from "./PixelButton";
 import { PixelStar, PixelHeart, PixelMusicNote, PixelGhost, PixelController } from "./PixelDecorations";
+import InteractiveTVControls from "./InteractiveTVControls";
+
 const AarunyaLogo = "/aarunya-logo.svg";
 const retroRoomBg = "/retro-room-bg.jpg";
 
@@ -16,6 +18,7 @@ const HeroSection = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const roomRef = useRef<HTMLDivElement>(null);
   const screenContentRef = useRef<HTMLDivElement>(null);
+  const [isPowered, setIsPowered] = useState(true);
 
   useEffect(() => {
     if (!sectionRef.current || !tvRef.current || !contentRef.current || !roomRef.current || !screenContentRef.current) return;
@@ -37,7 +40,7 @@ const HeroSection = () => {
       ease: "power2.inOut",
     })
     .to(tvRef.current, {
-      scale: 3,
+      scale: 3.5,
       duration: 0.5,
       ease: "power2.inOut",
     }, 0)
@@ -55,6 +58,7 @@ const HeroSection = () => {
       opacity: 1,
       scale: 1,
       duration: 0.5,
+      pointerEvents: "auto",
     }, 0.4);
 
     return () => {
@@ -89,12 +93,12 @@ const HeroSection = () => {
       </div>
 
       {/* CRT TV Container */}
-      <div ref={tvRef} className="relative z-10 w-[90vw] max-w-2xl overflow-hidden" style={{ transformOrigin: 'center' }}>
+      <div ref={tvRef} className="relative z-10 w-[90vw] max-w-2xl overflow-visible" style={{ transformOrigin: 'center' }}>
         <TVFrame>
           {/* Initial Insert Coin screen */}
           <div
             ref={screenContentRef}
-            className="w-full h-full flex flex-col items-center justify-center p-8"
+            className={`w-full h-full flex flex-col items-center justify-center p-8 transition-opacity duration-300 ${isPowered ? 'opacity-100' : 'opacity-0'}`}
             style={{
               background: 'radial-gradient(ellipse at center, hsl(var(--crt-black)) 0%, hsl(0 0% 0%) 100%)',
             }}
@@ -113,6 +117,12 @@ const HeroSection = () => {
             </div>
           </div>
         </TVFrame>
+
+        {/* Interactive Controls */}
+        <InteractiveTVControls 
+          screenRef={screenContentRef} 
+          onPowerToggle={setIsPowered}
+        />
       </div>
 
       {/* Content revealed after zoom */}
