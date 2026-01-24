@@ -131,7 +131,7 @@ export const generateRegistrationEmail = (name: string, aarunyaId: string) => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>AARUNYA</h1>
+          <img src="${process.env.FRONTEND_URL || 'http://localhost:5173'}/aarunya-logo.webp" alt="Aarunya 2025" style="height: 100px; width: auto; margin: 0 auto; display: block;">
           <p style="margin: 10px 0 0 0; color: #00d9ff; font-size: 14px; letter-spacing: 2px;">EUPHORIA CAMPUS EXPLORER</p>
         </div>
 

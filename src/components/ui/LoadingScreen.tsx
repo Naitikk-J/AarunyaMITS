@@ -66,11 +66,14 @@ export function LoadingScreen() {
             <div className="relative z-10 flex flex-col items-center gap-8">
                 {/* Logo with Glitch Effect */}
                 <div className="glitch-trigger transform transition-transform duration-300">
-                    <h1 className="kidcore-text font-orbitron text-6xl font-black tracking-[0.3em] text-center drop-shadow-lg" style={{
-                        textShadow: '3px 3px 0 #FF85C0, 6px 6px 0 #FF5E1F, 0 0 20px rgba(0, 166, 255, 0.5), 0 0 40px rgba(255, 94, 31, 0.3)'
-                    }}>
-                        AARUNYA 2.0
-                    </h1>
+                    <img
+                        src="/aarunya-logo.webp"
+                        alt="Aarunya 2025"
+                        className="h-40 w-auto drop-shadow-lg"
+                        style={{
+                            filter: 'drop-shadow(3px 3px 0 #FF85C0) drop-shadow(6px 6px 0 #FF5E1F)'
+                        }}
+                    />
                 </div>
 
                 {/* Loading Text with Animation */}
