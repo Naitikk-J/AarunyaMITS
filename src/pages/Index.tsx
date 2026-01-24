@@ -48,6 +48,22 @@ const Index = () => {
 
         window.addEventListener('scroll', updateVelocity, { passive: true });
 
+        // Scroll Flow Animations for Arcade Challenge
+        const ctx = gsap.context(() => {
+            gsap.from("#games h2, #games p, #games .space-y-4 > div", {
+                scrollTrigger: {
+                    trigger: "#games",
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power3.out"
+            });
+        }, mainRef);
+
         const timelineTrigger = ScrollTrigger.create({
             trigger: "#games",
             start: "top center",
