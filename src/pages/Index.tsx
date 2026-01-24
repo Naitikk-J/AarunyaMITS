@@ -124,10 +124,10 @@ const Index = () => {
                 </div>
 
                 {/* Timeline Section - Optimized Scroll Length */}
-                <div id="timeline-section" className="relative bg-background/50 py-10">
-                    <div className="container mx-auto px-4 mb-10">
+                <div id="timeline-section" className="relative bg-background/50 pt-8 pb-4">
+                    <div className="container mx-auto px-4">
                         <div className="max-w-4xl mx-auto">
-                            <h2 className="font-pixel text-2xl text-secondary mb-8 text-center">MISSION: COIN COLLECTOR</h2>
+                            <h2 className="font-pixel text-2xl text-secondary mb-6 text-center">MISSION: COIN COLLECTOR</h2>
                             <CoinCollectorGame />
                         </div>
                     </div>
