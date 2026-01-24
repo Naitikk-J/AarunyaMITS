@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TVFrame from "./TVFrame";
@@ -19,41 +19,56 @@ const HeroSection = () => {
     const innerScreenRef = useRef<HTMLDivElement>(null);
     const [isPowered, setIsPowered] = useState(true);
 
-    useEffect(() => {
-      if (!sectionRef.current || !tvRef.current || !roomRef.current || !screenContentRef.current || !innerScreenRef.current) return;
+    const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+
+    useLayoutEffect(() => {
+      const section = sectionRef.current;
+      const tv = tvRef.current;
+      const room = roomRef.current;
+      const innerScreen = innerScreenRef.current;
+      const scrollIndicator = scrollIndicatorRef.current;
+
+      if (!section || !tv || !room || !innerScreen || !scrollIndicator) return;
 
       const ctx = gsap.context(() => {
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: sectionRef.current,
+            trigger: section,
             start: "top top",
-            end: "+=120%", // Increased for longer sticky feeling
+            end: "+=500%", // Very long pin to ensure zoom is the only focus
             scrub: 1,
             pin: true,
             anticipatePin: 1,
+            pinSpacing: true,
           },
         });
 
-        // Clean, direct zoom into TV screen starting immediately
-        tl.to(tvRef.current, {
-          scale: 8, // Increased scale for deeper zoom
-          z: 600,
-          duration: 1,
-          ease: "power1.in",
+        // Phase 1: Fade out indicators and start zoom
+        tl.to(scrollIndicator, {
+          opacity: 0,
+          duration: 0.1,
         })
-        .to(innerScreenRef.current, {
-          opacity: 0,
-          duration: 0.3,
-          ease: "power2.out",
+        .to(tv, {
+          scale: 60, // Deepest zoom to completely pass through the screen
+          duration: 1.5,
+          ease: "power2.in",
         }, 0)
-        .to(roomRef.current, {
+        .to(room, {
           opacity: 0,
-          scale: 1.1,
-          duration: 0.5,
-        }, 0.1);
-      }, sectionRef);
+          scale: 1.8,
+          duration: 0.7,
+          ease: "power1.inOut"
+        }, 0.2)
+        .to(innerScreen, {
+          opacity: 0,
+          duration: 0.4,
+          ease: "power2.out",
+        }, 0.8);
+      });
 
-      return () => ctx.revert();
+      return () => {
+        ctx.revert();
+      };
     }, []);
 
     return (
@@ -125,7 +140,7 @@ const HeroSection = () => {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-20">
+        <div ref={scrollIndicatorRef} className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-20">
           <span className="font-pixel text-[8px] text-muted-foreground tracking-widest">SCROLL</span>
           <div className="w-6 h-10 border-4 border-electric-yellow p-1" style={{ imageRendering: 'pixelated' }}>
             <div className="w-2 h-2 bg-electric-yellow mx-auto animate-bounce" />
