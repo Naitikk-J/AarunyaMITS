@@ -48,19 +48,21 @@ const Index = () => {
 
         window.addEventListener('scroll', updateVelocity, { passive: true });
 
-        ScrollTrigger.create({
-            trigger: "#games",
-            start: "top center",
-            onEnter: () => {
-                setAchievement({
-                    id: 'secret-arcade',
-                    title: 'Arcade Master',
-                    description: 'You found the hidden games zone!',
-                    icon: '🎮'
-                });
-            },
-            once: true
-        });
+        const ctx = gsap.context(() => {
+            ScrollTrigger.create({
+                trigger: "#games",
+                start: "top center",
+                onEnter: () => {
+                    setAchievement({
+                        id: 'secret-arcade',
+                        title: 'Arcade Master',
+                        description: 'You found the hidden games zone!',
+                        icon: '🎮'
+                    });
+                },
+                once: true
+            });
+        }, mainRef);
 
         const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
         if (mediaQuery.matches) {
@@ -69,7 +71,7 @@ const Index = () => {
 
         return () => {
             window.removeEventListener('scroll', updateVelocity);
-            ScrollTrigger.getAll().forEach(t => t.kill());
+            ctx.revert();
         };
     }, []);
 
