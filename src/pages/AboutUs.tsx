@@ -1,188 +1,114 @@
-import { useState } from 'react';
 import { MainNavigation } from '@/components/ui/MainNavigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 
 const teamMembers = [
   {
-    name: 'Teammate Name',
-    role: 'Frontend Developer',
-    image: '/team/member1.jpg',
-    skills: ['React', 'Tailwind', 'Animations'],
-    contribution: 'Designed UI, animations & kidcore interactions',
+    name: 'CORE_DEVELOPER_01',
+    role: 'FRONTEND_ENGINEER',
+    contribution: 'Pixel-art UI components and scroll-driven engine.',
   },
   {
-    name: 'Teammate Name',
-    role: 'Backend Developer',
-    image: '/team/member2.jpg',
-    skills: ['Node.js', 'Auth', 'APIs'],
-    contribution: 'Built backend logic & authentication system',
+    name: 'CORE_DEVELOPER_02',
+    role: 'BACKEND_ARCHITECT',
+    contribution: 'Secure data pipelines and event logic infrastructure.',
   },
 ];
 
 const technologies = [
-  'React',
-  'TypeScript',
-  'Tailwind',
-  'Vite',
-  'Node.js',
-  'Cyber UI',
-  'AARUNYA ID',
+  'REACT', 'TYPESCRIPT', 'TAILWIND', 'VITE', 'GSAP', 'FRAMER_MOTION', 'PIXEL_FONTS'
 ];
 
 const AboutUs = () => {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-
-  const handleTilt = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 18;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -18;
-    setTilt({ x, y });
-  };
-
   return (
-    <div className="min-h-screen bg-background overflow-hidden">
+    <div className="min-h-screen bg-black text-white font-pixel selection:bg-electric-yellow selection:text-black">
       <MainNavigation />
 
-      {/* HEADER */}
-      <div className="relative overflow-hidden bg-gradient-to-b from-primary/20 via-accent/10 to-transparent py-24">
-        <div className="absolute inset-0 scanlines opacity-10" />
-        <div className="container mx-auto px-6 relative z-10">
-          <h1 className="text-6xl md:text-7xl font-orbitron font-bold text-center mb-4 kidcore-text animate-rainbow">
-            AARUNYA 2.0
+      {/* Header */}
+      <div className="relative pt-32 pb-16 overflow-hidden border-b-4 border-electric-yellow/20">
+        <div className="container mx-auto px-6 relative z-10 text-center">
+          <h1 className="text-4xl md:text-6xl text-electric-yellow mb-4 glow-yellow uppercase tracking-tighter">
+            SYSTEM_SPECS
           </h1>
-          <p className="text-xl text-center text-muted-foreground font-rajdhani max-w-3xl mx-auto">
-            A futuristic campus experience blending creativity, technology, and interaction.
+          <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-[0.3em] max-w-2xl mx-auto">
+            Documentation on the creators and the technology powering AARUNYA 2026.
           </p>
         </div>
       </div>
 
-      {/* MISSION */}
-      <section className="py-24 px-6">
-        <Card className="glass-card max-w-4xl mx-auto text-center">
-          <CardHeader>
-            <CardTitle className="font-orbitron text-2xl kidcore-text">
-              Our Mission
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="font-rajdhani text-lg leading-relaxed text-muted-foreground">
-            AARUNYA 2.0 is designed to merge technology, creativity, and
-            interaction — redefining how students explore campus events through
-            immersive digital experiences.
-          </CardContent>
-        </Card>
-      </section>
+      {/* Mission Section */}
+      <div className="container mx-auto px-6 py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="border-4 border-white/10 p-8 relative">
+            <div className="absolute -top-1 -left-1 w-4 h-4 bg-electric-yellow" />
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-electric-yellow" />
+            
+            <h2 className="text-2xl text-electric-yellow mb-6 uppercase tracking-tight">MISSION_STATEMENT</h2>
+            <p className="text-xs md:text-sm text-muted-foreground leading-relaxed uppercase tracking-wider">
+              AARUNYA 2026 is a digital-first festival experience designed to merge retro-gaming aesthetics 
+              with modern campus life. Our goal is to create an interactive "Quest-driven" environment 
+              where every participant is a player in a larger narrative.
+            </p>
+          </div>
+        </div>
+      </div>
 
-      {/* TEAM */}
-      <section className="py-24">
-        <h2 className="text-center text-4xl font-orbitron mb-16 kidcore-text">
-          CORE TEAM
-        </h2>
-
-        <div className="flex flex-wrap justify-center gap-14 px-6">
-          {teamMembers.map((member, index) => (
-            <div
-              key={index}
-              className="w-72 h-96 perspective"
-              onMouseMove={handleTilt}
-              onMouseLeave={() => setTilt({ x: 0, y: 0 })}
-            >
-              <div
-                className="relative w-full h-full preserve-3d transition-transform duration-500 floating-sticker"
-                style={{
-                  transform: `rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`,
-                }}
-              >
-                {/* FRONT */}
-                <Card className="absolute inset-0 backface-hidden glass-card flex flex-col items-center justify-center">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-32 h-32 rounded-full border border-primary mb-4 object-cover"
-                  />
-                  <h3 className="text-xl font-orbitron text-primary">
-                    {member.name}
-                  </h3>
-                  <p className="text-sm font-mono text-muted-foreground">
-                    {member.role}
-                  </p>
-                </Card>
-
-                {/* BACK */}
-                <Card className="absolute inset-0 backface-hidden rotate-y-180 glass-card p-5">
-                  <p className="text-sm mb-4 font-rajdhani text-muted-foreground">
-                    {member.contribution}
-                  </p>
-                  <div className="flex flex-wrap gap-1">
-                    {member.skills.map((skill, i) => (
-                      <Badge key={i} variant="outline" className="font-mono text-xs">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </Card>
+      {/* Team Section */}
+      <div className="container mx-auto px-6 py-20 border-t-4 border-white/5 bg-white/5">
+        <h2 className="text-3xl text-center text-electric-yellow mb-16 uppercase tracking-tighter">THE_ARCHITECTS</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+          {teamMembers.map((member) => (
+            <div key={member.name} className="relative group">
+              <div className="absolute inset-0 bg-electric-yellow/5 border-2 border-white/10 group-hover:border-electric-yellow transition-colors" />
+              <div className="relative p-8 space-y-4">
+                <div className="w-16 h-1 bg-electric-yellow mb-4" />
+                <h3 className="text-xl text-white group-hover:text-electric-yellow transition-colors">{member.name}</h3>
+                <p className="text-[10px] text-electric-yellow/60 uppercase">{member.role}</p>
+                <p className="text-[10px] text-muted-foreground uppercase leading-relaxed">
+                  {member.contribution}
+                </p>
               </div>
             </div>
           ))}
         </div>
-      </section>
-
-      {/* ✅ TECH MARQUEE — FIXED */}
-      {/* TECH MARQUEE — FINAL CORRECT VERSION */}
-<section className="py-20 overflow-hidden relative">
-  <div className="absolute inset-0 scanlines opacity-10 pointer-events-none" />
-
-  {/* VIEWPORT */}
-  <div className="w-full overflow-hidden">
-    {/* TRACK */}
-    <div className="flex animate-marquee min-w-max">
-      {/* FIRST COPY */}
-      <div className="flex gap-14 px-6">
-        {technologies.map((tech, i) => (
-          <span
-            key={`tech-1-${i}`}
-            className="text-xl md:text-2xl font-mono kidcore-text whitespace-nowrap"
-          >
-            ⚡ {tech}
-          </span>
-        ))}
       </div>
 
-      {/* SECOND COPY */}
-      <div className="flex gap-14 px-6">
-        {technologies.map((tech, i) => (
-          <span
-            key={`tech-2-${i}`}
-            className="text-xl md:text-2xl font-mono kidcore-text whitespace-nowrap"
-          >
-            ⚡ {tech}
-          </span>
-        ))}
+      {/* Tech Stack */}
+      <div className="py-20 overflow-hidden bg-black border-y-4 border-white/5">
+        <div className="flex animate-marquee whitespace-nowrap">
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="flex gap-20 px-10">
+              {technologies.map((tech) => (
+                <span key={tech} className="text-2xl md:text-4xl text-white/10 font-bold uppercase tracking-widest hover:text-electric-yellow/20 transition-colors">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  </div>
-</section>
-
 
       {/* CTA */}
-      <section className="py-28 text-center">
-        <h2 className="text-4xl font-orbitron mb-10 kidcore-text">
-          JOIN THE AARUNYA REVOLUTION
-        </h2>
-        <div className="flex justify-center gap-6 flex-wrap">
-          <Button className="kidcore-btn font-orbitron">Join Team</Button>
-          <Button variant="outline" className="font-orbitron">
-            Feedback
-          </Button>
+      <div className="container mx-auto px-6 py-32 text-center">
+        <h2 className="text-3xl text-white mb-10 uppercase tracking-tighter">READY_TO_COLABORATE?</h2>
+        <div className="flex justify-center gap-6">
+          <button className="px-8 py-4 bg-electric-yellow text-black text-xs font-bold uppercase border-4 border-black shadow-[4px_4px_0px_#888] hover:translate-y-[-2px] transition-all">
+            SUBMIT_DATA
+          </button>
+          <button className="px-8 py-4 bg-transparent text-white text-xs font-bold uppercase border-4 border-white/20 hover:border-electric-yellow transition-all">
+            VIEW_SOURCE
+          </button>
         </div>
-      </section>
+      </div>
 
-      {/* CORNERS */}
-      <div className="fixed bottom-6 left-6 w-20 h-0.5 bg-gradient-to-r from-primary to-transparent" />
-      <div className="fixed bottom-6 left-6 w-0.5 h-20 bg-gradient-to-t from-primary to-transparent" />
-      <div className="fixed bottom-6 right-6 w-20 h-0.5 bg-gradient-to-l from-secondary to-transparent" />
-      <div className="fixed bottom-6 right-6 w-0.5 h-20 bg-gradient-to-t from-secondary to-transparent" />
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 20s linear infinite;
+        }
+      `}} />
     </div>
   );
 };
