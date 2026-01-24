@@ -36,75 +36,39 @@ export const PacManChaseGame = ({ isActive = true }: PacManChaseGameProps) => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Initialize Pac-Man animation
-    const tl = gsap.timeline({ repeat: -1 });
+    // Initialize Pac-Man scroll-driven animation
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top 80%",
+        end: "bottom 20%",
+        scrub: 1,
+      }
+    });
 
     if (pacManRef.current) {
-      // Pac-Man moves back and forth with animated mouth
       tl.to(pacManRef.current, {
-        x: 300,
-        duration: 3,
-        ease: 'sine.inOut',
-      })
-        .to(
-          pacManRef.current,
-          {
-            rotation: 180,
-            duration: 0.2,
-          },
-          0
-        )
-        .to(pacManRef.current, {
-          x: 0,
-          duration: 3,
-          ease: 'sine.inOut',
-        })
-        .to(
-          pacManRef.current,
-          {
-            rotation: 0,
-            duration: 0.2,
-          }
-        );
+        x: "85vw",
+        ease: 'none',
+      });
     }
 
-    // Animate ghosts with scroll-responsive speed
+    // Animate ghosts with scroll-driven position
     ghostsRef.current.forEach((ghost, index) => {
       if (!ghost) return;
 
-      const ghostTl = gsap.timeline({ repeat: -1 });
-      const speed = 2 + index * 0.5;
-      const offset = index * 60;
-
-      ghostTl.to(ghost, {
-        x: 250 + offset,
-        duration: speed,
-        ease: 'sine.inOut',
-      })
-        .to(
-          ghost,
-          {
-            x: 0 + offset,
-            duration: speed,
-            ease: 'sine.inOut',
-          }
-        );
-
-      // Speed up ghosts based on scroll velocity
-      ScrollTrigger.create({
-        onUpdate: (self) => {
-          const velocity = Math.min(scrollVelocity / 5, 3);
-          if (ghostTl) {
-            ghostTl.timeScale(1 + velocity * 0.5);
-          }
-        },
-      });
+      const offset = (index + 1) * 50;
+      tl.to(ghost, {
+        x: `calc(85vw - ${offset}px)`,
+        ease: 'none',
+      }, 0);
     });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      tl.kill();
       ScrollTrigger.getAll().forEach((t) => {
-        if (t !== ScrollTrigger.current && t.vars.onUpdate) t.kill();
+        if (t.vars.trigger === containerRef.current) t.kill();
       });
     };
   }, [isActive, scrollVelocity]);

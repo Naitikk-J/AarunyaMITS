@@ -48,7 +48,7 @@ const Index = () => {
 
         window.addEventListener('scroll', updateVelocity, { passive: true });
 
-        ScrollTrigger.create({
+        const timelineTrigger = ScrollTrigger.create({
             trigger: "#games",
             start: "top center",
             onEnter: () => {
@@ -69,7 +69,7 @@ const Index = () => {
 
         return () => {
             window.removeEventListener('scroll', updateVelocity);
-            ScrollTrigger.getAll().forEach(t => t.kill());
+            timelineTrigger.kill();
         };
     }, []);
 
