@@ -73,34 +73,32 @@ const Headliners = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background font-orbitron">
+        <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black">
             <MainNavigation />
 
             {/* Header */}
-            <div className="relative overflow-hidden bg-gradient-to-b from-primary/20 via-secondary/10 to-transparent py-24">
-                <div className="absolute inset-0 scanlines opacity-10" />
-                <div className="container mx-auto px-6 relative z-10">
-                    <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-center mb-6 bg-gradient-to-b from-white to-white/20 bg-clip-text text-transparent">
-                        HEADLINERS
-                    </h1>
-                    <div className="h-1 w-[120px] bg-primary mx-auto shadow-neon mb-8" />
-                    <p className="text-xl text-center text-muted-foreground font-share-tech tracking-widest max-w-3xl mx-auto uppercase opacity-80">
-                        // DISCOVER THE MOST EXCITING EVENTS AND ACHIEVEMENTS
-                    </p>
-                </div>
+            <div className="relative pt-40 pb-20 text-center">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
+                <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
+                    HEADLINERS
+                </h1>
+                <div className="h-1 w-[120px] bg-primary mx-auto shadow-neon" />
+                <p className="mt-8 text-sm md:text-base font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60 max-w-3xl mx-auto px-6">
+                    // DISCOVER THE MOST EXCITING EVENTS AND ACHIEVEMENTS
+                </p>
             </div>
 
             {/* Category Filter */}
             <div className="container mx-auto px-6 py-8">
-                <div className="flex flex-wrap justify-center gap-4 mb-16">
+                <div className="flex flex-wrap justify-center gap-4 mb-20">
                     {categories.map((category) => (
                         <Button
                             key={category.id}
                             onClick={() => setSelectedCategory(category.id)}
-                            className={`font-orbitron text-xs tracking-[0.2em] uppercase transition-all px-8 py-6 rounded-none border-2 ${
+                            className={`font-orbitron text-[10px] tracking-[0.3em] uppercase transition-all px-8 py-6 rounded-none border-2 ${
                                 selectedCategory === category.id
                                     ? 'bg-primary border-primary text-black shadow-neon'
-                                    : 'bg-transparent border-white/10 text-white/60 hover:border-primary/50 hover:text-primary'
+                                    : 'bg-transparent border-white/10 text-white/60 hover:border-primary/40 hover:text-primary'
                             }`}
                         >
                             {category.label}
@@ -108,55 +106,57 @@ const Headliners = () => {
                     ))}
                 </div>
 
-                {/* Events Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                {/* Events Grid - Styled like Schedule cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-40">
                     {filteredHeadliners.map((event) => {
                         const statusBadge = getStatusBadge(event.status);
                         return (
-                            <Card key={event.id} className="bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-xl overflow-hidden hover:border-primary/40 transition-all duration-500 group">
-                                <div className="absolute top-4 right-4 z-20">
-                                    <Badge className={`${statusBadge.color} text-black font-bold tracking-widest text-[10px] rounded-none px-3 py-1`}>
-                                        {statusBadge.label}
-                                    </Badge>
-                                </div>
-
-                                <div className="h-56 bg-black relative overflow-hidden flex items-center justify-center">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 group-hover:scale-110 transition-transform duration-700" />
-                                    <div className="absolute inset-0 scanlines opacity-20" />
-                                    <span className="text-7xl group-hover:scale-125 transition-transform duration-500 drop-shadow-[0_0_20px_rgba(188,19,254,0.4)]">
-                                        {event.category === 'tech' ? '⚡' : event.category === 'music' ? '🔊' : event.category === 'innovation' ? '💡' : '🎨'}
-                                    </span>
-                                </div>
-
-                                <CardHeader className="p-8">
-                                    <CardTitle className="text-2xl font-black text-white group-hover:text-primary transition-colors mb-2 tracking-tight">
-                                        {event.title}
-                                    </CardTitle>
-                                    <CardDescription className="font-share-tech text-xs text-primary/60 tracking-[0.2em] uppercase">
-                                        {event.date} // {event.attendees} REGISTERED
-                                    </CardDescription>
-                                </CardHeader>
-
-                                <CardContent className="px-8 pb-8">
-                                    <p className="text-muted-foreground text-sm mb-8 leading-relaxed font-medium">
-                                        {event.description}
-                                    </p>
-
-                                    <div className="flex items-center justify-between pt-6 border-t border-white/5">
-                                        <div className="flex flex-col">
-                                            <span className="text-[10px] text-white/30 tracking-widest uppercase mb-1">Sector</span>
-                                            <span className="text-xs font-share-tech text-secondary tracking-widest">{event.category.toUpperCase()}</span>
-                                        </div>
-
-                                        <Button
-                                            size="sm"
-                                            className="bg-transparent border border-primary/30 text-primary hover:bg-primary hover:text-black transition-all rounded-none text-[10px] tracking-[0.3em] font-bold px-6 py-4"
-                                        >
-                                            {event.status === 'registration' ? 'ACCESS NOW' : 'DETAILS'}
-                                        </Button>
+                            <div key={event.id} className="group">
+                                <div className="relative h-full bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-xl overflow-hidden hover:border-primary shadow-[0_0_30px_rgba(188,19,254,0.05)] transition-all duration-500 hover:shadow-[0_0_30px_rgba(188,19,254,0.15)] flex flex-col">
+                                    <div className="absolute top-4 right-4 z-20">
+                                        <Badge className={`${statusBadge.color} text-black font-bold tracking-widest text-[8px] rounded-none px-3 py-1 border-none`}>
+                                            {statusBadge.label}
+                                        </Badge>
                                     </div>
-                                </CardContent>
-                            </Card>
+
+                                    <div className="h-48 bg-black/40 relative overflow-hidden flex items-center justify-center border-b border-white/5">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 group-hover:scale-110 transition-transform duration-700" />
+                                        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(188, 19, 254, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(188, 19, 254, 0.2) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                                        <span className="text-6xl group-hover:scale-125 transition-transform duration-500 drop-shadow-[0_0_20px_rgba(188,19,254,0.4)] relative z-10">
+                                            {event.category === 'tech' ? '⚡' : event.category === 'music' ? '🔊' : event.category === 'innovation' ? '💡' : '🎨'}
+                                        </span>
+                                    </div>
+
+                                    <div className="p-8 flex-grow flex flex-col">
+                                        <h3 className="text-xl md:text-2xl font-black text-white group-hover:text-primary transition-colors mb-2 tracking-tight">
+                                            {event.title}
+                                        </h3>
+                                        <p className="font-share-tech text-[10px] text-primary/60 tracking-[0.3em] uppercase mb-4">
+                                            {event.date} // {event.attendees} REGISTERED
+                                        </p>
+                                        <p className="text-muted-foreground text-sm mb-8 leading-relaxed font-medium opacity-80 group-hover:opacity-100 transition-opacity">
+                                            {event.description}
+                                        </p>
+
+                                        <div className="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">
+                                            <div className="flex flex-col">
+                                                <span className="text-[8px] text-white/30 tracking-[0.4em] uppercase mb-1">Sector</span>
+                                                <span className="text-[10px] font-share-tech text-secondary tracking-[0.2em] font-bold">{event.category.toUpperCase()}</span>
+                                            </div>
+
+                                            <Button
+                                                size="sm"
+                                                className="bg-transparent border border-primary/30 text-primary hover:bg-primary hover:text-black transition-all rounded-none text-[9px] tracking-[0.4em] font-bold px-6 py-4"
+                                            >
+                                                {event.status === 'registration' ? 'ACCESS NOW' : 'DETAILS'}
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    {/* Background Accents */}
+                                    <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                                </div>
+                            </div>
                         );
                     })}
                 </div>
