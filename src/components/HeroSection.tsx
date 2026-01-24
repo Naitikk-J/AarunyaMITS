@@ -27,39 +27,35 @@ const HeroSection = () => {
       scrollTrigger: {
         trigger: sectionRef.current,
         start: "top top",
-        end: "+=150%",
+        end: "+=60%",
         scrub: 1,
         pin: true,
       },
     });
 
-    // Zoom into TV in 2 steps and fade out the logo/insert coin
+    // Clean, direct zoom into TV screen starting immediately
     tl.to(tvRef.current, {
-      scale: 1.8,
-      duration: 0.5,
-      ease: "power2.inOut",
+      scale: 6,
+      z: 500,
+      duration: 1,
+      ease: "power1.in",
     })
-    .to(tvRef.current, {
-      scale: 3.5,
-      duration: 0.5,
-      ease: "power2.inOut",
-    }, 0)
     .to(screenContentRef.current, {
       opacity: 0,
-      duration: 0.5,
-      ease: "power2.inOut",
+      duration: 0.3,
+      ease: "power2.out",
     }, 0)
     .to(roomRef.current, {
       opacity: 0,
-      scale: 1.5,
+      scale: 1.2,
       duration: 0.5,
-    }, 0.3)
+    }, 0.1)
     .to(contentRef.current, {
       opacity: 1,
       scale: 1,
-      duration: 0.5,
+      duration: 0.4,
       pointerEvents: "auto",
-    }, 0.4);
+    }, 0.6);
 
     return () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());

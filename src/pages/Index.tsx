@@ -28,7 +28,7 @@ const Index = () => {
         const timelineTrigger = ScrollTrigger.create({
             trigger: "#timeline-section",
             start: "top top",
-            end: "+=800", // Significantly reduced scroll length
+            end: "+=500", // Further reduced scroll length
             pin: true,
             scrub: 1,
             anticipatePin: 1,
