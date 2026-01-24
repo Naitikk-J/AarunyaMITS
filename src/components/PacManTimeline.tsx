@@ -60,18 +60,22 @@ const PacManTimeline = () => {
 
     // Scroll flow animations for timeline elements
     const ctx = gsap.context(() => {
-      gsap.from(".pixel-border-8bit, .flex-1.grid > div", {
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 85%",
-          toggleActions: "play none none none"
-        },
-        y: 40,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.15,
-        ease: "power2.out"
-      });
+      gsap.fromTo(".pixel-border-8bit, .flex-1.grid > div",
+        { y: 40, opacity: 0 },
+        {
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 85%",
+            end: "top 30%",
+            toggleActions: "play reverse play reverse"
+          },
+          y: 0,
+          opacity: 1,
+          duration: 0.7,
+          stagger: 0.15,
+          ease: "power2.out"
+        }
+      );
     }, containerRef);
 
     const tl = gsap.timeline({

@@ -50,46 +50,58 @@ const Index = () => {
 
         const ctx = gsap.context(() => {
             // Arcade Challenge section
-            gsap.from("#games h2, #games p, #games .space-y-4 > div, #games .grid > div", {
-                scrollTrigger: {
-                    trigger: "#games",
-                    start: "top 80%",
-                    toggleActions: "play none none none"
-                },
-                y: 60,
-                opacity: 0,
-                duration: 0.8,
-                stagger: 0.15,
-                ease: "power3.out"
-            });
+            gsap.fromTo("#games h2, #games p, #games .space-y-4 > div, #games .grid > div", 
+                { y: 60, opacity: 0 },
+                {
+                    scrollTrigger: {
+                        trigger: "#games",
+                        start: "top 80%",
+                        end: "top 20%",
+                        toggleActions: "play reverse play reverse"
+                    },
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.15,
+                    ease: "power3.out"
+                }
+            );
 
             // Timeline section
-            gsap.from("#timeline-section h2, #timeline-section .container > div", {
-                scrollTrigger: {
-                    trigger: "#timeline-section",
-                    start: "top 80%",
-                    toggleActions: "play none none none"
-                },
-                y: 50,
-                opacity: 0,
-                duration: 0.8,
-                stagger: 0.2,
-                ease: "power3.out"
-            });
+            gsap.fromTo("#timeline-section h2, #timeline-section .container > div",
+                { y: 50, opacity: 0 },
+                {
+                    scrollTrigger: {
+                        trigger: "#timeline-section",
+                        start: "top 80%",
+                        end: "top 20%",
+                        toggleActions: "play reverse play reverse"
+                    },
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.2,
+                    ease: "power3.out"
+                }
+            );
 
             // Footer section
-            gsap.from("#contact > div, #contact .flex > div, #contact a, #contact p", {
-                scrollTrigger: {
-                    trigger: "#contact",
-                    start: "top 85%",
-                    toggleActions: "play none none none"
-                },
-                y: 40,
-                opacity: 0,
-                duration: 0.6,
-                stagger: 0.1,
-                ease: "power2.out"
-            });
+            gsap.fromTo("#contact > div, #contact .flex > div, #contact a, #contact p",
+                { y: 40, opacity: 0 },
+                {
+                    scrollTrigger: {
+                        trigger: "#contact",
+                        start: "top 85%",
+                        end: "top 30%",
+                        toggleActions: "play reverse play reverse"
+                    },
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.6,
+                    stagger: 0.1,
+                    ease: "power2.out"
+                }
+            );
         }, mainRef);
 
         const timelineTrigger = ScrollTrigger.create({
