@@ -34,9 +34,9 @@ const Merch = () => {
                     <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-kidcore-blue via-kidcore-pink to-kidcore-orange bg-clip-text text-transparent animate-rainbow">
                         MERCH
                     </h1>
-                    <p className="text-xl text-center text-kidcore-cream font-rajdhani max-w-3xl mx-auto">
-                        Pick your gear. Keep the glow.
-                    </p>
+                      <p className="text-xl text-center text-muted-foreground font-share-tech max-w-3xl mx-auto">
+                          Pick your gear. Keep the glow.
+                      </p>
                 </div>
             </div>
 

@@ -75,9 +75,9 @@ const Theme = () => {
           <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             VISUAL THEMES
           </h1>
-          <p className="text-xl text-center text-muted-foreground font-rajdhani max-w-3xl mx-auto">
-            Customize your campus explorer experience with our collection of immersive visual themes
-          </p>
+            <p className="text-xl text-center text-muted-foreground font-share-tech max-w-3xl mx-auto">
+              Customize your campus explorer experience with our collection of immersive visual themes
+            </p>
         </div>
       </div>
 

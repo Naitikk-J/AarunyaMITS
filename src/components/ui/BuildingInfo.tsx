@@ -54,7 +54,7 @@ export const BuildingInfo = ({ buildingId }: BuildingInfoProps) => {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-sm text-kidcore-cream font-rajdhani leading-relaxed">
+                    <p className="text-sm text-kidcore-cream font-orbitron leading-relaxed">
                         {building.description}
                     </p>
                 </CardContent>

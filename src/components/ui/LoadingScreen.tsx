@@ -65,7 +65,7 @@ export function LoadingScreen() {
                         {loadingText}
                     </p>
                     <p 
-                        className="text-sm font-rajdhani tracking-widest font-bold"
+                        className="text-sm font-orbitron tracking-widest font-bold"
                         style={{
                             color: '#FF5E1F',
                             textShadow: '0 0 8px #FF5E1F'
@@ -96,7 +96,7 @@ export function LoadingScreen() {
 
                 {/* Loading Message */}
                 <p 
-                    className="font-rajdhani text-lg font-bold mt-4"
+                    className="font-orbitron text-lg font-bold mt-4"
                     style={{
                         color: '#B0FF57',
                         textShadow: '0 0 10px #B0FF57'

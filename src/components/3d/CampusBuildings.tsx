@@ -262,7 +262,7 @@ function HolographicBuilding({
                         <div className="font-orbitron text-sm font-bold" style={{ color: building.color }}>
                             {building.name}
                         </div>
-                        <div className="font-rajdhani text-xs text-muted-foreground">
+                        <div className="font-orbitron text-xs text-muted-foreground">
                             {building.hindiName}
                         </div>
                         {hovered && (
