@@ -78,13 +78,13 @@ export const MainNavigation = () => {
                 <div className="absolute bottom-1 right-0 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff, inset 1px 1px 0 #ff66ff' }} />
 
                 <div className="container mx-auto px-6 relative">
-                    <div className="flex items-center justify-between h-16">
+                    <div className="flex items-center justify-between h-24">
                         <Link to="/" className="flex items-center gap-3 group relative">
                             <div className="relative">
                                 <img
                                     src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/d75f38c7-4d8b-4d07-9e34-9f97ded313dc/AARUNYA-TYPO-resized-1769290270496.webp?width=200&height=200&resize=contain"
                                     alt="Aarunya 2026"
-                                    className="h-12 w-auto transition-transform group-hover:scale-105 duration-300"
+                                    className="h-16 w-auto transition-transform group-hover:scale-105 duration-300"
                                     style={{
                                         imageRendering: 'pixelated',
                                         filter: 'drop-shadow(0 0 12px #ff00ff) drop-shadow(0 0 24px #00ffff)'
@@ -93,7 +93,7 @@ export const MainNavigation = () => {
                             </div>
                         </Link>
 
-                        <div className="hidden lg:flex items-center gap-1">
+                        <div className="hidden lg:flex items-center gap-1.5">
                             {navLinks.map((link, idx) => {
                                 const isActive = location.pathname === link.path;
                                 const isHovered = hoverIdx === idx;
@@ -108,7 +108,7 @@ export const MainNavigation = () => {
                                     >
                                         <div 
                                             className={cn(
-                                                "relative px-2.5 py-1.5 text-[10px] font-bold tracking-wider transition-all duration-150",
+                                                "relative px-3 py-2.5 font-bold tracking-wider transition-all duration-150",
                                                 "border-2",
                                                 isActive 
                                                     ? "bg-gradient-to-b from-[#ff00ff] to-[#cc00cc] text-white border-[#ff66ff]" 
@@ -118,7 +118,7 @@ export const MainNavigation = () => {
                                             )}
                                             style={{
                                                 fontFamily: '"Press Start 2P", "Courier New", monospace',
-                                                fontSize: '8px',
+                                                fontSize: '9px',
                                                 textShadow: isActive 
                                                     ? '0 0 10px #fff, 2px 2px 0 #880088' 
                                                     : isHovered 
@@ -133,10 +133,10 @@ export const MainNavigation = () => {
                                         >
                                             {isActive && (
                                                 <>
-                                                    <span className="absolute -top-1 -left-1 w-2 h-2 bg-[#00ffff]" style={{ boxShadow: '0 0 6px #00ffff' }} />
-                                                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#00ffff]" style={{ boxShadow: '0 0 6px #00ffff' }} />
-                                                    <span className="absolute -bottom-1 -left-1 w-2 h-2 bg-[#00ffff]" style={{ boxShadow: '0 0 6px #00ffff' }} />
-                                                    <span className="absolute -bottom-1 -right-1 w-2 h-2 bg-[#00ffff]" style={{ boxShadow: '0 0 6px #00ffff' }} />
+                                                    <span className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 8px #00ffff' }} />
+                                                    <span className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 8px #00ffff' }} />
+                                                    <span className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 8px #00ffff' }} />
+                                                    <span className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 8px #00ffff' }} />
                                                 </>
                                             )}
                                             
@@ -190,7 +190,7 @@ export const MainNavigation = () => {
             </nav>
 
             {isOpen && (
-                <div className="fixed inset-0 z-40 lg:hidden top-16">
+                <div className="fixed inset-0 z-40 lg:hidden top-24">
                     <div
                         className="fixed inset-0 bg-black/90"
                         onClick={() => setIsOpen(false)}
@@ -200,7 +200,7 @@ export const MainNavigation = () => {
                     />
                     
                     <div 
-                        className="fixed top-16 left-0 right-0 z-50 overflow-hidden"
+                        className="fixed top-24 left-0 right-0 z-50 overflow-hidden"
                         style={{
                             background: 'linear-gradient(to bottom, #1a0a2e, #0d0520)',
                             borderBottom: '4px solid',
@@ -211,7 +211,7 @@ export const MainNavigation = () => {
                             background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.03) 2px, rgba(0,255,255,0.03) 4px)'
                         }} />
                         
-                        <div className="container mx-auto px-4 py-3 flex flex-col gap-1 max-h-[calc(100vh-64px)] overflow-y-auto relative">
+                        <div className="container mx-auto px-4 py-4 flex flex-col gap-2 max-h-[calc(100vh-96px)] overflow-y-auto relative">
                             <div 
                                 className="text-center py-2 mb-2"
                                 style={{
