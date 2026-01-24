@@ -19,6 +19,15 @@ const HeroSection = () => {
     const screenContentRef = useRef<HTMLDivElement>(null);
     const innerScreenRef = useRef<HTMLDivElement>(null);
     const [isPowered, setIsPowered] = useState(true);
+  
+    const handleStart = () => {
+      if (!sectionRef.current) return;
+      const scrollAmount = window.innerHeight * 0.8; // Scroll enough to trigger zoom
+      window.scrollTo({
+        top: scrollAmount,
+        behavior: "smooth",
+      });
+    };
 
     useEffect(() => {
       if (!sectionRef.current || !tvRef.current || !roomRef.current || !screenContentRef.current || !innerScreenRef.current) return;
@@ -87,12 +96,13 @@ const HeroSection = () => {
       {/* CRT TV Container */}
       <div ref={tvRef} className="relative z-10 w-[90vw] max-w-2xl overflow-visible" style={{ transformOrigin: 'center' }}>
             <TVFrame>
-              {/* Initial Insert Coin screen */}
-              <div
-                ref={screenContentRef}
-                className={`w-full h-full relative transition-opacity duration-300 ${isPowered ? 'opacity-100' : 'opacity-0'}`}
-                style={{
-                  backgroundImage: 'url(/Loadingscreen.png)',
+                {/* Initial Insert Coin screen */}
+                <div
+                  ref={screenContentRef}
+                  onClick={handleStart}
+                  className={`w-full h-full relative transition-opacity duration-300 cursor-pointer ${isPowered ? 'opacity-100' : 'opacity-0'}`}
+                  style={{
+                    backgroundImage: 'url(/Loadingscreen.png)',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   backgroundColor: 'hsl(var(--crt-black))',
