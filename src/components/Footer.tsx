@@ -39,42 +39,42 @@ const Footer = () => {
                 </p>
               </div>
 
-              {/* Quick Links */}
-              <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-center md:text-left">
-                {["EVENTS", "REGISTER", "SCHEDULE", "SPONSORS", "GALLERY", "CONTACT"].map((link) => (
-                  <a 
-                    key={link}
-                    href={`#${link.toLowerCase()}`}
-                    className="font-pixel text-[8px] text-foreground hover:text-electric-yellow transition-colors tracking-wider"
-                  >
-                    &gt; {link}
-                  </a>
-                ))}
-              </div>
-
-              {/* Social & CTA */}
-              <div className="flex flex-col items-center gap-4">
-                <PixelButton variant="warning" size="sm">
-                  REGISTER NOW
-                </PixelButton>
-                <div className="flex gap-3">
-                  {[
-                    { icon: "📷", label: "Instagram" },
-                    { icon: "🐦", label: "Twitter" },
-                    { icon: "📘", label: "Facebook" },
-                    { icon: "📺", label: "YouTube" },
-                  ].map((social) => (
+                {/* Quick Links */}
+                <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-center md:text-left">
+                  {["EVENTS", "SCHEDULE", "SPONSORS", "HISTORY", "ABOUT", "CONTACT"].map((link) => (
                     <a 
-                      key={social.label}
-                      href="#" 
-                      className="w-10 h-10 border-4 border-crt-black bg-card flex items-center justify-center text-lg shadow-[3px_3px_0_0_hsl(var(--crt-black))] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0_0_hsl(var(--crt-black))] transition-all"
-                      title={social.label}
+                      key={link}
+                      href={link === "CONTACT" ? "/contact" : link === "ABOUT" ? "/about" : link === "HISTORY" ? "/history" : link === "SPONSORS" ? "/sponsors" : link === "SCHEDULE" ? "/schedule" : "/events"}
+                      className="font-pixel text-[8px] text-foreground hover:text-electric-yellow transition-colors tracking-wider"
                     >
-                      {social.icon}
+                      &gt; {link}
                     </a>
                   ))}
                 </div>
-              </div>
+
+                {/* Social & CTA */}
+                <div className="flex flex-col items-center gap-4">
+                  <div className="font-pixel text-[10px] text-electric-yellow animate-pulse tracking-widest">
+                    STAY CONNECTED
+                  </div>
+                  <div className="flex gap-3">
+                    {[
+                      { icon: "📷", label: "Instagram" },
+                      { icon: "🐦", label: "Twitter" },
+                      { icon: "📘", label: "Facebook" },
+                      { icon: "📺", label: "YouTube" },
+                    ].map((social) => (
+                      <a 
+                        key={social.label}
+                        href="#" 
+                        className="w-10 h-10 border-4 border-crt-black bg-card flex items-center justify-center text-lg shadow-[3px_3px_0_0_hsl(var(--crt-black))] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0_0_hsl(var(--crt-black))] transition-all"
+                        title={social.label}
+                      >
+                        {social.icon}
+                      </a>
+                    ))}
+                  </div>
+                </div>
             </div>
 
             {/* Bottom bar */}
