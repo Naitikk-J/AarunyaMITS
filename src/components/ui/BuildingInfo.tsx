@@ -45,16 +45,16 @@ export const BuildingInfo = ({ buildingId }: BuildingInfoProps) => {
     };
 
     return (
-        <div className="fixed bottom-24 left-4 right-4 sm:left-6 sm:right-auto sm:max-w-xs z-40 floating-sticker">
-            <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-2xl sm:rounded-3xl">
-                <CardHeader className="p-3 sm:pb-2">
-                    <CardTitle className="font-orbitron text-sm sm:text-lg text-kidcore-yellow flex items-center gap-2 animate-playful-bounce">
-                        <MapPin size={16} className="text-kidcore-pink sm:size-[18px]" />
+        <div className="fixed bottom-24 left-6 z-40 max-w-xs floating-sticker">
+            <Card className="glass-card border-kidcore-blue/60 bg-background/85 backdrop-blur-xl rounded-3xl">
+                <CardHeader className="pb-2">
+                    <CardTitle className="font-orbitron text-lg text-kidcore-yellow flex items-center gap-2 animate-playful-bounce">
+                        <MapPin size={18} className="text-kidcore-pink" />
                         {building.name}
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
-                    <p className="text-[10px] sm:text-sm text-kidcore-cream font-orbitron leading-relaxed line-clamp-2 sm:line-clamp-none">
+                <CardContent>
+                    <p className="text-sm text-kidcore-cream font-orbitron leading-relaxed">
                         {building.description}
                     </p>
                 </CardContent>

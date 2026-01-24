@@ -24,7 +24,7 @@ const InsertCoin = () => {
         INSERT COIN
       </p>
       <p className="font-pixel text-foreground/60 text-xs md:text-sm">
-        CLICK OR SCROLL TO START
+        SCROLL TO START
       </p>
     </div>
   );
