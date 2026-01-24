@@ -50,7 +50,7 @@ const Character = ({ data, isMobile = false }: { data: CharacterData; isMobile?:
     const currentWaypoint = useRef(0);
 
     useFrame(() => {
-        if (!meshRef.current) return;
+        if (!meshRef.current || !data || !data.position || !data.targetPosition) return;
 
         const direction = data.targetPosition.clone().sub(data.position);
         const distance = direction.length();
@@ -58,7 +58,10 @@ const Character = ({ data, isMobile = false }: { data: CharacterData; isMobile?:
         if (distance < 0.5) {
             // Reached waypoint, pick next one
             currentWaypoint.current = (currentWaypoint.current + 1) % WAYPOINTS.length;
-            data.targetPosition.copy(WAYPOINTS[currentWaypoint.current]);
+            const nextWaypoint = WAYPOINTS[currentWaypoint.current];
+            if (nextWaypoint) {
+                data.targetPosition.copy(nextWaypoint);
+            }
         } else {
             // Move towards waypoint
             direction.normalize().multiplyScalar(data.speed);
@@ -66,17 +69,21 @@ const Character = ({ data, isMobile = false }: { data: CharacterData; isMobile?:
 
             // Rotate towards direction
             const angle = Math.atan2(direction.x, direction.z);
-            meshRef.current.rotation.y = THREE.MathUtils.lerp(
-                meshRef.current.rotation.y,
-                angle,
-                0.05
-            );
+            if (meshRef.current) {
+                meshRef.current.rotation.y = THREE.MathUtils.lerp(
+                    meshRef.current.rotation.y,
+                    angle,
+                    0.05
+                );
+            }
         }
 
         // Update mesh position with floating animation
-        const t = Date.now() * 0.001;
-        meshRef.current.position.copy(data.position);
-        meshRef.current.position.y = data.position.y + Math.sin(t * 3) * 0.08;
+        if (meshRef.current) {
+            const t = Date.now() * 0.001;
+            meshRef.current.position.copy(data.position);
+            meshRef.current.position.y = data.position.y + Math.sin(t * 3) * 0.08;
+        }
     });
 
     return (

@@ -61,12 +61,14 @@ const Shape = ({ data }: { data: ShapeData }) => {
     }, [data.type]);
 
     useFrame((state) => {
-        if (!meshRef.current) return;
+        if (!meshRef.current || !data || !data.position) return;
 
         const t = state.clock.getElapsedTime();
 
         // Floating animation
-        meshRef.current.position.y = data.position[1] + Math.sin(t * data.speed) * 5;
+        if (meshRef.current.position) {
+            meshRef.current.position.y = data.position[1] + Math.sin(t * data.speed) * 5;
+        }
 
         // Rotation
         meshRef.current.rotation.x += rotationSpeed.current[0];
