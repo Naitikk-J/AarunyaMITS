@@ -11,6 +11,7 @@ import { KidcoreDecorations } from '@/components/ui/KidcoreDecorations';
 import { HolographicMap } from '@/components/3d/HolographicMap';
 import { WalkingCharacters } from '@/components/3d/WalkingCharacters';
 import { FloatingShapes } from '@/components/3d/FloatingShapes';
+import { CameraController } from '@/components/3d/CameraController';
 
 const CampusExplorer = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -113,6 +114,8 @@ const CampusExplorer = () => {
                                 maxDistance={100}
                                 autoRotateSpeed={2}
                             />
+
+                            <CameraController selectedBuilding={selectedBuilding} />
 
                             {/* Main Lighting Setup */}
                             <ambientLight intensity={0.4} />

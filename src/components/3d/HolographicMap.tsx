@@ -16,6 +16,9 @@ interface BuildingData {
     icon?: string;
     color?: string;
     rotationY?: number;
+    description?: string;
+    facilities?: string[];
+    established?: string;
 }
 
 // --- Configuration --- Realistic & Tech Theme
@@ -32,11 +35,68 @@ const THEME = {
 
 // --- Data: Campus Layout ---
 const BUILDINGS: BuildingData[] = [
-    { id: 'main-gate', name: 'MITS Main Gate', hindiName: 'मुख्य द्वार', position: [5, -25], size: [4, 2], height: 2, type: 'landmark', icon: '🎓' },
-    { id: 'old-building', name: 'Old Building', hindiName: 'सिविल विभाग', position: [-6, -10], size: [16, 7], height: 4, type: 'complex' },
-    { id: 'canteen', name: 'Canteen', hindiName: 'कैंटीन', position: [-15, -12], size: [4, 4], height: 2, type: 'simple', icon: '🍽️' },
-    { id: 'ai-department', name: 'AI department', hindiName: 'एआई विभाग', position: [-3, 4], size: [9, 5], height: 8, type: 'simple', icon: '🤖' },
-    { id: 'library', name: 'Central Library', hindiName: 'पुस्तकालय', position: [-7, -16], size: [4, 3], height: 5, type: 'complex', icon: '📚' },
+    { 
+        id: 'main-gate', 
+        name: 'MITS Main Gate', 
+        hindiName: 'मुख्य द्वार', 
+        position: [5, -25], 
+        size: [4, 2], 
+        height: 2, 
+        type: 'landmark', 
+        icon: '🎓',
+        description: 'The iconic entrance to Madhav Institute of Technology & Science, Gwalior. A symbol of excellence and tradition.',
+        established: '1957',
+        facilities: ['24/7 Security', 'Information Desk', 'Entry/Exit Logs']
+    },
+    { 
+        id: 'old-building', 
+        name: 'Old Building', 
+        hindiName: 'सिविल विभाग', 
+        position: [-6, -10], 
+        size: [16, 7], 
+        height: 4, 
+        type: 'complex',
+        description: 'The historic heart of the campus, housing the Department of Civil Engineering and administrative offices.',
+        established: '1957',
+        facilities: ['Civil Labs', 'Auditorium', 'Admin Block']
+    },
+    { 
+        id: 'canteen', 
+        name: 'Canteen', 
+        hindiName: 'कैंटीन', 
+        position: [-15, -12], 
+        size: [4, 4], 
+        height: 2, 
+        type: 'simple', 
+        icon: '🍽️',
+        description: 'A vibrant hub for students to relax and enjoy a variety of cuisines. The social center of MITS.',
+        facilities: ['Hygienic Kitchen', 'Outdoor Seating', 'Digital Payments']
+    },
+    { 
+        id: 'ai-department', 
+        name: 'AI department', 
+        hindiName: 'एआई विभाग', 
+        position: [-3, 4], 
+        size: [9, 5], 
+        height: 8, 
+        type: 'simple', 
+        icon: '🤖',
+        description: 'State-of-the-art facility dedicated to Artificial Intelligence and Data Science research.',
+        established: '2020',
+        facilities: ['GPU Cluster', 'AI Lab', 'Smart Classrooms']
+    },
+    { 
+        id: 'library', 
+        name: 'Central Library', 
+        hindiName: 'पुस्तकालय', 
+        position: [-7, -16], 
+        size: [4, 3], 
+        height: 5, 
+        type: 'complex', 
+        icon: '📚',
+        description: 'A vast repository of knowledge with over 100,000 books and digital resources.',
+        facilities: ['E-Library', 'Reading Halls', 'Journal Section']
+    },
     { id: 'stage-ground', name: 'stage ground', hindiName: 'स्टेज ग्राउंड', position: [-5, -22], size: [15, 6], height: 0.1, type: 'landmark', color: '#2D5A27' },
     { id: 'ai-ground', name: 'AI ground', hindiName: 'एआई ग्राउंड', position: [-3, -2], size: [9, 7], height: 0.1, type: 'landmark', color: '#3A6B35' },
     { id: 'statue-ground', name: 'statue ground', hindiName: 'स्टैच्यू ग्राउंड', position: [15, -18.5], size: [10, 10], height: 0.1, type: 'landmark', color: '#2D5A27' },
@@ -50,6 +110,7 @@ const BUILDINGS: BuildingData[] = [
     { id: 'mits-main', name: 'mechanical workshop', hindiName: 'मैकेनिकल वर्कशॉप', position: [0, 15], size: [7, 5], height: 5, type: 'complex', icon: '⚙️' },
     { id: 'diamond-gate', name: 'Diamond Jubilee Gate', hindiName: 'डायमंड गेट', position: [-20, 16], size: [4, 1], height: 3, type: 'landmark', rotationY: Math.PI / 2 },
 ];
+
 
 const ROADS = [
     { start: [-20, -20], end: [20, -20], width: 2 },
