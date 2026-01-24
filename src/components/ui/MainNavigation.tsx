@@ -29,9 +29,17 @@ export const MainNavigation = () => {
                         {/* Logo */}
                         <Link
                             to="/"
-                            className="font-orbitron text-2xl font-bold bg-gradient-to-r from-kidcore-blue via-kidcore-pink to-kidcore-orange bg-clip-text text-transparent animate-rainbow"
+                            className="flex items-center"
                         >
-                            AARUNYA
+                            <img
+                                src="/aarunya-logo.svg"
+                                alt="Aarunya 2026"
+                                className="h-10 w-auto"
+                                style={{
+                                    filter: "drop-shadow(0 0 8px hsl(var(--neon-magenta)))",
+                                    imageRendering: 'pixelated',
+                                }}
+                            />
                         </Link>
 
                         {/* Desktop Navigation */}

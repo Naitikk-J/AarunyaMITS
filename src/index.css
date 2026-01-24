@@ -45,6 +45,16 @@
         --input: 240 25% 20%;
         --ring: 210 100% 50%;
         --radius: 0.5rem;
+
+        /* Kidcore Color Variables */
+        --radical-red: 0 100% 50%;
+        --electric-yellow: 61 100% 60%;
+        --cyber-blue: 210 100% 50%;
+        --neon-magenta: 300 100% 50%;
+        --lime-green: 90 100% 50%;
+        --crt-black: 0 0% 10%;
+        --arcade-orange: 25 100% 55%;
+        --hot-pink: 320 100% 50%;
     }
 
     .dark {
@@ -158,6 +168,162 @@
 }
 
 @layer components {
+    /* CRT TV Frame Styles */
+    .crt-frame {
+        position: relative;
+        background: hsl(var(--crt-black));
+        border: 8px solid hsl(var(--crt-black));
+        border-radius: 12px;
+        box-shadow: 0 0 20px hsl(0 0% 0% / 0.8), inset 0 0 10px hsl(0 0% 0% / 0.5);
+        padding: 12px;
+    }
+
+    .crt-screen {
+        background: radial-gradient(ellipse at center, hsl(0 0% 0%), hsl(var(--crt-black)));
+        border: 4px solid hsl(var(--crt-black));
+        box-shadow: inset 0 0 20px hsl(0 0% 0% / 0.8);
+    }
+
+    /* Pixel Art Border Styles */
+    .pixel-border-8bit {
+        border: 8px solid hsl(var(--crt-black));
+        box-shadow:
+            0 0 0 2px hsl(var(--electric-yellow)),
+            0 0 0 4px hsl(var(--crt-black)),
+            4px 4px 0 hsl(var(--crt-black));
+    }
+
+    .pixel-border-4bit {
+        border: 4px solid hsl(var(--crt-black));
+        box-shadow:
+            0 0 0 1px hsl(var(--electric-yellow)),
+            2px 2px 0 hsl(var(--crt-black));
+    }
+
+    /* Font Pixel */
+    .font-pixel {
+        font-family: 'Orbitron', monospace;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+    }
+
+    /* Glow Effects for Colors */
+    .glow-yellow {
+        text-shadow: 0 0 10px hsl(var(--electric-yellow)), 0 0 20px hsl(var(--electric-yellow) / 0.6);
+        filter: drop-shadow(0 0 5px hsl(var(--electric-yellow)));
+    }
+
+    .glow-red {
+        text-shadow: 0 0 10px hsl(var(--radical-red)), 0 0 20px hsl(var(--radical-red) / 0.6);
+        filter: drop-shadow(0 0 5px hsl(var(--radical-red)));
+    }
+
+    .glow-green {
+        text-shadow: 0 0 10px hsl(var(--lime-green)), 0 0 20px hsl(var(--lime-green) / 0.6);
+        filter: drop-shadow(0 0 5px hsl(var(--lime-green)));
+    }
+
+    .glow-blue {
+        text-shadow: 0 0 10px hsl(var(--cyber-blue)), 0 0 20px hsl(var(--cyber-blue) / 0.6);
+        filter: drop-shadow(0 0 5px hsl(var(--cyber-blue)));
+    }
+
+    .glow-pink {
+        text-shadow: 0 0 10px hsl(var(--neon-magenta)), 0 0 20px hsl(var(--neon-magenta) / 0.6);
+        filter: drop-shadow(0 0 5px hsl(var(--neon-magenta)));
+    }
+
+    /* Pac-Man Chomp Animation */
+    @keyframes chomp {
+        0%, 100% {
+            clip-path: polygon(30% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%, 0% 0%);
+        }
+        50% {
+            clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 0% 100%);
+        }
+    }
+
+    .animate-chomp {
+        animation: chomp 0.5s infinite;
+    }
+
+    /* Pulse Glow Animation */
+    @keyframes pulse-glow {
+        0%, 100% {
+            opacity: 1;
+            filter: drop-shadow(0 0 5px currentColor);
+        }
+        50% {
+            opacity: 0.7;
+            filter: drop-shadow(0 0 15px currentColor);
+        }
+    }
+
+    .animate-pulse-glow {
+        animation: pulse-glow 1.5s ease-in-out infinite;
+    }
+
+    /* Glitch Text Effect */
+    .glitch {
+        position: relative;
+        color: hsl(var(--electric-yellow));
+        font-weight: bold;
+    }
+
+    .glitch::before,
+    .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .glitch::before {
+        animation: glitch 0.3s infinite;
+        color: hsl(var(--neon-magenta));
+        z-index: -1;
+        text-shadow: -2px 0 hsl(var(--neon-magenta));
+    }
+
+    .glitch::after {
+        animation: glitch 0.3s infinite reverse;
+        color: hsl(var(--lime-green));
+        z-index: -2;
+        text-shadow: -2px 0 hsl(var(--lime-green));
+    }
+
+    /* Kidcore Color Variable Classes */
+    .radical-red {
+        --current-color: hsl(var(--radical-red));
+        color: var(--current-color);
+    }
+
+    .electric-yellow {
+        --current-color: hsl(var(--electric-yellow));
+        color: var(--current-color);
+    }
+
+    .cyber-blue {
+        --current-color: hsl(var(--cyber-blue));
+        color: var(--current-color);
+    }
+
+    .neon-magenta {
+        --current-color: hsl(var(--neon-magenta));
+        color: var(--current-color);
+    }
+
+    .lime-green {
+        --current-color: hsl(var(--lime-green));
+        color: var(--current-color);
+    }
+
+    .crt-black {
+        --current-color: hsl(var(--crt-black));
+        color: var(--current-color);
+    }
 
     /* Glitch Animation */
     @keyframes glitch {
@@ -899,6 +1065,72 @@
     .animate-text-bounce-stagger > span:nth-child(8) { animation-delay: 0.7s; }
     .animate-text-bounce-stagger > span:nth-child(9) { animation-delay: 0.8s; }
     .animate-text-bounce-stagger > span:nth-child(10) { animation-delay: 0.9s; }
+
+    /* CRT Overlay Effects */
+    .crt-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            hsl(0 0% 0% / 0.03) 2px,
+            hsl(0 0% 0% / 0.03) 4px
+        );
+        z-index: 9999;
+    }
+
+    .noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise" /><feColorMatrix in="noise" type="saturate" values="0.3"/></filter><rect width="100" height="100" fill="%230A0E27" filter="url(%23noise)" opacity="0.1"/></svg>');
+        animation: noise-shift 0.2s infinite;
+        z-index: 9998;
+    }
+
+    @keyframes noise-shift {
+        0% {
+            transform: translate(0, 0);
+        }
+        10% {
+            transform: translate(-2px, -2px);
+        }
+        20% {
+            transform: translate(2px, 2px);
+        }
+        30% {
+            transform: translate(-2px, 2px);
+        }
+        40% {
+            transform: translate(2px, -2px);
+        }
+        50% {
+            transform: translate(-1px, 1px);
+        }
+        60% {
+            transform: translate(1px, -1px);
+        }
+        70% {
+            transform: translate(0px, 0px);
+        }
+        80% {
+            transform: translate(-1px, -2px);
+        }
+        90% {
+            transform: translate(2px, 1px);
+        }
+        100% {
+            transform: translate(0, 0);
+        }
+    }
 }
 
 /* Custom scrollbar - Kidcore */
