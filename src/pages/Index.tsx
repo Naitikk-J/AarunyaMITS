@@ -28,7 +28,7 @@ const Index = () => {
             <MainNavigation />
 
             {/* Main Content */}
-            <>
+            <div>
                 {/* Hero Section with TV zoom effect */}
                 <HeroSection />
 
@@ -43,7 +43,7 @@ const Index = () => {
 
                 {/* CRT Overlay Effects */}
                 <CRTOverlay />
-            </>
+            </div>
         </div>
     );
 };
