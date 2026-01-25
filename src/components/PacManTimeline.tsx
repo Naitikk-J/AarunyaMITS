@@ -51,6 +51,8 @@ const PacManTimeline = () => {
   const pacmanRef = useRef<HTMLDivElement>(null);
   const [eatenDots, setEatenDots] = useState<number[]>([]);
   const [activeEvent, setActiveEvent] = useState<number>(0);
+  const [dots, setDots] = useState<{ x: number, y: number }[]>([]);
+  const [eventProgressions, setEventProgressions] = useState<number[]>([0, 0.33, 0.66, 1]);
 
   useEffect(() => {
     if (!containerRef.current || !pathRef.current || !pacmanRef.current) return;
@@ -58,7 +60,40 @@ const PacManTimeline = () => {
     const path = pathRef.current;
     const pathLength = path.getTotalLength();
 
-    // Scroll flow animations for timeline elements
+    // Calculate dot positions along the path
+    const numDots = 12;
+    const newDots = [];
+    for (let i = 0; i < numDots; i++) {
+      const p = (i + 0.5) / numDots;
+      const pt = path.getPointAtLength(p * pathLength);
+      newDots.push({ x: pt.x, y: pt.y });
+    }
+    setDots(newDots);
+
+    // Calculate event progressions
+    const eventPoints = [
+      { x: 30, y: 50 },
+      { x: 330, y: 150 },
+      { x: 30, y: 350 },
+      { x: 280, y: 450 },
+    ];
+
+    const progressions = eventPoints.map(target => {
+      let bestP = 0;
+      let minD = Infinity;
+      for (let i = 0; i <= 100; i++) {
+        const p = i / 100;
+        const pt = path.getPointAtLength(p * pathLength);
+        const d = Math.pow(pt.x - target.x, 2) + Math.pow(pt.y - target.y, 2);
+        if (d < minD) {
+          minD = d;
+          bestP = p;
+        }
+      }
+      return bestP;
+    });
+    setEventProgressions(progressions);
+
     const ctx = gsap.context(() => {
       gsap.from(".pixel-border-8bit, .flex-1.grid > div", {
         scrollTrigger: {
@@ -83,32 +118,34 @@ const PacManTimeline = () => {
         onUpdate: (self) => {
           const progress = self.progress;
           const point = path.getPointAtLength(progress * pathLength);
+          const nextPoint = path.getPointAtLength(Math.min(progress + 0.01, 1) * pathLength);
 
           if (pacmanRef.current) {
             pacmanRef.current.style.left = `${point.x}px`;
             pacmanRef.current.style.top = `${point.y}px`;
+            
+            // Calculate rotation
+            const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
+            pacmanRef.current.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
           }
 
-          const newEatenDots: number[] = [];
-          const dotPositions = [0.1, 0.2, 0.35, 0.5, 0.65, 0.8, 0.9];
-
-          dotPositions.forEach((pos, index) => {
-            if (progress > pos) {
-              newEatenDots.push(index);
+          const eaten: number[] = [];
+          for (let i = 0; i < numDots; i++) {
+            if (progress > (i + 0.5) / numDots) {
+              eaten.push(i);
             }
+          }
+          setEatenDots(eaten);
+
+          let currentEvent = 0;
+          progressions.forEach((p, i) => {
+            if (progress >= p - 0.05) currentEvent = i;
           });
-
-          setEatenDots(newEatenDots);
-
-          if (progress < 0.25) setActiveEvent(0);
-          else if (progress < 0.5) setActiveEvent(1);
-          else if (progress < 0.75) setActiveEvent(2);
-          else setActiveEvent(3);
+          setActiveEvent(currentEvent);
         },
       },
     });
 
-    // Add a dummy animation to activate the scroll trigger
     tl.to({}, { duration: 1 });
 
     return () => {
@@ -117,19 +154,6 @@ const PacManTimeline = () => {
       if (tl.scrollTrigger) tl.scrollTrigger.kill();
     };
   }, []);
-
-  const getDotPosition = (index: number) => {
-    const positions = [
-      { x: 80, y: 50 },
-      { x: 180, y: 50 },
-      { x: 280, y: 150 },
-      { x: 180, y: 250 },
-      { x: 280, y: 350 },
-      { x: 180, y: 450 },
-      { x: 80, y: 450 },
-    ];
-    return positions[index] || { x: 0, y: 0 };
-  };
 
   return (
     <section className="relative py-4" ref={containerRef}>
@@ -210,8 +234,7 @@ const PacManTimeline = () => {
               })}
 
               {/* Regular dots */}
-              {[0, 1, 2, 3, 4, 5, 6].map((index) => {
-                const pos = getDotPosition(index);
+              {dots.map((pos, index) => {
                 return (
                   <rect
                     key={`dot-${index}`}
