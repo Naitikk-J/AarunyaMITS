@@ -28,9 +28,9 @@ const Footer = () => {
     return () => ctx.revert();
   }, []);
 
-  return (
-    <footer ref={footerRef} className="relative py-16 px-4 overflow-hidden" id="contact">
-      {/* VHS Filter Overlay */}
+    return (
+      <footer ref={footerRef} className="relative py-16 px-4 overflow-hidden z-50" id="contact">
+        {/* VHS Filter Overlay */}
       <div className="vhs-filter absolute inset-0 opacity-20 pointer-events-none" />
 
       {/* Floating Sticker Decorations */}
