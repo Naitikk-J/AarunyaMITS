@@ -40,6 +40,15 @@ const Index = () => {
             ref={mainRef} 
             className="relative w-full overflow-x-hidden bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] bg-fixed bg-cover bg-center"
         >
+            {/* Retro Grid Background Overlay */}
+            <div 
+                className="fixed inset-0 pointer-events-none opacity-20" 
+                style={{ 
+                    backgroundImage: 'linear-gradient(#BC13FE 1px, transparent 1px), linear-gradient(90deg, #BC13FE 1px, transparent 1px)', 
+                    backgroundSize: '30px 30px',
+                    maskImage: 'radial-gradient(circle, black, transparent 80%)'
+                }} 
+            />
             <MainNavigation />
             <CRTOverlay />
 
