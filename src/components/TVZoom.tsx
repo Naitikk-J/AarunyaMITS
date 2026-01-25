@@ -47,12 +47,7 @@ export const TVZoom: React.FC<TVZoomProps> = ({ children }) => {
 
           {/* TV Screen Content Area */}
           <div className="absolute inset-0 flex items-center justify-center p-[10%]">
-            <div className="w-full h-full bg-[#0D001A] overflow-hidden relative">
-               {/* Grid background inside TV */}
-               <div className="absolute inset-0 opacity-20" 
-                    style={{ backgroundImage: 'linear-gradient(#BC13FE 1px, transparent 1px), linear-gradient(90deg, #BC13FE 1px, transparent 1px)', backgroundSize: '20px 20px' }} 
-               />
-               
+            <div className="w-full h-full bg-[#0D001A]/80 overflow-hidden relative">
                {/* This is where the next section's content will appear as we zoom in */}
                <motion.div 
                  style={{ opacity: contentOpacity }}
