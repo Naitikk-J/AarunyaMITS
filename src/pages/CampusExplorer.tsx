@@ -234,20 +234,21 @@ const DrivingCamera = ({ carPosition, carRotation }: { carPosition: [number, num
     const { camera } = useThree();
     
     useFrame(() => {
-        const offsetX = Math.sin(carRotation) * -8;
-        const offsetZ = Math.cos(carRotation) * -8;
+        // Racing game camera: strictly follow behind and slightly above
+        const distance = 9;
+        const height = 3.8;
         
-        camera.position.lerp(
-            new THREE.Vector3(
-                carPosition[0] + offsetX,
-                carPosition[1] + 6,
-                carPosition[2] + offsetZ
-            ),
-            0.1
-        );
+        // Calculate camera position relative to car
+        const cameraX = carPosition[0] - Math.sin(carRotation) * distance;
+        const cameraZ = carPosition[2] - Math.cos(carRotation) * distance;
+        const cameraY = carPosition[1] + height;
         
-        const target = new THREE.Vector3(carPosition[0], carPosition[1] + 0.5, carPosition[2]);
-        camera.lookAt(target);
+        // Set position strictly (no lerp for "strictly follow")
+        camera.position.set(cameraX, cameraY, cameraZ);
+        
+        // Look at a point on the car or slightly ahead
+        // We look at the car's center slightly elevated
+        camera.lookAt(carPosition[0], carPosition[1] + 1.2, carPosition[2]);
     });
     
     return null;
