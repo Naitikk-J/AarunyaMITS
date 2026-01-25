@@ -1,15 +1,17 @@
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useDeviceCapability } from '@/hooks/useDeviceCapability';
 
 export function HolographicGrid() {
     const gridRef = useRef<THREE.Group>(null);
+    const deviceCapability = useDeviceCapability();
 
-    // Create grid lines
+    // Create optimized grid lines
     const gridLines = useMemo(() => {
         const lines: JSX.Element[] = [];
-        const gridSize = 200000;
-        const gridDivisions = 8000;
+        const gridSize = 100;
+        const gridDivisions = deviceCapability.isMobile ? 20 : 40;
         const spacing = gridSize / gridDivisions;
 
         // Main grid - Purple
@@ -81,7 +83,7 @@ export function HolographicGrid() {
 
             {/* Ground plane with dark material */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]} receiveShadow castShadow>
-                <planeGeometry args={[20000, 20000]} />
+                <planeGeometry args={[100, 100]} />
                 <meshStandardMaterial
                     color="#1d270a"
                     transparent
@@ -94,7 +96,7 @@ export function HolographicGrid() {
 
             {/* Subtle grid pattern overlay */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.08, 0]}>
-                <planeGeometry args={[20000, 20000]} />
+                <planeGeometry args={[100, 100]} />
                 <meshBasicMaterial
                     color="#00A6FF"
                     transparent
@@ -103,10 +105,9 @@ export function HolographicGrid() {
                 />
             </mesh>
 
-            {/* Glow ring at center (scaled up) */}
+            {/* Glow ring at center */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-                {/* OuterRadius, InnerRadius, Segments */}
-                <ringGeometry args={[200, 260, 128]} />
+                <ringGeometry args={[45, 55, 64]} />
                 <meshBasicMaterial
                     color="#00A6FF"
                     transparent

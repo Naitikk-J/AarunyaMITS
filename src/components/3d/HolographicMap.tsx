@@ -492,18 +492,22 @@ const Building = ({ data, onHover, onClick, showLabels = false, visualMode = 'no
                 onPointerOut={handlePointerOut}
                 onClick={() => onClick(data.id)}
                 rotation={[data.type === 'complex' ? -Math.PI / 2 : 0, data.rotationY || 0, 0]} // Rotate extruded geo
+                castShadow
+                receiveShadow
             >
                 {visualMode === 'normal' && (
                     <>
                         <meshStandardMaterial
                             map={stoneTexture}
+                            normalMap={detailedNormalMap}
                             color={data.color || THEME.stoneBeige}
                             emissive={data.color || THEME.stoneBeige}
-                            emissiveIntensity={hovered ? 0.3 : 0.05}
-                            roughness={0.7}
-                            metalness={0.2}
+                            emissiveIntensity={hovered ? 0.3 : 0.08}
+                            roughness={0.65}
+                            metalness={0.1}
+                            envMapIntensity={1.2}
                             transparent
-                            opacity={hovered ? 0.85 : 0.75}
+                            opacity={hovered ? 0.9 : 0.8}
                             side={THREE.DoubleSide}
                         />
                         <NeonEdges geometry={geometry} color={data.color || THEME.primary} />
@@ -530,10 +534,11 @@ const Building = ({ data, onHover, onClick, showLabels = false, visualMode = 'no
                             normalMap={detailedNormalMap}
                             color={data.color || THEME.stoneBeige}
                             emissive={THEME.primary}
-                            emissiveIntensity={hovered ? 0.6 : 0.35}
+                            emissiveIntensity={hovered ? 0.7 : 0.4}
                             emissiveMap={detailedStoneTexture}
-                            metalness={0.15}
-                            roughness={0.5}
+                            metalness={0.12}
+                            roughness={0.45}
+                            envMapIntensity={1.5}
                             transparent
                             opacity={1}
                             side={THREE.DoubleSide}
@@ -544,12 +549,12 @@ const Building = ({ data, onHover, onClick, showLabels = false, visualMode = 'no
             </mesh>
 
             {/* Base Glow Plate */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]} receiveShadow>
                 <planeGeometry args={[data.size[0] * 1.2, data.size[1] * 1.2]} />
                 <meshBasicMaterial
                     color={visualMode === 'wireframe' ? THEME.primary : (visualMode === 'neon' ? THEME.primary : data.color || THEME.primary)}
                     transparent
-                    opacity={visualMode === 'neon' ? (hovered ? 0.35 : 0.12) : (visualMode === 'wireframe' ? (hovered ? 0.3 : 0.05) : (hovered ? 0.3 : 0.05))}
+                    opacity={visualMode === 'neon' ? (hovered ? 0.4 : 0.15) : (visualMode === 'wireframe' ? (hovered ? 0.35 : 0.08) : (hovered ? 0.35 : 0.08))}
                 />
             </mesh>
 
@@ -674,24 +679,25 @@ const HangingBulb = ({ bulbColor = THEME.primary }: { bulbColor?: string }) => {
     return (
         <group ref={bulbRef} position={[0, baseYPos, 0]}>
             {/* Filament wire holder - connecting to ring */}
-            <mesh position={[0, 0.3, 0]}>
+            <mesh position={[0, 0.3, 0]} castShadow>
                 <cylinderGeometry args={[0.08, 0.08, 1.2, 8]} />
-                <meshStandardMaterial color="#C0C0C0" metalness={0.9} roughness={0.1} />
+                <meshStandardMaterial color="#C0C0C0" metalness={0.85} roughness={0.15} envMapIntensity={1.2} />
             </mesh>
 
             {/* Bulb glass sphere - larger and more visible */}
-            <mesh position={[0, -0.5, 0]}>
+            <mesh position={[0, -0.5, 0]} castShadow>
                 <sphereGeometry args={[3, 32, 32]} />
                 <meshPhysicalMaterial
                     color={bulbColor}
                     emissive={bulbColor}
-                    emissiveIntensity={1.2}
-                    metalness={0.05}
-                    roughness={0.15}
+                    emissiveIntensity={1.3}
+                    metalness={0.04}
+                    roughness={0.1}
                     transparent
-                    opacity={0.9}
+                    opacity={0.92}
                     clearcoat={1}
                     clearcoatRoughness={0.05}
+                    envMapIntensity={1.4}
                 />
             </mesh>
 
@@ -701,20 +707,20 @@ const HangingBulb = ({ bulbColor = THEME.primary }: { bulbColor?: string }) => {
                 <meshBasicMaterial
                     color={bulbColor}
                     transparent
-                    opacity={0.4}
+                    opacity={0.45}
                 />
             </mesh>
 
             {/* Bulb base/socket */}
-            <mesh position={[0, -1.05, 0]}>
+            <mesh position={[0, -1.05, 0]} castShadow>
                 <cylinderGeometry args={[0.2, 0.18, 0.2, 16]} />
-                <meshStandardMaterial color="#2A2A2A" metalness={0.6} roughness={0.4} />
+                <meshStandardMaterial color="#2A2A2A" metalness={0.55} roughness={0.45} envMapIntensity={1.1} />
             </mesh>
 
             {/* Base threads detail */}
-            <mesh position={[0, -1.2, 0]}>
+            <mesh position={[0, -1.2, 0]} castShadow>
                 <cylinderGeometry args={[0.19, 0.19, 0.1, 16]} />
-                <meshStandardMaterial color="#1A1A1A" metalness={0.7} roughness={0.3} />
+                <meshStandardMaterial color="#1A1A1A" metalness={0.65} roughness={0.35} />
             </mesh>
 
             {/* Light emission from bulb - stronger */}
@@ -733,22 +739,19 @@ const SciFiBase = ({ bulbColor = THEME.primary }: { bulbColor?: string }) => {
     return (
         <group position={[0, -2, 0]}>
             {/* Main Cylinder Base */}
-            <mesh position={[0, 1, 0]}>
+            <mesh position={[0, 1, 0]} castShadow receiveShadow>
                 <cylinderGeometry args={[28, 20, 2, 64]} />
-                <meshStandardMaterial color="#021014" metalness={0.8} roughness={0.2} />
+                <meshStandardMaterial color="#021014" metalness={0.75} roughness={0.25} envMapIntensity={1.3} />
             </mesh>
 
             {/* Glowing Ring */}
-            <mesh position={[0, 2.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <mesh position={[0, 2.1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <ringGeometry args={[26, 27, 64]} />
                 <meshBasicMaterial color={THEME.primary} transparent opacity={0.5} side={THREE.DoubleSide} />
             </mesh>
 
             {/* Hanging Bulb from Ring */}
             <HangingBulb bulbColor={bulbColor} />
-
-            {/* Inner Grid Floor */}
-            <gridHelper args={[1000, 1000, '#8B00FF', '#1a0033']} position={[0, 2.05, 0]} />
 
             {/* Decorative Outer Rings */}
             <mesh position={[0, 0.5, 0]}>
@@ -804,7 +807,7 @@ const HolographicTrees = ({ visualMode = 'normal', isMobile = false }: { visualM
                 return (
                     <group key={i} position={data.position}>
                         {/* Main tree cone */}
-                        <mesh scale={[data.scale, data.scale * 1.5, data.scale]} castShadow>
+                        <mesh scale={[data.scale, data.scale * 1.5, data.scale]} castShadow receiveShadow>
                             <coneGeometry args={[0.8, 2, 8]} />
                             {visualMode === 'wireframe' ? (
                                 <meshBasicMaterial
@@ -817,23 +820,25 @@ const HolographicTrees = ({ visualMode = 'normal', isMobile = false }: { visualM
                                 <meshPhysicalMaterial
                                     color={treeColor}
                                     emissive={treeColor}
-                                    emissiveIntensity={1.2}
+                                    emissiveIntensity={1.3}
                                     transparent
-                                    opacity={0.9}
-                                    metalness={0.6}
-                                    roughness={0.2}
-                                    clearcoat={1}
-                                    clearcoatRoughness={0}
+                                    opacity={0.95}
+                                    metalness={0.5}
+                                    roughness={0.25}
+                                    clearcoat={0.8}
+                                    clearcoatRoughness={0.1}
+                                    envMapIntensity={1.3}
                                 />
                             ) : (
                                 <meshPhysicalMaterial
                                     color={treeColor}
                                     emissive={treeColor}
-                                    emissiveIntensity={0.4}
+                                    emissiveIntensity={0.45}
                                     transparent
-                                    opacity={0.7}
-                                    metalness={0.3}
-                                    roughness={0.6}
+                                    opacity={0.75}
+                                    metalness={0.25}
+                                    roughness={0.55}
+                                    envMapIntensity={1.1}
                                 />
                             )}
                         </mesh>
@@ -844,27 +849,29 @@ const HolographicTrees = ({ visualMode = 'normal', isMobile = false }: { visualM
                             <meshBasicMaterial
                                 color={treeColor}
                                 transparent
-                                opacity={visualMode === 'neon' ? 0.5 : 0.3}
+                                opacity={visualMode === 'neon' ? 0.55 : 0.35}
                                 wireframe
                             />
                         </mesh>
 
                         {/* Tree trunk - darker base */}
-                        <mesh position={[0, -0.5, 0]} scale={[data.scale * 0.3, data.scale * 0.8, data.scale * 0.3]}>
+                        <mesh position={[0, -0.5, 0]} scale={[data.scale * 0.3, data.scale * 0.8, data.scale * 0.3]} castShadow receiveShadow>
                             <cylinderGeometry args={[0.4, 0.5, 1, 4]} />
                             {visualMode === 'neon' ? (
                                 <meshPhysicalMaterial
                                     color="#1A1A1A"
                                     emissive={THEME.primary}
-                                    emissiveIntensity={0.8}
-                                    metalness={0.8}
-                                    roughness={0.2}
+                                    emissiveIntensity={0.85}
+                                    metalness={0.75}
+                                    roughness={0.25}
+                                    envMapIntensity={1.2}
                                 />
                             ) : (
                                 <meshStandardMaterial
                                     color="#1A1A1A"
                                     emissive="#FF5E1F"
-                                    emissiveIntensity={visualMode === 'wireframe' ? 0 : 0.2}
+                                    emissiveIntensity={visualMode === 'wireframe' ? 0 : 0.25}
+                                    roughness={0.8}
                                 />
                             )}
                         </mesh>
@@ -944,25 +951,25 @@ const GrassBlades = () => {
             {grassBlades.map((data, i) => (
                 <group key={i} position={data.position} rotation={[0, data.rotation, 0]}>
                     {/* Grass blade 1 */}
-                    <mesh scale={[data.scale * 0.15, data.scale * 0.6, data.scale * 0.1]}>
+                    <mesh scale={[data.scale * 0.15, data.scale * 0.6, data.scale * 0.1]} castShadow receiveShadow>
                         <boxGeometry args={[1, 1, 1]} />
                         <meshStandardMaterial
                             color={Math.random() > 0.5 ? '#2D7A3E' : '#3A9C52'}
                             emissive="#2D7A3E"
-                            emissiveIntensity={0.1}
-                            metalness={0}
-                            roughness={0.8}
+                            emissiveIntensity={0.12}
+                            metalness={0.05}
+                            roughness={0.75}
                         />
                     </mesh>
                     {/* Grass blade 2 - rotated */}
-                    <mesh rotation={[0, Math.PI / 3, 0]} scale={[data.scale * 0.15, data.scale * 0.5, data.scale * 0.1]}>
+                    <mesh rotation={[0, Math.PI / 3, 0]} scale={[data.scale * 0.15, data.scale * 0.5, data.scale * 0.1]} castShadow receiveShadow>
                         <boxGeometry args={[1, 1, 1]} />
                         <meshStandardMaterial
                             color="#3A9C52"
                             emissive="#2D7A3E"
-                            emissiveIntensity={0.08}
-                            metalness={0}
-                            roughness={0.8}
+                            emissiveIntensity={0.1}
+                            metalness={0.05}
+                            roughness={0.75}
                         />
                     </mesh>
                 </group>
@@ -1025,7 +1032,7 @@ export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading = f
             <group rotation={[0, Math.PI / 4, 0]} position={[0, 0.5, 0]}>
 
                 {/* Ground Plane with Metallic Grey Base Material */}
-                <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+                <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow castShadow>
                     <circleGeometry args={[30, 128]} />
                     {visualMode === 'wireframe' ? (
                         <meshBasicMaterial
@@ -1041,23 +1048,24 @@ export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading = f
                             normalMap={detailedNormalMap}
                             color="#A69F96"
                             emissive={THEME.primary}
-                            emissiveIntensity={0.25}
+                            emissiveIntensity={0.28}
                             emissiveMap={detailedStoneTexture}
-                            metalness={0.25}
-                            roughness={0.4}
+                            metalness={0.2}
+                            roughness={0.35}
+                            envMapIntensity={1.4}
                             side={THREE.DoubleSide}
                         />
                     ) : (
                         <meshStandardMaterial
                             map={metallicTexture}
                             normalMap={normalMap}
-                            color="#8B8B8B"
-                            metalness={0.85}
-                            roughness={0.25}
-                            emissive="#6B6B6B"
-                            emissiveIntensity={0.2}
+                            color="#9A9A9A"
+                            metalness={0.8}
+                            roughness={0.2}
+                            emissive="#7A7A7A"
+                            emissiveIntensity={0.15}
                             emissiveMap={metallicTexture}
-                            envMapIntensity={1.5}
+                            envMapIntensity={1.6}
                             side={THREE.DoubleSide}
                         />
                     )}
