@@ -12,7 +12,7 @@ interface CharacterData {
     speed: number;
 }
 
-const CHARACTER_SPAWNS = [
+const CHARACTER_SPAWNS_DESKTOP = [
     { position: [-5, 0.4, -20], color: '#FF85C0' },
     { position: [10, 0.4, -10], color: '#00A6FF' },
     { position: [-15, 0.4, 5], color: '#B0FF57' },
@@ -23,6 +23,13 @@ const CHARACTER_SPAWNS = [
     { position: [-15, 0.4, 5], color: '#B0FF57' },
     { position: [8, 0.4, 15], color: '#e2e607' },
     { position: [-10, 0.4, -5], color: '#FF5E1F' },
+];
+
+const CHARACTER_SPAWNS_MOBILE = [
+    { position: [-5, 0.4, -20], color: '#FF85C0' },
+    { position: [10, 0.4, -10], color: '#00A6FF' },
+    { position: [-15, 0.4, 5], color: '#B0FF57' },
+    { position: [8, 0.4, 15], color: '#FFDD33' },
 ];
 
 const WAYPOINTS = [
@@ -119,15 +126,17 @@ const Character = ({ data, isMobile = false }: { data: CharacterData; isMobile?:
 
 export function WalkingCharacters() {
     const deviceCapability = useDeviceCapability();
+    const spawns = deviceCapability.isMobile ? CHARACTER_SPAWNS_MOBILE : CHARACTER_SPAWNS_DESKTOP;
+
     const characters = useMemo(() => {
-        return CHARACTER_SPAWNS.map((spawn, idx) => ({
+        return spawns.map((spawn, idx) => ({
             id: `char-${idx}`,
             position: new THREE.Vector3(...spawn.position),
             targetPosition: WAYPOINTS[idx % WAYPOINTS.length].clone(),
             color: spawn.color,
             speed: 0.03 + Math.random() * 0.02,
         }));
-    }, []);
+    }, [spawns]);
 
     return (
         <group>

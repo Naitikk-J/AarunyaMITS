@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 
 const navLinks = [
     { name: 'HOME', path: '/' },
+    { name: 'VIEW MAP', path: '/view-map' },
     { name: 'THEME', path: '/theme' },
     { name: 'HEADLINERS', path: '/headliners' },
     { name: 'EVENTS', path: '/events' },

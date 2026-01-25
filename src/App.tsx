@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Headliners from "./pages/Headliners";
 import Theme from "./pages/Theme";
+import ViewMap from "./pages/ViewMap";
+import CampusExplorer from "./pages/CampusExplorer";
 import AboutUs from "./pages/AboutUs";
 import History from "./pages/History";
 import Schedule from "./pages/Schedule";
@@ -33,6 +35,8 @@ const App = () => (
                 <PageTransition>
                     <Routes>
                         <Route path="/" element={<Index />} />
+                        <Route path="/view-map" element={<ViewMap />} />
+                        <Route path="/campus-explorer" element={<CampusExplorer />} />
                         <Route path="/schedule" element={<Schedule />} />
                         <Route path="/events" element={<Events />} />
                         <Route path="/merch" element={<Merch />} />
