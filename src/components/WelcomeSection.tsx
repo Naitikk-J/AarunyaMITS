@@ -15,8 +15,8 @@ export const WelcomeSection: React.FC = () => {
     }));
   }, []);
 
-  return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-kidcore-indigo">
+    return (
+      <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
       {/* 8-bit Particles */}
       <div className="absolute inset-0 pointer-events-none">
         {particles.map((p) => (

@@ -35,7 +35,7 @@ export const PacmanTimeline: React.FC = () => {
   }, [scrollYProgress, eatenDots]);
 
   return (
-    <div ref={containerRef} className="relative min-h-[200vh] py-24 bg-kidcore-indigo overflow-hidden">
+    <div ref={containerRef} className="relative min-h-[200vh] py-24 overflow-hidden">
       <div className="max-w-4xl mx-auto px-4">
         <h2 className="text-3xl md:text-5xl font-press-start text-center mb-24 text-kidcore-pink">
           TIMELINE
