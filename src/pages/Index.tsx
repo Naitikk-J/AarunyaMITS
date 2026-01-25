@@ -1,45 +1,38 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MainNavigation } from '@/components/ui/MainNavigation';
-import TVZoom from '@/components/TVZoom';
-import TVIntro from '@/components/TVIntro';
-import WelcomeSection from '@/components/WelcomeSection';
-import PacManTimeline from '@/components/PacManTimeline';
+import { TVZoom } from '@/components/TVZoom';
+import { TVIntro } from '@/components/TVIntro';
+import { WelcomeSection } from '@/components/WelcomeSection';
+import { PacmanTimeline } from '@/components/PacmanTimeline';
+import { CRTOverlay } from '@/components/CRTOverlay';
 import Footer from '@/components/Footer';
-import CRTOverlay from '@/components/CRTOverlay';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const Index = () => {
     const mainRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        // Initialize Lenis for smooth scrolling
         const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            orientation: 'vertical',
-            gestureOrientation: 'vertical',
-            smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 2,
-            infinite: false,
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
+          smoothWheel: true,
+          wheelMultiplier: 1,
+          touchMultiplier: 2,
+          infinite: false,
         });
 
-        // Sync ScrollTrigger with Lenis
-        lenis.on('scroll', ScrollTrigger.update);
+        function raf(time: number) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
 
-        const updateLenis = (time: number) => {
-            lenis.raf(time * 1000);
-        };
-
-        gsap.ticker.add(updateLenis);
-        gsap.ticker.lagSmoothing(0);
+        requestAnimationFrame(raf);
 
         return () => {
-            lenis.destroy();
-            gsap.ticker.remove(updateLenis);
+          lenis.destroy();
         };
     }, []);
 
@@ -61,11 +54,12 @@ const Index = () => {
                 <WelcomeSection />
 
                 {/* Section 3: The Pac-Man Timeline (Gamified Scroll) */}
-                <PacManTimeline />
+                <PacmanTimeline />
                 
-                {/* Footer is moved inside main for correct scroll flow */}
-                <Footer />
+                {/* Additional sections can be added here if needed */}
             </main>
+
+            <Footer />
 
             <style dangerouslySetInnerHTML={{ __html: `
                 .glitch {
@@ -94,6 +88,7 @@ const Index = () => {
                 @keyframes glitch-anim {
                     0% { clip: rect(31px, 9999px, 94px, 0); transform: skew(0.85deg); }
                     5% { clip: rect(70px, 9999px, 71px, 0); transform: skew(0.85deg); }
+                    /* ... more steps if needed ... */
                     100% { clip: rect(67px, 9999px, 62px, 0); transform: skew(0.1deg); }
                 }
                 @keyframes glitch-anim2 {
