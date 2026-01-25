@@ -1,18 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MainNavigation } from '@/components/ui/MainNavigation';
-import { TVZoom } from '@/components/TVZoom';
-import { TVIntro } from '@/components/TVIntro';
-import { WelcomeSection } from '@/components/WelcomeSection';
-import { PacmanTimeline } from '@/components/PacmanTimeline';
-import { CRTOverlay } from '@/components/CRTOverlay';
-import Footer from '@/components/Footer';
 
-const Index = () => {
-    const mainRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        // Initialize Lenis for smooth scrolling
+// ... inside useEffect
         const lenis = new Lenis({
           duration: 1.2,
           easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -24,15 +16,20 @@ const Index = () => {
           infinite: false,
         });
 
-        function raf(time: number) {
-          lenis.raf(time);
-          requestAnimationFrame(raf);
-        }
+        // Sync ScrollTrigger with Lenis
+        lenis.on('scroll', ScrollTrigger.update);
 
-        requestAnimationFrame(raf);
+        const updateLenis = (time: number) => {
+          lenis.raf(time * 1000);
+        };
+
+        gsap.ticker.add(updateLenis);
+
+        gsap.ticker.lagSmoothing(0);
 
         return () => {
           lenis.destroy();
+          gsap.ticker.remove(updateLenis);
         };
     }, []);
 
@@ -56,12 +53,11 @@ const Index = () => {
                 {/* Section 3: The Pac-Man Timeline (Gamified Scroll) */}
                 <PacmanTimeline />
                 
-                {/* Additional sections can be added here if needed */}
-            </main>
+                  {/* Additional sections can be added here if needed */}
+                  <Footer />
+              </main>
 
-            <Footer />
-
-            <style dangerouslySetInnerHTML={{ __html: `
+              <style dangerouslySetInnerHTML={{ __html: `
                 .glitch {
                     position: relative;
                 }
