@@ -51,6 +51,16 @@
         --lime-green: 111 100% 54%;
         --crt-black: 260 100% 5%;
         --arcade-orange: 30 100% 55%;
+
+        /* Kidcore Theme Variables */
+        --kidcore-indigo: #0D001A;
+        --kidcore-grape: #BC13FE;
+        --kidcore-green: #39FF14;
+        --kidcore-pink: #FF0099;
+        --kidcore-yellow: #FFE737;
+        --kidcore-blue: #00fff9;
+        --kidcore-orange: #ff8a00;
+        --kidcore-cream: #fff5e6;
     }
 
     .dark {
