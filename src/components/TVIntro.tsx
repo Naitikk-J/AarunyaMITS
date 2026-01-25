@@ -4,26 +4,25 @@ import { motion } from 'framer-motion';
 export const TVIntro: React.FC = () => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
-        <motion.div
-          initial={{ scale: 1, opacity: 0.5 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.2, ease: "easeIn" }}
-          className="text-center px-4"
-        >
-          <h2 className="text-kidcore-yellow text-xl sm:text-2xl md:text-5xl font-press-start mb-2 md:mb-4 drop-shadow-[2px_2px_0px_#000] md:drop-shadow-[4px_4px_0px_#000]">
-            ENTERING
-          </h2>
-          <h1 className="text-kidcore-pink text-3xl sm:text-4xl md:text-7xl font-press-start drop-shadow-[3px_3px_0px_#000] md:drop-shadow-[6px_6px_0px_#000] glitch" data-text="AARUNYA">
-            AARUNYA
-          </h1>
-          <motion.div 
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 1, repeat: Infinity }}
-            className="mt-4 md:mt-8 text-kidcore-green text-xs sm:text-sm md:text-2xl font-pixel"
-          >
-            PREPARE FOR THE MITS CARNIVAL...
-          </motion.div>
-        </motion.div>
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="text-center px-4 flex flex-col items-center"
+    >
+      <img 
+        src="/aarunya-logo.svg" 
+        alt="Aarunya Logo" 
+        className="w-[90%] md:w-[600px] h-auto mb-4 object-contain"
+      />
+      <motion.div 
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="text-kidcore-green text-xs sm:text-sm md:text-2xl font-pixel drop-shadow-[2px_2px_0px_#000]"
+      >
+        PREPARE FOR THE MITS CARNIVAL...
+      </motion.div>
+    </motion.div>
 
       
       {/* Decorative scanlines or something inside the TV */}
