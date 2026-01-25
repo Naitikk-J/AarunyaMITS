@@ -142,7 +142,7 @@ export const InteractiveTVControls = ({
   return (
     <div
       ref={containerRef}
-      className="absolute right-3 top-[10%] h-[80%] flex flex-col items-center justify-around z-20 w-16"
+      className="h-full flex flex-col items-center justify-around z-20 w-full px-2"
     >
       {showEasterEgg && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[100]">
