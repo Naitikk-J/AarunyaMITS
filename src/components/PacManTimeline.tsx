@@ -222,36 +222,37 @@ export const PacmanTimeline: React.FC = () => {
                 )}
               </AnimatePresence>
 
-              {/* Event Card */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: false, margin: "-100px" }}
-                className={`p-6 md:p-8 absolute w-[80vw] md:w-[40%] max-w-[350px] rounded-2xl border-2 bg-kidcore-indigo/80 backdrop-blur-md ${
-                  index % 2 === 0 ? 'right-[5%] md:right-[8%]' : 'left-[5%] md:left-[8%]'
-                } -translate-y-1/2`}
-                style={{ 
-                  borderColor: event.color,
-                  boxShadow: `0 0 15px ${event.color}44, inset 0 0 10px ${event.color}22`
-                }}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="bg-white/10 px-2 py-1 text-[8px] md:text-[10px] font-press-start text-white border border-white/20 rounded">
-                    {event.date}
-                  </span>
-                  <div className="h-[2px] flex-1 bg-white/10" />
-                </div>
-                <h3 className="text-base md:text-lg font-press-start mb-3" style={{ color: event.color }}>
-                  {event.title}
-                </h3>
-                <p className="font-vt323 text-lg md:text-xl text-white/80 leading-snug">
-                  {event.description}
-                </p>
-                <div className="mt-4 flex justify-between items-center">
-                   <div className="w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: event.color }} />
-                   <span className="text-[8px] font-press-start opacity-40 text-white">LVL {index + 1}</span>
-                </div>
-              </motion.div>
+                {/* Event Card */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: false, margin: "-100px" }}
+                  className={`p-4 md:p-8 absolute w-[85vw] md:w-[40%] max-w-[350px] rounded-2xl border-2 bg-kidcore-indigo/80 backdrop-blur-md left-1/2 -translate-x-1/2 md:translate-x-0 ${
+                    index % 2 === 0 ? 'md:left-auto md:right-[8%]' : 'md:right-auto md:left-[8%]'
+                  } -translate-y-1/2 mt-20 md:mt-0`}
+                  style={{ 
+                    borderColor: event.color,
+                    boxShadow: `0 0 15px ${event.color}44, inset 0 0 10px ${event.color}22`
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-2 md:mb-3">
+                    <span className="bg-white/10 px-2 py-1 text-[7px] md:text-[10px] font-press-start text-white border border-white/20 rounded">
+                      {event.date}
+                    </span>
+                    <div className="h-[1px] md:h-[2px] flex-1 bg-white/10" />
+                  </div>
+                  <h3 className="text-sm md:text-lg font-press-start mb-2 md:mb-3" style={{ color: event.color }}>
+                    {event.title}
+                  </h3>
+                  <p className="font-vt323 text-base md:text-xl text-white/80 leading-snug">
+                    {event.description}
+                  </p>
+                  <div className="mt-3 md:mt-4 flex justify-between items-center">
+                     <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full animate-ping" style={{ backgroundColor: event.color }} />
+                     <span className="text-[7px] md:text-[8px] font-press-start opacity-40 text-white">LVL {index + 1}</span>
+                  </div>
+                </motion.div>
+
             </div>
           ))}
         </div>
