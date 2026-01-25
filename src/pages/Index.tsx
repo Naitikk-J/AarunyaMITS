@@ -38,7 +38,7 @@ const Index = () => {
     return (
         <div 
             ref={mainRef} 
-            className="relative w-full overflow-x-hidden bg-[url('/retro-room-bg.jpg')] bg-fixed bg-cover bg-center"
+            className="relative w-full overflow-x-hidden bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] bg-fixed bg-cover bg-center"
         >
             <MainNavigation />
             <CRTOverlay />
