@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 
 const events = [
   { id: 1, title: "INAUGURATION", date: "FEB 10", description: "The grand opening ceremony with 8-bit fireworks.", pos: 0.1, color: "var(--kidcore-blue)" },
@@ -12,47 +12,18 @@ export const PacmanTimeline: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [eatenDots, setEatenDots] = useState<number[]>([]);
   
-    const { scrollYProgress } = useScroll({
-      target: containerRef,
-      offset: ["start end", "end start"]
-    });
-
-    const smoothProgress = useSpring(scrollYProgress, {
-      stiffness: 100,
-      damping: 30,
-      restDelta: 0.001
-    });
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"]
+  });
 
     // SVG Path for the Pac-man road - updated to be more rectilinear like a maze
     const pathData = "M 400 0 V 120 H 150 V 350 H 650 V 580 H 150 V 820 H 650 V 1100 H 150 V 1350 H 400 V 1600";
     
-    const mazeRef = useRef<HTMLDivElement>(null);
-    const [scale, setScale] = useState(1);
+    const offsetDistance = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
     useEffect(() => {
-      const updateScale = () => {
-        if (mazeRef.current) {
-          setScale(mazeRef.current.offsetWidth / 800);
-        }
-      };
-      updateScale();
-      window.addEventListener('resize', updateScale);
-      return () => window.removeEventListener('resize', updateScale);
-    }, []);
-
-    // Calculate vertical movement to keep Pac-man centered
-    const progressToY = useTransform(
-      smoothProgress,
-      [0, 0.029, 0.09, 0.146, 0.268, 0.324, 0.446, 0.505, 0.627, 0.695, 0.817, 0.878, 0.939, 1],
-      [0, 120, 120, 350, 350, 580, 580, 820, 820, 1100, 1100, 1350, 1350, 1600]
-    );
-
-    const offsetDistance = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
-    
-    const mazeTranslateY = useTransform(progressToY, y => `calc(50vh - ${y * scale}px)`); 
-
-    useEffect(() => {
-      const unsubscribe = smoothProgress.on("change", (latest) => {
+      const unsubscribe = scrollYProgress.on("change", (latest) => {
         events.forEach(event => {
           if (latest >= event.pos && !eatenDots.includes(event.id)) {
             setEatenDots(prev => [...prev, event.id]);
@@ -63,7 +34,7 @@ export const PacmanTimeline: React.FC = () => {
     }, [scrollYProgress, eatenDots]);
 
     return (
-      <div ref={containerRef} id="timeline" className="relative min-h-[400vh] bg-[#0D001A] overflow-hidden">
+      <div ref={containerRef} id="timeline" className="relative min-h-[300vh] py-24 bg-[#0D001A] overflow-hidden">
         {/* Animated Background Grid */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0" style={{ 
@@ -72,17 +43,12 @@ export const PacmanTimeline: React.FC = () => {
           }} />
         </div>
 
-        <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden">
-          <div className="max-w-5xl w-full mx-auto px-4 relative z-10">
-            <h2 className="text-2xl md:text-4xl font-press-start text-center mb-8 text-kidcore-blue drop-shadow-[0_0_20px_rgba(0,255,249,0.8)] tracking-widest">
-              TIMELINE
-            </h2>
+        <div className="max-w-5xl mx-auto px-4 relative z-10">
+          <h2 className="text-4xl md:text-6xl font-press-start text-center mb-32 text-kidcore-blue drop-shadow-[0_0_20px_rgba(0,255,249,0.8)] tracking-widest">
+            TIMELINE
+          </h2>
 
-            <motion.div 
-              ref={mazeRef}
-              style={{ y: mazeTranslateY }}
-              className="relative h-[1600px] w-full rounded-[40px] border-[6px] border-[#00fff9]/30 bg-black/80 shadow-[0_0_50px_rgba(0,0,0,0.9)]"
-            >
+            <div className="relative h-[1600px] w-full rounded-[40px] overflow-hidden border-[6px] border-[#00fff9]/30 bg-black/80 shadow-[0_0_50px_rgba(0,0,0,0.9)]">
               <svg 
                 viewBox="0 0 800 1600" 
                 className="absolute inset-0 w-full h-full pointer-events-none"
@@ -290,7 +256,6 @@ export const PacmanTimeline: React.FC = () => {
               </motion.div>
             </div>
           ))}
-          </motion.div>
         </div>
       </div>
     </div>
