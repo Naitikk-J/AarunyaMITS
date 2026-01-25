@@ -98,7 +98,7 @@ const PacManTimeline = () => {
       gsap.from(".pixel-border-8bit, .flex-1.grid > div", {
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 85%",
+          start: "top 95%",
           toggleActions: "play none none none"
         },
         y: 40,
@@ -112,9 +112,11 @@ const PacManTimeline = () => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
-        start: "top center",
-        end: "bottom center",
+        start: "top 96px",
+        end: "+=1500",
         scrub: 1,
+        pin: true,
+        anticipatePin: 1,
         onUpdate: (self) => {
           const progress = self.progress;
           const point = path.getPointAtLength(progress * pathLength);
@@ -155,9 +157,9 @@ const PacManTimeline = () => {
     };
   }, []);
 
-  return (
-    <section className="relative py-4" ref={containerRef}>
-      <div className="sticky top-10 mx-auto max-w-6xl px-4">
+    return (
+      <section className="relative py-20 min-h-screen z-20" ref={containerRef}>
+        <div className="mx-auto max-w-6xl px-4">
         <h2 className="font-pixel text-xl md:text-3xl text-electric-yellow text-center mb-4 glow-yellow tracking-wider">
           EVENT TIMELINE
         </h2>
