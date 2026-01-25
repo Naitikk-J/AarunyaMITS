@@ -328,59 +328,75 @@ const Car = ({ position, rotation }: { position: [number, number, number], rotat
 };
 
 const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [number, number, number], carRotation: number, viewMode: 'third' | 'first' }) => {
-    const { camera } = useThree();
-    const smoothedRotation = useRef(carRotation);
-    const smoothedPosition = useRef(new THREE.Vector3(0, 4, 8));
+    const { set } = useThree();
+    const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+    const smoothedCameraPos = useRef(new THREE.Vector3());
     const lookAtTarget = useRef(new THREE.Vector3());
-    
+
+    useEffect(() => {
+        if (cameraRef.current) {
+            set({ camera: cameraRef.current });
+        }
+    }, [set]);
+
     useFrame(() => {
+        if (!cameraRef.current) return;
+
         const mapRotation = Math.PI / 4;
-        const adjustedCarRotation = carRotation + mapRotation;
-        const rotatedCarX = carPosition[0] * Math.cos(mapRotation) - carPosition[2] * Math.sin(mapRotation);
-        const rotatedCarZ = carPosition[0] * Math.sin(mapRotation) + carPosition[2] * Math.cos(mapRotation);
-        
-        smoothedRotation.current = THREE.MathUtils.lerp(smoothedRotation.current, adjustedCarRotation, 0.08);
-        
+
+        // Apply world rotation to car position to get world-space position
+        const worldCarX = carPosition[0] * Math.cos(mapRotation) - carPosition[2] * Math.sin(mapRotation);
+        const worldCarZ = carPosition[0] * Math.sin(mapRotation) + carPosition[2] * Math.cos(mapRotation);
+
+        // Adjust car rotation for the rotated world
+        const worldCarRotation = carRotation + mapRotation;
+
         if (viewMode === 'third') {
+            // Third-person camera: position behind and above the car
             const distance = 8;
             const height = 4;
-            
-            const targetX = rotatedCarX - Math.sin(smoothedRotation.current) * distance;
-            const targetZ = rotatedCarZ - Math.cos(smoothedRotation.current) * distance;
+
+            // Position camera behind car in world space
+            const targetX = worldCarX - Math.sin(worldCarRotation) * distance;
+            const targetZ = worldCarZ - Math.cos(worldCarRotation) * distance;
             const targetY = carPosition[1] + height;
-            
-            smoothedPosition.current.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.1);
-            camera.position.copy(smoothedPosition.current);
-            
-            const lookAheadDistance = 5;
-            const lookX = rotatedCarX + Math.sin(adjustedCarRotation) * lookAheadDistance;
-            const lookZ = rotatedCarZ + Math.cos(adjustedCarRotation) * lookAheadDistance;
-            const lookY = carPosition[1] + 0.5;
-            
-            lookAtTarget.current.lerp(new THREE.Vector3(lookX, lookY, lookZ), 0.12);
-            camera.lookAt(lookAtTarget.current);
+
+            smoothedCameraPos.current.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.12);
+            cameraRef.current.position.copy(smoothedCameraPos.current);
+
+            // Look ahead of the car
+            const lookAheadDistance = 6;
+            const lookX = worldCarX + Math.sin(worldCarRotation) * lookAheadDistance;
+            const lookZ = worldCarZ + Math.cos(worldCarRotation) * lookAheadDistance;
+            const lookY = carPosition[1] + 1;
+
+            lookAtTarget.current.lerp(new THREE.Vector3(lookX, lookY, lookZ), 0.15);
+            cameraRef.current.lookAt(lookAtTarget.current);
         } else {
+            // First-person camera: positioned at driver's eye level
             const height = 0.55;
             const forwardOffset = 0.3;
-            
-            const cameraX = rotatedCarX + Math.sin(adjustedCarRotation) * forwardOffset;
-            const cameraZ = rotatedCarZ + Math.cos(adjustedCarRotation) * forwardOffset;
+
+            // Position camera just ahead of car center
+            const cameraX = worldCarX + Math.sin(worldCarRotation) * forwardOffset;
+            const cameraZ = worldCarZ + Math.cos(worldCarRotation) * forwardOffset;
             const cameraY = carPosition[1] + height;
-            
-            smoothedPosition.current.lerp(new THREE.Vector3(cameraX, cameraY, cameraZ), 0.15);
-            camera.position.copy(smoothedPosition.current);
-            
-            const lookAtDistance = 20;
-            const lookAtX = rotatedCarX + Math.sin(adjustedCarRotation) * lookAtDistance;
-            const lookAtZ = rotatedCarZ + Math.cos(adjustedCarRotation) * lookAtDistance;
-            const lookAtY = carPosition[1] + height - 0.1;
-            
-            lookAtTarget.current.lerp(new THREE.Vector3(lookAtX, lookAtY, lookAtZ), 0.1);
-            camera.lookAt(lookAtTarget.current);
+
+            smoothedCameraPos.current.lerp(new THREE.Vector3(cameraX, cameraY, cameraZ), 0.15);
+            cameraRef.current.position.copy(smoothedCameraPos.current);
+
+            // Look far ahead in the direction of travel
+            const lookAtDistance = 25;
+            const lookAtX = worldCarX + Math.sin(worldCarRotation) * lookAtDistance;
+            const lookAtZ = worldCarZ + Math.cos(worldCarRotation) * lookAtDistance;
+            const lookAtY = carPosition[1] + height - 0.15;
+
+            lookAtTarget.current.lerp(new THREE.Vector3(lookAtX, lookAtY, lookAtZ), 0.12);
+            cameraRef.current.lookAt(lookAtTarget.current);
         }
     });
-    
-    return null;
+
+    return <perspectiveCamera ref={cameraRef} fov={viewMode === 'first' ? 85 : 60} near={0.1} far={1000} />;
 };
 
 const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
@@ -520,25 +536,36 @@ const CampusExplorer = () => {
 
         const handleKeyDown = (e: KeyboardEvent) => {
             const key = e.key.toLowerCase();
-            keysPressed.current.add(key);
-            
+
+            // Handle view mode toggle
             if (key === 'c') {
-                setViewMode(prev => prev === 'third' ? 'first' : 'third');
-            }
-            
-            if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
                 e.preventDefault();
+                setViewMode(prev => prev === 'third' ? 'first' : 'third');
+                return;
             }
-        };
-        const handleKeyUp = (e: KeyboardEvent) => {
-            keysPressed.current.delete(e.key.toLowerCase());
+
+            // Add key to pressed set
+            const movementKeys = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
+            if (movementKeys.includes(key)) {
+                e.preventDefault();
+                keysPressed.current.add(key);
+            }
         };
 
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
+        const handleKeyUp = (e: KeyboardEvent) => {
+            const key = e.key.toLowerCase();
+            const movementKeys = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
+            if (movementKeys.includes(key)) {
+                keysPressed.current.delete(key);
+            }
+        };
+
+        // Use capture phase for better key handling
+        window.addEventListener('keydown', handleKeyDown, true);
+        window.addEventListener('keyup', handleKeyUp, true);
         return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('keyup', handleKeyUp);
+            window.removeEventListener('keydown', handleKeyDown, true);
+            window.removeEventListener('keyup', handleKeyUp, true);
         };
     }, [isDriving]);
 
@@ -550,30 +577,43 @@ const CampusExplorer = () => {
             let newSpeed = speed;
             let newRotation = carRotation;
 
-            const forward = keys.has('w') || keys.has('arrowup') || joystickInput.current.y > 0.3;
-            const backward = keys.has('s') || keys.has('arrowdown') || joystickInput.current.y < -0.3;
-            const left = keys.has('a') || keys.has('arrowleft') || joystickInput.current.x < -0.3;
-            const right = keys.has('d') || keys.has('arrowright') || joystickInput.current.x > 0.3;
+            // Check for movement input from keyboard and joystick
+            // Use more sensitive joystick thresholds for better mobile control
+            const joystickForward = joystickInput.current.y > 0.2;
+            const joystickBackward = joystickInput.current.y < -0.2;
+            const joystickLeft = joystickInput.current.x < -0.2;
+            const joystickRight = joystickInput.current.x > 0.2;
 
+            const forward = keys.has('w') || keys.has('arrowup') || joystickForward;
+            const backward = keys.has('s') || keys.has('arrowdown') || joystickBackward;
+            const left = keys.has('a') || keys.has('arrowleft') || joystickLeft;
+            const right = keys.has('d') || keys.has('arrowright') || joystickRight;
+
+            // Handle acceleration and deceleration
             if (forward) {
-                newSpeed = Math.min(speed + 0.02, 0.3);
+                newSpeed = Math.min(speed + 0.025, 0.35);
             } else if (backward) {
-                newSpeed = Math.max(speed - 0.02, -0.15);
+                newSpeed = Math.max(speed - 0.025, -0.18);
             } else {
-                newSpeed = speed * 0.95;
-                if (Math.abs(newSpeed) < 0.01) newSpeed = 0;
+                // Natural deceleration when no input
+                newSpeed = speed * 0.92;
+                if (Math.abs(newSpeed) < 0.005) newSpeed = 0;
             }
 
+            // Handle rotation only when moving
             if (Math.abs(newSpeed) > 0.01) {
-                if (left) newRotation += 0.03;
-                if (right) newRotation -= 0.03;
+                const rotationSpeed = Math.abs(newSpeed) > 0.1 ? 0.04 : 0.03;
+                if (left) newRotation += rotationSpeed;
+                if (right) newRotation -= rotationSpeed;
             }
 
+            // Update position based on rotation and speed
             const newX = carPosition[0] + Math.sin(newRotation) * newSpeed;
             const newZ = carPosition[2] + Math.cos(newRotation) * newSpeed;
 
-            const boundedX = Math.max(-30, Math.min(30, newX));
-            const boundedZ = Math.max(-30, Math.min(30, newZ));
+            // Boundary collision with campus limits
+            const boundedX = Math.max(-28, Math.min(28, newX));
+            const boundedZ = Math.max(-28, Math.min(28, newZ));
 
             setCarPosition([boundedX, 0, boundedZ]);
             setCarRotation(newRotation);
@@ -696,28 +736,20 @@ const CampusExplorer = () => {
                             dpr={Math.min(window.devicePixelRatio, 2)}
                             style={{ width: '100%', height: '100%' }}
                         >
-<Suspense fallback={null}>
+                            <Suspense fallback={null}>
+                                <PerspectiveCamera makeDefault position={[30, 25, 30]} fov={45} />
+                                
                                 {!isDriving && (
-                                    <PerspectiveCamera 
-                                        makeDefault 
-                                        position={[0, 80, 0]} 
-                                        fov={50}
-                                        rotation={[-Math.PI / 2, 0, 0]}
+                                    <OrbitControls
+                                        autoRotate={!isDriving}
+                                        autoRotateSpeed={0.5}
+                                        enableZoom={true}
+                                        enablePan={true}
+                                        minDistance={15}
+                                        maxDistance={100}
                                     />
                                 )}
                                 
-{!isDriving && (
-                                      <OrbitControls
-                                          autoRotate={false}
-                                          enableZoom={true}
-                                          enablePan={false}
-                                          enableRotate={false}
-                                          minDistance={50}
-                                          maxDistance={120}
-                                          target={[0, 0, 0]}
-                                      />
-                                  )}
-                                  
                                 {isDriving && (
                                     <DrivingCamera carPosition={carPosition} carRotation={carRotation} viewMode={viewMode} />
                                 )}
@@ -727,17 +759,18 @@ const CampusExplorer = () => {
                                 <pointLight position={[-20, 25, -20]} intensity={0.8} color="#00A6FF" />
                                 <fog attach="fog" args={['#050c15', 50, 300]} />
 
-<Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-                                  <ContactShadows
-                                      position={[0, 0, 0]}
-                                      opacity={0.4}
-                                      scale={60}
-                                      blur={2.5}
-                                      far={10}
-                                      resolution={256}
-                                      color="#000000"
-                                      frames={1}
-                                  />
+                                <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+                                <Environment preset="city" />
+                                <ContactShadows
+                                    position={[0, 0, 0]}
+                                    opacity={0.4}
+                                    scale={60}
+                                    blur={2.5}
+                                    far={10}
+                                    resolution={256}
+                                    color="#000000"
+                                    frames={1}
+                                />
 
                                 <CampusMap 
                                     textures={textures} 
