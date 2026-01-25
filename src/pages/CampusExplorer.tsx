@@ -231,7 +231,7 @@ const Car = ({ position, rotation }: { position: [number, number, number], rotat
 };
 
 const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [number, number, number], carRotation: number, viewMode: 'third' | 'first' }) => {
-    const { camera, set } = useThree();
+    const { set } = useThree();
     const cameraRef = useRef<THREE.PerspectiveCamera>(null);
     const smoothedRotation = useRef(carRotation);
     const smoothedPosition = useRef(new THREE.Vector3());
@@ -254,8 +254,8 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [n
         smoothedRotation.current = THREE.MathUtils.lerp(smoothedRotation.current, adjustedCarRotation, 0.08);
         
         if (viewMode === 'third') {
-            const distance = 12;
-            const height = 7;
+            const distance = 8;
+            const height = 4;
             
             const targetX = rotatedCarX - Math.sin(smoothedRotation.current) * distance;
             const targetZ = rotatedCarZ - Math.cos(smoothedRotation.current) * distance;
@@ -264,7 +264,7 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [n
             smoothedPosition.current.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.1);
             cameraRef.current.position.copy(smoothedPosition.current);
             
-            const lookAheadDistance = 8;
+            const lookAheadDistance = 5;
             const lookX = rotatedCarX + Math.sin(adjustedCarRotation) * lookAheadDistance;
             const lookZ = rotatedCarZ + Math.cos(adjustedCarRotation) * lookAheadDistance;
             const lookY = carPosition[1] + 0.5;
@@ -272,24 +272,27 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [n
             lookAtTarget.current.lerp(new THREE.Vector3(lookX, lookY, lookZ), 0.12);
             cameraRef.current.lookAt(lookAtTarget.current);
         } else {
-            const distance = 0.5;
-            const height = 1;
+            const height = 0.55;
+            const forwardOffset = 0.3;
             
-            const cameraX = rotatedCarX + Math.sin(adjustedCarRotation) * distance;
-            const cameraZ = rotatedCarZ + Math.cos(adjustedCarRotation) * distance;
+            const cameraX = rotatedCarX + Math.sin(adjustedCarRotation) * forwardOffset;
+            const cameraZ = rotatedCarZ + Math.cos(adjustedCarRotation) * forwardOffset;
             const cameraY = carPosition[1] + height;
             
-            cameraRef.current.position.set(cameraX, cameraY, cameraZ);
+            smoothedPosition.current.lerp(new THREE.Vector3(cameraX, cameraY, cameraZ), 0.15);
+            cameraRef.current.position.copy(smoothedPosition.current);
             
-            const lookAtDistance = 15;
+            const lookAtDistance = 20;
             const lookAtX = rotatedCarX + Math.sin(adjustedCarRotation) * lookAtDistance;
             const lookAtZ = rotatedCarZ + Math.cos(adjustedCarRotation) * lookAtDistance;
-            const lookAtY = carPosition[1] + height;
-            cameraRef.current.lookAt(lookAtX, lookAtY, lookAtZ);
+            const lookAtY = carPosition[1] + height - 0.1;
+            
+            lookAtTarget.current.lerp(new THREE.Vector3(lookAtX, lookAtY, lookAtZ), 0.1);
+            cameraRef.current.lookAt(lookAtTarget.current);
         }
     });
     
-    return <perspectiveCamera ref={cameraRef} fov={60} near={0.1} far={1000} />;
+    return <perspectiveCamera ref={cameraRef} fov={viewMode === 'first' ? 85 : 60} near={0.1} far={1000} />;
 };
 
 const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
@@ -666,12 +669,62 @@ const CampusExplorer = () => {
                         </div>
                     )}
 
-                    {isDriving && (
-                        <>
-                            <MobileJoystick onMove={handleJoystickMove} />
-                            
-                            <div 
-                                className="absolute top-4 left-4 z-50 px-4 py-3 rounded-lg hidden md:block"
+{isDriving && (
+                          <>
+                              <MobileJoystick onMove={handleJoystickMove} />
+                              
+                              {viewMode === 'first' && (
+                                  <div className="absolute inset-0 pointer-events-none z-40">
+                                      <div 
+                                          className="absolute bottom-0 left-0 right-0 h-24"
+                                          style={{
+                                              background: 'linear-gradient(to top, rgba(10,0,20,0.95) 0%, rgba(10,0,20,0.7) 50%, transparent 100%)',
+                                          }}
+                                      />
+                                      <div 
+                                          className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[280px] h-16 rounded-t-xl"
+                                          style={{
+                                              background: 'linear-gradient(to bottom, #1a0030, #0a0015)',
+                                              border: '2px solid #ff00ff40',
+                                              borderBottom: 'none',
+                                              boxShadow: '0 0 20px rgba(255,0,255,0.2), inset 0 -10px 30px rgba(0,0,0,0.5)'
+                                          }}
+                                      >
+                                          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-[#ff00ff80] flex items-center justify-center"
+                                              style={{ background: 'radial-gradient(circle, #0a0015 0%, #000 100%)' }}
+                                          >
+                                              <div className="text-center">
+                                                  <div className="text-[#00ffff] text-lg font-bold" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '14px' }}>
+                                                      {Math.abs(Math.round(speed * 100))}
+                                                  </div>
+                                                  <div className="text-[#ff00ff80] text-[6px]" style={{ fontFamily: '"Press Start 2P", monospace' }}>KM/H</div>
+                                              </div>
+                                          </div>
+                                          <div className="absolute bottom-2 left-4 text-[6px] text-[#00ffff80]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+                                              AARUNYA
+                                          </div>
+                                          <div className="absolute bottom-2 right-4 text-[6px] text-[#ff00ff80]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+                                              MITS
+                                          </div>
+                                      </div>
+                                      <div className="absolute top-0 left-0 w-8 h-full" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.3), transparent)' }} />
+                                      <div className="absolute top-0 right-0 w-8 h-full" style={{ background: 'linear-gradient(to left, rgba(0,0,0,0.3), transparent)' }} />
+                                      <div 
+                                          className="absolute top-8 left-4 w-16 h-8 rounded"
+                                          style={{
+                                              background: 'rgba(0,0,0,0.6)',
+                                              border: '1px solid #ff00ff40'
+                                          }}
+                                      >
+                                          <div className="h-full flex items-center justify-center">
+                                              <div className="w-3 h-3 rounded-full bg-[#00ff00] animate-pulse" style={{ boxShadow: '0 0 10px #00ff00' }} />
+                                          </div>
+                                      </div>
+                                  </div>
+                              )}
+                              
+                              <div 
+                                  className="absolute top-4 left-4 z-50 px-4 py-3 rounded-lg hidden md:block"
                                 style={{
                                     background: 'rgba(0,0,0,0.8)',
                                     border: '2px solid #ff00ff',
