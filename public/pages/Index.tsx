@@ -2,7 +2,7 @@ import CRTOverlay from "@/components/CRTOverlay";
 import NavBar from "@/components/NavBar";
 import HeroSection from "@/components/HeroSection";
 import KidcoreGrid from "@/components/KidcoreGrid";
-import PacManTimeline from "@/components/PacManTimeline";
+import { PacmanTimeline } from "@/components/PacmanTimeline";
 import Footer from "@/components/Footer";
 
 const Index = () => {
