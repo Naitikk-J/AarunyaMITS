@@ -38,13 +38,10 @@ const Index = () => {
     }, []);
 
     return (
-        <div ref={mainRef} className="relative w-full overflow-x-hidden">
-            {/* Fixed Background */}
-            <div 
-                className="fixed inset-0 z-[-1] bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] bg-cover bg-center"
-                style={{ backgroundAttachment: 'scroll' }}
-                aria-hidden="true"
-            />
+        <div
+            ref={mainRef}
+            className="relative w-full overflow-x-hidden bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] md:bg-fixed bg-local bg-cover bg-center"
+        >
             <MainNavigation />
             <CRTOverlay />
 
