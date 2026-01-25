@@ -12,7 +12,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
     return (
         <div 
             ref={containerRef}
-            className="w-full transition-opacity"
+            className="relative w-full transition-opacity"
             style={{
                 perspective: '1200px',
                 transformStyle: 'preserve-3d'
