@@ -232,29 +232,35 @@ const Car = ({ position, rotation }: { position: [number, number, number], rotat
 
 const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [number, number, number], carRotation: number, viewMode: 'third' | 'first' }) => {
     const { camera } = useThree();
+    const smoothedRotation = useRef(carRotation);
+    const lookAtTarget = useRef(new THREE.Vector3());
     
     useFrame(() => {
+        // Smoothly interpolate rotation to follow car's turning
+        smoothedRotation.current = THREE.MathUtils.lerp(smoothedRotation.current, carRotation, 0.05);
+        
         if (viewMode === 'third') {
-            // Racing game camera: follow behind and above
-            // Adjusted for "car below me" feel
-            const distance = 12;
-            const height = 6;
+            const distance = 10;
+            const height = 8;
             
-            const targetX = carPosition[0] - Math.sin(carRotation) * distance;
-            const targetZ = carPosition[2] - Math.cos(carRotation) * distance;
+            // Camera position based on smoothed rotation - follows behind the car
+            const targetX = carPosition[0] - Math.sin(smoothedRotation.current) * distance;
+            const targetZ = carPosition[2] - Math.cos(smoothedRotation.current) * distance;
             const targetY = carPosition[1] + height;
             
-            // Smoother camera movement
-            camera.position.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.1);
+            camera.position.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.08);
             
-            // Look at a point slightly ahead of the car to keep car in lower part of screen
-            const lookAtX = carPosition[0] + Math.sin(carRotation) * 4;
-            const lookAtZ = carPosition[2] + Math.cos(carRotation) * 4;
-            camera.lookAt(lookAtX, carPosition[1] + 1, lookAtZ);
+            // Look at a point ahead of the car based on its actual rotation
+            const lookAheadDistance = 5;
+            const lookX = carPosition[0] + Math.sin(carRotation) * lookAheadDistance;
+            const lookZ = carPosition[2] + Math.cos(carRotation) * lookAheadDistance;
+            const lookY = carPosition[1];
+            
+            lookAtTarget.current.lerp(new THREE.Vector3(lookX, lookY, lookZ), 0.1);
+            camera.lookAt(lookAtTarget.current);
         } else {
-            // First person: inside the car
-            const distance = 0.2; // Positioned slightly ahead of center
-            const height = 0.75;  // At cabin height
+            const distance = 0.2;
+            const height = 0.75;
             
             const cameraX = carPosition[0] + Math.sin(carRotation) * distance;
             const cameraZ = carPosition[2] + Math.cos(carRotation) * distance;
@@ -262,7 +268,6 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [n
             
             camera.position.set(cameraX, cameraY, cameraZ);
             
-            // Look ahead of the car
             const lookAtDistance = 10;
             const lookAtX = carPosition[0] + Math.sin(carRotation) * lookAtDistance;
             const lookAtZ = carPosition[2] + Math.cos(carRotation) * lookAtDistance;
