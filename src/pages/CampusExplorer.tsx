@@ -235,16 +235,22 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [n
     
     useFrame(() => {
         if (viewMode === 'third') {
-            // Racing game camera: strictly follow behind and slightly above
-            const distance = 9;
-            const height = 3.8;
+            // Racing game camera: follow behind and above
+            // Adjusted for "car below me" feel
+            const distance = 12;
+            const height = 6;
             
-            const cameraX = carPosition[0] - Math.sin(carRotation) * distance;
-            const cameraZ = carPosition[2] - Math.cos(carRotation) * distance;
-            const cameraY = carPosition[1] + height;
+            const targetX = carPosition[0] - Math.sin(carRotation) * distance;
+            const targetZ = carPosition[2] - Math.cos(carRotation) * distance;
+            const targetY = carPosition[1] + height;
             
-            camera.position.set(cameraX, cameraY, cameraZ);
-            camera.lookAt(carPosition[0], carPosition[1] + 1.2, carPosition[2]);
+            // Smoother camera movement
+            camera.position.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.1);
+            
+            // Look at a point slightly ahead of the car to keep car in lower part of screen
+            const lookAtX = carPosition[0] + Math.sin(carRotation) * 4;
+            const lookAtZ = carPosition[2] + Math.cos(carRotation) * 4;
+            camera.lookAt(lookAtX, carPosition[1] + 1, lookAtZ);
         } else {
             // First person: inside the car
             const distance = 0.2; // Positioned slightly ahead of center
@@ -488,7 +494,7 @@ const CampusExplorer = () => {
 
     return (
         <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black">
-            <MainNavigation />
+            {!isDriving && <MainNavigation />}
 
             {isLoading && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#05010D]">
@@ -546,15 +552,28 @@ const CampusExplorer = () => {
                 </div>
             </div>
 
-            <div className="container mx-auto px-6 pb-20">
+            <div className={`container mx-auto px-6 pb-20 ${isDriving ? 'p-0 m-0 max-w-none' : ''}`}>
                 <div 
-                    className="relative w-full rounded-xl overflow-hidden border-2 border-white/10"
+                    className={`relative w-full overflow-hidden transition-all duration-500 ${
+                        isDriving 
+                            ? 'fixed inset-0 z-[100] rounded-none border-0' 
+                            : 'rounded-xl border-2 border-white/10'
+                    }`}
                     style={{ 
-                        height: 'calc(100vh - 380px)', 
-                        minHeight: '500px',
-                        boxShadow: '0 0 60px rgba(188,19,254,0.2), inset 0 0 30px rgba(0,0,0,0.5)'
+                        height: isDriving ? '100vh' : 'calc(100vh - 380px)', 
+                        minHeight: isDriving ? '100vh' : '500px',
+                        boxShadow: isDriving ? 'none' : '0 0 60px rgba(188,19,254,0.2), inset 0 0 30px rgba(0,0,0,0.5)'
                     }}
                 >
+                    {isDriving && (
+                        <button
+                            onClick={stopDriving}
+                            className="fixed top-4 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 bg-black/80 border border-primary/50 text-primary text-[8px] font-press-start hover:bg-primary hover:text-black transition-all flex items-center gap-2 shadow-neon-small"
+                            style={{ fontFamily: '"Press Start 2P", monospace' }}
+                        >
+                            <span>✕</span> EXIT DRIVING
+                        </button>
+                    )}
                     {webglSupported ? (
                         <Canvas
                             camera={{ position: [30, 25, 30], fov: 45 }}
