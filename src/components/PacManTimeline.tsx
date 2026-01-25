@@ -17,128 +17,155 @@ export const PacmanTimeline: React.FC = () => {
     offset: ["start center", "end center"]
   });
 
-  // SVG Path for the Pac-man road - updated to be more rectilinear like a maze
-  const pathData = "M 400 0 V 200 H 100 V 450 H 700 V 750 H 150 V 1050 H 650 V 1350 H 400 V 1600";
-  
-  const offsetDistance = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+    // SVG Path for the Pac-man road - updated to be more rectilinear like a maze
+    const pathData = "M 400 0 V 120 H 150 V 350 H 650 V 580 H 150 V 820 H 650 V 1100 H 150 V 1350 H 400 V 1600";
+    
+    const offsetDistance = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
-  useEffect(() => {
-    const unsubscribe = scrollYProgress.on("change", (latest) => {
-      events.forEach(event => {
-        if (latest >= event.pos && !eatenDots.includes(event.id)) {
-          setEatenDots(prev => [...prev, event.id]);
-        }
+    useEffect(() => {
+      const unsubscribe = scrollYProgress.on("change", (latest) => {
+        events.forEach(event => {
+          if (latest >= event.pos && !eatenDots.includes(event.id)) {
+            setEatenDots(prev => [...prev, event.id]);
+          }
+        });
       });
-    });
-    return () => unsubscribe();
-  }, [scrollYProgress, eatenDots]);
+      return () => unsubscribe();
+    }, [scrollYProgress, eatenDots]);
 
-  return (
-    <div ref={containerRef} id="timeline" className="relative min-h-[250vh] py-24 bg-kidcore-indigo overflow-hidden">
-      <div className="max-w-4xl mx-auto px-4 relative z-10">
-        <h2 className="text-3xl md:text-5xl font-press-start text-center mb-24 text-kidcore-blue drop-shadow-[0_0_15px_rgba(0,255,249,0.5)]">
-          TIMELINE
-        </h2>
+    return (
+      <div ref={containerRef} id="timeline" className="relative min-h-[300vh] py-24 bg-[#0D001A] overflow-hidden">
+        {/* Animated Background Grid */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute inset-0" style={{ 
+            backgroundImage: `linear-gradient(var(--kidcore-blue) 1px, transparent 1px), linear-gradient(90deg, var(--kidcore-blue) 1px, transparent 1px)`,
+            backgroundSize: '100px 100px'
+          }} />
+        </div>
 
-        <div className="relative h-[1600px] w-full rounded-3xl overflow-hidden border-4 border-kidcore-blue/20 bg-black/40">
-          <svg 
-            viewBox="0 0 800 1600" 
-            className="absolute inset-0 w-full h-full pointer-events-none"
-          >
-            <defs>
-              <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="3" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-              </filter>
-              <pattern id="dot-grid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                <circle cx="20" cy="20" r="1.5" fill="white" fillOpacity="0.2" />
-              </pattern>
-            </defs>
+        <div className="max-w-5xl mx-auto px-4 relative z-10">
+          <h2 className="text-4xl md:text-6xl font-press-start text-center mb-32 text-kidcore-blue drop-shadow-[0_0_20px_rgba(0,255,249,0.8)] tracking-widest">
+            TIMELINE
+          </h2>
 
-            {/* Dot Grid Background */}
-            <rect width="100%" height="100%" fill="url(#dot-grid)" />
+          <div className="relative h-[1600px] w-full rounded-[40px] overflow-hidden border-[6px] border-[#00fff9]/30 bg-black/60 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+            <svg 
+              viewBox="0 0 800 1600" 
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              preserveAspectRatio="xMidYMid slice"
+            >
+              <defs>
+                <filter id="maze-glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feFlood floodColor="#00fff9" floodOpacity="0.8" result="color" />
+                  <feComposite in="color" in2="blur" operator="in" result="glow" />
+                  <feMerge>
+                    <feMergeNode in="glow" />
+                    <feMergeNode in="glow" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <pattern id="maze-dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <circle cx="20" cy="20" r="1.5" fill="#00fff9" fillOpacity="0.3" />
+                </pattern>
+              </defs>
 
-            {/* Complex Maze Walls - Inspired by the photo */}
-            <g fill="none" stroke="var(--kidcore-blue)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" filter="url(#neon-glow)">
-              {/* Top Section */}
-              <rect x="50" y="50" width="120" height="60" rx="10" />
-              <rect x="220" y="50" width="150" height="30" rx="15" />
-              <rect x="430" y="50" width="150" height="30" rx="15" />
-              <rect x="630" y="50" width="120" height="60" rx="10" />
-              
-              <path d="M 50 160 H 170 V 220 H 50 Z" />
-              <path d="M 630 160 H 750 V 220 H 630 Z" />
-              <path d="M 220 130 H 300 V 250 H 220 Z" />
-              <path d="M 500 130 H 580 V 250 H 500 Z" />
-              
-              {/* Middle Section */}
-              <rect x="50" y="300" width="120" height="30" rx="15" />
-              <rect x="630" y="300" width="120" height="30" rx="15" />
-              
-              <path d="M 220 330 H 580 V 370 H 220 Z" />
-              <path d="M 380 370 V 450 H 420 V 370 Z" />
-              
-              <rect x="50" y="550" width="120" height="80" rx="10" />
-              <rect x="630" y="550" width="120" height="80" rx="10" />
-              
-              <path d="M 220 530 H 350 V 600 H 220 Z" />
-              <path d="M 450 530 H 580 V 600 H 450 Z" />
-              
-              {/* Ghost House Style Center */}
-              <rect x="330" y="650" width="140" height="80" rx="5" strokeWidth="4" />
-              <line x1="370" y1="650" x2="430" y2="650" stroke="white" strokeWidth="2" opacity="0.5" />
-              
-              {/* Lower Section */}
-              <path d="M 50 780 H 170 V 840 H 50 Z" />
-              <path d="M 630 780 H 750 V 840 H 630 Z" />
-              
-              <rect x="220" y="850" width="120" height="30" rx="15" />
-              <rect x="460" y="850" width="120" height="30" rx="15" />
-              
-              <path d="M 50 950 H 250 V 990 H 50 Z" />
-              <path d="M 550 950 H 750 V 990 H 550 Z" />
-              
-              <path d="M 380 920 V 1050 H 420 V 920 Z" />
-              
-              <rect x="150" y="1150" width="100" height="100" rx="20" />
-              <rect x="550" y="1150" width="100" height="100" rx="20" />
-              
-              <path d="M 300 1200 H 500 V 1240 H 300 Z" />
-              <path d="M 380 1240 V 1350 H 420 V 1240 Z" />
-              
-              <path d="M 50 1450 H 320 V 1500 H 50 Z" />
-              <path d="M 480 1450 H 750 V 1500 H 480 Z" />
-            </g>
+              {/* Background Dots */}
+              <rect width="100%" height="100%" fill="url(#maze-dots)" />
 
-            {/* Power Pellets */}
-            <circle cx="50" cy="50" r="10" fill="white" filter="url(#neon-glow)" />
-            <circle cx="750" cy="50" r="10" fill="white" filter="url(#neon-glow)" />
-            <circle cx="50" cy="1550" r="10" fill="white" filter="url(#neon-glow)" />
-            <circle cx="750" cy="1550" r="10" fill="white" filter="url(#neon-glow)" />
+              {/* High-Fidelity Maze Walls - Matching the photo exactly */}
+              <g fill="none" stroke="#00fff9" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" filter="url(#maze-glow)">
+                {/* Border Wall */}
+                <rect x="20" y="20" width="760" height="1560" rx="30" strokeWidth="4" opacity="0.5" />
 
-            {/* The Main Path Path (Invisible background for depth) */}
-            <path 
-              d={pathData} 
-              fill="none" 
-              stroke="var(--kidcore-blue)" 
-              strokeWidth="4" 
-              className="opacity-20"
-            />
-            
-            {/* Food dots along the path */}
-            {[...Array(30)].map((_, i) => (
-              <circle 
-                key={i} 
-                r="4" 
-                fill="var(--kidcore-yellow)" 
-                filter="url(#neon-glow)"
-                style={{
-                  offsetPath: `path("${pathData}")`,
-                  offsetDistance: `${(i / 30) * 100}%`
-                }}
+                {/* Top Section blocks */}
+                <rect x="70" y="70" width="130" height="70" rx="15" />
+                <rect x="250" y="70" width="300" height="40" rx="20" />
+                <rect x="600" y="70" width="130" height="70" rx="15" />
+
+                {/* T-Shapes and Dividers */}
+                <path d="M 70 190 H 200 V 280 H 70 Z" />
+                <path d="M 600 190 H 730 V 280 H 600 Z" />
+                
+                <path d="M 270 160 H 530 V 200 H 430 V 300 H 370 V 200 H 270 Z" /> {/* Large T-Shape */}
+                
+                {/* Horizontal Bars */}
+                <rect x="70" y="330" width="130" height="30" rx="15" />
+                <rect x="600" y="330" width="130" height="30" rx="15" />
+                
+                <path d="M 270 350 H 370 V 450 H 270 Z" />
+                <path d="M 430 350 H 530 V 450 H 430 Z" />
+
+                {/* Side Inlets */}
+                <path d="M 20 400 H 100 V 500 H 20" />
+                <path d="M 780 400 H 700 V 500 H 780" />
+
+                {/* Ghost House (Centerpiece) */}
+                <g strokeWidth="6">
+                  <rect x="300" y="550" width="200" height="120" rx="10" stroke="#00fff9" />
+                  <line x1="360" y1="550" x2="440" y2="550" stroke="white" strokeWidth="4" />
+                </g>
+
+                {/* Vertical Separators */}
+                <rect x="230" y="550" width="30" height="150" rx="15" />
+                <rect x="540" y="550" width="30" height="150" rx="15" />
+
+                {/* Bottom-Middle Section */}
+                <path d="M 70 700 H 200 V 740 H 70 Z" />
+                <path d="M 600 700 H 730 V 740 H 600 Z" />
+                
+                <path d="M 300 730 H 500 V 770 H 415 V 850 H 385 V 770 H 300 Z" />
+
+                <rect x="70" y="800" width="130" height="100" rx="20" />
+                <rect x="600" y="800" width="130" height="100" rx="20" />
+
+                <path d="M 250 900 H 550 V 940 H 250 Z" />
+                <path d="M 380 940 V 1050 H 420 V 940 Z" />
+
+                {/* Lower Blocks */}
+                <rect x="70" y="1000" width="130" height="50" rx="25" />
+                <rect x="600" y="1000" width="130" height="50" rx="25" />
+
+                <path d="M 150 1150 H 350 V 1200 H 150 Z" />
+                <path d="M 450 1150 H 650 V 1200 H 450 Z" />
+
+                <path d="M 380 1200 V 1350" strokeWidth="10" />
+                
+                <rect x="70" y="1400" width="300" height="40" rx="20" />
+                <rect x="430" y="1400" width="300" height="40" rx="20" />
+                
+                <path d="M 70 1480 H 730 V 1530 H 70 Z" />
+              </g>
+
+              {/* Power Pellets - Large glowing white circles */}
+              <circle cx="60" cy="60" r="14" fill="white" filter="url(#maze-glow)" />
+              <circle cx="740" cy="60" r="14" fill="white" filter="url(#maze-glow)" />
+              <circle cx="60" cy="1540" r="14" fill="white" filter="url(#maze-glow)" />
+              <circle cx="740" cy="1540" r="14" fill="white" filter="url(#maze-glow)" />
+
+              {/* The Active Path (Subtle guide) */}
+              <path 
+                d={pathData} 
+                fill="none" 
+                stroke="#00fff9" 
+                strokeWidth="2" 
+                className="opacity-10"
               />
-            ))}
-          </svg>
+              
+              {/* Animated path dots */}
+              {[...Array(40)].map((_, i) => (
+                <circle 
+                  key={i} 
+                  r="3.5" 
+                  fill="#FFE737" 
+                  filter="url(#maze-glow)"
+                  style={{
+                    offsetPath: `path("${pathData}")`,
+                    offsetDistance: `${(i / 40) * 100}%`
+                  }}
+                />
+              ))}
+            </svg>
 
           {/* Pac-man Character */}
           <motion.div
