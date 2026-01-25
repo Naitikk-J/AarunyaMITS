@@ -4,7 +4,7 @@ import { MainNavigation } from '@/components/ui/MainNavigation';
 import { TVZoom } from '@/components/TVZoom';
 import { TVIntro } from '@/components/TVIntro';
 import { WelcomeSection } from '@/components/WelcomeSection';
-import { PacmanTimeline } from '@/components/PacmanTimeline';
+import { PacmanTimeline } from '@/components/PacManTimeline';
 import { CRTOverlay } from '@/components/CRTOverlay';
 import Footer from '@/components/Footer';
 
@@ -14,31 +14,31 @@ const Index = () => {
     useEffect(() => {
         // Initialize Lenis for smooth scrolling
         const lenis = new Lenis({
-          duration: 1.2,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-          orientation: 'vertical',
-          gestureOrientation: 'vertical',
-          smoothWheel: true,
-          wheelMultiplier: 1,
-          touchMultiplier: 2,
-          infinite: false,
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+            infinite: false,
         });
 
         function raf(time: number) {
-          lenis.raf(time);
-          requestAnimationFrame(raf);
+            lenis.raf(time);
+            requestAnimationFrame(raf);
         }
 
         requestAnimationFrame(raf);
 
         return () => {
-          lenis.destroy();
+            lenis.destroy();
         };
     }, []);
 
     return (
-        <div 
-            ref={mainRef} 
+        <div
+            ref={mainRef}
             className="relative w-full overflow-x-hidden bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] bg-fixed bg-cover bg-center"
         >
             <MainNavigation />
@@ -55,13 +55,14 @@ const Index = () => {
 
                 {/* Section 3: The Pac-Man Timeline (Gamified Scroll) */}
                 <PacmanTimeline />
-                
+
                 {/* Additional sections can be added here if needed */}
             </main>
 
             <Footer />
 
-            <style dangerouslySetInnerHTML={{ __html: `
+            <style dangerouslySetInnerHTML={{
+                __html: `
                 .glitch {
                     position: relative;
                 }
