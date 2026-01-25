@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import TVFrame from './TVFrame';
+import { RegisterCoinButton } from './RegisterCoinButton';
 
 interface TVZoomProps {
   children?: React.ReactNode;
@@ -48,6 +49,16 @@ export const TVZoom: React.FC<TVZoomProps> = ({ children }) => {
                 {children}
               </motion.div>
             </TVFrame>
+
+            {/* Register Coin Button - Placed near the TV */}
+            <motion.div 
+              className="absolute -right-20 -bottom-20 md:-right-32 md:-bottom-32 z-20"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1, duration: 0.5 }}
+            >
+              <RegisterCoinButton />
+            </motion.div>
           </motion.div>
         </div>
       </div>
