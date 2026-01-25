@@ -2,7 +2,6 @@ import { useState } from "react";
 import { RetroButton } from "./ui/retro-button";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { RotatingCoin } from "./RotatingCoin";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,33 +27,30 @@ const NavBar = () => {
         </a>
 
         {/* Desktop Nav Links */}
-        <div className="hidden md:flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            {navLinks.map((link) => (
-              <a 
-                key={link} 
-                href={`#${link.toLowerCase()}`}
-              >
-                <RetroButton variant="white" className="w-24 text-[8px] font-pixel">
-                  {link}
-                </RetroButton>
-              </a>
-            ))}
-          </div>
-          <div className="relative -mr-4">
-            <RotatingCoin className="scale-75 md:scale-90" />
-          </div>
+        <div className="hidden md:flex items-center gap-2">
+          {navLinks.map((link) => (
+            <a 
+              key={link} 
+              href={`#${link.toLowerCase()}`}
+            >
+              <RetroButton variant="white" className="w-24 text-[8px] font-pixel">
+                {link}
+              </RetroButton>
+            </a>
+          ))}
+          <RetroButton variant="default" className="w-28 text-[10px] font-pixel ml-4">
+            REGISTER
+          </RetroButton>
         </div>
 
         {/* Mobile Menu Toggle */}
-        <div className="md:hidden flex items-center gap-4">
-          <RotatingCoin className="scale-[0.6]" />
-          <button 
+        <div className="md:hidden flex items-center gap-2">
+           <button 
             onClick={() => setIsOpen(!isOpen)}
             className="kidcore-btn p-2 w-10 h-10 flex items-center justify-center"
-          >
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+           >
+             {isOpen ? <X size={20} /> : <Menu size={20} />}
+           </button>
         </div>
       </div>
 
@@ -65,23 +61,22 @@ const NavBar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 right-0 bg-kidcore-cream border-b-4 border-kidcore-blue p-6 md:hidden flex flex-col items-center gap-4 shadow-[0_10px_0px_var(--kidcore-pink)]"
+            className="absolute top-full left-0 right-0 bg-kidcore-cream border-b-4 border-kidcore-blue p-6 md:hidden flex flex-col gap-4 shadow-[0_10px_0px_var(--kidcore-pink)]"
           >
             {navLinks.map((link) => (
               <a 
                 key={link} 
                 href={`#${link.toLowerCase()}`}
                 onClick={() => setIsOpen(false)}
-                className="w-full"
               >
                 <RetroButton variant="white" className="w-full text-xs font-pixel">
                   {link}
                 </RetroButton>
               </a>
             ))}
-            <div className="py-4">
-              <RotatingCoin onClick={() => setIsOpen(false)} />
-            </div>
+            <RetroButton variant="default" className="w-full text-xs font-pixel mt-2">
+              REGISTER NOW
+            </RetroButton>
           </motion.div>
         )}
       </AnimatePresence>
