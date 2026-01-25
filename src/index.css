@@ -1,5 +1,5 @@
 /* Google Fonts import for Kidcore typography */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Fredoka+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Mono&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -12,73 +12,49 @@
 
 @layer base {
     :root {
-        /* Kidcore Color Palette - Neon Purple Theme */
-        --neon-purple: #BC13FE;
-        --deep-purple: #1A0B2E;
-        --cyber-magenta: #FF00FF;
-        --electric-cyan: #00FFFF;
-        --dark-bg: #0D0221;
-        --dark-card: #1B065E;
-        --grit-black: #05010D;
+        /* Kidcore Color Palette - Neon Nostalgia Mix */
+        --deep-indigo: #0D001A;
+        --cyber-grape: #BC13FE;
+        --slime-green: #39FF14;
+        --hot-pink: #FF0099;
+        --pacman-yellow: #FFE737;
 
-        --background: 260 80% 4%;
+        --background: 260 100% 5%;
         --foreground: 270 100% 95%;
         --card: 260 70% 8%;
         --card-foreground: 270 100% 95%;
         --popover: 260 70% 8%;
         --popover-foreground: 270 100% 95%;
-        --primary: 280 100% 60%;
-        --primary-glow: 280 100% 70%;
+        --primary: 282 98% 54%; /* #BC13FE equivalent approx */
+        --primary-glow: 282 98% 64%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 300 100% 55%;
-        --secondary-glow: 300 100% 65%;
+        --secondary: 324 100% 50%; /* #FF0099 equivalent */
+        --secondary-glow: 324 100% 60%;
         --secondary-foreground: 0 0% 100%;
         --muted: 260 30% 25%;
         --muted-foreground: 270 20% 70%;
-        --accent: 190 100% 50%;
-        --accent-glow: 190 100% 60%;
+        --accent: 111 100% 54%; /* #39FF14 equivalent */
+        --accent-glow: 111 100% 64%;
         --accent-foreground: 0 0% 0%;
         --destructive: 0 100% 50%;
         --destructive-foreground: 0 0% 100%;
-        --border: 280 100% 60%;
+        --border: 282 98% 54%;
         --input: 260 50% 15%;
-        --ring: 280 100% 60%;
-        --radius: 0.5rem;
+        --ring: 282 98% 54%;
+        --radius: 0rem; /* Hard corners as requested */
 
         /* Neon Purple Theme Variables */
         --radical-red: 340 100% 55%;
-        --electric-yellow: 55 100% 50%;
+        --electric-yellow: 54 100% 61%; /* #FFE737 approx */
         --cyber-blue: 190 100% 50%;
         --neon-magenta: 300 100% 55%;
-        --lime-green: 120 100% 55%;
+        --lime-green: 111 100% 54%;
         --crt-black: 260 100% 5%;
         --arcade-orange: 30 100% 55%;
-        --hot-pink: 330 100% 60%;
     }
 
     .dark {
-        --background: 260 80% 4%;
-        --foreground: 270 100% 95%;
-        --card: 260 70% 8%;
-        --card-foreground: 270 100% 95%;
-        --popover: 260 70% 8%;
-        --popover-foreground: 270 100% 95%;
-        --primary: 280 100% 60%;
-        --primary-glow: 280 100% 70%;
-        --primary-foreground: 0 0% 100%;
-        --secondary: 300 100% 55%;
-        --secondary-glow: 300 100% 65%;
-        --secondary-foreground: 0 0% 100%;
-        --muted: 260 30% 25%;
-        --muted-foreground: 270 20% 70%;
-        --accent: 190 100% 50%;
-        --accent-glow: 190 100% 60%;
-        --accent-foreground: 0 0% 0%;
-        --destructive: 0 100% 50%;
-        --destructive-foreground: 0 0% 100%;
-        --border: 280 100% 60%;
-        --input: 260 50% 15%;
-        --ring: 280 100% 60%;
+        --background: 260 100% 5%;
     }
 
     * {
@@ -86,40 +62,25 @@
     }
 
     body {
-        @apply bg-background text-foreground;
-        font-family: 'Orbitron', monospace;
-        background-image:
-            url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="4" result="noise" /><feColorMatrix in="noise" type="saturate" values="0.3"/></filter><rect width="100" height="100" fill="%230D0221" filter="url(%23noise)" opacity="0.1"/></svg>');
+        @apply bg-[#0D001A] text-foreground overflow-x-hidden;
+        font-family: 'VT323', monospace;
         background-attachment: fixed;
-        contain: layout;
     }
 
-    /* Optimize navbar rendering - prevent flickering */
-    nav {
-        contain: layout style paint;
-        will-change: auto;
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Press Start 2P', cursive;
     }
 
-    /* Prevent nav link scale animations from causing flickering */
-    nav a {
-        will-change: auto;
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
+    .font-press-start {
+        font-family: 'Press Start 2P', cursive;
     }
 
-    .font-orbitron {
-        font-family: 'Orbitron', monospace;
+    .font-vt323 {
+        font-family: 'VT323', monospace;
     }
 
-    .font-share-tech {
-        font-family: 'Share Tech Mono', monospace;
-    }
-
-    .font-fredoka {
-        font-family: 'Fredoka One', sans-serif;
-        font-weight: 700;
+    .font-space-mono {
+        font-family: 'Space Mono', monospace;
     }
 
     /* 3D Text Effects */

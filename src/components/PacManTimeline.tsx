@@ -1,336 +1,185 @@
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import PixelCard from "./PixelCard";
-import { PixelCoin } from "./PixelDecorations";
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 
-gsap.registerPlugin(ScrollTrigger);
-
-interface TimelineEvent {
-  id: number;
-  title: string;
-  description: string;
-  date: string;
-  color: string;
-}
-
-const events: TimelineEvent[] = [
-  {
-    id: 1,
-    title: "OPENING CEREMONY",
-    description: "The dawn breaks! Join us for an electrifying kick-off",
-    date: "DAY 1",
-    color: "radical-red",
-  },
-  {
-    id: 2,
-    title: "BATTLE OF BANDS",
-    description: "Rock the stage! Music that moves mountains",
-    date: "DAY 2",
-    color: "electric-yellow",
-  },
-  {
-    id: 3,
-    title: "CULTURAL NIGHT",
-    description: "A celebration of art, dance, and tradition",
-    date: "DAY 3",
-    color: "neon-magenta",
-  },
-  {
-    id: 4,
-    title: "GRAND FINALE",
-    description: "The ultimate showdown! Who will claim victory?",
-    date: "DAY 4",
-    color: "lime-green",
-  },
+const events = [
+  { id: 1, title: "INAUGURATION", date: "FEB 10", description: "The grand opening ceremony with 8-bit fireworks.", pos: 0.1, color: "#BC13FE" },
+  { id: 2, title: "PIXEL HACK", date: "FEB 11", description: "48-hour coding marathon in the neon grid.", pos: 0.35, color: "#39FF14" },
+  { id: 3, title: "ARCADE BATTLE", date: "FEB 12", description: "Retro gaming tournament for the ultimate champion.", pos: 0.6, color: "#FF0099" },
+  { id: 4, title: "TECH SYMPOSIUM", date: "FEB 13", description: "Deep dives into the future of digital art.", pos: 0.85, color: "#FFE737" },
 ];
 
-const PacManTimeline = () => {
+export const PacmanTimeline: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const pathRef = useRef<SVGPathElement>(null);
-  const pacmanRef = useRef<HTMLDivElement>(null);
   const [eatenDots, setEatenDots] = useState<number[]>([]);
-  const [activeEvent, setActiveEvent] = useState<number>(0);
-  const [dots, setDots] = useState<{ x: number, y: number }[]>([]);
-  const [eventProgressions, setEventProgressions] = useState<number[]>([0, 0.33, 0.66, 1]);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"]
+  });
 
+  // SVG Path for the Pac-man road
+  const pathData = "M 400 0 Q 600 200 400 400 T 400 800 Q 200 1000 400 1200 T 400 1600";
+  
+  const offsetDistance = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  // Track scroll to "eat" dots
   useEffect(() => {
-    if (!containerRef.current || !pathRef.current || !pacmanRef.current) return;
-
-    const path = pathRef.current;
-    const pathLength = path.getTotalLength();
-
-    // Calculate dot positions along the path
-    const numDots = 12;
-    const newDots = [];
-    for (let i = 0; i < numDots; i++) {
-      const p = (i + 0.5) / numDots;
-      const pt = path.getPointAtLength(p * pathLength);
-      newDots.push({ x: pt.x, y: pt.y });
-    }
-    setDots(newDots);
-
-    // Calculate event progressions
-    const eventPoints = [
-      { x: 30, y: 50 },
-      { x: 330, y: 150 },
-      { x: 30, y: 350 },
-      { x: 280, y: 450 },
-    ];
-
-    const progressions = eventPoints.map(target => {
-      let bestP = 0;
-      let minD = Infinity;
-      for (let i = 0; i <= 100; i++) {
-        const p = i / 100;
-        const pt = path.getPointAtLength(p * pathLength);
-        const d = Math.pow(pt.x - target.x, 2) + Math.pow(pt.y - target.y, 2);
-        if (d < minD) {
-          minD = d;
-          bestP = p;
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
+      events.forEach(event => {
+        if (latest >= event.pos && !eatenDots.includes(event.id)) {
+          setEatenDots(prev => [...prev, event.id]);
         }
-      }
-      return bestP;
-    });
-    setEventProgressions(progressions);
-
-    const ctx = gsap.context(() => {
-      gsap.from(".pixel-border-8bit, .flex-1.grid > div", {
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 85%",
-          toggleActions: "play none none none"
-        },
-        y: 40,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.15,
-        ease: "power2.out"
       });
-    }, containerRef);
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top center",
-        end: "bottom center",
-        scrub: 1,
-        onUpdate: (self) => {
-          const progress = self.progress;
-          const point = path.getPointAtLength(progress * pathLength);
-          const nextPoint = path.getPointAtLength(Math.min(progress + 0.01, 1) * pathLength);
-
-          if (pacmanRef.current) {
-            pacmanRef.current.style.left = `${point.x}px`;
-            pacmanRef.current.style.top = `${point.y}px`;
-            
-            // Calculate rotation
-            const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
-            pacmanRef.current.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
-          }
-
-          const eaten: number[] = [];
-          for (let i = 0; i < numDots; i++) {
-            if (progress > (i + 0.5) / numDots) {
-              eaten.push(i);
-            }
-          }
-          setEatenDots(eaten);
-
-          let currentEvent = 0;
-          progressions.forEach((p, i) => {
-            if (progress >= p - 0.05) currentEvent = i;
-          });
-          setActiveEvent(currentEvent);
-        },
-      },
     });
-
-    tl.to({}, { duration: 1 });
-
-    return () => {
-      ctx.revert();
-      tl.kill();
-      if (tl.scrollTrigger) tl.scrollTrigger.kill();
-    };
-  }, []);
+    return () => unsubscribe();
+  }, [scrollYProgress, eatenDots]);
 
   return (
-    <section className="relative py-4" ref={containerRef}>
-      <div className="sticky top-10 mx-auto max-w-6xl px-4">
-        <h2 className="font-pixel text-xl md:text-3xl text-electric-yellow text-center mb-4 glow-yellow tracking-wider">
-          EVENT TIMELINE
+    <div ref={containerRef} className="relative min-h-[200vh] py-24 bg-kidcore-indigo overflow-hidden">
+      <div className="max-w-4xl mx-auto px-4">
+        <h2 className="text-3xl md:text-5xl font-press-start text-center mb-24 text-kidcore-pink">
+          TIMELINE
         </h2>
-        <p className="text-center text-muted-foreground mb-12 text-sm">
-          Follow Pac-Man through the festival journey
-        </p>
 
-        <div className="relative flex flex-col lg:flex-row gap-8 lg:gap-16 items-center lg:items-start">
-          {/* SVG Path Container */}
-          <div className="relative w-[360px] h-[500px] flex-shrink-0 pixel-border-8bit p-4 bg-crt-black/50">
-            <svg
-              viewBox="0 0 360 500"
-              className="w-full h-full"
-              style={{ overflow: "visible" }}
-            >
-              {/* Maze walls - pixel style */}
-              <path
-                d="M 20 40 H 340 V 120 H 260 V 180 H 340 V 260 H 100 V 320 H 20 V 260 H 100 V 200 H 20 V 120 H 100 V 40"
-                fill="none"
-                stroke="hsl(var(--cyber-blue))"
-                strokeWidth="8"
-                strokeLinecap="square"
-                className="opacity-40"
-              />
-              
-              {/* Path */}
-              <path
-                ref={pathRef}
-                d="M 30 50 H 280 Q 330 50 330 100 V 200 Q 330 250 280 250 H 80 Q 30 250 30 300 V 400 Q 30 450 80 450 H 280"
-                fill="none"
-                stroke="hsl(var(--cyber-blue))"
-                strokeWidth="4"
-                strokeLinecap="square"
-                strokeDasharray="8 4"
-                className="opacity-60"
-              />
+        <div className="relative h-[1600px] w-full">
+          {/* The Maze Road SVG */}
+          <svg 
+            viewBox="0 0 800 1600" 
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            style={{ filter: 'drop-shadow(0 0 10px #BC13FE)' }}
+          >
+            <path 
+              d={pathData} 
+              fill="none" 
+              stroke="#2A1045" 
+              strokeWidth="40" 
+              strokeLinecap="round"
+            />
+            <path 
+              d={pathData} 
+              fill="none" 
+              stroke="#BC13FE" 
+              strokeWidth="4" 
+              strokeDasharray="10 10"
+              strokeLinecap="round"
+            />
+            
+            {/* Blue Maze Wall style */}
+            <path 
+              d={pathData} 
+              fill="none" 
+              stroke="#0000FF" 
+              strokeWidth="60" 
+              strokeOpacity="0.1"
+              strokeLinecap="round"
+            />
+          </svg>
 
-              {/* Power pellets at event positions */}
-              {events.map((event, index) => {
-                const positions = [
-                  { x: 30, y: 50 },
-                  { x: 330, y: 150 },
-                  { x: 30, y: 350 },
-                  { x: 280, y: 450 },
-                ];
-                const pos = positions[index];
-                return (
-                  <g key={event.id}>
-                    <rect
-                      x={pos.x - 12}
-                      y={pos.y - 12}
-                      width={24}
-                      height={24}
-                      fill={`hsl(var(--${event.color}))`}
-                      className={`transition-all duration-300 ${
-                        activeEvent >= index ? "animate-pulse-glow" : "opacity-60"
-                      }`}
-                      style={{
-                        filter: activeEvent >= index
-                          ? `drop-shadow(0 0 10px hsl(var(--${event.color})))`
-                          : "none",
-                      }}
-                    />
-                    <text
-                      x={pos.x}
-                      y={pos.y + 4}
-                      textAnchor="middle"
-                      className="font-pixel text-[10px] fill-crt-black"
-                    >
-                      {index + 1}
-                    </text>
-                  </g>
-                );
-              })}
-
-              {/* Regular dots */}
-              {dots.map((pos, index) => {
-                return (
-                  <rect
-                    key={`dot-${index}`}
-                    x={pos.x - 4}
-                    y={pos.y - 4}
-                    width={8}
-                    height={8}
-                    fill="hsl(var(--electric-yellow))"
-                    className={`transition-all duration-200 ${
-                      eatenDots.includes(index) ? "opacity-20" : "opacity-100"
-                    }`}
-                    style={{
-                      filter: !eatenDots.includes(index)
-                        ? "drop-shadow(0 0 5px hsl(var(--electric-yellow)))"
-                        : "none",
-                    }}
-                  />
-                );
-              })}
-            </svg>
-
-            {/* Pac-Man - Pixel Style */}
-            <div
-              ref={pacmanRef}
-              className="absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 z-10"
-              style={{ left: 30, top: 50, imageRendering: 'pixelated' }}
-            >
-              <svg viewBox="0 0 16 16" className="w-full h-full animate-chomp">
-                <rect x="4" y="0" width="8" height="2" fill="hsl(var(--electric-yellow))" />
-                <rect x="2" y="2" width="12" height="2" fill="hsl(var(--electric-yellow))" />
-                <rect x="0" y="4" width="16" height="2" fill="hsl(var(--electric-yellow))" />
-                <rect x="0" y="6" width="10" height="2" fill="hsl(var(--electric-yellow))" />
-                <rect x="12" y="6" width="4" height="2" fill="hsl(var(--electric-yellow))" />
-                <rect x="0" y="8" width="8" height="2" fill="hsl(var(--electric-yellow))" />
-                <rect x="0" y="10" width="10" height="2" fill="hsl(var(--electric-yellow))" />
-                <rect x="12" y="10" width="4" height="2" fill="hsl(var(--electric-yellow))" />
-                <rect x="2" y="12" width="12" height="2" fill="hsl(var(--electric-yellow))" />
-                <rect x="4" y="14" width="8" height="2" fill="hsl(var(--electric-yellow))" />
-                {/* Eye */}
-                <rect x="6" y="4" width="2" height="2" fill="hsl(var(--crt-black))" />
-              </svg>
+          {/* Pac-man Character */}
+          <motion.div
+            style={{
+              offsetPath: `path("${pathData}")`,
+              offsetDistance: offsetDistance,
+              offsetRotate: 'auto'
+            }}
+            className="absolute z-20 w-16 h-16"
+          >
+            <div className="relative w-full h-full bg-kidcore-yellow rounded-full shadow-[0_0_20px_#FFE737] animate-chomp"
+                 style={{ clipPath: 'polygon(100% 0%, 100% 100%, 0% 100%, 0% 0%)' }}>
+               <div className="absolute top-1/4 right-1/4 w-3 h-3 bg-black rounded-full" />
+               {/* Mouth slice */}
+               <motion.div 
+                  className="absolute inset-0 bg-kidcore-indigo origin-center"
+                  animate={{ 
+                    clipPath: [
+                      'polygon(50% 50%, 100% 25%, 100% 75%)',
+                      'polygon(50% 50%, 100% 50%, 100% 50%)',
+                      'polygon(50% 50%, 100% 25%, 100% 75%)'
+                    ] 
+                  }}
+                  transition={{ duration: 0.3, repeat: Infinity }}
+               />
             </div>
+          </motion.div>
 
-            {/* Coin decorations */}
-            <PixelCoin className="absolute -top-6 -left-6 w-8 h-8" />
-            <PixelCoin className="absolute -bottom-6 -right-6 w-8 h-8" />
-          </div>
-
-          {/* Event Cards */}
-          <div className="flex-1 grid gap-4">
-            {events.map((event, index) => (
-              <PixelCard
-                key={event.id}
-                variant={activeEvent === index ? "primary" : "default"}
-                className={`transition-all duration-500 ${
-                  activeEvent === index
-                    ? "scale-105 border-l-8"
-                    : "opacity-60 scale-100"
-                }`}
-                style={{
-                  borderLeftColor: activeEvent === index
-                    ? `hsl(var(--${event.color}))`
-                    : undefined,
-                } as React.CSSProperties}
-              >
-                <div className="flex items-start gap-4">
-                  <span
-                    className="font-pixel text-[10px] px-3 py-1.5"
-                    style={{
-                      backgroundColor: `hsl(var(--${event.color}))`,
-                      color: 'hsl(var(--crt-black))',
-                    }}
+          {/* Dots and Info Cards */}
+          {events.map((event, index) => (
+            <div 
+              key={event.id}
+              className="absolute"
+              style={{
+                // We need to manually approximate positions on the path for UI elements
+                // or use SVG pointAtLength if we had it. For now, manual placement.
+                top: `${event.pos * 100}%`,
+                left: index % 2 === 0 ? '60%' : '10%',
+                width: '30%'
+              }}
+            >
+              {/* Dot / Fruit */}
+              <AnimatePresence>
+                {!eatenDots.includes(event.id) && (
+                  <motion.div 
+                    exit={{ scale: 0, opacity: 0 }}
+                    className="absolute -top-8 -left-8 w-12 h-12 bg-[#39FF14] rounded-full shadow-[0_0_15px_#39FF14] flex items-center justify-center animate-pulse"
+                    style={{ left: index % 2 === 0 ? '-40%' : '110%' }}
                   >
-                    {event.date}
-                  </span>
-                  <div>
-                    <h3
-                      className="font-pixel text-sm mb-2"
-                      style={{
-                        color: activeEvent === index
-                          ? `hsl(var(--${event.color}))`
-                          : "hsl(var(--foreground))",
-                      }}
-                    >
-                      {event.title}
-                    </h3>
-                    <p className="text-muted-foreground text-xs">{event.description}</p>
-                  </div>
+                     <div className="w-4 h-4 bg-white opacity-50 rounded-full" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Event Card */}
+              <motion.div
+                initial={{ opacity: 0, x: index % 2 === 0 ? 50 : -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: false, margin: "-100px" }}
+                className="bg-[#1B065E] border-4 border-black p-6 shadow-[8px_8px_0_#000] relative"
+                style={{ borderTopColor: event.color }}
+              >
+                <div className="absolute -top-4 left-4 bg-black px-2 py-1 text-xs font-press-start text-white">
+                  {event.date}
                 </div>
-              </PixelCard>
-            ))}
-          </div>
+                <h3 className="text-xl font-press-start mb-2" style={{ color: event.color }}>
+                  {event.title}
+                </h3>
+                <p className="font-vt323 text-lg text-gray-300">
+                  {event.description}
+                </p>
+                <div className="mt-4 flex justify-end">
+                   <div className="w-4 h-4 bg-kidcore-pink animate-ping" />
+                </div>
+              </motion.div>
+            </div>
+          ))}
         </div>
       </div>
-    </section>
+      
+      {/* Ghost chasing Pac-man */}
+      <motion.div
+        style={{
+          offsetPath: `path("${pathData}")`,
+          offsetDistance: useTransform(scrollYProgress, [0.1, 1], ["0%", "90%"]),
+          offsetRotate: 'auto'
+        }}
+        className="absolute z-10 w-12 h-12"
+      >
+        <div className="relative w-full h-full bg-[#FF0000] rounded-t-full shadow-[0_0_15px_red]">
+           <div className="absolute top-1/4 left-1/4 flex gap-2">
+              <div className="w-3 h-3 bg-white rounded-full flex items-center justify-center">
+                 <div className="w-1.5 h-1.5 bg-blue-900 rounded-full" />
+              </div>
+              <div className="w-3 h-3 bg-white rounded-full flex items-center justify-center">
+                 <div className="w-1.5 h-1.5 bg-blue-900 rounded-full" />
+              </div>
+           </div>
+           {/* Ghost bottom spikes */}
+           <div className="absolute -bottom-2 left-0 w-full h-4 flex">
+              <div className="flex-1 bg-[#FF0000]" style={{ clipPath: 'polygon(0% 0%, 50% 100%, 100% 0%)' }} />
+              <div className="flex-1 bg-[#FF0000]" style={{ clipPath: 'polygon(0% 0%, 50% 100%, 100% 0%)' }} />
+              <div className="flex-1 bg-[#FF0000]" style={{ clipPath: 'polygon(0% 0%, 50% 100%, 100% 0%)' }} />
+           </div>
+        </div>
+      </motion.div>
+    </div>
   );
 };
-
-export default PacManTimeline;
