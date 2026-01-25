@@ -15,8 +15,8 @@ export const WelcomeSection: React.FC = () => {
     }));
   }, []);
 
-    return (
-      <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+  return (
+    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-transparent">
       {/* 8-bit Particles */}
       <div className="absolute inset-0 pointer-events-none">
         {particles.map((p) => (
@@ -84,14 +84,14 @@ export const WelcomeSection: React.FC = () => {
         </motion.div>
       </div>
 
-        {/* Retro Grid Floor */}
-        <div 
-          className="absolute bottom-0 left-0 w-full h-1/3 opacity-10 pointer-events-none"
-          style={{
-            perspective: '500px',
-            background: 'linear-gradient(to bottom, transparent, rgba(188, 19, 254, 0.3))'
-          }}
-        >
+      {/* Retro Grid Floor */}
+      <div 
+        className="absolute bottom-0 left-0 w-full h-1/3 opacity-20 pointer-events-none"
+        style={{
+          perspective: '500px',
+          background: 'linear-gradient(to bottom, transparent, #BC13FE)'
+        }}
+      >
         <div 
           className="w-full h-full"
           style={{

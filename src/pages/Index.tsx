@@ -38,13 +38,7 @@ const Index = () => {
     return (
         <div 
             ref={mainRef} 
-            className="relative w-full overflow-x-hidden min-h-screen"
-            style={{
-                backgroundImage: 'url(/retro-room-bg.jpg)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundAttachment: 'fixed'
-            }}
+            className="relative w-full overflow-x-hidden bg-[url('/retro-room-bg.jpg')] bg-fixed bg-cover bg-center"
         >
             <MainNavigation />
             <CRTOverlay />
