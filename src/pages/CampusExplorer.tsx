@@ -230,25 +230,39 @@ const Car = ({ position, rotation }: { position: [number, number, number], rotat
     );
 };
 
-const DrivingCamera = ({ carPosition, carRotation }: { carPosition: [number, number, number], carRotation: number }) => {
+const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [number, number, number], carRotation: number, viewMode: 'third' | 'first' }) => {
     const { camera } = useThree();
     
     useFrame(() => {
-        // Racing game camera: strictly follow behind and slightly above
-        const distance = 9;
-        const height = 3.8;
-        
-        // Calculate camera position relative to car
-        const cameraX = carPosition[0] - Math.sin(carRotation) * distance;
-        const cameraZ = carPosition[2] - Math.cos(carRotation) * distance;
-        const cameraY = carPosition[1] + height;
-        
-        // Set position strictly (no lerp for "strictly follow")
-        camera.position.set(cameraX, cameraY, cameraZ);
-        
-        // Look at a point on the car or slightly ahead
-        // We look at the car's center slightly elevated
-        camera.lookAt(carPosition[0], carPosition[1] + 1.2, carPosition[2]);
+        if (viewMode === 'third') {
+            // Racing game camera: strictly follow behind and slightly above
+            const distance = 9;
+            const height = 3.8;
+            
+            const cameraX = carPosition[0] - Math.sin(carRotation) * distance;
+            const cameraZ = carPosition[2] - Math.cos(carRotation) * distance;
+            const cameraY = carPosition[1] + height;
+            
+            camera.position.set(cameraX, cameraY, cameraZ);
+            camera.lookAt(carPosition[0], carPosition[1] + 1.2, carPosition[2]);
+        } else {
+            // First person: inside the car
+            const distance = 0.2; // Positioned slightly ahead of center
+            const height = 0.75;  // At cabin height
+            
+            const cameraX = carPosition[0] + Math.sin(carRotation) * distance;
+            const cameraZ = carPosition[2] + Math.cos(carRotation) * distance;
+            const cameraY = carPosition[1] + height;
+            
+            camera.position.set(cameraX, cameraY, cameraZ);
+            
+            // Look ahead of the car
+            const lookAtDistance = 10;
+            const lookAtX = carPosition[0] + Math.sin(carRotation) * lookAtDistance;
+            const lookAtZ = carPosition[2] + Math.cos(carRotation) * lookAtDistance;
+            const lookAtY = carPosition[1] + height;
+            camera.lookAt(lookAtX, lookAtY, lookAtZ);
+        }
     });
     
     return null;
@@ -366,6 +380,7 @@ const CampusExplorer = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [webglSupported, setWebglSupported] = useState(true);
     const [isDriving, setIsDriving] = useState(false);
+    const [viewMode, setViewMode] = useState<'third' | 'first'>('third');
     const [carPosition, setCarPosition] = useState<[number, number, number]>([0, 0, -20]);
     const [carRotation, setCarRotation] = useState(0);
     const [speed, setSpeed] = useState(0);
@@ -389,8 +404,14 @@ const CampusExplorer = () => {
         if (!isDriving) return;
 
         const handleKeyDown = (e: KeyboardEvent) => {
-            keysPressed.current.add(e.key.toLowerCase());
-            if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(e.key.toLowerCase())) {
+            const key = e.key.toLowerCase();
+            keysPressed.current.add(key);
+            
+            if (key === 'c') {
+                setViewMode(prev => prev === 'third' ? 'first' : 'third');
+            }
+            
+            if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
                 e.preventDefault();
             }
         };
@@ -562,7 +583,7 @@ const CampusExplorer = () => {
                                 )}
                                 
                                 {isDriving && (
-                                    <DrivingCamera carPosition={carPosition} carRotation={carRotation} />
+                                    <DrivingCamera carPosition={carPosition} carRotation={carRotation} viewMode={viewMode} />
                                 )}
 
                                 <ambientLight intensity={0.4} />
@@ -623,11 +644,19 @@ const CampusExplorer = () => {
                                 <div style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '8px', color: '#00ffff', marginBottom: '8px' }}>
                                     ═══ CONTROLS ═══
                                 </div>
-                                <div className="text-[10px] text-white/80 space-y-1" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '7px' }}>
+                                <div className="text-[10px] text-white/80 space-y-2" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '7px' }}>
                                     <div><span className="text-primary">W/↑</span> Forward</div>
                                     <div><span className="text-primary">S/↓</span> Reverse</div>
                                     <div><span className="text-primary">A/←</span> Turn Left</div>
                                     <div><span className="text-primary">D/→</span> Turn Right</div>
+                                    <div className="pt-2 border-t border-white/10">
+                                        <button 
+                                            onClick={() => setViewMode(v => v === 'third' ? 'first' : 'third')}
+                                            className="w-full text-left hover:text-primary transition-colors flex items-center gap-2"
+                                        >
+                                            <span className="text-primary">[C]</span> VIEW: {viewMode === 'third' ? '3RD' : '1ST'}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
