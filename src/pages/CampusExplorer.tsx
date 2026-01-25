@@ -198,34 +198,131 @@ const Streetlights = () => {
 };
 
 const Car = ({ position, rotation }: { position: [number, number, number], rotation: number }) => {
+    const wheelRotation = useRef(0);
+    
+    useFrame((_, delta) => {
+        wheelRotation.current += delta * 10;
+    });
+    
     return (
         <group position={position} rotation={[0, rotation, 0]}>
-            <mesh position={[0, 0.3, 0]} castShadow>
-                <boxGeometry args={[1.2, 0.4, 2.5]} />
-                <meshStandardMaterial color="#ff00ff" metalness={0.8} roughness={0.2} emissive="#ff00ff" emissiveIntensity={0.3} />
+            <mesh position={[0, 0.22, 0]} castShadow>
+                <boxGeometry args={[1.6, 0.3, 3.8]} />
+                <meshStandardMaterial color="#0a0a0a" metalness={0.95} roughness={0.05} />
             </mesh>
-            <mesh position={[0, 0.6, -0.2]} castShadow>
-                <boxGeometry args={[1, 0.35, 1.2]} />
-                <meshStandardMaterial color="#1a0030" metalness={0.9} roughness={0.1} />
+            
+            <mesh position={[0, 0.4, 0.3]} castShadow>
+                <boxGeometry args={[1.5, 0.25, 2.2]} />
+                <meshStandardMaterial color="#111111" metalness={0.9} roughness={0.1} />
             </mesh>
-            <mesh position={[0.5, 0.1, 0.8]}>
-                <cylinderGeometry args={[0.2, 0.2, 0.15, 16]} />
-                <meshStandardMaterial color="#111111" />
+            
+            <mesh position={[0, 0.55, -0.3]} castShadow>
+                <boxGeometry args={[1.3, 0.3, 1.4]} />
+                <meshStandardMaterial color="#050505" metalness={0.95} roughness={0.05} />
             </mesh>
-            <mesh position={[-0.5, 0.1, 0.8]}>
-                <cylinderGeometry args={[0.2, 0.2, 0.15, 16]} />
-                <meshStandardMaterial color="#111111" />
+            
+            <mesh position={[0, 0.62, -0.3]}>
+                <boxGeometry args={[1.2, 0.02, 1.2]} />
+                <meshStandardMaterial color="#00ffff" transparent opacity={0.4} emissive="#00ffff" emissiveIntensity={0.5} />
             </mesh>
-            <mesh position={[0.5, 0.1, -0.8]}>
-                <cylinderGeometry args={[0.2, 0.2, 0.15, 16]} />
-                <meshStandardMaterial color="#111111" />
+            <mesh position={[0.55, 0.48, -0.3]} rotation={[0, 0, Math.PI / 2]}>
+                <boxGeometry args={[0.25, 0.02, 1.1]} />
+                <meshStandardMaterial color="#00ffff" transparent opacity={0.3} emissive="#00ffff" emissiveIntensity={0.3} />
             </mesh>
-            <mesh position={[-0.5, 0.1, -0.8]}>
-                <cylinderGeometry args={[0.2, 0.2, 0.15, 16]} />
-                <meshStandardMaterial color="#111111" />
+            <mesh position={[-0.55, 0.48, -0.3]} rotation={[0, 0, Math.PI / 2]}>
+                <boxGeometry args={[0.25, 0.02, 1.1]} />
+                <meshStandardMaterial color="#00ffff" transparent opacity={0.3} emissive="#00ffff" emissiveIntensity={0.3} />
             </mesh>
-            <pointLight position={[0, 0.4, 1.3]} intensity={2} distance={8} color="#ffffff" />
-            <pointLight position={[0, 0.4, -1.3]} intensity={0.5} distance={3} color="#ff0000" />
+            
+            <mesh position={[0, 0.32, 1.9]} castShadow>
+                <boxGeometry args={[1.4, 0.15, 0.3]} />
+                <meshStandardMaterial color="#0a0a0a" metalness={0.9} roughness={0.1} />
+            </mesh>
+            <mesh position={[0, 0.32, -1.9]} castShadow>
+                <boxGeometry args={[1.4, 0.2, 0.3]} />
+                <meshStandardMaterial color="#0a0a0a" metalness={0.9} roughness={0.1} />
+            </mesh>
+            
+            <mesh position={[0, 0.6, -1.85]}>
+                <boxGeometry args={[1.2, 0.08, 0.02]} />
+                <meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={1} />
+            </mesh>
+            
+            <mesh position={[0.6, 0.42, -1.0]} rotation={[0, 0, Math.PI / 2]}>
+                <boxGeometry args={[0.12, 0.05, 0.4]} />
+                <meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.8} />
+            </mesh>
+            <mesh position={[-0.6, 0.42, -1.0]} rotation={[0, 0, Math.PI / 2]}>
+                <boxGeometry args={[0.12, 0.05, 0.4]} />
+                <meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.8} />
+            </mesh>
+            
+            <mesh position={[0.6, 0.25, 0]} rotation={[0, 0, Math.PI / 2]}>
+                <boxGeometry args={[0.03, 0.02, 3.5]} />
+                <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={0.6} />
+            </mesh>
+            <mesh position={[-0.6, 0.25, 0]} rotation={[0, 0, Math.PI / 2]}>
+                <boxGeometry args={[0.03, 0.02, 3.5]} />
+                <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={0.6} />
+            </mesh>
+            
+            {[
+                [0.7, 0.15, 1.3],
+                [-0.7, 0.15, 1.3],
+                [0.7, 0.15, -1.2],
+                [-0.7, 0.15, -1.2]
+            ].map((pos, i) => (
+                <group key={i} position={pos as [number, number, number]}>
+                    <mesh rotation={[0, 0, Math.PI / 2]}>
+                        <cylinderGeometry args={[0.25, 0.25, 0.18, 24]} />
+                        <meshStandardMaterial color="#1a1a1a" metalness={0.8} roughness={0.3} />
+                    </mesh>
+                    <mesh rotation={[0, 0, Math.PI / 2]}>
+                        <cylinderGeometry args={[0.18, 0.18, 0.2, 6]} />
+                        <meshStandardMaterial color="#333333" metalness={0.95} roughness={0.1} />
+                    </mesh>
+                    <mesh rotation={[0, 0, Math.PI / 2]} position={[pos[0] > 0 ? 0.1 : -0.1, 0, 0]}>
+                        <ringGeometry args={[0.12, 0.17, 6]} />
+                        <meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.3} side={THREE.DoubleSide} />
+                    </mesh>
+                </group>
+            ))}
+            
+            <mesh position={[0.4, 0.32, 1.85]}>
+                <boxGeometry args={[0.2, 0.08, 0.05]} />
+                <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={2} />
+            </mesh>
+            <mesh position={[-0.4, 0.32, 1.85]}>
+                <boxGeometry args={[0.2, 0.08, 0.05]} />
+                <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={2} />
+            </mesh>
+            <mesh position={[0.4, 0.32, 1.83]}>
+                <boxGeometry args={[0.25, 0.12, 0.02]} />
+                <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={1.5} transparent opacity={0.8} />
+            </mesh>
+            <mesh position={[-0.4, 0.32, 1.83]}>
+                <boxGeometry args={[0.25, 0.12, 0.02]} />
+                <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={1.5} transparent opacity={0.8} />
+            </mesh>
+            
+            <mesh position={[0.5, 0.32, -1.85]}>
+                <boxGeometry args={[0.3, 0.06, 0.05]} />
+                <meshStandardMaterial color="#ff0033" emissive="#ff0033" emissiveIntensity={1.5} />
+            </mesh>
+            <mesh position={[-0.5, 0.32, -1.85]}>
+                <boxGeometry args={[0.3, 0.06, 0.05]} />
+                <meshStandardMaterial color="#ff0033" emissive="#ff0033" emissiveIntensity={1.5} />
+            </mesh>
+            
+            <mesh position={[0, 0.08, 0]}>
+                <boxGeometry args={[1.2, 0.02, 3.2]} />
+                <meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.4} transparent opacity={0.6} />
+            </mesh>
+            
+            <pointLight position={[0.4, 0.35, 2]} intensity={3} distance={15} color="#00ffff" />
+            <pointLight position={[-0.4, 0.35, 2]} intensity={3} distance={15} color="#00ffff" />
+            <pointLight position={[0, 0.35, -2]} intensity={1} distance={5} color="#ff0033" />
+            <pointLight position={[0, 0, 0]} intensity={0.5} distance={4} color="#ff00ff" />
         </group>
     );
 };
