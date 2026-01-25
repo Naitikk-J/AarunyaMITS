@@ -77,7 +77,7 @@ export function MapboxMap({
                     center: [INDIA_CENTER.lng, INDIA_CENTER.lat],
                     zoom: 4,
                     pitch: 0,
-                    duration: 3000
+                    duration: 1000
                 });
 
                 // After India animation, animate to Gwalior
@@ -88,7 +88,7 @@ export function MapboxMap({
                         center: [GWALIOR_CENTER.lng, GWALIOR_CENTER.lat],
                         zoom: 10,
                         pitch: 0,
-                        duration: 3000
+                        duration: 1000
                     });
 
                     // After Gwalior animation, animate to MITS Gwalior College
@@ -100,11 +100,11 @@ export function MapboxMap({
                             zoom: 17,
                             pitch: 45,
                             bearing: 0,
-                            duration: 3000
+                            duration: 1000
                         });
-                    }, 3000);
-                }, 3000);
-            }, 2000);
+                    }, 1000);
+                }, 1000);
+            }, 1000);
 
             // Check if 3D buildings layer exists
             if (!map.current.getLayer('3d-buildings')) {
