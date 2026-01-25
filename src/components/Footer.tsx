@@ -176,7 +176,10 @@ const Footer = () => {
 
       {/* PLAYFUL FOOTER END */}
       <div className="footer-item mt-16 text-center">
-        <button className="kidcore-btn px-8 py-3 text-sm font-pixel">
+        <button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="kidcore-btn px-8 py-3 text-sm font-pixel"
+        >
           [ BACK TO TOP ]
         </button>
         <p className="font-pixel text-[9px] text-kidcore-orange mt-4">

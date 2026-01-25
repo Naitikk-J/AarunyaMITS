@@ -41,29 +41,61 @@ export const PacmanTimeline: React.FC = () => {
           TIMELINE
         </h2>
 
-        <div className="relative h-[1600px] w-full">
-          {/* The Maze Road SVG */}
-          <svg 
-            viewBox="0 0 800 1600" 
-            className="absolute inset-0 w-full h-full pointer-events-none"
-          >
-            <path 
-              d={pathData} 
-              fill="none" 
-              stroke="var(--kidcore-black)" 
-              strokeWidth="40" 
-              strokeLinecap="round"
-              className="opacity-10"
-            />
-            <path 
-              d={pathData} 
-              fill="none" 
-              stroke="var(--kidcore-blue)" 
-              strokeWidth="6" 
-              strokeDasharray="12 12"
-              strokeLinecap="round"
-            />
-          </svg>
+          <div className="relative h-[1600px] w-full bg-black/5 rounded-3xl overflow-hidden border-8 border-kidcore-blue/30">
+            {/* The Maze Road SVG */}
+            <svg 
+              viewBox="0 0 800 1600" 
+              className="absolute inset-0 w-full h-full pointer-events-none"
+            >
+              {/* Maze Walls */}
+              <g fill="none" stroke="var(--kidcore-blue)" strokeWidth="8" strokeLinejoin="round" className="opacity-40">
+                <rect x="50" y="50" width="100" height="200" rx="10" />
+                <rect x="650" y="50" width="100" height="200" rx="10" />
+                <rect x="250" y="150" width="300" height="40" rx="20" />
+                <rect x="50" y="400" width="150" height="40" rx="20" />
+                <rect x="600" y="400" width="150" height="40" rx="20" />
+                <rect x="380" y="500" width="40" height="200" rx="20" />
+                <rect x="150" y="800" width="100" height="100" rx="10" />
+                <rect x="550" y="800" width="100" height="100" rx="10" />
+                <rect x="300" y="1100" width="200" height="40" rx="20" />
+                <rect x="100" y="1300" width="40" height="200" rx="20" />
+                <rect x="660" y="1300" width="40" height="200" rx="20" />
+              </g>
+
+              <path 
+                d={pathData} 
+                fill="none" 
+                stroke="var(--kidcore-black)" 
+                strokeWidth="60" 
+                strokeLinecap="round"
+                className="opacity-5"
+              />
+              <path 
+                d={pathData} 
+                fill="none" 
+                stroke="var(--kidcore-blue)" 
+                strokeWidth="8" 
+                strokeDasharray="4 20"
+                strokeLinecap="round"
+                className="opacity-50"
+              />
+              
+              {/* Food dots along the path */}
+              {[...Array(20)].map((_, i) => (
+                <circle 
+                  key={i} 
+                  cx="400" 
+                  cy={i * 80} 
+                  r="4" 
+                  fill="var(--kidcore-yellow)" 
+                  className="opacity-30"
+                  style={{
+                    offsetPath: `path("${pathData}")`,
+                    offsetDistance: `${(i / 20) * 100}%`
+                  }}
+                />
+              ))}
+            </svg>
 
           {/* Pac-man Character */}
           <motion.div
