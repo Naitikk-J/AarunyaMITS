@@ -70,6 +70,9 @@ export default {
                     green: "#39FF14",
                     pink: "#FF0099",
                     yellow: "#FFE737",
+                    blue: "#00fff9",
+                    orange: "#ff8a00",
+                    cream: "#fff5e6",
                 },
                 sidebar: {
                     DEFAULT: "hsl(var(--sidebar-background))",
