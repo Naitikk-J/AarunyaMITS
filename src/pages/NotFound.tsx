@@ -1,6 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
-import { RetroTvError } from "@/components/ui/404-error-page";
 
 const NotFound = () => {
   const location = useLocation();
@@ -10,26 +9,48 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="relative min-h-screen bg-[#0D001A] overflow-hidden">
-      <RetroTvError 
-        errorCode="404" 
-        errorMessage={`SIGNAL LOST AT ${location.pathname}`}
-      />
-      
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30">
-        <Link 
-          to="/" 
-          className="kidcore-btn group"
-        >
-          <span className="relative z-10 flex items-center gap-2">
-            RETURN TO BASE
-          </span>
-        </Link>
+    <div className="flex min-h-screen items-center justify-center bg-black text-white font-pixel p-6">
+      <div className="max-w-md w-full border-4 border-red-600 bg-black p-10 relative overflow-hidden">
+        {/* Glitch Overlay */}
+        <div className="absolute inset-0 bg-red-600/5 animate-pulse pointer-events-none" />
+        
+        <div className="relative z-10 text-center space-y-8">
+          <div className="inline-block px-4 py-1 bg-red-600 text-black text-xs font-bold mb-4 animate-bounce">
+            ERROR_404
+          </div>
+          
+          <h1 className="text-6xl md:text-8xl font-bold text-red-600 tracking-tighter glow-red">
+            LOST_NODE
+          </h1>
+          
+          <div className="space-y-4">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest leading-relaxed">
+              The transmission at <span className="text-red-400">"{location.pathname}"</span> has been intercepted or does not exist in this sector.
+            </p>
+            
+            <div className="h-1 w-full bg-red-600/20 relative overflow-hidden">
+              <div className="absolute top-0 left-0 h-full w-1/3 bg-red-600 animate-[scan_1.5s_linear_infinite]" />
+            </div>
+          </div>
+
+          <Link 
+            to="/" 
+            className="inline-block w-full py-4 bg-white text-black font-bold text-xs uppercase hover:bg-red-600 hover:text-white transition-all shadow-[4px_4px_0px_#444] active:translate-y-[2px] active:shadow-none"
+          >
+            RETURN_TO_BASE
+          </Link>
+        </div>
       </div>
-      
-      {/* Background elements */}
-      <div className="absolute top-10 left-10 w-32 h-32 bg-cyber-grape/10 blur-3xl rounded-full" />
-      <div className="absolute bottom-10 right-10 w-40 h-40 bg-slime-green/10 blur-3xl rounded-full" />
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes scan {
+          0% { left: -33%; }
+          100% { left: 100%; }
+        }
+        .glow-red {
+          text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+        }
+      `}} />
     </div>
   );
 };
