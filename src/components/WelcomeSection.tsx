@@ -37,7 +37,15 @@ const WelcomeSection = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen py-24 flex items-center justify-center overflow-hidden bg-transparent">
+    <section 
+      ref={sectionRef} 
+      className="relative min-h-screen py-24 flex items-center justify-center overflow-hidden"
+      style={{
+        backgroundImage: 'url(/secondbg.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       {/* Floating decorations */}
       <PixelStar className="absolute top-20 left-10 w-16 h-16 animate-float" color="primary" />
       <PixelStar className="absolute top-1/3 right-16 w-12 h-12 animate-float" color="accent" style={{ animationDelay: '1s' }} />
