@@ -4,6 +4,56 @@
   padding: 2rem;
   text-align: center;
 }
+/* ================= PIXEL LOCK ================= */
+.pixelated,
+.font-pixel,
+footer * {
+  image-rendering: pixelated;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* ================= CRT EFFECT ================= */
+.crt-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255,255,255,0.03) 0%,
+    rgba(0,0,0,0.45) 70%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.scanlines {
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 255, 157, 0.12) 50%
+  );
+  background-size: 100% 4px;
+  opacity: 0.2;
+}
+
+/* ================= ARCADE BUTTON ================= */
+.arcade-btn {
+  cursor: pointer;
+  image-rendering: pixelated;
+  transition: transform 0.12s steps(2);
+}
+
+.arcade-btn:active {
+  transform: translateY(4px);
+  filter: brightness(0.85);
+}
+
+/* ================= COLOR GLOW ================= */
+.glow {
+  text-shadow: 0 0 8px currentColor;
+}
+
 
 .logo {
   height: 6em;
