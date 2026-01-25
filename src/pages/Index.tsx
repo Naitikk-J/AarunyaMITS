@@ -1,35 +1,45 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MainNavigation } from '@/components/ui/MainNavigation';
+import TVZoom from '@/components/TVZoom';
+import TVIntro from '@/components/TVIntro';
+import WelcomeSection from '@/components/WelcomeSection';
+import PacManTimeline from '@/components/PacManTimeline';
+import Footer from '@/components/Footer';
+import CRTOverlay from '@/components/CRTOverlay';
 
-// ... inside useEffect
+gsap.registerPlugin(ScrollTrigger);
+
+const Index = () => {
+    const mainRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
         const lenis = new Lenis({
-          duration: 1.2,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-          orientation: 'vertical',
-          gestureOrientation: 'vertical',
-          smoothWheel: true,
-          wheelMultiplier: 1,
-          touchMultiplier: 2,
-          infinite: false,
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+            infinite: false,
         });
 
         // Sync ScrollTrigger with Lenis
         lenis.on('scroll', ScrollTrigger.update);
 
         const updateLenis = (time: number) => {
-          lenis.raf(time * 1000);
+            lenis.raf(time * 1000);
         };
 
         gsap.ticker.add(updateLenis);
-
         gsap.ticker.lagSmoothing(0);
 
         return () => {
-          lenis.destroy();
-          gsap.ticker.remove(updateLenis);
+            lenis.destroy();
+            gsap.ticker.remove(updateLenis);
         };
     }, []);
 
@@ -51,13 +61,13 @@ import { MainNavigation } from '@/components/ui/MainNavigation';
                 <WelcomeSection />
 
                 {/* Section 3: The Pac-Man Timeline (Gamified Scroll) */}
-                <PacmanTimeline />
+                <PacManTimeline />
                 
-                  {/* Additional sections can be added here if needed */}
-                  <Footer />
-              </main>
+                {/* Footer is moved inside main for correct scroll flow */}
+                <Footer />
+            </main>
 
-              <style dangerouslySetInnerHTML={{ __html: `
+            <style dangerouslySetInnerHTML={{ __html: `
                 .glitch {
                     position: relative;
                 }
@@ -84,7 +94,6 @@ import { MainNavigation } from '@/components/ui/MainNavigation';
                 @keyframes glitch-anim {
                     0% { clip: rect(31px, 9999px, 94px, 0); transform: skew(0.85deg); }
                     5% { clip: rect(70px, 9999px, 71px, 0); transform: skew(0.85deg); }
-                    /* ... more steps if needed ... */
                     100% { clip: rect(67px, 9999px, 62px, 0); transform: skew(0.1deg); }
                 }
                 @keyframes glitch-anim2 {
