@@ -227,9 +227,11 @@ export const PacmanTimeline: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: false, margin: "-100px" }}
-                className={`p-6 md:p-8 absolute w-[80vw] md:w-[40%] max-w-[350px] rounded-2xl border-2 bg-kidcore-indigo/80 backdrop-blur-md ${
-                  index % 2 === 0 ? 'right-[5%] md:right-[8%]' : 'left-[5%] md:left-[8%]'
-                } -translate-y-1/2`}
+                className={`p-4 md:p-8 absolute w-[75vw] md:w-[40%] max-w-[350px] rounded-2xl border-2 bg-kidcore-indigo/70 backdrop-blur-md z-30 ${
+                  index % 2 === 0 
+                    ? 'right-[2%] md:right-[8%] -translate-y-[60%]' 
+                    : 'left-[2%] md:left-[8%] -translate-y-[40%]'
+                } md:-translate-y-1/2`}
                 style={{ 
                   borderColor: event.color,
                   boxShadow: `0 0 15px ${event.color}44, inset 0 0 10px ${event.color}22`
