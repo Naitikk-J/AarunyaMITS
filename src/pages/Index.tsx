@@ -39,32 +39,27 @@ const Index = () => {
     return (
         <div
             ref={mainRef}
-            className="relative w-full overflow-x-hidden bg-[#0D001A]"
+            className="relative w-full overflow-x-hidden bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] bg-fixed bg-cover bg-center"
         >
-            {/* Main Background with Fixed Effect Fix for Mobile */}
-            <div className="fixed inset-0 z-0 pointer-events-none bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] bg-cover bg-center" />
-            
-            <div className="relative z-10">
-                <MainNavigation />
-                <CRTOverlay />
+            <MainNavigation />
+            <CRTOverlay />
 
-                <main>
-                    {/* Section 1: The Infinite TV Zoom (Hero) */}
-                    <TVZoom>
-                        <TVIntro />
-                    </TVZoom>
+            <main>
+                {/* Section 1: The Infinite TV Zoom (Hero) */}
+                <TVZoom>
+                    <TVIntro />
+                </TVZoom>
 
-                    {/* Section 2: Welcome to Aarunya (Standalone Section revealed after TV goes up) */}
-                    <WelcomeSection />
+                {/* Section 2: Welcome to Aarunya (Standalone Section revealed after TV goes up) */}
+                <WelcomeSection />
 
-                    {/* Section 3: The Pac-Man Timeline (Gamified Scroll) */}
-                    <PacmanTimeline />
+                {/* Section 3: The Pac-Man Timeline (Gamified Scroll) */}
+                <PacmanTimeline />
 
-                    {/* Additional sections can be added here if needed */}
-                </main>
+                {/* Additional sections can be added here if needed */}
+            </main>
 
-                <Footer />
-            </div>
+            <Footer />
 
             <style dangerouslySetInnerHTML={{
                 __html: `
