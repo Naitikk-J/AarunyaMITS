@@ -30,7 +30,7 @@ const ViewMap = () => {
     return (
         <div className="relative w-full h-screen overflow-hidden bg-background">
             <MainNavigation />
-            
+
             {/* Mapbox Map Container */}
             <div className="absolute inset-0 pt-16">
                 <MapboxMap />
@@ -38,10 +38,10 @@ const ViewMap = () => {
 
             {/* Explore Campus Button */}
             {showExploreButton && (
-                <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40 animate-fade-in">
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 animate-fade-in">
                     <Button
                         onClick={handleExploreCampus}
-                        className="px-8 py-6 text-lg font-orbitron font-bold tracking-wider bg-gradient-to-r from-kidcore-pink via-kidcore-blue to-kidcore-cyan text-white rounded-lg shadow-2xl hover:shadow-3xl transition-all duration-100 hover:scale-105 active:scale-95"
+                        className="px-8 py-6 text-3xl font-orbitron font-bold tracking-wider bg-gradient-to-r from-kidcore-pink via-kidcore-blue to-kidcore-cyan text-white rounded-lg shadow-2xl hover:shadow-3xl transition-all duration-100 hover:scale-105 active:scale-95"
                     >
                         CLICK ME TO EXPLORE CAMPUS
                     </Button>
