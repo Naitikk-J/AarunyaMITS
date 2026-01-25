@@ -3,13 +3,41 @@ import { motion } from 'framer-motion';
 
 export const TVIntro: React.FC = () => {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
-    <motion.div
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="text-center px-4 flex flex-col items-center"
-    >
+    <div className="w-full h-full flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm relative overflow-hidden">
+      {/* Neon Purple Perspective Grid */}
+      <div className="absolute inset-0 pointer-events-none select-none z-0">
+        <div className="absolute inset-0 [perspective:500px] [perspective-origin:50%_50%]">
+          <motion.div 
+            animate={{ 
+              backgroundPosition: ['0px 0px', '0px 40px'] 
+            }}
+            transition={{ 
+              duration: 2.5, 
+              repeat: Infinity, 
+              ease: "linear" 
+            }}
+            className="absolute inset-[-100%] h-[300%] w-[300%] origin-center"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, rgba(184, 23, 253, 0.6) 1.5px, transparent 1.5px),
+                linear-gradient(to bottom, rgba(184, 23, 253, 0.6) 1.5px, transparent 1.5px)
+              `,
+              backgroundSize: '60px 60px',
+              transform: 'rotateX(75deg)',
+              filter: 'drop-shadow(0 0 8px rgba(184, 23, 253, 0.8))',
+              maskImage: 'radial-gradient(circle at 50% 50%, black 10%, transparent 80%)'
+            }}
+          />
+        </div>
+      </div>
+
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="text-center px-4 flex flex-col items-center relative z-10"
+      >
+
       <img 
         src="/aarunya-logo.svg" 
         alt="Aarunya Logo" 
