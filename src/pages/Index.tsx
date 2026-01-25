@@ -22,6 +22,7 @@ const Index = () => {
             wheelMultiplier: 1,
             touchMultiplier: 2,
             infinite: false,
+            syncTouch: true,
         });
 
         function raf(time: number) {
@@ -39,7 +40,7 @@ const Index = () => {
     return (
         <div
             ref={mainRef}
-            className="relative w-full overflow-x-hidden bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] bg-fixed bg-cover bg-center"
+            className="relative w-full overflow-x-hidden bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] md:bg-fixed bg-local bg-cover bg-center"
         >
             <MainNavigation />
             <CRTOverlay />
