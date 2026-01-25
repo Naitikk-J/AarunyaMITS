@@ -231,52 +231,65 @@ const Car = ({ position, rotation }: { position: [number, number, number], rotat
 };
 
 const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [number, number, number], carRotation: number, viewMode: 'third' | 'first' }) => {
-    const { camera } = useThree();
+    const { camera, set } = useThree();
+    const cameraRef = useRef<THREE.PerspectiveCamera>(null);
     const smoothedRotation = useRef(carRotation);
+    const smoothedPosition = useRef(new THREE.Vector3());
     const lookAtTarget = useRef(new THREE.Vector3());
     
+    useEffect(() => {
+        if (cameraRef.current) {
+            set({ camera: cameraRef.current });
+        }
+    }, [set]);
+    
     useFrame(() => {
-        // Smoothly interpolate rotation to follow car's turning
-        smoothedRotation.current = THREE.MathUtils.lerp(smoothedRotation.current, carRotation, 0.05);
+        if (!cameraRef.current) return;
+        
+        const mapRotation = Math.PI / 4;
+        const adjustedCarRotation = carRotation + mapRotation;
+        const rotatedCarX = carPosition[0] * Math.cos(mapRotation) - carPosition[2] * Math.sin(mapRotation);
+        const rotatedCarZ = carPosition[0] * Math.sin(mapRotation) + carPosition[2] * Math.cos(mapRotation);
+        
+        smoothedRotation.current = THREE.MathUtils.lerp(smoothedRotation.current, adjustedCarRotation, 0.08);
         
         if (viewMode === 'third') {
-            const distance = 10;
-            const height = 8;
+            const distance = 12;
+            const height = 7;
             
-            // Camera position based on smoothed rotation - follows behind the car
-            const targetX = carPosition[0] - Math.sin(smoothedRotation.current) * distance;
-            const targetZ = carPosition[2] - Math.cos(smoothedRotation.current) * distance;
+            const targetX = rotatedCarX - Math.sin(smoothedRotation.current) * distance;
+            const targetZ = rotatedCarZ - Math.cos(smoothedRotation.current) * distance;
             const targetY = carPosition[1] + height;
             
-            camera.position.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.08);
+            smoothedPosition.current.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.1);
+            cameraRef.current.position.copy(smoothedPosition.current);
             
-            // Look at a point ahead of the car based on its actual rotation
-            const lookAheadDistance = 5;
-            const lookX = carPosition[0] + Math.sin(carRotation) * lookAheadDistance;
-            const lookZ = carPosition[2] + Math.cos(carRotation) * lookAheadDistance;
-            const lookY = carPosition[1];
+            const lookAheadDistance = 8;
+            const lookX = rotatedCarX + Math.sin(adjustedCarRotation) * lookAheadDistance;
+            const lookZ = rotatedCarZ + Math.cos(adjustedCarRotation) * lookAheadDistance;
+            const lookY = carPosition[1] + 0.5;
             
-            lookAtTarget.current.lerp(new THREE.Vector3(lookX, lookY, lookZ), 0.1);
-            camera.lookAt(lookAtTarget.current);
+            lookAtTarget.current.lerp(new THREE.Vector3(lookX, lookY, lookZ), 0.12);
+            cameraRef.current.lookAt(lookAtTarget.current);
         } else {
-            const distance = 0.2;
-            const height = 0.75;
+            const distance = 0.5;
+            const height = 1;
             
-            const cameraX = carPosition[0] + Math.sin(carRotation) * distance;
-            const cameraZ = carPosition[2] + Math.cos(carRotation) * distance;
+            const cameraX = rotatedCarX + Math.sin(adjustedCarRotation) * distance;
+            const cameraZ = rotatedCarZ + Math.cos(adjustedCarRotation) * distance;
             const cameraY = carPosition[1] + height;
             
-            camera.position.set(cameraX, cameraY, cameraZ);
+            cameraRef.current.position.set(cameraX, cameraY, cameraZ);
             
-            const lookAtDistance = 10;
-            const lookAtX = carPosition[0] + Math.sin(carRotation) * lookAtDistance;
-            const lookAtZ = carPosition[2] + Math.cos(carRotation) * lookAtDistance;
+            const lookAtDistance = 15;
+            const lookAtX = rotatedCarX + Math.sin(adjustedCarRotation) * lookAtDistance;
+            const lookAtZ = rotatedCarZ + Math.cos(adjustedCarRotation) * lookAtDistance;
             const lookAtY = carPosition[1] + height;
-            camera.lookAt(lookAtX, lookAtY, lookAtZ);
+            cameraRef.current.lookAt(lookAtX, lookAtY, lookAtZ);
         }
     });
     
-    return null;
+    return <perspectiveCamera ref={cameraRef} fov={60} near={0.1} far={1000} />;
 };
 
 const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
