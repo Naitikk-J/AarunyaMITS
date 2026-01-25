@@ -1,5 +1,6 @@
 import { ReactNode, useRef } from "react";
 import { InteractiveTVControls } from "./InteractiveTVControls";
+import { cn } from "@/lib/utils";
 
 interface TVFrameProps {
   children: ReactNode;
@@ -10,47 +11,67 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
   const screenRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={cn("relative flex flex-col items-center", className)}>
+      {/* Antenna System */}
+      <div className="antenna mb-[-20px] scale-75 md:scale-100 opacity-80">
+        <div className="a1"></div>
+        <div className="a1d"></div>
+        <div className="a2"></div>
+        <div className="a2d"></div>
+        <div className="a_base"></div>
+      </div>
+
       {/* TV Body */}
-      <div className="bg-[#1A1A1A] border-[12px] border-[#0A0A0A] rounded-xl shadow-2xl relative overflow-visible">
-        {/* Main Screen Container */}
-        <div className="flex">
-          {/* Screen area */}
-          <div 
-            ref={screenRef}
-            className="flex-1 crt-screen aspect-video relative overflow-hidden bg-black rounded-sm m-2 shadow-[inset_0_0_20px_rgba(0,0,0,1)]"
+      <div className="tv w-full max-w-[800px] aspect-[4/3] flex-row p-4 md:p-6 shadow-[10px_10px_0_#BC13FE,0_20px_40px_rgba(0,0,0,0.8)] border-[12px] border-[#333]">
+        {/* SVG Curve Overlay (Decorative) */}
+        <div className="cruve">
+          <svg
+            viewBox="0 0 189.929 189.929"
+            xmlns="http://www.w3.org/2000/svg"
+            className="curve_svg"
           >
-            {/* Inner glow */}
-            <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/50 pointer-events-none z-10" />
-            
-            {/* Content */}
-            <div className="relative z-0 w-full h-full flex items-center justify-center">
-              {children}
-            </div>
+            <path d="M70.343,70.343c-30.554,30.553-44.806,72.7-39.102,115.635l-29.738,3.951C-5.442,137.659,11.917,86.34,49.129,49.13C86.34,11.918,137.664-5.445,189.928,1.502l-3.95,29.738C143.041,25.54,100.895,39.789,70.343,70.343z" />
+          </svg>
+        </div>
 
-            {/* Corner vignette */}
-            <div className="absolute inset-0 pointer-events-none" style={{
-              background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%)'
-            }} />
+        {/* Main Screen Container */}
+        <div className="display_div flex-1 h-full bg-black border-[6px] md:border-[8px] border-[#222] rounded-lg md:rounded-xl overflow-hidden relative">
+          <div className="screen_out w-full h-full relative">
+            <div className="screen w-full h-full flex items-center justify-center bg-radial-gradient(circle_at_center,_#1a0033_0%,_#000_100%)">
+               <div ref={screenRef} className="w-full h-full relative z-0">
+                  {children}
+               </div>
+            </div>
+            <div className="screenM pointer-events-none" />
           </div>
+        </div>
 
-          {/* Integrated Control Panel Space (Right Side) */}
-          <div className="w-20 md:w-24 bg-[#111111] border-l-4 border-[#0A0A0A] flex flex-col items-center py-4 relative">
-            <InteractiveTVControls screenRef={screenRef} />
-            
-            {/* Small indicator lights at the bottom of panel */}
-            <div className="absolute bottom-4 flex gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-lime-green animate-pulse shadow-[0_0_5px_rgba(57,255,20,0.8)]" />
-              <div className="w-1.5 h-1.5 rounded-full bg-radical-red shadow-[0_0_5px_rgba(255,0,153,0.8)]" />
+        {/* Integrated Control Panel Space (Right Side) */}
+        <div className="buttons_div w-24 md:w-32 flex flex-col items-center justify-around py-2 relative">
+          <InteractiveTVControls screenRef={screenRef} />
+          
+          {/* Speaker Grill area from Retro design */}
+          <div className="speakers mt-2 w-3/4">
+            <div className="g1">
+              <div className="g11"></div>
+              <div className="g12"></div>
+              <div className="g13"></div>
             </div>
+            <div className="g"></div>
+            <div className="g"></div>
           </div>
         </div>
       </div>
 
       {/* Stand/Bottom Decoration */}
-      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-6 bg-[#0A0A0A] rounded-b-xl" />
+      <div className="bottom scale-75 md:scale-100">
+        <div className="base1"></div>
+        <div className="base2"></div>
+        <div className="base3"></div>
+      </div>
     </div>
   );
 };
 
 export default TVFrame;
+
