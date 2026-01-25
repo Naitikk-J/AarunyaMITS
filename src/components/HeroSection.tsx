@@ -111,24 +111,30 @@ const HeroSection = () => {
                   backgroundColor: 'hsl(var(--crt-black))',
                 }}
               >
-                {/* Wrapper for content that SHOULD fade */}
-                <div 
-                  ref={innerScreenRef}
-                  className="w-full h-full flex flex-col items-center justify-center p-8"
-                >
-                  <img
-                    src={AarunyaLogo}
-                    alt="Aarunya 2026"
-                    className="w-48 md:w-64 mb-8 animate-pulse-glow transition-opacity duration-500"
-                    style={{
-                      filter: "drop-shadow(0 0 20px hsl(var(--primary)))",
-                      imageRendering: 'pixelated',
-                    } as React.CSSProperties}
-                  />
-                  <div className="transition-opacity duration-500">
-                    <InsertCoin />
+                  {/* Wrapper for content that SHOULD fade */}
+                  <div 
+                    ref={innerScreenRef}
+                    className="w-full h-full flex flex-col items-center justify-center p-8 relative overflow-hidden"
+                  >
+                    {/* Floating collage elements to match reference image */}
+                    <div className="absolute top-4 left-4 w-12 h-12 bg-radical-red/20 border border-radical-red rounded flex items-center justify-center font-pixel text-[10px] text-radical-red animate-float">GG</div>
+                    <div className="absolute bottom-10 right-10 w-16 h-8 bg-lime-green/20 border border-lime-green rounded flex items-center justify-center font-pixel text-[8px] text-lime-green animate-float" style={{animationDelay: '0.5s'}}>FESTIVAL</div>
+                    <div className="absolute top-1/2 -left-4 w-12 h-12 bg-cyber-blue/20 border border-cyber-blue rounded-full flex items-center justify-center font-pixel text-[10px] text-cyber-blue animate-float" style={{animationDelay: '1s'}}>PEACE</div>
+                    <div className="absolute top-10 right-4 w-10 h-10 bg-electric-yellow/20 border border-electric-yellow transform rotate-12 flex items-center justify-center font-pixel text-[10px] text-electric-yellow animate-float" style={{animationDelay: '1.5s'}}>2026</div>
+
+                    <img
+                      src={AarunyaLogo}
+                      alt="Aarunya 2026"
+                      className="w-48 md:w-64 mb-8 animate-pulse-glow transition-opacity duration-500 relative z-10"
+                      style={{
+                        filter: "drop-shadow(0 0 20px hsl(var(--primary)))",
+                        imageRendering: 'pixelated',
+                      } as React.CSSProperties}
+                    />
+                    <div className="transition-opacity duration-500 relative z-10">
+                      <InsertCoin />
+                    </div>
                   </div>
-                </div>
               </div>
             </TVFrame>
     
@@ -139,11 +145,11 @@ const HeroSection = () => {
           />
         </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator - Mouse style */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce z-20">
-        <span className="font-pixel text-[8px] text-muted-foreground tracking-widest">SCROLL</span>
-        <div className="w-6 h-10 border-4 border-primary p-1" style={{ imageRendering: 'pixelated' }}>
-          <div className="w-2 h-2 bg-primary mx-auto animate-bounce" />
+        <span className="font-pixel text-[8px] text-gray-400 tracking-[0.2em] mb-1">SCROLL</span>
+        <div className="w-5 h-8 border-2 border-primary rounded-full relative p-1 flex justify-center">
+          <div className="w-0.5 h-2 bg-primary rounded-full animate-scroll-mouse" />
         </div>
       </div>
     </section>

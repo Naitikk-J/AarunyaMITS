@@ -9,49 +9,40 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
   return (
     <div className={`relative ${className}`}>
       {/* TV Body */}
-      <div className="crt-frame">
-        {/* Control knobs */}
-        <div className="absolute -right-2 top-1/4 flex flex-col gap-4">
-          <div className="w-6 h-6 rounded-full bg-crt-black border-2 border-electric-yellow shadow-glow-yellow" />
-          <div className="w-6 h-6 rounded-full bg-crt-black border-2 border-lime-green shadow-glow-green" />
-        </div>
+      <div className="bg-[#1A1A1A] border-[12px] border-[#0A0A0A] rounded-xl shadow-2xl relative overflow-visible">
+        {/* Main Screen Container */}
+        <div className="flex">
+          {/* Screen area */}
+          <div className="flex-1 crt-screen aspect-video relative overflow-hidden bg-black rounded-sm m-2">
+            {/* Inner glow */}
+            <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/50 pointer-events-none z-10" />
+            
+            {/* Content */}
+            <div className="relative z-0 w-full h-full flex items-center justify-center">
+              {children}
+            </div>
 
-        {/* VU Meters decoration */}
-        <div className="absolute -left-3 top-8 w-8 h-20 bg-cyber-blue/20 border-2 border-cyber-blue rounded-sm overflow-hidden">
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-cyber-blue to-transparent animate-pulse" />
-        </div>
-
-        {/* Screen area */}
-        <div className="crt-screen aspect-video relative overflow-hidden">
-          {/* Inner glow */}
-          <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/50 pointer-events-none z-10" />
-          
-          {/* Content */}
-          <div className="relative z-0 w-full h-full flex items-center justify-center">
-            {children}
+            {/* Corner vignette */}
+            <div className="absolute inset-0 pointer-events-none" style={{
+              background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%)'
+            }} />
           </div>
 
-          {/* Corner vignette */}
-          <div className="absolute inset-0 pointer-events-none" style={{
-            background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%)'
-          }} />
-        </div>
-
-        {/* TV Label */}
-        <div className="mt-3 flex items-center justify-between px-2">
-          <div className="font-pixel text-[8px] text-crt-black">AARUNYA TV</div>
-          <div className="flex gap-1">
-            <div className="w-2 h-2 rounded-full bg-lime-green animate-pulse" />
-            <div className="w-2 h-2 rounded-full bg-radical-red" />
+          {/* Integrated Control Panel Space (Right Side) */}
+          <div className="w-24 bg-[#111111] border-l-4 border-[#0A0A0A] flex flex-col items-center py-8 gap-8 relative">
+            {/* These will be filled by InteractiveTVControls via absolute positioning or we can pass them as props */}
+            {/* Small indicator lights at the bottom of panel */}
+            <div className="absolute bottom-4 right-4 flex gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-lime-green animate-pulse shadow-[0_0_5px_rgba(57,255,20,0.8)]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-radical-red shadow-[0_0_5px_rgba(255,0,153,0.8)]" />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Speaker grille decoration */}
-      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-1/2 h-6 bg-hot-pink rounded-full opacity-50" 
-           style={{
-             background: 'repeating-linear-gradient(90deg, hsl(var(--hot-pink)), hsl(var(--hot-pink)) 2px, transparent 2px, transparent 6px)'
-           }} />
+      {/* Stand/Bottom Decoration */}
+      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-6 bg-[#0A0A0A] rounded-b-xl" />
+      <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-1/2 h-8 border-x-[20px] border-b-[8px] border-[#0A0A0A] opacity-80" />
     </div>
   );
 };
