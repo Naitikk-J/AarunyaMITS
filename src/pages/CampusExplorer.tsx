@@ -328,7 +328,7 @@ const Car = ({ position, rotation }: { position: [number, number, number], rotat
 };
 
 const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [number, number, number], carRotation: number, viewMode: 'third' | 'first' }) => {
-    const { set } = useThree();
+    const { set, gl } = useThree();
     const cameraRef = useRef<THREE.PerspectiveCamera>(null);
     const smoothedRotation = useRef(carRotation);
     const smoothedPosition = useRef(new THREE.Vector3());
@@ -336,9 +336,11 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [n
     
     useEffect(() => {
         if (cameraRef.current) {
+            cameraRef.current.aspect = gl.domElement.clientWidth / gl.domElement.clientHeight;
+            cameraRef.current.updateProjectionMatrix();
             set({ camera: cameraRef.current });
         }
-    }, [set]);
+    }, [set, gl]);
     
     useFrame(() => {
         if (!cameraRef.current) return;
@@ -706,18 +708,20 @@ const CampusExplorer = () => {
                             style={{ width: '100%', height: '100%' }}
                         >
                             <Suspense fallback={null}>
-                                <PerspectiveCamera makeDefault position={[30, 25, 30]} fov={45} />
+                                {!isDriving && <PerspectiveCamera makeDefault position={[30, 25, 30]} fov={45} />}
                                 
-                                {!isDriving && (
-                                    <OrbitControls
-                                        autoRotate={!isDriving}
-                                        autoRotateSpeed={0.5}
-                                        enableZoom={true}
-                                        enablePan={true}
-                                        minDistance={15}
-                                        maxDistance={100}
-                                    />
-                                )}
+{!isDriving && (
+                                      <OrbitControls
+                                          autoRotate={!isDriving}
+                                          autoRotateSpeed={0.5}
+                                          enableZoom={true}
+                                          enablePan={true}
+                                          minDistance={15}
+                                          maxDistance={100}
+                                          enableDamping={false}
+                                          enableRotate={true}
+                                      />
+                                  )}
                                 
                                 {isDriving && (
                                     <DrivingCamera carPosition={carPosition} carRotation={carRotation} viewMode={viewMode} />
