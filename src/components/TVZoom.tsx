@@ -17,7 +17,7 @@ export const TVZoom: React.FC<TVZoomProps> = ({ children }) => {
     const scale = useTransform(scrollYProgress, [0, 0.7, 1], [1, 50, 50]);
     
     // Opacity of the content inside the TV screen
-    const contentOpacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
+    const contentOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
     
     // Opacity of the TV itself
     const tvOpacity = useTransform(scrollYProgress, [0.6, 0.8], [1, 0]);
