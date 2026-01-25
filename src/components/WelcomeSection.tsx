@@ -1,107 +1,101 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
+import { RetroButton } from './ui/retro-button';
 
 export const WelcomeSection: React.FC = () => {
-  // Generate random particles
-  const particles = useMemo(() => {
-    return Array.from({ length: 40 }).map((_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 6 + 2,
-      color: ['#BC13FE', '#39FF14', '#FF0099', '#FFE737'][Math.floor(Math.random() * 4)],
-      duration: Math.random() * 10 + 5,
-      delay: Math.random() * 5
-    }));
-  }, []);
-
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-transparent">
-      {/* 8-bit Particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {particles.map((p) => (
-          <motion.div
-            key={p.id}
-            initial={{ y: '110%', opacity: 0 }}
-            animate={{ 
-              y: '-10%', 
-              opacity: [0, 1, 1, 0],
-              x: `${p.x + (Math.random() * 10 - 5)}%` 
-            }}
-            transition={{ 
-              duration: p.duration, 
-              repeat: Infinity, 
-              delay: p.delay,
-              ease: "linear"
-            }}
-            style={{
-              position: 'absolute',
-              left: `${p.x}%`,
-              width: p.size,
-              height: p.size,
-              backgroundColor: p.color,
-              boxShadow: `0 0 10px ${p.color}`,
-              zIndex: 0
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="relative z-10 text-center px-4">
-        <motion.h1 
-          className="text-4xl md:text-6xl lg:text-8xl font-press-start text-kidcore-yellow mb-8 drop-shadow-[0_0_20px_rgba(255,231,55,0.5)]"
-          initial={{ scale: 0.8, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, type: "spring" }}
+    <section className="relative min-h-screen w-full flex flex-col items-center justify-center bg-kidcore-cream py-24 overflow-hidden">
+      {/* Gritty Texture Overlay */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none" 
+           style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/stardust.png")' }} />
+      
+      {/* Background Decorative Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Floating Stickers - More of them and varied */}
+        <motion.div 
+          animate={{ y: [0, -30, 0], rotate: [0, 15, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-20 left-[5%] w-32 h-32 bg-kidcore-yellow border-4 border-black flex items-center justify-center rotate-[-10deg] z-0 shadow-[8px_8px_0px_#000]"
         >
-          <span className="glitch" data-text="WELCOME TO">WELCOME TO</span>
-          <br />
-          <span className="glitch text-kidcore-grape" data-text="AARUNYA">AARUNYA</span>
-        </motion.h1>
-        
-        <motion.p 
-          className="text-xl md:text-2xl font-vt323 text-kidcore-green max-w-2xl mx-auto"
-          initial={{ y: 20, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          The ultimate digital festival where pixel art meets retro nostalgia.
-          Get ready for a journey through the neon dimensions.
-        </motion.p>
+          <span className="text-black font-press-start text-[10px] text-center">AARUNYA<br/>FEST</span>
+        </motion.div>
         
         <motion.div 
-          className="mt-12 flex flex-wrap justify-center gap-6"
-          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: [0, 40, 0], rotate: [0, -10, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute top-[20%] right-[8%] w-40 h-40 bg-kidcore-pink border-4 border-black flex items-center justify-center rotate-[15deg] rounded-full z-0 shadow-[10px_10px_0px_#000]"
+        >
+          <span className="text-white font-press-start text-xs text-center px-2 leading-loose">RETRO<br/>VIBES<br/>2K26</span>
+        </motion.div>
+
+        <motion.div 
+          animate={{ x: [0, 20, 0], y: [0, 20, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[15%] left-[10%] w-24 h-24 bg-kidcore-green border-4 border-black flex items-center justify-center rotate-[-5deg] z-0 shadow-[6px_6px_0px_#000]"
+        >
+          <span className="text-black font-press-start text-sm">GG</span>
+        </motion.div>
+
+        {/* Big Decorative Shapes */}
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-kidcore-blue/20 rounded-full blur-3xl" />
+        <div className="absolute -top-20 -left-20 w-80 h-80 bg-kidcore-yellow/20 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 flex flex-col items-center">
+        {/* Main Heading */}
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0, y: 50 }}
+          whileInView={{ scale: 1, opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-2xl md:text-4xl font-press-start text-kidcore-orange mb-6 drop-shadow-[4px_4px_0px_#000]">
+            WELCOME TO
+          </h2>
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-press-start text-white leading-none tracking-tighter">
+            <span className="block text-kidcore-blue drop-shadow-[8px_8px_0px_#000] glitch" data-text="AARUNYA">AARUNYA</span>
+            <span className="block text-kidcore-pink drop-shadow-[8px_8px_0px_#000] -mt-2 md:-mt-6">2.0</span>
+          </h1>
+        </motion.div>
+
+        {/* Description Card */}
+        <motion.div
+          initial={{ y: 50, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="max-w-3xl w-full bg-black/80 border-4 border-kidcore-blue p-8 md:p-12 relative shadow-[10px_10px_0px_theme(colors.kidcore.blue)] mb-12"
+        >
+          {/* Decorative corners */}
+          <div className="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-kidcore-yellow" />
+          <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-kidcore-yellow" />
+
+          <p className="text-xl md:text-2xl font-vt323 text-kidcore-green text-center leading-relaxed">
+            STEP INTO THE ULTIMATE DIGITAL CARNIVAL WHERE PIXELS COME TO LIFE! 
+            EXPERIENCE A MULTIDIMENSIONAL FESTIVAL OF TECHNOLOGY, ART, AND MUSIC. 
+            FROM RETRO ARCADE VIBES TO FUTURE-TECH INNOVATIONS, AARUNYA 2.0 IS 
+            WHERE THE ANALOG PAST MEETS THE DIGITAL FUTURE.
+          </p>
+        </motion.div>
+
+        {/* Action Buttons */}
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
+          className="flex flex-wrap justify-center gap-8 pointer-events-auto"
         >
-          <button className="px-8 py-4 bg-kidcore-pink text-white font-press-start text-sm hover:translate-y-1 active:translate-y-2 border-b-8 border-r-8 border-black transition-all">
-            JOIN NOW
-          </button>
-          <button className="px-8 py-4 bg-kidcore-green text-black font-press-start text-sm hover:translate-y-1 active:translate-y-2 border-b-8 border-r-8 border-black transition-all">
-            EXPLORE
-          </button>
+          <RetroButton variant="default" className="scale-150 md:scale-[2] mx-8">
+            JOIN
+          </RetroButton>
+          <RetroButton variant="white" className="scale-150 md:scale-[2] mx-8">
+            INFO
+          </RetroButton>
         </motion.div>
       </div>
 
-      {/* Retro Grid Floor */}
-      <div 
-        className="absolute bottom-0 left-0 w-full h-1/3 opacity-20 pointer-events-none"
-        style={{
-          perspective: '500px',
-          background: 'linear-gradient(to bottom, transparent, #BC13FE)'
-        }}
-      >
-        <div 
-          className="w-full h-full"
-          style={{
-            backgroundImage: 'linear-gradient(#BC13FE 1px, transparent 1px), linear-gradient(90deg, #BC13FE 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-            transform: 'rotateX(60deg)',
-            transformOrigin: 'top center'
-          }}
-        />
-      </div>
+      {/* VHS Overlay effect specific to this section */}
+      <div className="absolute inset-0 pointer-events-none opacity-10 bg-[url('https://media.giphy.com/media/oEI9uWUicG7vA68tV6/giphy.gif')] bg-cover mix-blend-overlay" />
     </section>
   );
 };

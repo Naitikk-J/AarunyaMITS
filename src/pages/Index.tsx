@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 import { MainNavigation } from '@/components/ui/MainNavigation';
 import { TVZoom } from '@/components/TVZoom';
+import { TVIntro } from '@/components/TVIntro';
 import { WelcomeSection } from '@/components/WelcomeSection';
 import { PacmanTimeline } from '@/components/PacmanTimeline';
 import { CRTOverlay } from '@/components/CRTOverlay';
@@ -46,9 +47,11 @@ const Index = () => {
             <main>
                 {/* Section 1: The Infinite TV Zoom (Hero) */}
                 <TVZoom>
-                    {/* Section 2: Welcome to Aarunya (Inside TV screen and revealed) */}
-                    <WelcomeSection />
+                    <TVIntro />
                 </TVZoom>
+
+                {/* Section 2: Welcome to Aarunya (Standalone Section revealed after TV goes up) */}
+                <WelcomeSection />
 
                 {/* Section 3: The Pac-Man Timeline (Gamified Scroll) */}
                 <PacmanTimeline />
