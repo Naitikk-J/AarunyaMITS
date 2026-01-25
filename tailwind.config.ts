@@ -14,11 +14,10 @@ export default {
         },
         extend: {
             fontFamily: {
-                sans: ['Orbitron', 'monospace'],
-                orbitron: ['Orbitron', 'monospace'],
-                rajdhani: ['Rajdhani', 'sans-serif'],
-                mono: ['Share Tech Mono', 'monospace'],
-                'share-tech': ['Share Tech Mono', 'monospace'],
+                sans: ['VT323', 'monospace'],
+                'press-start': ['"Press Start 2P"', 'cursive'],
+                vt323: ['VT323', 'monospace'],
+                'space-mono': ['"Space Mono"', 'monospace'],
             },
             colors: {
                 border: "hsl(var(--border))",
@@ -66,13 +65,11 @@ export default {
                 "arcade-orange": "hsl(var(--arcade-orange))",
                 "hot-pink": "hsl(var(--hot-pink))",
                 kidcore: {
-                    blue: "#BC13FE",
-                    orange: "#FF00FF",
-                    pink: "#FF0080",
-                    green: "#00FFFF",
-                    yellow: "#FFDD33",
-                    cream: "#1B065E",
-                    black: "#0D0221",
+                    indigo: "#0D001A",
+                    grape: "#BC13FE",
+                    green: "#39FF14",
+                    pink: "#FF0099",
+                    yellow: "#FFE737",
                 },
                 sidebar: {
                     DEFAULT: "hsl(var(--sidebar-background))",
