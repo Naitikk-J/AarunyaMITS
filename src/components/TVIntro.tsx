@@ -5,15 +5,15 @@ export const TVIntro: React.FC = () => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
       <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
+        initial={{ scale: 1, opacity: 0.5 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.2, ease: "easeIn" }}
         className="text-center"
       >
-        <h2 className="text-kidcore-yellow text-4xl md:text-6xl font-press-start mb-4 drop-shadow-[4px_4px_0px_#000]">
+        <h2 className="text-kidcore-yellow text-4xl md:text-5xl font-press-start mb-4 drop-shadow-[4px_4px_0px_#000]">
           ENTERING
         </h2>
-        <h1 className="text-kidcore-pink text-6xl md:text-8xl font-press-start drop-shadow-[6px_6px_0px_#000] glitch" data-text="AARUNYA">
+        <h1 className="text-kidcore-pink text-6xl md:text-7xl font-press-start drop-shadow-[6px_6px_0px_#000] glitch" data-text="AARUNYA">
           AARUNYA
         </h1>
         <motion.div 
@@ -21,7 +21,7 @@ export const TVIntro: React.FC = () => {
           transition={{ duration: 1, repeat: Infinity }}
           className="mt-8 text-kidcore-green text-xl md:text-2xl font-pixel"
         >
-          PREPARE FOR THE DIGITAL CARNIVAL...
+          PREPARE FOR THE MITS CARNIVAL...
         </motion.div>
       </motion.div>
       
