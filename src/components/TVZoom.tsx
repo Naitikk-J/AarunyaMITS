@@ -28,28 +28,29 @@ export const TVZoom: React.FC<TVZoomProps> = ({ children }) => {
     // Enable pointer events only when content is visible
     const pointerEvents = useTransform(scrollYProgress, [0.5, 0.51], ["none", "auto"] as any);
 
-  return (
-    <div ref={containerRef} className="relative h-[150vh] w-full">
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
-        <motion.div 
-          style={{ 
-            scale, 
-            opacity: tvOpacity, 
-            y: tvY,
-            transformOrigin: "40% 50%" 
-          }}
-          className="relative w-[75vw] max-w-[800px] z-10"
-        >
-          <TVFrame className="w-full">
-            <motion.div 
-              style={{ opacity: contentOpacity }}
-              className="absolute inset-0"
-            >
-              {children}
-            </motion.div>
-          </TVFrame>
-        </motion.div>
+    return (
+      <div ref={containerRef} className="relative h-[150vh] w-full">
+        <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+          <motion.div 
+            style={{ 
+              scale, 
+              opacity: tvOpacity, 
+              y: tvY,
+              transformOrigin: "40% 50%" 
+            }}
+            className="relative w-[95vw] sm:w-[90vw] md:w-[75vw] max-w-[800px] z-10"
+          >
+            <TVFrame className="w-full">
+              <motion.div 
+                style={{ opacity: contentOpacity }}
+                className="absolute inset-0"
+              >
+                {children}
+              </motion.div>
+            </TVFrame>
+          </motion.div>
+        </div>
       </div>
-    </div>
-  );
+    );
+
 };

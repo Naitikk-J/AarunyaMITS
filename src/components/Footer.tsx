@@ -34,14 +34,6 @@ const Footer = () => {
         ease: "steps(4)",
         y: "+=2",
       });
-
-      gsap.to(".neon-pulse", {
-        opacity: 0.6,
-        duration: 1,
-        repeat: -1,
-        yoyo: true,
-        ease: "steps(2)",
-      });
     }, footerRef);
 
     return () => ctx.revert();
@@ -51,21 +43,21 @@ const Footer = () => {
     <footer
       ref={footerRef}
       id="contact"
-      className="relative overflow-hidden py-16 px-4 bg-[#0a0a0a] crt-overlay"
+      className="relative overflow-hidden py-16 px-4 bg-kidcore-cream"
       style={{
         backgroundImage: `
-          linear-gradient(to right, #1a0a2a 2px, transparent 2px),
-          linear-gradient(to bottom, #1a0a2a 2px, transparent 2px)
+          linear-gradient(to right, rgba(26, 26, 26, 0.05) 2px, transparent 2px),
+          linear-gradient(to bottom, rgba(26, 26, 26, 0.05) 2px, transparent 2px)
         `,
         backgroundSize: "40px 40px",
       }}
     >
-      {/* CRT Scanlines */}
-      <div className="absolute inset-0 pointer-events-none scanlines" />
+      {/* CRT Scanlines (Subtle for light theme) */}
+      <div className="absolute inset-0 pointer-events-none scanlines opacity-5" />
 
       {/* Pixel Rainbow Border */}
       <div className="absolute top-0 left-0 right-0 h-2 flex">
-        {["#BC13FE", "#00FFFF", "#FF44CC", "#FFF01F", "#00FF9D"].map(
+        {["#00A6FF", "#FF5E1F", "#FF85C0", "#FFDD33", "#B0FF57"].map(
           (c, i) => (
             <div key={i} className="flex-1" style={{ background: c }} />
           )
@@ -73,21 +65,20 @@ const Footer = () => {
       </div>
 
       {/* Decorations */}
-      <PixelStar className="absolute top-20 left-10 w-8 h-8 neon-pulse" />
-      <PixelHeart className="absolute bottom-20 right-12 w-8 h-8 neon-pulse" />
+      <PixelStar className="absolute top-20 left-10 w-8 h-8 text-kidcore-pink animate-pulse" />
+      <PixelHeart className="absolute bottom-20 right-12 w-8 h-8 text-kidcore-orange animate-pulse" />
 
-      <div className="max-w-6xl mx-auto relative z-10 footer-item">
+      <div className="max-w-6xl mx-auto relative z-10">
         <div
-          className="p-2"
+          className="glass-card p-1"
           style={{
-            border: "8px solid",
-            borderImage:
-              "repeating-linear-gradient(45deg, #BC13FE 0 4px, #00FFFF 4px 8px) 8",
-            boxShadow:
-              "0 0 30px rgba(188,19,254,.4), inset 0 0 20px rgba(188,19,254,.2)",
+            borderWidth: "6px",
+            borderStyle: "dashed",
+            borderColor: "var(--kidcore-blue)",
+            boxShadow: "10px 10px 0px var(--kidcore-pink), 20px 20px 0px var(--kidcore-yellow)",
           }}
         >
-          <div className="bg-[#1a0a2a] p-10 border-4 border-black">
+          <div className="bg-white/80 backdrop-blur-sm p-6 md:p-10 border-4 border-kidcore-black">
             {/* TOP */}
             <div className="flex flex-col md:flex-row justify-between gap-10">
               {/* Logo */}
@@ -96,21 +87,20 @@ const Footer = () => {
                   src="/aarunya-logo.svg"
                   className="w-32 pixelated mb-4"
                   style={{
-                    filter:
-                      "drop-shadow(0 0 10px #BC13FE) drop-shadow(0 0 30px #BC13FE)",
+                    filter: "drop-shadow(4px 4px 0px var(--kidcore-blue))",
                   }}
                 />
-                <p className="font-pixel text-xs text-cyan-400">
+                <p className="font-pixel text-xs text-kidcore-blue">
                   MITS GWALIOR
                 </p>
-                <p className="font-pixel text-[10px] text-pink-400 mt-1">
-                  ARCADE MODE ACTIVE
+                <p className="font-pixel text-[10px] text-kidcore-pink mt-1">
+                  KIDCORE MODE ACTIVE
                 </p>
               </div>
 
               {/* Nav */}
               <div className="footer-item">
-                <p className="font-pixel text-yellow-400 mb-3">
+                <p className="font-pixel text-kidcore-orange mb-3">
                   &gt; NAVIGATION
                 </p>
                 <div className="grid grid-cols-2 gap-x-10 gap-y-3">
@@ -124,30 +114,31 @@ const Footer = () => {
                     <a
                       key={l}
                       href={`#${l.toLowerCase()}`}
-                      className="font-pixel text-[10px] text-white hover:text-green-400 relative group"
+                      className="font-pixel text-[10px] text-kidcore-black hover:text-kidcore-blue relative group"
                     >
-                      <span className="absolute -left-3 opacity-0 group-hover:opacity-100 text-pink-400">
+                      <span className="absolute -left-3 opacity-0 group-hover:opacity-100 text-kidcore-pink">
                         ▶
                       </span>
                       {l}
-                      <span className="block h-px w-0 group-hover:w-full bg-gradient-to-r from-cyan-400 to-pink-400 transition-all" />
+                      <span className="block h-px w-0 group-hover:w-full bg-gradient-to-r from-kidcore-blue to-kidcore-pink transition-all" />
                     </a>
                   ))}
                 </div>
               </div>
 
               {/* Social */}
-              <div className="footer-item text-center">
-                <p className="font-pixel text-green-400 mb-4">
-                  INSERT COINS
+              <div className="footer-item">
+                <p className="font-pixel text-kidcore-green mb-4 text-center md:text-left">
+                  GET IN TOUCH
                 </p>
-                <div className="flex gap-4 justify-center">
-                  {["👾", "🎮", "🕹️", "🎯"].map((icon, i) => (
+                <div className="flex gap-4 justify-center md:justify-start">
+                  {["🎨", "⚡", "💥", "📌"].map((icon, i) => (
                     <div
                       key={i}
-                      className="arcade-btn w-14 h-14 border-4 border-white bg-black flex items-center justify-center text-2xl"
+                      className="kidcore-btn w-12 h-12 flex items-center justify-center text-xl cursor-pointer"
                       style={{
-                        boxShadow: "0 4px 0 #000, 0 0 15px currentColor",
+                        padding: 0,
+                        minWidth: "48px",
                       }}
                     >
                       {icon}
@@ -158,39 +149,38 @@ const Footer = () => {
             </div>
 
             {/* Bottom */}
-            <div className="footer-item mt-10 pt-6 border-t-4 border-dashed border-cyan-400 flex flex-col md:flex-row justify-between gap-6">
+            <div className="footer-item mt-10 pt-6 border-t-4 border-dashed border-kidcore-blue flex flex-col md:flex-row justify-between items-center gap-6">
               <div className="flex items-center gap-2">
-                <span className="font-pixel text-[10px] text-pink-400">
-                  LIVES:
+                <span className="font-pixel text-[10px] text-kidcore-pink">
+                  ENERGY:
                 </span>
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="w-5 h-5 bg-gradient-to-br from-pink-400 to-purple-600"
+                    className="w-5 h-5 bg-kidcore-yellow border-2 border-kidcore-black"
                     style={{
-                      clipPath:
-                        "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)",
+                      clipPath: "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)",
                     }}
                   />
                 ))}
               </div>
 
-              <div className="font-pixel text-[10px] text-cyan-300">
-                © 2026 AARUNYA ARCADE <br />
-                MITS GWALIOR
+              <div className="font-pixel text-[10px] text-kidcore-black text-center md:text-right">
+                © 2026 AARUNYA FESTIVAL <br />
+                MITS GWALIOR • MADE WITH ❤️
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* PRESS START */}
-      <div className="footer-item mt-10 text-center">
-        <p className="font-pixel text-sm border-2 border-white inline-block px-6 py-3 animate-pulse">
-          [ PRESS START ]
-        </p>
-        <p className="font-pixel text-[9px] text-green-400 mt-3">
-          SYSTEM READY • COINS ∞ • PLAYERS 999+
+      {/* PLAYFUL FOOTER END */}
+      <div className="footer-item mt-16 text-center">
+        <button className="kidcore-btn px-8 py-3 text-sm font-pixel">
+          [ BACK TO TOP ]
+        </button>
+        <p className="font-pixel text-[9px] text-kidcore-orange mt-4">
+          SYSTEM ACTIVE • CREATIVITY ∞ • VIBES 100%
         </p>
       </div>
     </footer>

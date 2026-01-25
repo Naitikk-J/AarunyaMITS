@@ -83,12 +83,12 @@ export const WelcomeSection: React.FC = () => {
           initial={{ y: 30, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="flex flex-wrap justify-center gap-8 pointer-events-auto"
+          className="flex flex-wrap justify-center gap-4 sm:gap-8 pointer-events-auto mt-8 md:mt-12"
         >
-          <RetroButton variant="default" className="scale-150 md:scale-[2] mx-8">
+          <RetroButton variant="default" className="scale-110 sm:scale-125 md:scale-150 mx-2 sm:mx-8">
             JOIN
           </RetroButton>
-          <RetroButton variant="white" className="scale-150 md:scale-[2] mx-8">
+          <RetroButton variant="white" className="scale-110 sm:scale-125 md:scale-150 mx-2 sm:mx-8">
             INFO
           </RetroButton>
         </motion.div>
