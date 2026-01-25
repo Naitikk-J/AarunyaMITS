@@ -142,7 +142,7 @@ export const InteractiveTVControls = ({
   return (
     <div
       ref={containerRef}
-      className="absolute right-0 top-1/4 flex flex-col gap-6 translate-x-16 z-20"
+      className="absolute right-3 top-[10%] h-[80%] flex flex-col items-center justify-around z-20 w-16"
     >
       {showEasterEgg && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[100]">
@@ -152,39 +152,52 @@ export const InteractiveTVControls = ({
         </div>
       )}
 
-      <div className="flex flex-col items-center gap-2">
+      {/* POWER BUTTON */}
+      <div className="flex flex-col items-center gap-1">
         <button
           id="power-btn"
           onClick={handlePowerClick}
-          className={`w-12 h-12 rounded-full border-4 transition-all cursor-pointer font-pixel text-[10px] font-bold flex items-center justify-center ${
-            isPowered ? 'border-lime-green bg-lime-green/20 text-lime-green shadow-glow-green' : 'border-gray-600 bg-gray-900/40 text-gray-600'
+          className={`w-10 h-10 rounded-full border-2 transition-all cursor-pointer flex items-center justify-center shadow-lg ${
+            isPowered 
+              ? 'border-lime-green bg-[#1A3A1A] text-lime-green shadow-[0_0_15px_rgba(57,255,20,0.6)]' 
+              : 'border-gray-700 bg-[#0A0A0A] text-gray-700'
           } hover:scale-110 active:scale-95`}
-        >⏻</button>
-        <span className="font-pixel text-[7px] text-muted-foreground uppercase tracking-widest">POWER</span>
+        >
+          <div className={`w-4 h-4 rounded-full border-2 ${isPowered ? 'border-lime-green' : 'border-gray-700'} flex items-center justify-center`}>
+            <div className={`w-0.5 h-2 ${isPowered ? 'bg-lime-green' : 'bg-gray-700'} -mt-1`} />
+          </div>
+        </button>
+        <span className="font-pixel text-[6px] text-gray-400 uppercase tracking-tighter">POWER</span>
       </div>
 
-      <div className="flex flex-col items-center gap-2">
+      {/* CHANNEL BUTTON */}
+      <div className="flex flex-col items-center gap-1">
         <button
           id="channel-btn"
           onClick={handleChannelChange}
-          className="w-12 h-12 rounded-full border-4 border-cyber-blue bg-cyber-blue/20 font-pixel text-sm font-bold flex items-center justify-center text-cyber-blue shadow-glow-blue hover:scale-110 active:scale-95 transition-all cursor-pointer"
-        >{channel}</button>
-        <span className="font-pixel text-[7px] text-muted-foreground uppercase tracking-widest">CH</span>
+          className="w-10 h-10 rounded-full border-2 border-cyber-blue bg-[#0D1A2A] font-pixel text-xs font-bold flex items-center justify-center text-cyber-blue shadow-[0_0_15px_rgba(0,255,255,0.4)] hover:scale-110 active:scale-95 transition-all cursor-pointer"
+        >
+          <span className="mt-0.5">{channel}</span>
+        </button>
+        <span className="font-pixel text-[6px] text-gray-400 uppercase tracking-tighter">CH</span>
       </div>
 
+      {/* VOLUME BUTTONS */}
       <div className="flex flex-col items-center gap-2">
         <button
           id="volume-btn"
           onClick={handleVolumeUp}
-          className="w-10 h-10 rounded-full border-3 border-electric-yellow bg-electric-yellow/20 font-pixel text-lg font-bold flex items-center justify-center text-electric-yellow shadow-glow-yellow hover:scale-105 active:scale-90 transition-all cursor-pointer"
+          className="w-8 h-8 rounded-md border-2 border-electric-yellow bg-[#2A2A0D] font-pixel text-lg font-bold flex items-center justify-center text-electric-yellow shadow-[0_0_10px_rgba(255,231,55,0.3)] hover:scale-105 active:scale-90 transition-all cursor-pointer"
         >+</button>
-        <div className="flex items-center justify-center w-10 h-6 border-2 border-electric-yellow/50 rounded bg-background/40 font-pixel text-[7px] text-electric-yellow">{volume}</div>
+        <div className="flex items-center justify-center w-8 h-8 border-2 border-gray-700 rounded bg-[#0A0A0A] font-pixel text-[8px] text-electric-yellow shadow-inner">
+          {volume}
+        </div>
         <button
           id="volume-btn-down"
           onClick={handleVolumeDown}
-          className="w-10 h-10 rounded-full border-3 border-radical-red bg-radical-red/20 font-pixel text-lg font-bold flex items-center justify-center text-radical-red shadow-glow-red hover:scale-105 active:scale-90 transition-all cursor-pointer"
+          className="w-8 h-8 rounded-md border-2 border-radical-red bg-[#2A0D15] font-pixel text-lg font-bold flex items-center justify-center text-radical-red shadow-[0_0_10px_rgba(255,0,153,0.3)] hover:scale-105 active:scale-90 transition-all cursor-pointer"
         >−</button>
-        <span className="font-pixel text-[7px] text-muted-foreground uppercase tracking-widest">VOL</span>
+        <span className="font-pixel text-[6px] text-gray-400 uppercase tracking-tighter">VOL</span>
       </div>
     </div>
   );
