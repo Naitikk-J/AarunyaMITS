@@ -13,23 +13,23 @@ export const TVZoom: React.FC<TVZoomProps> = ({ children }) => {
     offset: ["start start", "end end"]
   });
 
-  // Scale from 1 to 50
-  const scale = useTransform(scrollYProgress, [0, 0.9, 1], [1, 50, 50]);
-  
-  // Opacity of the content inside the TV screen
-  const contentOpacity = useTransform(scrollYProgress, [0.3, 0.6], [0, 1]);
-  
-  // Opacity of the TV itself
-  const tvOpacity = useTransform(scrollYProgress, [0.85, 0.95], [1, 0]);
-  
-  // Y position to make it "go up" at the end
-  const tvY = useTransform(scrollYProgress, [0.9, 1], ["0%", "-100%"]);
-  
-  // Enable pointer events only when content is visible
-  const pointerEvents = useTransform(scrollYProgress, [0.7, 0.71], ["none", "auto"] as any);
+    // Scale from 1 to 50
+    const scale = useTransform(scrollYProgress, [0, 0.7, 1], [1, 50, 50]);
+    
+    // Opacity of the content inside the TV screen
+    const contentOpacity = useTransform(scrollYProgress, [0.2, 0.5], [0, 1]);
+    
+    // Opacity of the TV itself
+    const tvOpacity = useTransform(scrollYProgress, [0.6, 0.75], [1, 0]);
+    
+    // Y position to make it "go up" at the end
+    const tvY = useTransform(scrollYProgress, [0.75, 1], ["0%", "-120%"]);
+    
+    // Enable pointer events only when content is visible
+    const pointerEvents = useTransform(scrollYProgress, [0.5, 0.51], ["none", "auto"] as any);
 
   return (
-    <div ref={containerRef} className="relative h-[400vh] w-full">
+    <div ref={containerRef} className="relative h-[250vh] w-full">
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
         <motion.div 
           style={{ scale, opacity: tvOpacity, y: tvY }}
