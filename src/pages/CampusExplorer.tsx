@@ -328,23 +328,12 @@ const Car = ({ position, rotation }: { position: [number, number, number], rotat
 };
 
 const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [number, number, number], carRotation: number, viewMode: 'third' | 'first' }) => {
-    const { set, gl } = useThree();
-    const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+    const { camera } = useThree();
     const smoothedRotation = useRef(carRotation);
-    const smoothedPosition = useRef(new THREE.Vector3());
+    const smoothedPosition = useRef(new THREE.Vector3(0, 4, 8));
     const lookAtTarget = useRef(new THREE.Vector3());
     
-    useEffect(() => {
-        if (cameraRef.current) {
-            cameraRef.current.aspect = gl.domElement.clientWidth / gl.domElement.clientHeight;
-            cameraRef.current.updateProjectionMatrix();
-            set({ camera: cameraRef.current });
-        }
-    }, [set, gl]);
-    
     useFrame(() => {
-        if (!cameraRef.current) return;
-        
         const mapRotation = Math.PI / 4;
         const adjustedCarRotation = carRotation + mapRotation;
         const rotatedCarX = carPosition[0] * Math.cos(mapRotation) - carPosition[2] * Math.sin(mapRotation);
@@ -361,7 +350,7 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [n
             const targetY = carPosition[1] + height;
             
             smoothedPosition.current.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.1);
-            cameraRef.current.position.copy(smoothedPosition.current);
+            camera.position.copy(smoothedPosition.current);
             
             const lookAheadDistance = 5;
             const lookX = rotatedCarX + Math.sin(adjustedCarRotation) * lookAheadDistance;
@@ -369,7 +358,7 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [n
             const lookY = carPosition[1] + 0.5;
             
             lookAtTarget.current.lerp(new THREE.Vector3(lookX, lookY, lookZ), 0.12);
-            cameraRef.current.lookAt(lookAtTarget.current);
+            camera.lookAt(lookAtTarget.current);
         } else {
             const height = 0.55;
             const forwardOffset = 0.3;
@@ -379,7 +368,7 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [n
             const cameraY = carPosition[1] + height;
             
             smoothedPosition.current.lerp(new THREE.Vector3(cameraX, cameraY, cameraZ), 0.15);
-            cameraRef.current.position.copy(smoothedPosition.current);
+            camera.position.copy(smoothedPosition.current);
             
             const lookAtDistance = 20;
             const lookAtX = rotatedCarX + Math.sin(adjustedCarRotation) * lookAtDistance;
@@ -387,11 +376,11 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [n
             const lookAtY = carPosition[1] + height - 0.1;
             
             lookAtTarget.current.lerp(new THREE.Vector3(lookAtX, lookAtY, lookAtZ), 0.1);
-            cameraRef.current.lookAt(lookAtTarget.current);
+            camera.lookAt(lookAtTarget.current);
         }
     });
     
-    return <perspectiveCamera ref={cameraRef} fov={viewMode === 'first' ? 85 : 60} near={0.1} far={1000} />;
+    return null;
 };
 
 const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
@@ -707,22 +696,28 @@ const CampusExplorer = () => {
                             dpr={Math.min(window.devicePixelRatio, 2)}
                             style={{ width: '100%', height: '100%' }}
                         >
-                            <Suspense fallback={null}>
-                                {!isDriving && <PerspectiveCamera makeDefault position={[30, 25, 30]} fov={45} />}
+<Suspense fallback={null}>
+                                {!isDriving && (
+                                    <PerspectiveCamera 
+                                        makeDefault 
+                                        position={[0, 80, 0]} 
+                                        fov={50}
+                                        rotation={[-Math.PI / 2, 0, 0]}
+                                    />
+                                )}
                                 
 {!isDriving && (
                                       <OrbitControls
-                                          autoRotate={!isDriving}
-                                          autoRotateSpeed={0.5}
+                                          autoRotate={false}
                                           enableZoom={true}
-                                          enablePan={true}
-                                          minDistance={15}
-                                          maxDistance={100}
-                                          enableDamping={false}
-                                          enableRotate={true}
+                                          enablePan={false}
+                                          enableRotate={false}
+                                          minDistance={50}
+                                          maxDistance={120}
+                                          target={[0, 0, 0]}
                                       />
                                   )}
-                                
+                                  
                                 {isDriving && (
                                     <DrivingCamera carPosition={carPosition} carRotation={carRotation} viewMode={viewMode} />
                                 )}
@@ -732,18 +727,17 @@ const CampusExplorer = () => {
                                 <pointLight position={[-20, 25, -20]} intensity={0.8} color="#00A6FF" />
                                 <fog attach="fog" args={['#050c15', 50, 300]} />
 
-                                <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-                                <Environment preset="city" />
-                                <ContactShadows
-                                    position={[0, 0, 0]}
-                                    opacity={0.4}
-                                    scale={60}
-                                    blur={2.5}
-                                    far={10}
-                                    resolution={256}
-                                    color="#000000"
-                                    frames={1}
-                                />
+<Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+                                  <ContactShadows
+                                      position={[0, 0, 0]}
+                                      opacity={0.4}
+                                      scale={60}
+                                      blur={2.5}
+                                      far={10}
+                                      resolution={256}
+                                      color="#000000"
+                                      frames={1}
+                                  />
 
                                 <CampusMap 
                                     textures={textures} 
