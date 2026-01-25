@@ -2,10 +2,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 
 const events = [
-  { id: 1, title: "INAUGURATION", date: "FEB 10", description: "The grand opening ceremony with 8-bit fireworks.", pos: 0.1, color: "var(--kidcore-blue)" },
-  { id: 2, title: "PIXEL HACK", date: "FEB 11", description: "48-hour coding marathon in the neon grid.", pos: 0.35, color: "var(--kidcore-green)" },
-  { id: 3, title: "ARCADE BATTLE", date: "FEB 12", description: "Retro gaming tournament for the ultimate champion.", pos: 0.6, color: "var(--kidcore-orange)" },
-  { id: 4, title: "TECH SYMPOSIUM", date: "FEB 13", description: "Deep dives into the future of digital art.", pos: 0.85, color: "var(--kidcore-pink)" },
+  { id: 1, title: "INAUGURATION", date: "FEB 10", description: "The grand opening ceremony with 8-bit fireworks.", pos: 0.12, color: "var(--kidcore-blue)", side: 'right' },
+  { id: 2, title: "PIXEL HACK", date: "FEB 11", description: "48-hour coding marathon in the neon grid.", pos: 0.32, color: "var(--kidcore-green)", side: 'left' },
+  { id: 3, title: "ARCADE BATTLE", date: "FEB 12", description: "Retro gaming tournament for the ultimate champion.", pos: 0.65, color: "var(--kidcore-orange)", side: 'left' },
+  { id: 4, title: "TECH SYMPOSIUM", date: "FEB 13", description: "Deep dives into the future of digital art.", pos: 0.85, color: "var(--kidcore-pink)", side: 'right' },
 ];
 
 export const PacmanTimeline: React.FC = () => {
@@ -221,53 +221,53 @@ export const PacmanTimeline: React.FC = () => {
                   </foreignObject>
                 </motion.g>
 
-                {/* Event Cards inside SVG for perfect positioning */}
-                {events.map((event, index) => (
-                  <motion.g
-                    key={`card-${event.id}`}
-                    style={{
-                      offsetPath: `path("${pathData}")`,
-                      offsetDistance: `${event.pos * 100}%`,
-                      offsetRotate: '0deg'
-                    }}
-                  >
-                    <foreignObject 
-                      x={index % 2 === 0 ? 60 : -410} 
-                      y="-100" 
-                      width="350" 
-                      height="300"
-                      className="overflow-visible"
+                  {/* Event Cards inside SVG for perfect positioning */}
+                  {events.map((event, index) => (
+                    <motion.g
+                      key={`card-${event.id}`}
+                      style={{
+                        offsetPath: `path("${pathData}")`,
+                        offsetDistance: `${event.pos * 100}%`,
+                        offsetRotate: '0deg'
+                      }}
                     >
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: false }}
-                        className="p-6 rounded-2xl border-2 bg-kidcore-indigo/80 backdrop-blur-md pointer-events-auto"
-                        style={{ 
-                          borderColor: event.color,
-                          boxShadow: `0 0 20px ${event.color}44, inset 0 0 10px ${event.color}22`
-                        }}
+                      <foreignObject 
+                        x={event.side === 'right' ? 60 : -380} 
+                        y="-150" 
+                        width="320" 
+                        height="300"
+                        className="overflow-visible"
                       >
-                        <div className="flex items-center gap-3 mb-3">
-                          <span className="bg-white/10 px-2 py-1 text-[10px] font-press-start text-white border border-white/20 rounded">
-                            {event.date}
-                          </span>
-                          <div className="h-[2px] flex-1 bg-white/10" />
-                        </div>
-                        <h3 className="text-lg font-press-start mb-3" style={{ color: event.color }}>
-                          {event.title}
-                        </h3>
-                        <p className="font-vt323 text-xl text-white/80 leading-snug">
-                          {event.description}
-                        </p>
-                        <div className="mt-4 flex justify-between items-center">
-                           <div className="w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: event.color }} />
-                           <span className="text-[8px] font-press-start opacity-40 text-white">LVL {index + 1}</span>
-                        </div>
-                      </motion.div>
-                    </foreignObject>
-                  </motion.g>
-                ))}
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          viewport={{ once: false }}
+                          className="p-6 rounded-2xl border-2 bg-kidcore-indigo/80 backdrop-blur-md pointer-events-auto"
+                          style={{ 
+                            borderColor: event.color,
+                            boxShadow: `0 0 20px ${event.color}44, inset 0 0 10px ${event.color}22`
+                          }}
+                        >
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="bg-white/10 px-2 py-1 text-[10px] font-press-start text-white border border-white/20 rounded">
+                              {event.date}
+                            </span>
+                            <div className="h-[2px] flex-1 bg-white/10" />
+                          </div>
+                          <h3 className="text-base font-press-start mb-3" style={{ color: event.color }}>
+                            {event.title}
+                          </h3>
+                          <p className="font-vt323 text-lg text-white/80 leading-snug">
+                            {event.description}
+                          </p>
+                          <div className="mt-4 flex justify-between items-center">
+                             <div className="w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: event.color }} />
+                             <span className="text-[8px] font-press-start opacity-40 text-white">LVL {index + 1}</span>
+                          </div>
+                        </motion.div>
+                      </foreignObject>
+                    </motion.g>
+                  ))}
               </svg>
             </div>
       </div>
