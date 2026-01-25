@@ -12,15 +12,24 @@ export const PacmanTimeline: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [eatenDots, setEatenDots] = useState<number[]>([]);
   
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start center", "end center"]
-  });
+    const { scrollYProgress } = useScroll({
+      target: containerRef,
+      offset: ["start start", "end end"]
+    });
 
-    // SVG Path for the Pac-man road - updated to be more rectilinear like a maze
     const pathData = "M 400 0 V 120 H 150 V 350 H 650 V 580 H 150 V 820 H 650 V 1100 H 150 V 1350 H 400 V 1600";
     
     const offsetDistance = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+    const ghostOffsetDistance = useTransform(scrollYProgress, [0, 0.05, 1], ["-10%", "0%", "92%"]);
+
+    // Calculate Pac-man's Y position to center the camera
+    const pacmanY = useTransform(scrollYProgress, 
+      [0, 120/4100, 370/4100, 600/4100, 1100/4100, 1330/4100, 1830/4100, 2070/4100, 2570/4100, 2850/4100, 3350/4100, 3600/4100, 3850/4100, 1],
+      [0, 120, 120, 350, 350, 580, 580, 820, 820, 1100, 1100, 1350, 1350, 1600]
+    );
+
+    const mazeY = useTransform(pacmanY, (y) => `calc(50vh - ${y}px)`);
+
 
     useEffect(() => {
       const unsubscribe = scrollYProgress.on("change", (latest) => {
@@ -33,22 +42,26 @@ export const PacmanTimeline: React.FC = () => {
       return () => unsubscribe();
     }, [scrollYProgress, eatenDots]);
 
-    return (
-      <div ref={containerRef} id="timeline" className="relative min-h-[300vh] py-24 bg-[#0D001A] overflow-hidden">
-        {/* Animated Background Grid */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute inset-0" style={{ 
-            backgroundImage: `linear-gradient(var(--kidcore-blue) 1px, transparent 1px), linear-gradient(90deg, var(--kidcore-blue) 1px, transparent 1px)`,
-            backgroundSize: '100px 100px'
-          }} />
-        </div>
+      return (
+        <div ref={containerRef} id="timeline" className="relative min-h-[450vh] bg-[#0D001A]">
+          {/* Animated Background Grid */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none">
+            <div className="absolute inset-0" style={{ 
+              backgroundImage: `linear-gradient(var(--kidcore-blue) 1px, transparent 1px), linear-gradient(90deg, var(--kidcore-blue) 1px, transparent 1px)`,
+              backgroundSize: '100px 100px'
+            }} />
+          </div>
+  
+          <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden px-4">
+            <h2 className="text-3xl md:text-6xl font-press-start text-center mb-12 text-kidcore-blue drop-shadow-[0_0_20px_rgba(0,255,249,0.8)] tracking-widest z-50">
+              TIMELINE
+            </h2>
+  
+            <motion.div 
+              style={{ y: mazeY }}
+              className="relative h-[1600px] w-full max-w-5xl rounded-[40px] border-[6px] border-[#00fff9]/30 bg-black/80 shadow-[0_0_50px_rgba(0,0,0,0.9)]"
+            >
 
-        <div className="max-w-5xl mx-auto px-4 relative z-10">
-          <h2 className="text-4xl md:text-6xl font-press-start text-center mb-32 text-kidcore-blue drop-shadow-[0_0_20px_rgba(0,255,249,0.8)] tracking-widest">
-            TIMELINE
-          </h2>
-
-            <div className="relative h-[1600px] w-full rounded-[40px] overflow-hidden border-[6px] border-[#00fff9]/30 bg-black/80 shadow-[0_0_50px_rgba(0,0,0,0.9)]">
               <svg 
                 viewBox="0 0 800 1600" 
                 className="absolute inset-0 w-full h-full pointer-events-none"
@@ -167,30 +180,56 @@ export const PacmanTimeline: React.FC = () => {
               ))}
             </svg>
 
-          {/* Pac-man Character */}
-          <motion.div
-            style={{
-              offsetPath: `path("${pathData}")`,
-              offsetDistance: offsetDistance,
-              offsetRotate: 'auto'
-            }}
-            className="absolute z-20 w-12 h-12 md:w-16 md:h-16"
-          >
-            <div className="relative w-full h-full bg-kidcore-yellow rounded-full shadow-[0_0_30px_#FFE737] border-2 border-white/50">
-               <div className="absolute top-1/4 right-1/4 w-2 h-2 md:w-3 md:h-3 bg-black rounded-full" />
-               <motion.div 
-                  className="absolute inset-0 bg-kidcore-indigo origin-center"
-                  animate={{ 
-                    clipPath: [
-                      'polygon(50% 50%, 100% 20%, 100% 80%)',
-                      'polygon(50% 50%, 100% 50%, 100% 50%)',
-                      'polygon(50% 50%, 100% 20%, 100% 80%)'
-                    ] 
-                  }}
-                  transition={{ duration: 0.25, repeat: Infinity }}
-               />
-            </div>
-          </motion.div>
+            {/* Pac-man Character */}
+            <motion.div
+              style={{
+                offsetPath: `path("${pathData}")`,
+                offsetDistance: offsetDistance,
+                offsetRotate: 'auto'
+              }}
+              className="absolute z-30 w-12 h-12 md:w-16 md:h-16"
+            >
+              <div className="relative w-full h-full bg-kidcore-yellow rounded-full shadow-[0_0_30px_#FFE737] border-2 border-white/50">
+                 <div className="absolute top-1/4 right-1/4 w-2 h-2 md:w-3 md:h-3 bg-black rounded-full" />
+                 <motion.div 
+                    className="absolute inset-0 bg-black/20 origin-center"
+                    animate={{ 
+                      clipPath: [
+                        'polygon(50% 50%, 100% 20%, 100% 80%)',
+                        'polygon(50% 50%, 100% 50%, 100% 50%)',
+                        'polygon(50% 50%, 100% 20%, 100% 80%)'
+                      ] 
+                    }}
+                    transition={{ duration: 0.25, repeat: Infinity }}
+                 />
+              </div>
+            </motion.div>
+
+            {/* Ghost Character (Blinky) */}
+            <motion.div
+              style={{
+                offsetPath: `path("${pathData}")`,
+                offsetDistance: ghostOffsetDistance,
+                offsetRotate: 'auto'
+              }}
+              className="absolute z-20 w-10 h-10 md:w-14 md:h-14"
+            >
+              <div className="relative w-full h-full bg-radical-red rounded-t-full shadow-[0_0_25px_#FF003C] border-2 border-white/30">
+                  {/* Ghost Eyes */}
+                  <div className="absolute top-[20%] left-[20%] w-3 h-3 bg-white rounded-full">
+                    <div className="absolute top-[20%] right-0 w-1.5 h-1.5 bg-blue-600 rounded-full" />
+                  </div>
+                  <div className="absolute top-[20%] right-[20%] w-3 h-3 bg-white rounded-full">
+                    <div className="absolute top-[20%] right-0 w-1.5 h-1.5 bg-blue-600 rounded-full" />
+                  </div>
+                  {/* Wavy bottom */}
+                  <div className="absolute -bottom-1 left-0 right-0 flex justify-around">
+                     <div className="w-1/3 h-2 bg-radical-red rounded-b-full" />
+                     <div className="w-1/3 h-2 bg-radical-red rounded-b-full" />
+                     <div className="w-1/3 h-2 bg-radical-red rounded-b-full" />
+                  </div>
+              </div>
+            </motion.div>
 
           {/* Event Nodes (Gems/Fruits) */}
           {events.map((event, index) => (
