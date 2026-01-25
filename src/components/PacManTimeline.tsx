@@ -48,35 +48,35 @@ export const PacmanTimeline: React.FC = () => {
             TIMELINE
           </h2>
 
-          <div className="relative h-[1600px] w-full rounded-[40px] overflow-hidden border-[6px] border-[#00fff9]/30 bg-black/60 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
-            <svg 
-              viewBox="0 0 800 1600" 
-              className="absolute inset-0 w-full h-full pointer-events-none"
-              preserveAspectRatio="xMidYMid slice"
-            >
-              <defs>
-                <filter id="maze-glow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="4" result="blur" />
-                  <feFlood floodColor="#00fff9" floodOpacity="0.8" result="color" />
-                  <feComposite in="color" in2="blur" operator="in" result="glow" />
-                  <feMerge>
-                    <feMergeNode in="glow" />
-                    <feMergeNode in="glow" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-                <pattern id="maze-dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <circle cx="20" cy="20" r="1.5" fill="#00fff9" fillOpacity="0.3" />
-                </pattern>
-              </defs>
+            <div className="relative h-[1600px] w-full rounded-[40px] overflow-hidden border-[6px] border-[#00fff9]/30 bg-black/80 shadow-[0_0_50px_rgba(0,0,0,0.9)]">
+              <svg 
+                viewBox="0 0 800 1600" 
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                preserveAspectRatio="xMidYMin meet"
+              >
+                <defs>
+                  <filter id="maze-glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feFlood floodColor="#00fff9" floodOpacity="1" result="color" />
+                    <feComposite in="color" in2="blur" operator="in" result="glow" />
+                    <feMerge>
+                      <feMergeNode in="glow" />
+                      <feMergeNode in="glow" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                  <pattern id="maze-dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <circle cx="20" cy="20" r="1.5" fill="#00fff9" fillOpacity="0.4" />
+                  </pattern>
+                </defs>
 
-              {/* Background Dots */}
-              <rect width="100%" height="100%" fill="url(#maze-dots)" />
+                {/* Background Dots */}
+                <rect width="100%" height="100%" fill="url(#maze-dots)" />
 
-              {/* High-Fidelity Maze Walls - Matching the photo exactly */}
-              <g fill="none" stroke="#00fff9" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" filter="url(#maze-glow)">
-                {/* Border Wall */}
-                <rect x="20" y="20" width="760" height="1560" rx="30" strokeWidth="4" opacity="0.5" />
+                {/* High-Fidelity Maze Walls */}
+                <g fill="none" stroke="#00fff9" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" filter="url(#maze-glow)">
+                  {/* Border Wall */}
+                  <rect x="20" y="20" width="760" height="1560" rx="30" strokeWidth="6" opacity="0.8" />
 
                 {/* Top Section blocks */}
                 <rect x="70" y="70" width="130" height="70" rx="15" />
