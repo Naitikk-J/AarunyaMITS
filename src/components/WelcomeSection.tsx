@@ -50,13 +50,13 @@ export const WelcomeSection: React.FC = () => {
           transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
           className="text-center mb-12"
         >
-          <h2 className="text-2xl md:text-4xl font-press-start text-kidcore-orange mb-6 drop-shadow-[4px_4px_0px_#000]">
-            WELCOME TO
-          </h2>
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-press-start text-white leading-none tracking-tighter">
-            <span className="block text-kidcore-blue drop-shadow-[8px_8px_0px_#000] glitch" data-text="AARUNYA">AARUNYA</span>
-            <span className="block text-kidcore-pink drop-shadow-[8px_8px_0px_#000] -mt-2 md:-mt-6">2.0</span>
-          </h1>
+            <h2 className="text-[5vw] md:text-[3vw] font-press-start text-kidcore-orange mb-6 drop-shadow-[4px_4px_0px_#000]">
+              WELCOME TO
+            </h2>
+            <h1 className="text-[12vw] md:text-[10vw] lg:text-[12vw] font-press-start text-white leading-none tracking-tighter">
+              <span className="block text-kidcore-blue drop-shadow-[0.8vw_0.8vw_0px_#000] glitch" data-text="AARUNYA">AARUNYA</span>
+              <span className="block text-kidcore-pink drop-shadow-[0.8vw_0.8vw_0px_#000] -mt-2 md:-mt-6">2.0</span>
+            </h1>
         </motion.div>
 
         {/* Description Card */}

@@ -48,7 +48,7 @@ export const PacmanTimeline: React.FC = () => {
             TIMELINE
           </h2>
 
-            <div className="relative h-[1600px] w-full rounded-[40px] overflow-hidden border-[6px] border-[#00fff9]/30 bg-black/80 shadow-[0_0_50px_rgba(0,0,0,0.9)]">
+            <div className="relative h-[200vw] md:h-[1600px] w-full rounded-[4vw] md:rounded-[40px] overflow-hidden border-[0.8vw] md:border-[6px] border-[#00fff9]/30 bg-black/80 shadow-[0_0_5vw_rgba(0,0,0,0.9)]">
               <svg 
                 viewBox="0 0 800 1600" 
                 className="absolute inset-0 w-full h-full pointer-events-none"
@@ -223,20 +223,20 @@ export const PacmanTimeline: React.FC = () => {
               </AnimatePresence>
 
               {/* Event Card */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: false, margin: "-100px" }}
-                className={`p-4 md:p-8 absolute w-[75vw] md:w-[40%] max-w-[350px] rounded-2xl border-2 bg-kidcore-indigo/70 backdrop-blur-md z-30 ${
-                  index % 2 === 0 
-                    ? 'right-[2%] md:right-[8%] -translate-y-[60%]' 
-                    : 'left-[2%] md:left-[8%] -translate-y-[40%]'
-                } md:-translate-y-1/2`}
-                style={{ 
-                  borderColor: event.color,
-                  boxShadow: `0 0 15px ${event.color}44, inset 0 0 10px ${event.color}22`
-                }}
-              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: false, margin: "-100px" }}
+                  className={`p-[4vw] md:p-8 absolute w-[80vw] md:w-[40vw] max-w-[350px] rounded-[3vw] md:rounded-2xl border-[0.4vw] md:border-2 bg-kidcore-indigo/70 backdrop-blur-md z-30 ${
+                    index % 2 === 0 
+                      ? 'right-[2vw] md:right-[8vw] -translate-y-[60%]' 
+                      : 'left-[2vw] md:left-[8vw] -translate-y-[40%]'
+                  } md:-translate-y-1/2`}
+                  style={{ 
+                    borderColor: event.color,
+                    boxShadow: `0 0 4vw ${event.color}44, inset 0 0 2vw ${event.color}22`
+                  }}
+                >
                 <div className="flex items-center gap-3 mb-3">
                   <span className="bg-white/10 px-2 py-1 text-[8px] md:text-[10px] font-press-start text-white border border-white/20 rounded">
                     {event.date}

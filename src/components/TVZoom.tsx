@@ -29,8 +29,8 @@ export const TVZoom: React.FC<TVZoomProps> = ({ children }) => {
     const pointerEvents = useTransform(scrollYProgress, [0.5, 0.51], ["none", "auto"] as any);
 
     return (
-      <div ref={containerRef} className="relative h-[150vh] w-full">
-        <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+      <div ref={containerRef} className="relative h-[200vh] w-full">
+        <div className="sticky top-0 h-[100vh] w-full flex items-center justify-center overflow-hidden">
           <motion.div 
             style={{ 
               scale, 
@@ -38,7 +38,7 @@ export const TVZoom: React.FC<TVZoomProps> = ({ children }) => {
               y: tvY,
               transformOrigin: "40% 50%" 
             }}
-            className="relative w-[95vw] sm:w-[90vw] md:w-[75vw] max-w-[800px] z-10"
+            className="relative w-[92vw] md:w-[70vw] max-w-[850px] z-10"
           >
             <TVFrame className="w-full">
               <motion.div 
