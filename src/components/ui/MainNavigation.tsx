@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { RotatingCoin } from '../RotatingCoin';
 
 const navLinks = [
     { name: 'HOME', path: '/' },
@@ -9,7 +10,6 @@ const navLinks = [
     { name: 'HEADLINERS', path: '/headliners' },
     { name: 'EVENTS', path: '/events' },
     { name: 'SCHEDULE', path: '/schedule' },
-    { name: 'REGISTER', path: '/register' },
     { name: 'COMPETITIONS', path: '/competitions' },
     { name: 'SPONSORS', path: '/sponsors' },
     { name: 'ABOUT', path: '/about' },
@@ -145,14 +145,19 @@ export const MainNavigation = () => {
                                                 {link.name}
                                             </span>
                                         </div>
-                                    </Link>
-                                );
-                            })}
-                        </div>
+                                        </Link>
+                                    );
+                                })}
+                                <div className="ml-2 relative">
+                                    <RotatingCoin className="scale-75 hover:scale-90 transition-transform duration-300" />
+                                </div>
+                            </div>
 
-                        <button
-                            className="lg:hidden relative p-2 transition-all duration-200"
-                            onClick={() => setIsOpen(!isOpen)}
+                            <div className="lg:hidden flex items-center gap-3">
+                                <RotatingCoin className="scale-[0.5] md:scale-[0.6] -mr-4" />
+                                <button
+                                    className="relative p-2 transition-all duration-200"
+                                    onClick={() => setIsOpen(!isOpen)}
                             aria-label="Toggle menu"
                             style={{
                                 background: isOpen 
