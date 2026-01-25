@@ -27,30 +27,28 @@ export const TVZoom: React.FC<TVZoomProps> = ({ children }) => {
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
         <motion.div 
           style={{ scale, opacity: tvOpacity }}
-          className="relative w-[80vw] max-w-[800px] aspect-video flex items-center justify-center"
+          className="relative w-screen h-screen flex items-center justify-center"
         >
           {/* Retro TV Frame (SVG or Placeholder) */}
           <div className="absolute inset-0 z-10 pointer-events-none">
-             <svg viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_30px_rgba(188,19,254,0.3)]">
-                <rect x="20" y="20" width="760" height="500" rx="40" fill="#2A1045" stroke="#BC13FE" strokeWidth="12" />
-                <rect x="60" y="60" width="600" height="420" rx="10" fill="#0D001A" stroke="#BC13FE" strokeWidth="4" />
+             <svg viewBox="0 0 800 600" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_50px_rgba(188,19,254,0.4)]">
+                {/* Frame border with glass effect */}
+                <rect x="0" y="0" width="800" height="600" fill="rgba(42, 16, 69, 0.4)" backdrop-filter="blur(4px)" />
+                <rect x="10" y="10" width="780" height="580" rx="20" stroke="#BC13FE" strokeWidth="15" />
+                <rect x="40" y="40" width="620" height="520" rx="10" fill="rgba(13, 0, 26, 0.3)" stroke="#BC13FE" strokeWidth="4" />
                 {/* TV Knobs */}
-                <circle cx="720" cy="100" r="30" fill="#BC13FE" />
-                <circle cx="720" cy="180" r="30" fill="#BC13FE" />
-                <rect x="690" y="240" width="60" height="120" rx="10" fill="#39FF14" opacity="0.3" />
-                {/* TV Stand */}
-                <path d="M300 520 L250 580 M500 520 L550 580" stroke="#BC13FE" strokeWidth="12" strokeLinecap="round" />
-                {/* Antenna */}
-                <path d="M400 20 L300 -50 M400 20 L500 -50" stroke="#BC13FE" strokeWidth="8" strokeLinecap="round" />
+                <circle cx="720" cy="100" r="35" fill="#BC13FE" fillOpacity="0.8" />
+                <circle cx="720" cy="200" r="35" fill="#BC13FE" fillOpacity="0.8" />
+                <rect x="690" y="280" width="60" height="200" rx="10" fill="#39FF14" opacity="0.2" />
              </svg>
           </div>
 
           {/* TV Screen Content Area */}
-          <div className="absolute inset-0 flex items-center justify-center p-[10%]">
-            <div className="w-full h-full bg-[#0D001A] overflow-hidden relative">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-[77%] h-[86%] mr-[18%] mb-[2%] overflow-hidden relative">
                {/* Grid background inside TV */}
-               <div className="absolute inset-0 opacity-20" 
-                    style={{ backgroundImage: 'linear-gradient(#BC13FE 1px, transparent 1px), linear-gradient(90deg, #BC13FE 1px, transparent 1px)', backgroundSize: '20px 20px' }} 
+               <div className="absolute inset-0 opacity-10" 
+                    style={{ backgroundImage: 'linear-gradient(#BC13FE 1px, transparent 1px), linear-gradient(90deg, #BC13FE 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
                />
                
                {/* This is where the next section's content will appear as we zoom in */}

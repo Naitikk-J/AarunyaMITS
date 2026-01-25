@@ -84,14 +84,14 @@ export const WelcomeSection: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Retro Grid Floor */}
-      <div 
-        className="absolute bottom-0 left-0 w-full h-1/3 opacity-20 pointer-events-none"
-        style={{
-          perspective: '500px',
-          background: 'linear-gradient(to bottom, transparent, #BC13FE)'
-        }}
-      >
+        {/* Retro Grid Floor */}
+        <div 
+          className="absolute bottom-0 left-0 w-full h-1/3 opacity-10 pointer-events-none"
+          style={{
+            perspective: '500px',
+            background: 'linear-gradient(to bottom, transparent, rgba(188, 19, 254, 0.3))'
+          }}
+        >
         <div 
           className="w-full h-full"
           style={{
