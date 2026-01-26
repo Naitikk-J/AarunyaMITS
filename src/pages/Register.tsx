@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 
 export default function Register() {
   return (
-    <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black">
+    <div className="min-h-screen bg-[#05010D] text-white font-vt323 selection:bg-primary selection:text-black">
       <MainNavigation />
       
       <div className="relative pt-40 pb-20 text-center">
@@ -14,8 +14,8 @@ export default function Register() {
           REGISTER
         </h1>
         <div className="h-1 w-[120px] bg-primary mx-auto shadow-neon" />
-        <p className="mt-8 text-sm md:text-base font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60 max-w-3xl mx-auto px-6">
-          // INSERT CREDENTIALS TO JOIN THE NETWORK
+        <p className="mt-8 text-sm md:text-base font-vt323 text-muted-foreground tracking-normal opacity-60 max-w-3xl mx-auto px-6 leading-relaxed">
+          Insert your credentials to join the Aarunya network and access all festival features.
         </p>
       </div>
 
@@ -34,40 +34,40 @@ export default function Register() {
                 <div className="h-1 w-full bg-white/5 relative overflow-hidden rounded-full">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/60 to-secondary/60 animate-[scan_2s_linear_infinite]" />
                 </div>
-                <p className="font-share-tech text-[10px] text-white/40 mt-4 uppercase tracking-[0.3em]">
-                  INITIALIZE YOUR ACCOUNT
+                <p className="font-vt323 text-[10px] text-white/40 mt-4 uppercase tracking-normal">
+                  Initialize your account to access exclusive festival features and events.
                 </p>
               </div>
 
               <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                 <div className="space-y-2 group">
-                  <Label className="font-share-tech text-[10px] text-white/40 group-focus-within:text-primary transition-colors tracking-[0.3em] uppercase">
-                    USERNAME
+                  <Label className="font-vt323 text-[10px] text-white/40 group-focus-within:text-primary transition-colors tracking-normal uppercase">
+                    Username
                   </Label>
                   <Input 
-                    className="bg-black/40 border border-white/10 focus:border-primary rounded-lg font-orbitron text-sm h-12 transition-all placeholder:text-white/20"
-                    placeholder="PLAYER_ONE"
+                    className="bg-black/40 border border-white/10 focus:border-primary rounded-lg font-vt323 text-sm h-12 transition-all placeholder:text-white/20"
+                    placeholder="player_one"
                   />
                 </div>
 
                 <div className="space-y-2 group">
-                  <Label className="font-share-tech text-[10px] text-white/40 group-focus-within:text-primary transition-colors tracking-[0.3em] uppercase">
-                    EMAIL ADDRESS
+                  <Label className="font-vt323 text-[10px] text-white/40 group-focus-within:text-primary transition-colors tracking-normal uppercase">
+                    Email Address
                   </Label>
                   <Input 
                     type="email"
-                    className="bg-black/40 border border-white/10 focus:border-primary rounded-lg font-orbitron text-sm h-12 transition-all placeholder:text-white/20"
-                    placeholder="PLAYER@DOMAIN.COM"
+                    className="bg-black/40 border border-white/10 focus:border-primary rounded-lg font-vt323 text-sm h-12 transition-all placeholder:text-white/20"
+                    placeholder="player@domain.com"
                   />
                 </div>
 
                 <div className="space-y-2 group">
-                  <Label className="font-share-tech text-[10px] text-white/40 group-focus-within:text-primary transition-colors tracking-[0.3em] uppercase">
-                    PASSWORD
+                  <Label className="font-vt323 text-[10px] text-white/40 group-focus-within:text-primary transition-colors tracking-normal uppercase">
+                    Password
                   </Label>
                   <Input 
                     type="password"
-                    className="bg-black/40 border border-white/10 focus:border-primary rounded-lg font-orbitron text-sm h-12 transition-all placeholder:text-white/20"
+                    className="bg-black/40 border border-white/10 focus:border-primary rounded-lg font-vt323 text-sm h-12 transition-all placeholder:text-white/20"
                     placeholder="••••••••"
                   />
                 </div>
@@ -81,12 +81,12 @@ export default function Register() {
 
               <div className="mt-8 text-center border-t border-white/5 pt-6">
                 <div className="flex items-center justify-center gap-4">
-                  <span className="font-share-tech text-[8px] text-white/30 tracking-[0.4em] uppercase">
-                    SYSTEM STATUS
+                  <span className="font-vt323 text-[8px] text-white/30 tracking-normal uppercase">
+                    System Status
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    <span className="font-share-tech text-[10px] text-secondary tracking-[0.2em] font-bold">ONLINE</span>
+                    <span className="font-vt323 text-[10px] text-secondary tracking-normal font-bold">Online</span>
                   </span>
                 </div>
               </div>

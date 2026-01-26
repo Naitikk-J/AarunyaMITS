@@ -44,11 +44,16 @@ export const TVIntro: React.FC = () => {
         className="w-[90%] md:w-[600px] h-auto mb-4 object-contain"
       />
       <motion.div 
-        animate={{ scale: [1, 1.05, 1] }}
+        animate={{ scale: [1, 1.08, 1] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        className="text-kidcore-green text-xs sm:text-sm md:text-2xl font-pixel drop-shadow-[2px_2px_0px_#000]"
+        className="text-kidcore-blue text-xs sm:text-sm md:text-2xl font-pixel drop-shadow-[2px_2px_0px_#000]"
+        style={{
+                                    fontFamily: '"Press Start 2P", monospace',
+                                    fontSize: '12px',
+                                    color: '#00ffff',
+        }}
       >
-        PREPARE FOR THE MITS CARNIVAL...
+        SCROLL TO ENTER THE MITS CARNIVAL...
       </motion.div>
     </motion.div>
 
