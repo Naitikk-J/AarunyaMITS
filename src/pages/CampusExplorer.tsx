@@ -17,32 +17,38 @@ const THEME = {
 };
 
 const BUILDINGS = [
-    { id: 'main-gate', name: 'MITS Main Gate', hindiName: 'मुख्य द्वार', position: [5, -25], size: [4, 2], height: 2, type: 'landmark', icon: '🎓' },
-    { id: 'old-building', name: 'Old Building', hindiName: 'सिविल विभाग', position: [-6, -10], size: [16, 7], height: 4, type: 'complex' },
-    { id: 'canteen', name: 'Canteen', hindiName: 'कैंटीन', position: [-15, -12], size: [4, 4], height: 2, type: 'simple', icon: '🍽️' },
-    { id: 'ai-department', name: 'AI department', hindiName: 'एआई विभाग', position: [-3, 4], size: [9, 5], height: 8, type: 'simple', icon: '🤖' },
-    { id: 'library', name: 'Central Library', hindiName: 'पुस्तकालय', position: [-7, -16], size: [4, 3], height: 5, type: 'complex', icon: '📚' },
+    { id: 'main-gate', name: 'MITS Main Gate', hindiName: 'मुख्य द्वार', position: [5, -27], size: [4, 1], height: 6, type: 'gate', icon: '🎓' },
+    { id: 'old-building', name: 'CSE & IT Department', hindiName: 'सिविल विभाग', position: [-4, -10], size: [16, 3.5], height: 4, type: 'complex' },
+    { id: 'old-building-2', name: 'CSE & IT Department', hindiName: 'सिविल विभाग', position: [1, -12.5], size: [6, 3.5], height: 2, type: 'complex' },
+    { id: 'old-building-3', name: 'CSE & IT Department', hindiName: 'सिविल विभाग', position: [-9, -12.5], size: [6, 3.5], height: 2, type: 'complex' },
+    { id: 'canteen', name: 'Canteen', hindiName: 'कैंटीन', position: [-18, -17], size: [2, 2], height: 2, type: 'simple', icon: '🍽️' },
+    { id: 'ai-department', name: 'AI department', hindiName: 'एआई विभाग', position: [-1, 2], size: [9, 5], height: 8, type: 'simple', icon: '🤖' },
+    { id: 'library', name: 'Central Library', hindiName: 'पुस्तकालय', position: [-14, -12], size: [4, 3], height: 3, type: 'complex', icon: '📚' },
     { id: 'stage-ground', name: 'stage ground', hindiName: 'स्टेज ग्राउंड', position: [-5, -22], size: [15, 6], height: 0.1, type: 'landmark', color: '#2D5A27' },
-    { id: 'ai-ground', name: 'AI ground', hindiName: 'एआई ग्राउंड', position: [-3, -2], size: [9, 7], height: 0.1, type: 'landmark', color: '#3A6B35' },
+    { id: 'parking', name: 'parking', hindiName: 'स्टेज ग्राउंड', position: [-19, -5], size: [3, 20], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'garden-circle', name: 'garden circle', hindiName: 'स्टेज ग्राउंड', position: [-19, -5], size: [3, 20], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'ai-ground', name: 'AI ground', hindiName: 'एआई ग्राउंड', position: [-1, -4], size: [9, 7], height: 0.1, type: 'landmark', color: '#3A6B35' },
     { id: 'statue-ground', name: 'statue ground', hindiName: 'स्टैच्यू ग्राउंड', position: [15, -18.5], size: [10, 10], height: 0.1, type: 'landmark', color: '#2D5A27' },
-    { id: 'football-ground', name: 'football ground', hindiName: 'फुटबॉल ग्राउंड', position: [-5, 22], size: [30, 15], height: 0.1, type: 'landmark', color: '#1B4D17' },
+    { id: 'gymnasium', name: 'gymnasium ', hindiName: 'स्टैच्यू ग्राउंड', position: [11, 3.5], size: [10, 10], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'football-ground', name: 'football ground', hindiName: 'फुटबॉल ग्राउंड', position: [0, 19], size: [30, 15], height: 0.1, type: 'landmark', color: '#1B4D17' },
     { id: 'biotech', name: 'Biotech Dept', hindiName: 'जैव प्रौद्योगिकी', position: [15, -11], size: [5, 5], height: 3.5, type: 'simple' },
-    { id: 'dispensary', name: 'Dispensary', hindiName: 'औषधालय', position: [15, -4], size: [4, 4], height: 2, type: 'simple', icon: 'H' },
-    { id: 'architecture', name: 'Architecture Dept', hindiName: 'वास्तुकला', position: [-10, -3], size: [4, 4], height: 4, type: 'complex' },
-    { id: 'mechanical-dept', name: 'Mechanical Dept', hindiName: 'मैकेनिकल विभाग', position: [0, -5.5], size: [4, 4], height: 4, type: 'complex' },
+    { id: 'dispensary', name: 'Dispensary', hindiName: 'औषधालय', position: [11, -3.5], size: [4, 4], height: 2, type: 'simple', icon: 'H' },
+    { id: 'admission', name: 'Admission Sector', hindiName: 'औषधालय', position: [18, 0], size: [4, 12], height: 2, type: 'simple', icon: 'H' },
+    { id: 'amul', name: 'Amul Parlor', hindiName: 'औषधालय', position: [7, -0.5], size: [2, 2], height: 1, type: 'simple', icon: 'H' },
+    { id: 'architecture', name: 'Architecture Dept', hindiName: 'वास्तुकला', position: [-9.5, -6.5], size: [5, 5], height: 4, type: 'complex' },
+    { id: 'mechanical-dept', name: 'Mechanical Dept', hindiName: 'मैकेनिकल विभाग', position: [2, -7.25], size: [4, 4], height: 4, type: 'complex' },
     { id: 'statue-base', name: 'statue base', hindiName: 'स्टैच्यू आधार', position: [15, -18.5], size: [2, 2], height: 1, type: 'simple', color: '#A9A9A9' },
     { id: 'statue', name: 'statue', hindiName: 'मूर्ति', position: [15, -18.5], size: [0.5, 0.5], height: 3, type: 'simple', color: '#FFD700' },
-    { id: 'mits-main', name: 'mechanical workshop', hindiName: 'मैकेनिकल वर्कशॉप', position: [0, 15], size: [7, 5], height: 5, type: 'complex', icon: '⚙️' },
-    { id: 'diamond-gate', name: 'Diamond Jubilee Gate', hindiName: 'डायमंड गेट', position: [-20, 16], size: [4, 1], height: 3, type: 'landmark', rotationY: Math.PI / 2 },
+    { id: 'mits-main', name: 'mechanical workshop', hindiName: 'मैकेनिकल वर्कशॉप', position: [-3, 15], size: [7, 5], height: 5, type: 'complex', icon: '⚙️' },
+    { id: 'diamond-gate', name: 'Diamond Jubilee Gate', hindiName: 'डायमंड गेट', position: [-24, 9], size: [4, 1], height: 6, type: 'gate', rotationY: Math.PI / 2 },
 ];
 
 const ROADS = [
-    { start: [-20, -20], end: [20, -20], width: 2 },
-    { start: [20, -20], end: [20, 20], width: 2 },
-    { start: [20, 20], end: [-20, 20], width: 2 },
-    { start: [-20, 20], end: [-20, -20], width: 2 },
-    { start: [0, -25], end: [0, 25], width: 1.5 },
-    { start: [-25, 0], end: [25, 0], width: 1.5 },
+    { start: [-22, -26], end: [23, -26], width: 2 },
+    { start: [22, -25], end: [22, 11], width: 2 },
+    { start: [-22, 10], end: [-23, -27], width: 2 },
+    { start: [5, -25], end: [5, 11], width: 2 },
+    { start: [-23, 10], end: [23, 10], width: 2 },
 ];
 
 const generateTextures = () => {
@@ -82,6 +88,23 @@ const Building = ({ data, textures, showLabels }: any) => {
             shape.holes.push(hole);
             return new THREE.ExtrudeGeometry(shape, { depth: data.height, bevelEnabled: true, bevelThickness: 0.05 });
         }
+        if (data.type === 'gate') {
+            const shape = new THREE.Shape();
+            const width = data.size[0] / 2;
+            const height = data.height / 2;
+            const thickness = 0.8;
+            shape.moveTo(-width, -height);
+            shape.lineTo(-width + thickness, -height);
+            shape.lineTo(-width + thickness, height - 1);
+            shape.lineTo(width - thickness, height - 1);
+            shape.lineTo(width - thickness, -height);
+            shape.lineTo(width, -height);
+            shape.lineTo(width, height);
+            shape.lineTo(-width, height);
+            const geo = new THREE.ExtrudeGeometry(shape, { depth: data.size[1], bevelEnabled: true, bevelThickness: 0.05 });
+            geo.center();
+            return geo;
+        }
         return new THREE.BoxGeometry(data.size[0], data.height, data.size[1]);
     }, [data]);
 
@@ -91,7 +114,7 @@ const Building = ({ data, textures, showLabels }: any) => {
                 ref={mesh}
                 geometry={geometry}
                 rotation={[data.type === 'complex' ? -Math.PI / 2 : 0, data.rotationY || 0, 0]}
-                position={[0, data.height / 2, 0]}
+                position={[0, data.type === 'complex' || data.type === 'gate' ? 0 : data.height / 2, 0]}
                 onPointerOver={(e) => { e.stopPropagation(); setHover(true); }}
                 onPointerOut={() => setHover(false)}
                 castShadow
@@ -106,14 +129,12 @@ const Building = ({ data, textures, showLabels }: any) => {
                     emissiveIntensity={0.2}
                 />
             </mesh>
-            
             {data.type === 'complex' && (
                 <mesh position={[0, data.height, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                     <planeGeometry args={[data.size[0], data.size[1]]} />
                     <meshStandardMaterial color={THEME.roof} roughness={0.9} />
                 </mesh>
             )}
-
             {showLabels && (
                 <Html position={[0, data.height + 1.5, 0]} center distanceFactor={15}>
                     <div className="px-3 py-1 bg-black/80 backdrop-blur-md border border-white/20 rounded-full text-[10px] text-white whitespace-nowrap font-orbitron shadow-xl pointer-events-none">
@@ -125,28 +146,104 @@ const Building = ({ data, textures, showLabels }: any) => {
     );
 };
 
-const RealisticFoliage = ({ count = 50 }: { count?: number }) => {
+// -------------------------------------------------------------
+// UPDATED COMPONENT: Smart Foliage (With Circular Boundary)
+// -------------------------------------------------------------
+const SmartFoliage = () => {
     const trunkGeo = useMemo(() => new THREE.CylinderGeometry(0.1, 0.15, 0.8), []);
-    const leafGeo = useMemo(() => new THREE.SphereGeometry(0.6, 8, 8), []);
+    const leafGeo = useMemo(() => new THREE.SphereGeometry(0.6, 7, 7), []);
     const trunkMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#402905' }), []);
     const leafMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#1B4D17', roughness: 0.9 }), []);
 
-    const positions = useMemo(() => {
-        return Array.from({ length: count }, () => {
-            const angle = Math.random() * Math.PI * 2;
-            const r = 22 + Math.random() * 8;
-            return [Math.cos(angle) * r, 0, Math.sin(angle) * r];
-        });
-    }, [count]);
+    const treeData = useMemo(() => {
+        const trees = [];
+        const buildingBuffer = 2;
+        const roadBuffer = 1.8;
+        const campusRadius = 42; // Slightly smaller than ground radius (45) to stay inside
+        
+        // Scan a square grid, but filter by circle distance
+        for (let x = -45; x <= 45; x += 3.5) {
+            for (let z = -45; z <= 45; z += 3.5) {
+                
+                // --- BOUNDARY CHECK (NEW) ---
+                // If the point is outside the circular campus, skip it
+                if (Math.sqrt(x*x + z*z) > campusRadius) {
+                    continue;
+                }
+                
+                // --- COLLISION CHECK 1: BUILDINGS ---
+                let collision = false;
+                for (const b of BUILDINGS) {
+                    const halfW = (b.size[0] / 2) + buildingBuffer;
+                    const halfD = (b.size[1] / 2) + buildingBuffer;
+                    if (x > b.position[0] - halfW && x < b.position[0] + halfW && z > b.position[1] - halfD && z < b.position[1] + halfD) {
+                        collision = true;
+                        break;
+                    }
+                }
+                if (collision) continue;
+
+                // --- COLLISION CHECK 2: ROADS ---
+                for (const r of ROADS) {
+                    const minX = Math.min(r.start[0], r.end[0]) - (r.width/2 + roadBuffer);
+                    const maxX = Math.max(r.start[0], r.end[0]) + (r.width/2 + roadBuffer);
+                    const minZ = Math.min(r.start[1], r.end[1]) - (r.width/2 + roadBuffer);
+                    const maxZ = Math.max(r.start[1], r.end[1]) + (r.width/2 + roadBuffer);
+                    if (x >= minX && x <= maxX && z >= minZ && z <= maxZ) {
+                        collision = true;
+                        break;
+                    }
+                }
+                if (collision) continue;
+
+                // --- COLLISION CHECK 3: EXCLUSIONS ---
+                if (Math.abs(x) < 3 && Math.abs(z + 20) < 3) continue; // Car spawn
+                if (Math.abs(x + 24) < 3 && Math.abs(z - 6) < 3) continue; // Huge Tree location
+
+                const offsetX = (Math.random() - 0.5) * 1.5;
+                const offsetZ = (Math.random() - 0.5) * 1.5;
+                const scale = 0.8 + Math.random() * 0.6;
+
+                trees.push({
+                    position: [x + offsetX, 0, z + offsetZ],
+                    scale: [scale, scale, scale]
+                });
+            }
+        }
+        return trees;
+    }, []);
 
     return (
         <group>
             <Instances geometry={trunkGeo} material={trunkMat}>
-                {positions.map((p, i) => <Instance key={i} position={[p[0], 0.4, p[2]]} />)}
+                {treeData.map((t, i) => (
+                    <Instance key={`trunk-${i}`} position={[t.position[0], 0.4 * t.scale[1], t.position[2]]} scale={t.scale as any} />
+                ))}
             </Instances>
             <Instances geometry={leafGeo} material={leafMat}>
-                {positions.map((p, i) => <Instance key={i} position={[p[0], 1.2, p[2]]} scale={[1, 1.2, 1]} />)}
+                {treeData.map((t, i) => (
+                    <Instance key={`leaf-${i}`} position={[t.position[0], 1.2 * t.scale[1], t.position[2]]} scale={[t.scale[0], t.scale[1] * 1.2, t.scale[2]] as any} />
+                ))}
             </Instances>
+        </group>
+    );
+};
+
+const SingleHugeTree = ({ position, height }: { position: [number, number, number], height: number }) => {
+    const trunkHeight = height * 0.35;
+    const trunkRadiusTop = height * 0.08;
+    const trunkRadiusBottom = height * 0.12;
+    const foliageRadius = height * 0.4;
+    
+    const trunkGeo = useMemo(() => new THREE.CylinderGeometry(trunkRadiusTop, trunkRadiusBottom, trunkHeight, 12), [trunkHeight, trunkRadiusTop, trunkRadiusBottom]);
+    const leafGeo = useMemo(() => new THREE.SphereGeometry(foliageRadius, 16, 16), [foliageRadius]);
+    const trunkMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#402905', roughness: 0.9 }), []);
+    const leafMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#1B4D17', roughness: 0.8, metalness: 0.1 }), []);
+
+    return (
+        <group position={position}>
+            <mesh geometry={trunkGeo} material={trunkMat} position={[0, trunkHeight / 2, 0]} castShadow receiveShadow />
+            <mesh geometry={leafGeo} material={leafMat} position={[0, trunkHeight + foliageRadius * 0.7, 0]} scale={[1, 1.1, 1]} castShadow receiveShadow />
         </group>
     );
 };
@@ -175,150 +272,53 @@ const Streetlights = () => {
     const lightGeo = useMemo(() => new THREE.SphereGeometry(0.15, 8, 8), []);
     const poleMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#333333' }), []);
     const lightMat = useMemo(() => new THREE.MeshBasicMaterial({ color: '#FFDD33' }), []);
-
-    const positions = useMemo(() => [
-        [-18, 0, -18], [18, 0, 18], [0, 0, 22], [0, 0, -22]
-    ], []);
-
+    const positions = useMemo(() => [[-18, 0, -18], [18, 0, 18], [0, 0, 22], [0, 0, -22]], []);
     return (
         <group>
             <Instances geometry={poleGeo} material={poleMat}>
                 {positions.map((p, i) => <Instance key={i} position={[p[0], 1.25, p[2]]} />)}
             </Instances>
             <Instances geometry={lightGeo} material={lightMat}>
-                {positions.map((p, i) => (
-                    <Instance key={i} position={[p[0], 2.5, p[2]]} />
-                ))}
+                {positions.map((p, i) => (<Instance key={i} position={[p[0], 2.5, p[2]]} />))}
             </Instances>
-            {positions.map((p, i) => (
-                <pointLight key={i} position={[p[0], 2.5, p[2]]} intensity={0.8} distance={10} color="#FFDD33" />
-            ))}
+            {positions.map((p, i) => (<pointLight key={i} position={[p[0], 2.5, p[2]]} intensity={0.8} distance={10} color="#FFDD33" />))}
         </group>
     );
 };
 
 const Car = ({ position, rotation }: { position: [number, number, number], rotation: number }) => {
-    const wheelRotation = useRef(0);
-    
-    useFrame((_, delta) => {
-        wheelRotation.current += delta * 10;
-    });
+   const wheelRotation = useRef(0);
+    useFrame((_, delta) => { wheelRotation.current += delta * 10; });
     
     return (
         <group position={position} rotation={[0, rotation, 0]}>
-            <mesh position={[0, 0.22, 0]} castShadow>
-                <boxGeometry args={[1.6, 0.3, 3.8]} />
-                <meshStandardMaterial color="#0a0a0a" metalness={0.95} roughness={0.05} />
-            </mesh>
-            
-            <mesh position={[0, 0.4, 0.3]} castShadow>
-                <boxGeometry args={[1.5, 0.25, 2.2]} />
-                <meshStandardMaterial color="#111111" metalness={0.9} roughness={0.1} />
-            </mesh>
-            
-            <mesh position={[0, 0.55, -0.3]} castShadow>
-                <boxGeometry args={[1.3, 0.3, 1.4]} />
-                <meshStandardMaterial color="#050505" metalness={0.95} roughness={0.05} />
-            </mesh>
-            
-            <mesh position={[0, 0.62, -0.3]}>
-                <boxGeometry args={[1.2, 0.02, 1.2]} />
-                <meshStandardMaterial color="#00ffff" transparent opacity={0.4} emissive="#00ffff" emissiveIntensity={0.5} />
-            </mesh>
-            <mesh position={[0.55, 0.48, -0.3]} rotation={[0, 0, Math.PI / 2]}>
-                <boxGeometry args={[0.25, 0.02, 1.1]} />
-                <meshStandardMaterial color="#00ffff" transparent opacity={0.3} emissive="#00ffff" emissiveIntensity={0.3} />
-            </mesh>
-            <mesh position={[-0.55, 0.48, -0.3]} rotation={[0, 0, Math.PI / 2]}>
-                <boxGeometry args={[0.25, 0.02, 1.1]} />
-                <meshStandardMaterial color="#00ffff" transparent opacity={0.3} emissive="#00ffff" emissiveIntensity={0.3} />
-            </mesh>
-            
-            <mesh position={[0, 0.32, 1.9]} castShadow>
-                <boxGeometry args={[1.4, 0.15, 0.3]} />
-                <meshStandardMaterial color="#0a0a0a" metalness={0.9} roughness={0.1} />
-            </mesh>
-            <mesh position={[0, 0.32, -1.9]} castShadow>
-                <boxGeometry args={[1.4, 0.2, 0.3]} />
-                <meshStandardMaterial color="#0a0a0a" metalness={0.9} roughness={0.1} />
-            </mesh>
-            
-            <mesh position={[0, 0.6, -1.85]}>
-                <boxGeometry args={[1.2, 0.08, 0.02]} />
-                <meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={1} />
-            </mesh>
-            
-            <mesh position={[0.6, 0.42, -1.0]} rotation={[0, 0, Math.PI / 2]}>
-                <boxGeometry args={[0.12, 0.05, 0.4]} />
-                <meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.8} />
-            </mesh>
-            <mesh position={[-0.6, 0.42, -1.0]} rotation={[0, 0, Math.PI / 2]}>
-                <boxGeometry args={[0.12, 0.05, 0.4]} />
-                <meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.8} />
-            </mesh>
-            
-            <mesh position={[0.6, 0.25, 0]} rotation={[0, 0, Math.PI / 2]}>
-                <boxGeometry args={[0.03, 0.02, 3.5]} />
-                <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={0.6} />
-            </mesh>
-            <mesh position={[-0.6, 0.25, 0]} rotation={[0, 0, Math.PI / 2]}>
-                <boxGeometry args={[0.03, 0.02, 3.5]} />
-                <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={0.6} />
-            </mesh>
-            
-            {[
-                [0.7, 0.15, 1.3],
-                [-0.7, 0.15, 1.3],
-                [0.7, 0.15, -1.2],
-                [-0.7, 0.15, -1.2]
-            ].map((pos, i) => (
+            <mesh position={[0, 0.22, 0]} castShadow><boxGeometry args={[1.6, 0.3, 3.8]} /><meshStandardMaterial color="#0a0a0a" metalness={0.95} roughness={0.05} /></mesh>
+            <mesh position={[0, 0.4, 0.3]} castShadow><boxGeometry args={[1.5, 0.25, 2.2]} /><meshStandardMaterial color="#111111" metalness={0.9} roughness={0.1} /></mesh>
+            <mesh position={[0, 0.55, -0.3]} castShadow><boxGeometry args={[1.3, 0.3, 1.4]} /><meshStandardMaterial color="#050505" metalness={0.95} roughness={0.05} /></mesh>
+            <mesh position={[0, 0.62, -0.3]}><boxGeometry args={[1.2, 0.02, 1.2]} /><meshStandardMaterial color="#00ffff" transparent opacity={0.4} emissive="#00ffff" emissiveIntensity={0.5} /></mesh>
+            <mesh position={[0.55, 0.48, -0.3]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.25, 0.02, 1.1]} /><meshStandardMaterial color="#00ffff" transparent opacity={0.3} emissive="#00ffff" emissiveIntensity={0.3} /></mesh>
+            <mesh position={[-0.55, 0.48, -0.3]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.25, 0.02, 1.1]} /><meshStandardMaterial color="#00ffff" transparent opacity={0.3} emissive="#00ffff" emissiveIntensity={0.3} /></mesh>
+            <mesh position={[0, 0.32, 1.9]} castShadow><boxGeometry args={[1.4, 0.15, 0.3]} /><meshStandardMaterial color="#0a0a0a" metalness={0.9} roughness={0.1} /></mesh>
+            <mesh position={[0, 0.32, -1.9]} castShadow><boxGeometry args={[1.4, 0.2, 0.3]} /><meshStandardMaterial color="#0a0a0a" metalness={0.9} roughness={0.1} /></mesh>
+            <mesh position={[0, 0.6, -1.85]}><boxGeometry args={[1.2, 0.08, 0.02]} /><meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={1} /></mesh>
+            <mesh position={[0.6, 0.42, -1.0]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.12, 0.05, 0.4]} /><meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.8} /></mesh>
+            <mesh position={[-0.6, 0.42, -1.0]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.12, 0.05, 0.4]} /><meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.8} /></mesh>
+            <mesh position={[0.6, 0.25, 0]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.03, 0.02, 3.5]} /><meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={0.6} /></mesh>
+            <mesh position={[-0.6, 0.25, 0]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.03, 0.02, 3.5]} /><meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={0.6} /></mesh>
+            {[ [0.7, 0.15, 1.3], [-0.7, 0.15, 1.3], [0.7, 0.15, -1.2], [-0.7, 0.15, -1.2] ].map((pos, i) => (
                 <group key={i} position={pos as [number, number, number]}>
-                    <mesh rotation={[0, 0, Math.PI / 2]}>
-                        <cylinderGeometry args={[0.25, 0.25, 0.18, 24]} />
-                        <meshStandardMaterial color="#1a1a1a" metalness={0.8} roughness={0.3} />
-                    </mesh>
-                    <mesh rotation={[0, 0, Math.PI / 2]}>
-                        <cylinderGeometry args={[0.18, 0.18, 0.2, 6]} />
-                        <meshStandardMaterial color="#333333" metalness={0.95} roughness={0.1} />
-                    </mesh>
-                    <mesh rotation={[0, 0, Math.PI / 2]} position={[pos[0] > 0 ? 0.1 : -0.1, 0, 0]}>
-                        <ringGeometry args={[0.12, 0.17, 6]} />
-                        <meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.3} side={THREE.DoubleSide} />
-                    </mesh>
+                    <mesh rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.25, 0.25, 0.18, 24]} /><meshStandardMaterial color="#1a1a1a" metalness={0.8} roughness={0.3} /></mesh>
+                    <mesh rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.18, 0.18, 0.2, 6]} /><meshStandardMaterial color="#333333" metalness={0.95} roughness={0.1} /></mesh>
+                    <mesh rotation={[0, 0, Math.PI / 2]} position={[pos[0] > 0 ? 0.1 : -0.1, 0, 0]}><ringGeometry args={[0.12, 0.17, 6]} /><meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.3} side={THREE.DoubleSide} /></mesh>
                 </group>
             ))}
-            
-            <mesh position={[0.4, 0.32, 1.85]}>
-                <boxGeometry args={[0.2, 0.08, 0.05]} />
-                <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={2} />
-            </mesh>
-            <mesh position={[-0.4, 0.32, 1.85]}>
-                <boxGeometry args={[0.2, 0.08, 0.05]} />
-                <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={2} />
-            </mesh>
-            <mesh position={[0.4, 0.32, 1.83]}>
-                <boxGeometry args={[0.25, 0.12, 0.02]} />
-                <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={1.5} transparent opacity={0.8} />
-            </mesh>
-            <mesh position={[-0.4, 0.32, 1.83]}>
-                <boxGeometry args={[0.25, 0.12, 0.02]} />
-                <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={1.5} transparent opacity={0.8} />
-            </mesh>
-            
-            <mesh position={[0.5, 0.32, -1.85]}>
-                <boxGeometry args={[0.3, 0.06, 0.05]} />
-                <meshStandardMaterial color="#ff0033" emissive="#ff0033" emissiveIntensity={1.5} />
-            </mesh>
-            <mesh position={[-0.5, 0.32, -1.85]}>
-                <boxGeometry args={[0.3, 0.06, 0.05]} />
-                <meshStandardMaterial color="#ff0033" emissive="#ff0033" emissiveIntensity={1.5} />
-            </mesh>
-            
-            <mesh position={[0, 0.08, 0]}>
-                <boxGeometry args={[1.2, 0.02, 3.2]} />
-                <meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.4} transparent opacity={0.6} />
-            </mesh>
-            
+            <mesh position={[0.4, 0.32, 1.85]}><boxGeometry args={[0.2, 0.08, 0.05]} /><meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={2} /></mesh>
+            <mesh position={[-0.4, 0.32, 1.85]}><boxGeometry args={[0.2, 0.08, 0.05]} /><meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={2} /></mesh>
+            <mesh position={[0.4, 0.32, 1.83]}><boxGeometry args={[0.25, 0.12, 0.02]} /><meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={1.5} transparent opacity={0.8} /></mesh>
+            <mesh position={[-0.4, 0.32, 1.83]}><boxGeometry args={[0.25, 0.12, 0.02]} /><meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={1.5} transparent opacity={0.8} /></mesh>
+            <mesh position={[0.5, 0.32, -1.85]}><boxGeometry args={[0.3, 0.06, 0.05]} /><meshStandardMaterial color="#ff0033" emissive="#ff0033" emissiveIntensity={1.5} /></mesh>
+            <mesh position={[-0.5, 0.32, -1.85]}><boxGeometry args={[0.3, 0.06, 0.05]} /><meshStandardMaterial color="#ff0033" emissive="#ff0033" emissiveIntensity={1.5} /></mesh>
+            <mesh position={[0, 0.08, 0]}><boxGeometry args={[1.2, 0.02, 3.2]} /><meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.4} transparent opacity={0.6} /></mesh>
             <pointLight position={[0.4, 0.35, 2]} intensity={3} distance={15} color="#00ffff" />
             <pointLight position={[-0.4, 0.35, 2]} intensity={3} distance={15} color="#00ffff" />
             <pointLight position={[0, 0.35, -2]} intensity={1} distance={5} color="#ff0033" />
@@ -341,56 +341,35 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode }: { carPosition: [n
 
     useFrame(() => {
         if (!cameraRef.current) return;
-
         const mapRotation = Math.PI / 4;
-
-        // Apply world rotation to car position to get world-space position
         const worldCarX = carPosition[0] * Math.cos(mapRotation) - carPosition[2] * Math.sin(mapRotation);
         const worldCarZ = carPosition[0] * Math.sin(mapRotation) + carPosition[2] * Math.cos(mapRotation);
-
-        // Adjust car rotation for the rotated world
         const worldCarRotation = carRotation + mapRotation;
 
         if (viewMode === 'third') {
-            // Third-person camera: position behind and above the car
-            const distance = 8;
-            const height = 4;
-
-            // Position camera behind car in world space
+            const distance = 8; const height = 4;
             const targetX = worldCarX - Math.sin(worldCarRotation) * distance;
             const targetZ = worldCarZ - Math.cos(worldCarRotation) * distance;
             const targetY = carPosition[1] + height;
-
             smoothedCameraPos.current.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.12);
             cameraRef.current.position.copy(smoothedCameraPos.current);
-
-            // Look ahead of the car
             const lookAheadDistance = 6;
             const lookX = worldCarX + Math.sin(worldCarRotation) * lookAheadDistance;
             const lookZ = worldCarZ + Math.cos(worldCarRotation) * lookAheadDistance;
             const lookY = carPosition[1] + 1;
-
             lookAtTarget.current.lerp(new THREE.Vector3(lookX, lookY, lookZ), 0.15);
             cameraRef.current.lookAt(lookAtTarget.current);
         } else {
-            // First-person camera: positioned at driver's eye level
-            const height = 0.55;
-            const forwardOffset = 0.3;
-
-            // Position camera just ahead of car center
+            const height = 0.55; const forwardOffset = 0.3;
             const cameraX = worldCarX + Math.sin(worldCarRotation) * forwardOffset;
             const cameraZ = worldCarZ + Math.cos(worldCarRotation) * forwardOffset;
             const cameraY = carPosition[1] + height;
-
             smoothedCameraPos.current.lerp(new THREE.Vector3(cameraX, cameraY, cameraZ), 0.15);
             cameraRef.current.position.copy(smoothedCameraPos.current);
-
-            // Look far ahead in the direction of travel
             const lookAtDistance = 25;
             const lookAtX = worldCarX + Math.sin(worldCarRotation) * lookAtDistance;
             const lookAtZ = worldCarZ + Math.cos(worldCarRotation) * lookAtDistance;
             const lookAtY = carPosition[1] + height - 0.15;
-
             lookAtTarget.current.lerp(new THREE.Vector3(lookAtX, lookAtY, lookAtZ), 0.12);
             cameraRef.current.lookAt(lookAtTarget.current);
         }
@@ -403,15 +382,17 @@ const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
     return (
         <group rotation={[0, Math.PI / 4, 0]}>
             <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                <circleGeometry args={[35, 64]} />
+                <circleGeometry args={[45, 64]} />
                 <meshStandardMaterial color={THEME.ground} roughness={0.8} metalness={0.1} />
             </mesh>
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-                <circleGeometry args={[34.8, 64]} />
+                <circleGeometry args={[44.8, 64]} />
                 <meshStandardMaterial color={THEME.grass} roughness={1} />
             </mesh>
+            
             <Roads textures={textures} />
-            <RealisticFoliage count={50} />
+            <SmartFoliage />
+            <SingleHugeTree position={[-24, 0, 6]} height={6} />
             <Streetlights />
             {BUILDINGS.map((b) => (
                 <Building key={b.id} data={b} textures={textures} showLabels={!isDriving} />
@@ -430,79 +411,33 @@ const MobileJoystick = ({ onMove }: { onMove: (x: number, y: number) => void }) 
     const [isDragging, setIsDragging] = useState(false);
     const [knobPos, setKnobPos] = useState({ x: 0, y: 0 });
 
-    const handleStart = (clientX: number, clientY: number) => {
-        setIsDragging(true);
-    };
-
+    const handleStart = (clientX: number, clientY: number) => { setIsDragging(true); };
     const handleMove = (clientX: number, clientY: number) => {
         if (!isDragging || !joystickRef.current) return;
-        
         const rect = joystickRef.current.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
-        
         let deltaX = clientX - centerX;
         let deltaY = clientY - centerY;
-        
         const maxRadius = 40;
         const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        
-        if (distance > maxRadius) {
-            deltaX = (deltaX / distance) * maxRadius;
-            deltaY = (deltaY / distance) * maxRadius;
-        }
-        
+        if (distance > maxRadius) { deltaX = (deltaX / distance) * maxRadius; deltaY = (deltaY / distance) * maxRadius; }
         setKnobPos({ x: deltaX, y: deltaY });
         onMove(deltaX / maxRadius, -deltaY / maxRadius);
     };
-
-    const handleEnd = () => {
-        setIsDragging(false);
-        setKnobPos({ x: 0, y: 0 });
-        onMove(0, 0);
-    };
+    const handleEnd = () => { setIsDragging(false); setKnobPos({ x: 0, y: 0 }); onMove(0, 0); };
 
     return (
-        <div
-            ref={joystickRef}
-            className="fixed bottom-8 left-8 w-32 h-32 rounded-full z-50 md:hidden"
-            style={{
-                background: 'radial-gradient(circle, rgba(188,19,254,0.3) 0%, rgba(0,255,255,0.2) 100%)',
-                border: '3px solid #ff00ff',
-                boxShadow: '0 0 30px rgba(188,19,254,0.5), inset 0 0 20px rgba(0,255,255,0.3)'
-            }}
-            onTouchStart={(e) => {
-                e.preventDefault();
-                handleStart(e.touches[0].clientX, e.touches[0].clientY);
-            }}
-            onTouchMove={(e) => {
-                e.preventDefault();
-                handleMove(e.touches[0].clientX, e.touches[0].clientY);
-            }}
-            onTouchEnd={handleEnd}
-            onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
-            onMouseMove={(e) => handleMove(e.clientX, e.clientY)}
-            onMouseUp={handleEnd}
-            onMouseLeave={handleEnd}
+        <div ref={joystickRef} className="fixed bottom-8 left-8 w-32 h-32 rounded-full z-50 md:hidden"
+            style={{ background: 'radial-gradient(circle, rgba(188,19,254,0.3) 0%, rgba(0,255,255,0.2) 100%)', border: '3px solid #ff00ff', boxShadow: '0 0 30px rgba(188,19,254,0.5), inset 0 0 20px rgba(0,255,255,0.3)' }}
+            onTouchStart={(e) => { e.preventDefault(); handleStart(e.touches[0].clientX, e.touches[0].clientY); }}
+            onTouchMove={(e) => { e.preventDefault(); handleMove(e.touches[0].clientX, e.touches[0].clientY); }}
+            onTouchEnd={handleEnd} onMouseDown={(e) => handleStart(e.clientX, e.clientY)} onMouseMove={(e) => handleMove(e.clientX, e.clientY)} onMouseUp={handleEnd} onMouseLeave={handleEnd}
         >
-            <div
-                ref={knobRef}
-                className="absolute w-14 h-14 rounded-full"
-                style={{
-                    background: 'linear-gradient(135deg, #ff00ff, #00ffff)',
-                    boxShadow: '0 0 20px #ff00ff',
-                    left: '50%',
-                    top: '50%',
-                    transform: `translate(calc(-50% + ${knobPos.x}px), calc(-50% + ${knobPos.y}px))`,
-                    transition: isDragging ? 'none' : 'transform 0.2s ease-out'
-                }}
+            <div ref={knobRef} className="absolute w-14 h-14 rounded-full"
+                style={{ background: 'linear-gradient(135deg, #ff00ff, #00ffff)', boxShadow: '0 0 20px #ff00ff', left: '50%', top: '50%', transform: `translate(calc(-50% + ${knobPos.x}px), calc(-50% + ${knobPos.y}px))`, transition: isDragging ? 'none' : 'transform 0.2s ease-out' }}
             />
-            <div 
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '6px', color: '#00ffff', textShadow: '0 0 10px #00ffff' }}
-            >
-                {!isDragging && 'MOVE'}
-            </div>
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '6px', color: '#00ffff', textShadow: '0 0 10px #00ffff' }}>{!isDragging && 'MOVE'}</div>
         </div>
     );
 };
@@ -522,409 +457,131 @@ const CampusExplorer = () => {
     useEffect(() => {
         const canvas = document.createElement('canvas');
         const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (!gl) {
-            setWebglSupported(false);
-            setIsLoading(false);
-            return;
-        }
+        if (!gl) { setWebglSupported(false); setIsLoading(false); return; }
         const timer = setTimeout(() => setIsLoading(false), 2000);
         return () => clearTimeout(timer);
     }, []);
 
     useEffect(() => {
         if (!isDriving) return;
-
         const handleKeyDown = (e: KeyboardEvent) => {
             const key = e.key.toLowerCase();
-
-            // Handle view mode toggle
-            if (key === 'c') {
-                e.preventDefault();
-                setViewMode(prev => prev === 'third' ? 'first' : 'third');
-                return;
-            }
-
-            // Add key to pressed set
+            if (key === 'c') { e.preventDefault(); setViewMode(prev => prev === 'third' ? 'first' : 'third'); return; }
             const movementKeys = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
-            if (movementKeys.includes(key)) {
-                e.preventDefault();
-                keysPressed.current.add(key);
-            }
+            if (movementKeys.includes(key)) { e.preventDefault(); keysPressed.current.add(key); }
         };
-
         const handleKeyUp = (e: KeyboardEvent) => {
             const key = e.key.toLowerCase();
             const movementKeys = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
-            if (movementKeys.includes(key)) {
-                keysPressed.current.delete(key);
-            }
+            if (movementKeys.includes(key)) { keysPressed.current.delete(key); }
         };
-
-        // Use capture phase for better key handling
         window.addEventListener('keydown', handleKeyDown, true);
         window.addEventListener('keyup', handleKeyUp, true);
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown, true);
-            window.removeEventListener('keyup', handleKeyUp, true);
-        };
+        return () => { window.removeEventListener('keydown', handleKeyDown, true); window.removeEventListener('keyup', handleKeyUp, true); };
     }, [isDriving]);
 
     useEffect(() => {
         if (!isDriving) return;
-
         const interval = setInterval(() => {
             const keys = keysPressed.current;
-            let newSpeed = speed;
-            let newRotation = carRotation;
-
-            // Check for movement input from keyboard and joystick
-            // Use more sensitive joystick thresholds for better mobile control
-            const joystickForward = joystickInput.current.y > 0.2;
-            const joystickBackward = joystickInput.current.y < -0.2;
-            const joystickLeft = joystickInput.current.x < -0.2;
-            const joystickRight = joystickInput.current.x > 0.2;
-
+            let newSpeed = speed; let newRotation = carRotation;
+            const joystickForward = joystickInput.current.y > 0.2; const joystickBackward = joystickInput.current.y < -0.2;
+            const joystickLeft = joystickInput.current.x < -0.2; const joystickRight = joystickInput.current.x > 0.2;
             const forward = keys.has('w') || keys.has('arrowup') || joystickForward;
             const backward = keys.has('s') || keys.has('arrowdown') || joystickBackward;
             const left = keys.has('a') || keys.has('arrowleft') || joystickLeft;
             const right = keys.has('d') || keys.has('arrowright') || joystickRight;
 
-            // Handle acceleration and deceleration
-            if (forward) {
-                newSpeed = Math.min(speed + 0.025, 0.35);
-            } else if (backward) {
-                newSpeed = Math.max(speed - 0.025, -0.18);
-            } else {
-                // Natural deceleration when no input
-                newSpeed = speed * 0.92;
-                if (Math.abs(newSpeed) < 0.005) newSpeed = 0;
-            }
+            if (forward) { newSpeed = Math.min(speed + 0.025, 0.35); }
+            else if (backward) { newSpeed = Math.max(speed - 0.025, -0.18); }
+            else { newSpeed = speed * 0.92; if (Math.abs(newSpeed) < 0.005) newSpeed = 0; }
 
-            // Handle rotation only when moving
             if (Math.abs(newSpeed) > 0.01) {
                 const rotationSpeed = Math.abs(newSpeed) > 0.1 ? 0.04 : 0.03;
                 if (left) newRotation += rotationSpeed;
                 if (right) newRotation -= rotationSpeed;
             }
-
-            // Update position based on rotation and speed
             const newX = carPosition[0] + Math.sin(newRotation) * newSpeed;
             const newZ = carPosition[2] + Math.cos(newRotation) * newSpeed;
-
-            // Boundary collision with campus limits
-            const boundedX = Math.max(-28, Math.min(28, newX));
-            const boundedZ = Math.max(-28, Math.min(28, newZ));
-
-            setCarPosition([boundedX, 0, boundedZ]);
-            setCarRotation(newRotation);
-            setSpeed(newSpeed);
+            const boundedX = Math.max(-38, Math.min(38, newX));
+            const boundedZ = Math.max(-38, Math.min(38, newZ));
+            setCarPosition([boundedX, 0, boundedZ]); setCarRotation(newRotation); setSpeed(newSpeed);
         }, 16);
-
         return () => clearInterval(interval);
     }, [isDriving, carPosition, carRotation, speed]);
 
-    const handleJoystickMove = useCallback((x: number, y: number) => {
-        joystickInput.current = { x, y };
-    }, []);
-
-    const startDriving = () => {
-        setIsDriving(true);
-        setCarPosition([0, 0, -20]);
-        setCarRotation(0);
-        setSpeed(0);
-    };
-
-    const stopDriving = () => {
-        setIsDriving(false);
-        setSpeed(0);
-        keysPressed.current.clear();
-        joystickInput.current = { x: 0, y: 0 };
-    };
+    const handleJoystickMove = useCallback((x: number, y: number) => { joystickInput.current = { x, y }; }, []);
+    const startDriving = () => { setIsDriving(true); setCarPosition([0, 0, -20]); setCarRotation(0); setSpeed(0); };
+    const stopDriving = () => { setIsDriving(false); setSpeed(0); keysPressed.current.clear(); joystickInput.current = { x: 0, y: 0 }; };
 
     return (
         <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black">
             {!isDriving && <MainNavigation />}
-
             {isLoading && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#05010D]">
                     <div className="text-center">
                         <div className="text-6xl mb-8 animate-pulse">🏛️</div>
-                        <div 
-                            className="text-xl tracking-[0.3em] text-primary animate-pulse"
-                            style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '12px' }}
-                        >
-                            LOADING CAMPUS...
-                        </div>
-                        <div className="mt-4 w-48 h-2 bg-white/10 mx-auto overflow-hidden">
-                            <div className="h-full bg-gradient-to-r from-primary to-secondary animate-pulse" style={{ width: '60%' }} />
-                        </div>
+                        <div className="text-xl tracking-[0.3em] text-primary animate-pulse" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '12px' }}>LOADING CAMPUS...</div>
+                        <div className="mt-4 w-48 h-2 bg-white/10 mx-auto overflow-hidden"><div className="h-full bg-gradient-to-r from-primary to-secondary animate-pulse" style={{ width: '60%' }} /></div>
                     </div>
                 </div>
             )}
-
             <div className="relative pt-32 pb-12 text-center">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
-                    CAMPUS EXPLORER
-                </h1>
+                <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">CAMPUS EXPLORER</h1>
                 <div className="h-1 w-[120px] bg-primary mx-auto shadow-neon" />
-                <p className="mt-6 text-sm font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60 max-w-3xl mx-auto px-6">
-                    // EXPLORE MITS CAMPUS IN 3D
-                </p>
-
+                <p className="mt-6 text-sm font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60 max-w-3xl mx-auto px-6">// EXPLORE MITS CAMPUS IN 3D</p>
                 <div className="mt-8 flex justify-center gap-4 flex-wrap px-6">
                     {!isDriving ? (
-                        <Button
-                            onClick={startDriving}
-                            className="font-orbitron text-[10px] tracking-[0.3em] uppercase px-8 py-6 rounded-none border-2 bg-gradient-to-b from-[#ff00ff] to-[#cc00cc] border-[#ff66ff] text-white hover:shadow-[0_0_30px_#ff00ff] transition-all"
-                            style={{
-                                fontFamily: '"Press Start 2P", monospace',
-                                fontSize: '10px',
-                                boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff'
-                            }}
-                        >
-                            🚗 DRIVE IN CAMPUS
-                        </Button>
+                        <Button onClick={startDriving} className="font-orbitron text-[10px] tracking-[0.3em] uppercase px-8 py-6 rounded-none border-2 bg-gradient-to-b from-[#ff00ff] to-[#cc00cc] border-[#ff66ff] text-white hover:shadow-[0_0_30px_#ff00ff] transition-all" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '10px', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff' }}>🚗 DRIVE IN CAMPUS</Button>
                     ) : (
-                        <Button
-                            onClick={stopDriving}
-                            className="font-orbitron text-[10px] tracking-[0.3em] uppercase px-8 py-6 rounded-none border-2 bg-gradient-to-b from-[#00ffff] to-[#0088ff] border-[#66ffff] text-black hover:shadow-[0_0_30px_#00ffff] transition-all"
-                            style={{
-                                fontFamily: '"Press Start 2P", monospace',
-                                fontSize: '10px',
-                                boxShadow: 'inset -2px -2px 0 #006688, inset 2px 2px 0 #66ffff, 0 0 15px #00ffff'
-                            }}
-                        >
-                            ✕ EXIT DRIVING
-                        </Button>
+                        <Button onClick={stopDriving} className="font-orbitron text-[10px] tracking-[0.3em] uppercase px-8 py-6 rounded-none border-2 bg-gradient-to-b from-[#00ffff] to-[#0088ff] border-[#66ffff] text-black hover:shadow-[0_0_30px_#00ffff] transition-all" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '10px', boxShadow: 'inset -2px -2px 0 #006688, inset 2px 2px 0 #66ffff, 0 0 15px #00ffff' }}>✕ EXIT DRIVING</Button>
                     )}
                 </div>
             </div>
-
             <div className={`container mx-auto px-6 pb-20 ${isDriving ? 'p-0 m-0 max-w-none' : ''}`}>
-                <div 
-                    className={`relative w-full overflow-hidden transition-all duration-500 ${
-                        isDriving 
-                            ? 'fixed inset-0 z-[100] rounded-none border-0' 
-                            : 'rounded-xl border-2 border-white/10'
-                    }`}
-                    style={{ 
-                        height: isDriving ? '100vh' : 'calc(100vh - 380px)', 
-                        minHeight: isDriving ? '100vh' : '500px',
-                        boxShadow: isDriving ? 'none' : '0 0 60px rgba(188,19,254,0.2), inset 0 0 30px rgba(0,0,0,0.5)'
-                    }}
-                >
-                    {isDriving && (
-                        <button
-                            onClick={stopDriving}
-                            className="fixed top-4 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 bg-black/80 border border-primary/50 text-primary text-[8px] font-press-start hover:bg-primary hover:text-black transition-all flex items-center gap-2 shadow-neon-small"
-                            style={{ fontFamily: '"Press Start 2P", monospace' }}
-                        >
-                            <span>✕</span> EXIT DRIVING
-                        </button>
-                    )}
+                <div className={`relative w-full overflow-hidden transition-all duration-500 ${isDriving ? 'fixed inset-0 z-[100] rounded-none border-0' : 'rounded-xl border-2 border-white/10'}`} style={{ height: isDriving ? '100vh' : 'calc(100vh - 380px)', minHeight: isDriving ? '100vh' : '500px', boxShadow: isDriving ? 'none' : '0 0 60px rgba(188,19,254,0.2), inset 0 0 30px rgba(0,0,0,0.5)' }}>
+                    {isDriving && (<button onClick={stopDriving} className="fixed top-4 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 bg-black/80 border border-primary/50 text-primary text-[8px] font-press-start hover:bg-primary hover:text-black transition-all flex items-center gap-2 shadow-neon-small" style={{ fontFamily: '"Press Start 2P", monospace' }}><span>✕</span> EXIT DRIVING</button>)}
                     {webglSupported ? (
-                        <Canvas
-                            camera={{ position: [30, 25, 30], fov: 45 }}
-                            gl={{
-                                antialias: true,
-                                alpha: true,
-                                stencil: false,
-                                depth: true,
-                                powerPreference: 'high-performance',
-                            }}
-                            dpr={Math.min(window.devicePixelRatio, 2)}
-                            style={{ width: '100%', height: '100%' }}
-                        >
+                        <Canvas camera={{ position: [30, 25, 30], fov: 45 }} gl={{ antialias: true, alpha: true, stencil: false, depth: true, powerPreference: 'high-performance' }} dpr={Math.min(window.devicePixelRatio, 2)} style={{ width: '100%', height: '100%' }}>
                             <Suspense fallback={null}>
                                 <PerspectiveCamera makeDefault position={[30, 25, 30]} fov={45} />
-                                
-                                {!isDriving && (
-                                    <OrbitControls
-                                        autoRotate={!isDriving}
-                                        autoRotateSpeed={0.5}
-                                        enableZoom={true}
-                                        enablePan={true}
-                                        minDistance={15}
-                                        maxDistance={100}
-                                    />
-                                )}
-                                
-                                {isDriving && (
-                                    <DrivingCamera carPosition={carPosition} carRotation={carRotation} viewMode={viewMode} />
-                                )}
-
+                                {!isDriving && (<OrbitControls autoRotate={!isDriving} autoRotateSpeed={0.5} enableZoom={true} enablePan={true} minDistance={15} maxDistance={100} />)}
+                                {isDriving && (<DrivingCamera carPosition={carPosition} carRotation={carRotation} viewMode={viewMode} />)}
                                 <ambientLight intensity={0.4} />
                                 <pointLight position={[20, 30, 20]} intensity={1.5} />
                                 <pointLight position={[-20, 25, -20]} intensity={0.8} color="#00A6FF" />
                                 <fog attach="fog" args={['#050c15', 50, 300]} />
-
                                 <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
                                 <Environment preset="city" />
-                                <ContactShadows
-                                    position={[0, 0, 0]}
-                                    opacity={0.4}
-                                    scale={60}
-                                    blur={2.5}
-                                    far={10}
-                                    resolution={256}
-                                    color="#000000"
-                                    frames={1}
-                                />
-
-                                <CampusMap 
-                                    textures={textures} 
-                                    isDriving={isDriving}
-                                    carPosition={carPosition}
-                                    carRotation={carRotation}
-                                />
-
-                                <mesh position={[0, -0.6, 0]}>
-                                    <cylinderGeometry args={[36, 35, 1, 64]} />
-                                    <meshStandardMaterial color="#111111" metalness={0.9} roughness={0.1} />
-                                </mesh>
-                                <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                                    <ringGeometry args={[35.1, 35.5, 64]} />
-                                    <meshBasicMaterial color={THEME.primary} transparent opacity={0.3} />
-                                </mesh>
-
+                                <ContactShadows position={[0, 0, 0]} opacity={0.4} scale={60} blur={2.5} far={10} resolution={256} color="#000000" frames={1} />
+                                <CampusMap textures={textures} isDriving={isDriving} carPosition={carPosition} carRotation={carRotation} />
+                                <mesh position={[0, -0.6, 0]}><cylinderGeometry args={[46, 45, 1, 64]} /><meshStandardMaterial color="#111111" metalness={0.9} roughness={0.1} /></mesh>
+                                <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}><ringGeometry args={[45.1, 45.5, 64]} /><meshBasicMaterial color={THEME.primary} transparent opacity={0.3} /></mesh>
                                 <Preload all />
                             </Suspense>
                         </Canvas>
-                    ) : (
-                        <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#0a1a2a] to-[#050c15] text-center">
-                            <p className="font-orbitron text-lg text-primary">WebGL is not available on this device.</p>
-                        </div>
-                    )}
-
-{isDriving && (
-                          <>
-                              <MobileJoystick onMove={handleJoystickMove} />
-                              
-                              {viewMode === 'first' && (
-                                  <div className="absolute inset-0 pointer-events-none z-40">
-                                      <div 
-                                          className="absolute bottom-0 left-0 right-0 h-24"
-                                          style={{
-                                              background: 'linear-gradient(to top, rgba(10,0,20,0.95) 0%, rgba(10,0,20,0.7) 50%, transparent 100%)',
-                                          }}
-                                      />
-                                      <div 
-                                          className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[280px] h-16 rounded-t-xl"
-                                          style={{
-                                              background: 'linear-gradient(to bottom, #1a0030, #0a0015)',
-                                              border: '2px solid #ff00ff40',
-                                              borderBottom: 'none',
-                                              boxShadow: '0 0 20px rgba(255,0,255,0.2), inset 0 -10px 30px rgba(0,0,0,0.5)'
-                                          }}
-                                      >
-                                          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-[#ff00ff80] flex items-center justify-center"
-                                              style={{ background: 'radial-gradient(circle, #0a0015 0%, #000 100%)' }}
-                                          >
-                                              <div className="text-center">
-                                                  <div className="text-[#00ffff] text-lg font-bold" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '14px' }}>
-                                                      {Math.abs(Math.round(speed * 100))}
-                                                  </div>
-                                                  <div className="text-[#ff00ff80] text-[6px]" style={{ fontFamily: '"Press Start 2P", monospace' }}>KM/H</div>
-                                              </div>
-                                          </div>
-                                          <div className="absolute bottom-2 left-4 text-[6px] text-[#00ffff80]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
-                                              AARUNYA
-                                          </div>
-                                          <div className="absolute bottom-2 right-4 text-[6px] text-[#ff00ff80]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
-                                              MITS
-                                          </div>
-                                      </div>
-                                      <div className="absolute top-0 left-0 w-8 h-full" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.3), transparent)' }} />
-                                      <div className="absolute top-0 right-0 w-8 h-full" style={{ background: 'linear-gradient(to left, rgba(0,0,0,0.3), transparent)' }} />
-                                      <div 
-                                          className="absolute top-8 left-4 w-16 h-8 rounded"
-                                          style={{
-                                              background: 'rgba(0,0,0,0.6)',
-                                              border: '1px solid #ff00ff40'
-                                          }}
-                                      >
-                                          <div className="h-full flex items-center justify-center">
-                                              <div className="w-3 h-3 rounded-full bg-[#00ff00] animate-pulse" style={{ boxShadow: '0 0 10px #00ff00' }} />
-                                          </div>
-                                      </div>
-                                  </div>
-                              )}
-                              
-                              <div 
-                                  className="absolute top-4 left-4 z-50 px-4 py-3 rounded-lg hidden md:block"
-                                style={{
-                                    background: 'rgba(0,0,0,0.8)',
-                                    border: '2px solid #ff00ff',
-                                    boxShadow: '0 0 20px rgba(255,0,255,0.3)'
-                                }}
-                            >
-                                <div style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '8px', color: '#00ffff', marginBottom: '8px' }}>
-                                    ═══ CONTROLS ═══
-                                </div>
-                                <div className="text-[10px] text-white/80 space-y-2" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '7px' }}>
-                                    <div><span className="text-primary">W/↑</span> Forward</div>
-                                    <div><span className="text-primary">S/↓</span> Reverse</div>
-                                    <div><span className="text-primary">A/←</span> Turn Left</div>
-                                    <div><span className="text-primary">D/→</span> Turn Right</div>
-                                    <div className="pt-2 border-t border-white/10">
-                                        <button 
-                                            onClick={() => setViewMode(v => v === 'third' ? 'first' : 'third')}
-                                            className="w-full text-left hover:text-primary transition-colors flex items-center gap-2"
-                                        >
-                                            <span className="text-primary">[C]</span> VIEW: {viewMode === 'third' ? '3RD' : '1ST'}
-                                        </button>
+                    ) : (<div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#0a1a2a] to-[#050c15] text-center"><p className="font-orbitron text-lg text-primary">WebGL is not available on this device.</p></div>)}
+                    {isDriving && (
+                        <>
+                            <MobileJoystick onMove={handleJoystickMove} />
+                            {viewMode === 'first' && (
+                                <div className="absolute inset-0 pointer-events-none z-40">
+                                    <div className="absolute bottom-0 left-0 right-0 h-24" style={{ background: 'linear-gradient(to top, rgba(10,0,20,0.95) 0%, rgba(10,0,20,0.7) 50%, transparent 100%)' }} />
+                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[280px] h-16 rounded-t-xl" style={{ background: 'linear-gradient(to bottom, #1a0030, #0a0015)', border: '2px solid #ff00ff40', borderBottom: 'none', boxShadow: '0 0 20px rgba(255,0,255,0.2), inset 0 -10px 30px rgba(0,0,0,0.5)' }}>
+                                        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-[#ff00ff80] flex items-center justify-center" style={{ background: 'radial-gradient(circle, #0a0015 0%, #000 100%)' }}>
+                                            <div className="text-center"><div className="text-[#00ffff] text-lg font-bold" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '14px' }}>{Math.abs(Math.round(speed * 100))}</div><div className="text-[#ff00ff80] text-[6px]" style={{ fontFamily: '"Press Start 2P", monospace' }}>KM/H</div></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div 
-                                className="absolute bottom-4 right-4 z-50 px-4 py-2 rounded-lg"
-                                style={{
-                                    background: 'rgba(0,0,0,0.8)',
-                                    border: '2px solid #00ffff',
-                                    boxShadow: '0 0 20px rgba(0,255,255,0.3)'
-                                }}
-                            >
-                                <div style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '8px', color: '#ff00ff' }}>
-                                    SPEED: {Math.abs(Math.round(speed * 100))} KM/H
-                                </div>
-                            </div>
+                            )}
                         </>
                     )}
-
                     <div className="absolute inset-0 pointer-events-none scanlines opacity-20" />
-                    <div
-                        className="absolute inset-0 pointer-events-none"
-                        style={{
-                            background: 'radial-gradient(ellipse at center, transparent 40%, rgba(5,1,13,0.8) 100%)',
-                        }}
-                    />
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(5,1,13,0.8) 100%)' }} />
                 </div>
-
-                {!isDriving && (
-                    <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {[
-                            { icon: '🎓', title: 'Main Gate', desc: 'Historic entrance since 1957' },
-                            { icon: '🤖', title: 'AI Department', desc: 'State-of-the-art research facility' },
-                            { icon: '📚', title: 'Central Library', desc: 'Over 100,000 books & resources' }
-                        ].map((item, idx) => (
-                            <div 
-                                key={idx}
-                                className="group relative bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-xl p-6 hover:border-primary transition-all duration-500"
-                                style={{ boxShadow: '0 0 30px rgba(188,19,254,0.05)' }}
-                            >
-                                <div className="text-4xl mb-4">{item.icon}</div>
-                                <h3 className="text-lg font-black text-white group-hover:text-primary transition-colors mb-2">
-                                    {item.title}
-                                </h3>
-                                <p className="text-sm text-muted-foreground">{item.desc}</p>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                {!isDriving && (<div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">{[{ icon: '🎓', title: 'Main Gate', desc: 'Historic entrance since 1957' }, { icon: '🤖', title: 'AI Department', desc: 'State-of-the-art research facility' }, { icon: '📚', title: 'Central Library', desc: 'Over 100,000 books & resources' }].map((item, idx) => (<div key={idx} className="group relative bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-xl p-6 hover:border-primary transition-all duration-500" style={{ boxShadow: '0 0 30px rgba(188,19,254,0.05)' }}><div className="text-4xl mb-4">{item.icon}</div><h3 className="text-lg font-black text-white group-hover:text-primary transition-colors mb-2">{item.title}</h3><p className="text-sm text-muted-foreground">{item.desc}</p></div>))}</div>)}
             </div>
-
             <div className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
         </div>
     );
