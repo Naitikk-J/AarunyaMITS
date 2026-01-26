@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useResponsive } from '@/hooks/use-responsive';
+import { RESPONSIVE_NAV_HEIGHT, RESPONSIVE_BUTTON_SIZES } from '@/lib/responsive-styles';
 
 const navLinks = [
     { name: 'HOME', path: '/' },
     { name: 'MAP', path: '/view-map' },
-    { name: 'THEME', path: '/theme' },
-    { name: 'HEADLINERS', path: '/headliners' },
     { name: 'EVENTS', path: '/events' },
     { name: 'SCHEDULE', path: '/schedule' },
-    { name: 'COMPETITIONS', path: '/competitions' },
     { name: 'SPONSORS', path: '/sponsors' },
     { name: 'ABOUT', path: '/about' },
     { name: 'CONTACT', path: '/contact' },
@@ -21,6 +20,7 @@ export const MainNavigation = () => {
     const [scrolled, setScrolled] = useState(false);
     const [hoverIdx, setHoverIdx] = useState<number | null>(null);
     const location = useLocation();
+    const { isMobile, isTablet, isDesktop, isTouch } = useResponsive();
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -36,7 +36,8 @@ export const MainNavigation = () => {
             )}>
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute inset-0" style={{
-                        background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.03) 2px, rgba(0,255,255,0.03) 4px)'
+                        background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.03) 2px, rgba(0,255,255,0.03) 4px)',
+                        backgroundSize: '4px 4px'
                     }} />
                 </div>
 
@@ -77,14 +78,15 @@ export const MainNavigation = () => {
                 <div className="absolute bottom-1 left-0 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 10px #00ffff, inset -1px 1px 0 #66ffff' }} />
                 <div className="absolute bottom-1 right-0 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff, inset 1px 1px 0 #ff66ff' }} />
 
-                <div className="container mx-auto px-6 relative">
+                <div className="w-full px-6 relative">
                     <div className="flex items-center justify-between h-24">
+                        {/* Logo on the left */}
                         <Link to="/" className="flex items-center gap-3 group relative">
                             <div className="relative">
                                 <img
-                                    src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/d75f38c7-4d8b-4d07-9e34-9f97ded313dc/AARUNYA-TYPO-resized-1769290270496.webp?width=200&height=200&resize=contain"
+                                    src='../public/aarunya-logo.svg'
                                     alt="Aarunya 2026"
-                                    className="h-16 w-auto transition-transform group-hover:scale-105 duration-300"
+                                    className="h-12 w-auto transition-transform group-hover:scale-105 duration-300"
                                     style={{
                                         imageRendering: 'pixelated',
                                         filter: 'drop-shadow(0 0 12px #ff00ff) drop-shadow(0 0 24px #00ffff)'
@@ -93,7 +95,8 @@ export const MainNavigation = () => {
                             </div>
                         </Link>
 
-                        <div className="hidden lg:flex items-center gap-1.5">
+                        {/* Desktop Navigation Center */}
+                        <div className="hidden lg:flex items-center gap-1.5 flex-1 justify-center">
                             {navLinks.map((link, idx) => {
                                 const isActive = location.pathname === link.path;
                                 const isHovered = hoverIdx === idx;
@@ -150,6 +153,7 @@ export const MainNavigation = () => {
                             })}
                         </div>
 
+                        {/* Mobile Toggle Button on the right */}
                         <button
                             className="lg:hidden relative p-2 transition-all duration-200"
                             onClick={() => setIsOpen(!isOpen)}

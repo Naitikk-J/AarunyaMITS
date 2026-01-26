@@ -1,13 +1,22 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { RetroButton } from './ui/retro-button';
 import { useNavigate } from "react-router-dom";
 
 export const WelcomeSection: React.FC = () => {
     const navigate = useNavigate();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start end", "end start"]
+    });
+
+    // Zoom effect for the WelcomeSection content - more pronounced zoom
+    const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.5, 1, 1.5, 1.8]);
+    const opacity = useTransform(scrollYProgress, [0, 0.1, 0.2, 0.8, 0.9, 1], [0, 0.2, 1, 1, 0.2, 0]);
 
     return (
-        <section className="relative min-h-screen w-full flex flex-col items-center justify-center bg-kidcore-cream py-24 overflow-hidden">
+        <section ref={containerRef} className="relative min-h-screen w-full flex flex-col items-center justify-center bg-kidcore-cream py-24 overflow-hidden">
 
             {/* Gritty Texture Overlay */}
             <div
@@ -53,7 +62,10 @@ export const WelcomeSection: React.FC = () => {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 container mx-auto px-4 flex flex-col items-center">
+            <motion.div 
+                style={{ scale, opacity }}
+                className="relative z-10 container mx-auto px-4 flex flex-col items-center"
+            >
 
                 {/* Heading */}
                 <motion.div
@@ -121,10 +133,12 @@ export const WelcomeSection: React.FC = () => {
                         INFO
                     </RetroButton>
                 </motion.div>
-            </div>
+            </motion.div>
 
             {/* VHS Overlay */}
             <div className="absolute inset-0 pointer-events-none opacity-10 bg-[url('https://media.giphy.com/media/oEI9uWUicG7vA68tV6/giphy.gif')] bg-cover mix-blend-overlay" />
         </section>
     );
 };
+
+import { useRef } from 'react';

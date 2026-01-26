@@ -40,7 +40,11 @@ const Index = () => {
     return (
         <div
             ref={mainRef}
-            className="relative w-full overflow-x-hidden bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] md:bg-fixed bg-local bg-cover bg-center"
+            className="relative w-full overflow-x-hidden bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] bg-local bg-cover bg-center"
+            style={{
+                backgroundAttachment: window.innerWidth >= 768 ? 'fixed' : 'scroll',
+                backgroundSize: window.innerWidth < 768 ? 'auto' : undefined
+            }}
         >
             <MainNavigation />
             <CRTOverlay />
@@ -51,10 +55,10 @@ const Index = () => {
                     <TVIntro />
                 </TVZoom>
 
-                {/* Section 2: Welcome to Aarunya (Standalone Section revealed after TV goes up) */}
+                {/* Section 2: Welcome to Aarunya (Zoom effect as you scroll) */}
                 <WelcomeSection />
 
-                {/* Section 3: The Pac-Man Timeline (Gamified Scroll) */}
+                {/* Section 3: The Pac-Man Timeline (Appears after WelcomeSection zoom) */}
                 <PacmanTimeline />
 
                 {/* Additional sections can be added here if needed */}
