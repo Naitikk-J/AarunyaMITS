@@ -43,15 +43,15 @@ export const MainNavigation = () => {
 
                 <div className="absolute bottom-0 left-0 right-0 h-1 flex">
                     {[...Array(60)].map((_, i) => (
-                        <div 
-                            key={i} 
+                        <div
+                            key={i}
                             className="flex-1 h-full"
                             style={{
-                                background: i % 2 === 0 
-                                    ? 'linear-gradient(to bottom, #ff00ff, #bc13fe)' 
+                                background: i % 2 === 0
+                                    ? 'linear-gradient(to bottom, #ff00ff, #bc13fe)'
                                     : 'linear-gradient(to bottom, #00ffff, #0088ff)',
-                                boxShadow: i % 2 === 0 
-                                    ? '0 0 8px #ff00ff' 
+                                boxShadow: i % 2 === 0
+                                    ? '0 0 8px #ff00ff'
                                     : '0 0 8px #00ffff'
                             }}
                         />
@@ -60,12 +60,12 @@ export const MainNavigation = () => {
 
                 <div className="absolute top-0 left-0 right-0 h-1 flex">
                     {[...Array(60)].map((_, i) => (
-                        <div 
-                            key={i} 
+                        <div
+                            key={i}
                             className="flex-1 h-full"
                             style={{
-                                background: i % 2 === 0 
-                                    ? '#ff00ff' 
+                                background: i % 2 === 0
+                                    ? '#ff00ff'
                                     : '#00ffff',
                                 opacity: 0.6
                             }}
@@ -84,7 +84,7 @@ export const MainNavigation = () => {
                         <Link to="/" className="flex items-center gap-3 group relative">
                             <div className="relative">
                                 <img
-                                    src='../public/aarunya-logo.svg'
+                                    src='/public/aarunya-logo.svg'
                                     alt="Aarunya 2026"
                                     className="h-12 w-auto transition-transform group-hover:scale-105 duration-300"
                                     style={{
@@ -100,7 +100,7 @@ export const MainNavigation = () => {
                             {navLinks.map((link, idx) => {
                                 const isActive = location.pathname === link.path;
                                 const isHovered = hoverIdx === idx;
-                                
+
                                 return (
                                     <Link
                                         key={link.path}
@@ -109,12 +109,12 @@ export const MainNavigation = () => {
                                         onMouseLeave={() => setHoverIdx(null)}
                                         className="relative group"
                                     >
-                                        <div 
+                                        <div
                                             className={cn(
                                                 "relative px-3 py-2.5 font-bold tracking-wider transition-all duration-150",
                                                 "border-2",
-                                                isActive 
-                                                    ? "bg-gradient-to-b from-[#ff00ff] to-[#cc00cc] text-white border-[#ff66ff]" 
+                                                isActive
+                                                    ? "bg-gradient-to-b from-[#ff00ff] to-[#cc00cc] text-white border-[#ff66ff]"
                                                     : isHovered
                                                         ? "bg-gradient-to-b from-[#2a1a4a] to-[#1a0a2e] text-[#00ffff] border-[#00ffff]"
                                                         : "bg-transparent text-[#ff99ff] border-transparent hover:border-[#ff00ff]/50"
@@ -122,12 +122,12 @@ export const MainNavigation = () => {
                                             style={{
                                                 fontFamily: '"Press Start 2P", "Courier New", monospace',
                                                 fontSize: '9px',
-                                                textShadow: isActive 
-                                                    ? '0 0 10px #fff, 2px 2px 0 #880088' 
-                                                    : isHovered 
+                                                textShadow: isActive
+                                                    ? '0 0 10px #fff, 2px 2px 0 #880088'
+                                                    : isHovered
                                                         ? '0 0 10px #00ffff'
                                                         : '1px 1px 0 #440044',
-                                                boxShadow: isActive 
+                                                boxShadow: isActive
                                                     ? 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff'
                                                     : isHovered
                                                         ? 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 10px #00ffff'
@@ -142,7 +142,7 @@ export const MainNavigation = () => {
                                                     <span className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 8px #00ffff' }} />
                                                 </>
                                             )}
-                                            
+
                                             <span className="relative z-10 flex items-center gap-1">
                                                 {isActive && <span className="animate-pulse">►</span>}
                                                 {link.name}
@@ -159,12 +159,12 @@ export const MainNavigation = () => {
                             onClick={() => setIsOpen(!isOpen)}
                             aria-label="Toggle menu"
                             style={{
-                                background: isOpen 
+                                background: isOpen
                                     ? 'linear-gradient(to bottom, #ff00ff, #cc00cc)'
                                     : 'linear-gradient(to bottom, #2a1a4a, #1a0a2e)',
                                 border: '3px solid',
                                 borderColor: isOpen ? '#ff66ff' : '#ff00ff',
-                                boxShadow: isOpen 
+                                boxShadow: isOpen
                                     ? 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff'
                                     : 'inset -2px -2px 0 #0a0510, inset 2px 2px 0 #3a2a5a'
                             }}
@@ -173,7 +173,7 @@ export const MainNavigation = () => {
                             <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#ff00ff]" />
                             <span className="absolute -bottom-1 -left-1 w-2 h-2 bg-[#ff00ff]" />
                             <span className="absolute -bottom-1 -right-1 w-2 h-2 bg-[#00ffff]" />
-                            
+
                             <div className="flex flex-col gap-1" style={{ width: '18px' }}>
                                 <span className={cn(
                                     "block h-[3px] transition-all duration-200",
@@ -202,8 +202,8 @@ export const MainNavigation = () => {
                             background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,0,255,0.05) 2px, rgba(255,0,255,0.05) 4px)'
                         }}
                     />
-                    
-                    <div 
+
+                    <div
                         className="fixed top-24 left-0 right-0 z-50 overflow-hidden"
                         style={{
                             background: 'linear-gradient(to bottom, #1a0a2e, #0d0520)',
@@ -214,9 +214,9 @@ export const MainNavigation = () => {
                         <div className="absolute inset-0 pointer-events-none" style={{
                             background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.03) 2px, rgba(0,255,255,0.03) 4px)'
                         }} />
-                        
+
                         <div className="container mx-auto px-4 py-4 flex flex-col gap-2 max-h-[calc(100vh-96px)] overflow-y-auto relative">
-                            <div 
+                            <div
                                 className="text-center py-2 mb-2"
                                 style={{
                                     fontFamily: '"Press Start 2P", monospace',
@@ -228,10 +228,10 @@ export const MainNavigation = () => {
                             >
                                 ═══ SELECT DESTINATION ═══
                             </div>
-                            
+
                             {navLinks.map((link, idx) => {
                                 const isActive = location.pathname === link.path;
-                                
+
                                 return (
                                     <Link
                                         key={link.path}
@@ -239,7 +239,7 @@ export const MainNavigation = () => {
                                         onClick={() => setIsOpen(false)}
                                         className="relative"
                                     >
-                                        <div 
+                                        <div
                                             className={cn(
                                                 "relative px-4 py-3 transition-all duration-150 flex items-center gap-3",
                                                 "border-2"
@@ -247,15 +247,15 @@ export const MainNavigation = () => {
                                             style={{
                                                 fontFamily: '"Press Start 2P", monospace',
                                                 fontSize: '9px',
-                                                background: isActive 
+                                                background: isActive
                                                     ? 'linear-gradient(to right, #ff00ff, #cc00cc)'
                                                     : 'linear-gradient(to right, #1a0a2e, #2a1a4a)',
                                                 color: isActive ? '#ffffff' : '#ff99ff',
                                                 borderColor: isActive ? '#ff66ff' : '#440044',
-                                                textShadow: isActive 
+                                                textShadow: isActive
                                                     ? '0 0 10px #fff, 2px 2px 0 #880088'
                                                     : '1px 1px 0 #220022',
-                                                boxShadow: isActive 
+                                                boxShadow: isActive
                                                     ? 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff'
                                                     : 'inset -2px -2px 0 #0a0510, inset 2px 2px 0 #2a1a4a'
                                             }}
@@ -268,8 +268,8 @@ export const MainNavigation = () => {
                                                     <span className="absolute -bottom-1 -right-1 w-2 h-2 bg-[#00ffff]" style={{ boxShadow: '0 0 6px #00ffff' }} />
                                                 </>
                                             )}
-                                            
-                                            <span 
+
+                                            <span
                                                 className="w-8 text-center"
                                                 style={{
                                                     color: isActive ? '#00ffff' : '#00ffff',
@@ -278,9 +278,9 @@ export const MainNavigation = () => {
                                             >
                                                 {String(idx + 1).padStart(2, '0')}
                                             </span>
-                                            
+
                                             <span className="flex-1">{link.name}</span>
-                                            
+
                                             {isActive && (
                                                 <span className="animate-pulse" style={{ color: '#00ffff', textShadow: '0 0 8px #00ffff' }}>◄</span>
                                             )}
@@ -288,14 +288,14 @@ export const MainNavigation = () => {
                                     </Link>
                                 );
                             })}
-                            
-                            <div 
+
+                            <div
                                 className="mt-3 pt-3 flex items-center justify-center gap-4"
                                 style={{
                                     borderTop: '2px dashed #ff00ff'
                                 }}
                             >
-                                <span 
+                                <span
                                     className="flex items-center gap-2"
                                     style={{
                                         fontFamily: '"Press Start 2P", monospace',
@@ -307,7 +307,7 @@ export const MainNavigation = () => {
                                     <span className="w-2 h-2 bg-[#00ff00] animate-pulse" style={{ boxShadow: '0 0 8px #00ff00' }} />
                                     ONLINE
                                 </span>
-                                <span 
+                                <span
                                     style={{
                                         fontFamily: '"Press Start 2P", monospace',
                                         fontSize: '7px',
