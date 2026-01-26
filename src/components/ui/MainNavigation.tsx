@@ -82,17 +82,16 @@ export const MainNavigation = () => {
                     <div className="flex items-center justify-between h-24">
                         {/* Logo on the left */}
                         <Link to="/" className="flex items-center gap-3 group relative">
-                            <div className="relative">
-                                <img
-                                    src='/public/aarunya-logo.svg'
-                                    alt="Aarunya 2026"
-                                    className="h-12 w-auto transition-transform group-hover:scale-105 duration-300"
-                                    style={{
-                                        imageRendering: 'pixelated',
-                                        filter: 'drop-shadow(0 0 12px #ff00ff) drop-shadow(0 0 24px #00ffff)'
-                                    }}
-                                />
-                            </div>
+                            <img
+                                src="/aarunya-logo.svg"
+                                alt="Aarunya 2026"
+                                className="h-12 w-auto transition-transform group-hover:scale-105 duration-300"
+                                style={{
+                                    imageRendering: 'pixelated',
+                                    filter: 'drop-shadow(0 0 12px #ff00ff) drop-shadow(0 0 24px #00ffff)',
+                                }}
+                            />
+
                         </Link>
 
                         {/* Desktop Navigation Center */}
