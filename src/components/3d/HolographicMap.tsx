@@ -1,267 +1,207 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Html, Text, Float, Instance, Instances } from '@react-three/drei';
+import { Html, Text, Instance, Instances, ContactShadows, Environment, Stars, Float } from '@react-three/drei';
 import * as THREE from 'three';
+import gsap from 'gsap';
 
 // --- Types ---
 interface BuildingData {
     id: string;
     name: string;
     hindiName: string;
-    // Position: [x, z], Size: [width, length], Height
     position: [number, number];
     size: [number, number];
     height: number;
-    type?: 'complex' | 'simple' | 'landmark';
+    type?: 'complex' | 'simple' | 'landmark' | 'curved';
     icon?: string;
     color?: string;
+    rotationY?: number;
+    description?: string;
+    facilities?: string[];
+    established?: string;
 }
 
-// --- Configuration --- Kidcore Theme
+// --- Configuration --- Realistic & Tech Theme
 const THEME = {
-    primary: '#00A6FF',     // Electric Blue
-    secondary: '#FF5E1F',   // Safety Orange
-    accent: '#FF85C0',      // Bubblegum Pink
-    lime: '#B0FF57',        // Lime Green
-    yellow: '#FFDD33',      // Sunflower Yellow
-    ground: '#FFF9E6',      // Cream Background
-    black: '#1A1A1A',       // Gritty Black
-    glow: '#FF5E1F',        // Orange Glow
-    glassOpacity: 0.2,
-    edgeOpacity: 0.9
+    primary: '#BC13FE',     // Neon Purple (Accent)
+    secondary: '#00FFFF',   // Cyan (Accent)
+    building: '#F0F0F0',    // Concrete
+    roof: '#333333',        // Dark Roof
+    grass: '#2D5A27',       // Natural Green
+    road: '#1A1A1A',        // Asphalt
+    ground: '#050505',      // Dark Base
+    windowColor: '#FFDD33'  // Warm Window Light
 };
 
-// --- Data: Mapped to the Diamond Layout ---
-// The map is rotated 45deg. 
+// --- Data: Campus Layout ---
 const BUILDINGS: BuildingData[] = [
-    // Top Corner
-    { id: 'main-gate', name: 'MITS Main Gate', hindiName: 'मुख्य द्वार', position: [5, -25], size: [4, 2], height: 2, type: 'landmark', icon: '🎓' },
-
-    // Left Wing (Civil/Canteen area)
-    { id: 'old building', name: 'Old Building', hindiName: 'सिविल विभाग', position: [-6, -10], size: [16, 7], height: 2.5, type: 'complex' },
-    { id: 'canteen', name: 'Canteen', hindiName: 'कैंटीन', position: [-15, -12], size: [4, 4], height: 1.5, type: 'simple', icon: '🍽️' },
-    { id: 'AI department', name: 'AI department', hindiName: 'कैंटीन', position: [-3, 4], size: [9, 5], height: 6, type: 'simple', icon: '🍽️' },
-    { id: 'library', name: 'Central Library', hindiName: 'पुस्तकालय', position: [-7, -16], size: [4, 3], height: 3, type: 'complex', icon: '📚' },
-
-    // Center
-    { id: 'golden-garden', name: 'stage ground', hindiName: 'गोल्डन जुबिली गार्डन', position: [-5, -22], size: [15, 6], height: 0.2, type: 'landmark', color: '#FFDD33' },
-    { id: 'golden-garden', name: 'AI ground', hindiName: 'गोल्डन जुबिली गार्डन', position: [-3, -2], size: [9, 7], height: 0.2, type: 'landmark', color: '#B0FF57' },
-    { id: 'golden-garden', name: 'statue ground', hindiName: 'गोल्डन जुबिली गार्डन', position: [15, -18.5], size: [10, 10], height: 0.2, type: 'landmark', color: '#FF85C0' },
-    { id: 'golden-garden', name: 'football ground', hindiName: 'गोल्डन जुबिली गार्डन', position: [-5, 22], size: [30, 15], height: 0.2, type: 'landmark', color: '#00A6FF' },
-
-    // Right Wing (Biotech/Medical)
-    { id: 'biotech', name: 'Biotech Dept', hindiName: 'जैव प्रौद्योगिकी', position: [15, -11], size: [5, 5], height: 2.5, type: 'simple' },
-    { id: 'dispensary', name: 'Dispensary', hindiName: 'औषधालय', position: [15, -4], size: [4, 4], height: 1.5, type: 'simple', icon: 'H' },
-
-    // Bottom Section (Architecture/Main Block)
-    { id: 'architecture', name: 'Architecture Dept', hindiName: 'वास्तुकला', position: [-10, -3], size: [4, 4], height: 2.8, type: 'complex' },
-    { id: 'architecture', name: 'Mechanical Dept', hindiName: 'वास्तुकला', position: [0, -5.5], size: [4, 4], height: 2.8, type: 'complex' },
-    { id: 'golden-garden', name: 'statue', hindiName: 'वास्तुकला', position: [15, -18.5], size: [2, 2], height: 1.5, type: 'simple' },
-    { id: 'golden-garden', name: 'statue', hindiName: 'वास्तुकला', position: [15, -18.5], size: [1, 1], height: 3, type: 'simple' },
-    { id: 'mits-main', name: 'mechanical workshop', hindiName: 'मुख्य भवन', position: [0, 15], size: [7, 5], height: 3.5, type: 'complex', icon: '🏛️' },
-
-    // Bottom Corner
-    { id: 'diamond-gate', name: 'Diamond Jubilee Gate', hindiName: 'डायमंड गेट', position: [-20, 16], size: [4, 1], height: 2, type: 'landmark' },
+    { 
+        id: 'main-gate', 
+        name: 'MITS Main Gate', 
+        hindiName: 'मुख्य द्वार', 
+        position: [5, -25], 
+        size: [4, 2], 
+        height: 2, 
+        type: 'landmark', 
+        icon: '🎓',
+        description: 'The iconic entrance to Madhav Institute of Technology & Science, Gwalior. A symbol of excellence and tradition.',
+        established: '1957',
+        facilities: ['24/7 Security', 'Information Desk', 'Entry/Exit Logs']
+    },
+    { 
+        id: 'old-building', 
+        name: 'Old Building', 
+        hindiName: 'सिविल विभाग', 
+        position: [-6, -10], 
+        size: [16, 7], 
+        height: 4, 
+        type: 'complex',
+        description: 'The historic heart of the campus, housing the Department of Civil Engineering and administrative offices.',
+        established: '1957',
+        facilities: ['Civil Labs', 'Auditorium', 'Admin Block']
+    },
+    { 
+        id: 'canteen', 
+        name: 'Canteen', 
+        hindiName: 'कैंटीन', 
+        position: [-15, -12], 
+        size: [4, 4], 
+        height: 2, 
+        type: 'simple', 
+        icon: '🍽️',
+        description: 'A vibrant hub for students to relax and enjoy a variety of cuisines. The social center of MITS.',
+        facilities: ['Hygienic Kitchen', 'Outdoor Seating', 'Digital Payments']
+    },
+    { 
+        id: 'ai-department', 
+        name: 'AI department', 
+        hindiName: 'एआई विभाग', 
+        position: [-3, 4], 
+        size: [9, 5], 
+        height: 8, 
+        type: 'simple', 
+        icon: '🤖',
+        description: 'State-of-the-art facility dedicated to Artificial Intelligence and Data Science research.',
+        established: '2020',
+        facilities: ['GPU Cluster', 'AI Lab', 'Smart Classrooms']
+    },
+    { 
+        id: 'library', 
+        name: 'Central Library', 
+        hindiName: 'पुस्तकालय', 
+        position: [-15, -16], 
+        size: [3, 3], 
+        height: 5, 
+        type: 'complex', 
+        icon: '📚',
+        description: 'A vast repository of knowledge with over 100,000 books and digital resources.',
+        facilities: ['E-Library', 'Reading Halls', 'Journal Section']
+    },
+    { id: 'stage-ground', name: 'stage ground', hindiName: 'स्टेज ग्राउंड', position: [-5, -22], size: [15, 6], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'ai-ground', name: 'AI ground', hindiName: 'एआई ग्राउंड', position: [-3, -2], size: [9, 7], height: 0.1, type: 'landmark', color: '#3A6B35' },
+    { id: 'statue-ground', name: 'statue ground', hindiName: 'स्टैच्यू ग्राउंड', position: [15, -18.5], size: [10, 10], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'football-ground', name: 'football ground', hindiName: 'फुटबॉल ग्राउंड', position: [-5, 22], size: [30, 15], height: 0.1, type: 'landmark', color: '#1B4D17' },
+    { id: 'biotech', name: 'Biotech Dept', hindiName: 'जैव प्रौद्योगिकी', position: [15, -11], size: [5, 5], height: 3.5, type: 'simple' },
+    { id: 'dispensary', name: 'Dispensary', hindiName: 'औषधालय', position: [15, -4], size: [4, 4], height: 2, type: 'simple', icon: 'H' },
+    { id: 'architecture', name: 'Architecture Dept', hindiName: 'वास्तुकला', position: [-10, -3], size: [4, 4], height: 4, type: 'complex' },
+    { id: 'mechanical-dept', name: 'Mechanical Dept', hindiName: 'मैकेनिकल विभाग', position: [0, -5.5], size: [4, 4], height: 4, type: 'complex' },
+    { id: 'statue-base', name: 'statue base', hindiName: 'स्टैच्यू आधार', position: [15, -18.5], size: [2, 2], height: 1, type: 'simple', color: '#A9A9A9' },
+    { id: 'statue', name: 'statue', hindiName: 'मूर्ति', position: [15, -18.5], size: [0.5, 0.5], height: 3, type: 'simple', color: '#FFD700' },
+    { id: 'mits-main', name: 'mechanical workshop', hindiName: 'मैकेनिकल वर्कशॉप', position: [0, 15], size: [7, 5], height: 5, type: 'complex', icon: '⚙️' },
+    { id: 'diamond-gate', name: 'Diamond Jubilee Gate', hindiName: 'डायमंड गेट', position: [-20, 16], size: [4, 1], height: 3, type: 'landmark', rotationY: Math.PI / 2 },
 ];
+
 
 const ROADS = [
-    // The Square/Diamond Perimeter
-    { points: [[-16, -20], [16, -20], [16, 20], [-16, 20], [-16, -20]] }, // Outer Loop
-    { points: [[-18, -18], [18, 18]] }, // Diagonal Cross (Sun City to Gate)
-    { points: [[-5, -5], [5, -5], [5, 5], [-5, 5], [-5, -5]] }, // Inner Garden Loop
-
-    // Road from MITS Main Gate to campus center
-    { points: [[5, -25], [5, -20], [0, -10]] }, // Main gate entry road connecting to Old Building
+    { start: [-20, -20], end: [20, -20], width: 2 },
+    { start: [20, -20], end: [20, 20], width: 2 },
+    { start: [20, 20], end: [-20, 20], width: 2 },
+    { start: [-20, 20], end: [-20, -20], width: 2 },
+    { start: [0, -25], end: [0, 25], width: 1.5 },
+    { start: [-25, 0], end: [25, 0], width: 1.5 },
 ];
 
-// --- Components ---
+// --- Helper: Texture Generation ---
+const generateTextures = () => {
+    const windowCanvas = document.createElement('canvas');
+    windowCanvas.width = 128; windowCanvas.height = 128;
+    const wctx = windowCanvas.getContext('2d')!;
+    wctx.fillStyle = '#FFFFFF'; wctx.fillRect(0,0,128,128);
+    wctx.fillStyle = '#222222';
+    for(let x=10; x<120; x+=25) for(let y=10; y<120; y+=25) wctx.fillRect(x,y,15,15);
+    const windowTexture = new THREE.CanvasTexture(windowCanvas);
+    windowTexture.wrapS = windowTexture.wrapT = THREE.RepeatWrapping;
+    windowTexture.repeat.set(2, 2);
 
-/**
- * Enhanced Realistic Holographic Material
- * Better material properties for more realistic rendering
- */
-const HoloMaterial = ({ hovered, color = THEME.primary }: { hovered: boolean, color?: string }) => (
-    <meshPhysicalMaterial
-        color={color}
-        emissive={color}
-        emissiveIntensity={hovered ? 0.6 : 0.1}
-        roughness={0.25}
-        metalness={0.6}
-        transmission={0.4}
-        thickness={1.5}
-        transparent
-        opacity={hovered ? 0.8 : 0.35}
-        side={THREE.DoubleSide}
-        envMapIntensity={0.8}
-        ior={1.5}
-    />
-);
+    const roadCanvas = document.createElement('canvas');
+    roadCanvas.width = 256; roadCanvas.height = 256;
+    const rctx = roadCanvas.getContext('2d')!;
+    rctx.fillStyle = '#1A1A1A'; rctx.fillRect(0,0,256,256);
+    rctx.strokeStyle = '#555555'; rctx.setLineDash([10, 10]); rctx.lineWidth = 4;
+    rctx.beginPath(); rctx.moveTo(128,0); rctx.lineTo(128,256); rctx.stroke();
+    const roadTexture = new THREE.CanvasTexture(roadCanvas);
+    roadTexture.wrapS = roadTexture.wrapT = THREE.RepeatWrapping;
 
-/**
- * Renders the glowing neon edges of a building
- */
-const NeonEdges = ({ geometry, color = THEME.primary }: { geometry: THREE.BufferGeometry, color?: string }) => {
-    return (
-        <lineSegments>
-            <edgesGeometry args={[geometry]} />
-            <lineBasicMaterial color={color} transparent opacity={THEME.edgeOpacity} linewidth={2} />
-        </lineSegments>
-    );
+    return { window: windowTexture, road: roadTexture };
 };
 
-const Building = ({ data, onHover, onClick, showLabels = false }: { data: BuildingData, onHover: any, onClick: any, showLabels?: boolean }) => {
+// --- Sub-Components ---
+
+const Building = ({ data, onHover, onClick, showLabels, textures, visualMode }: any) => {
     const mesh = useRef<THREE.Mesh>(null);
     const [hovered, setHover] = useState(false);
 
-    // Create specific geometries based on "type" to mimic the satellite map shapes
     const geometry = useMemo(() => {
         if (data.type === 'complex') {
-            // Creates a hollow-ish building (Courtyard style) with beveled corners
             const shape = new THREE.Shape();
-            const w = data.size[0] / 2;
-            const h = data.size[1] / 2;
-            const bevel = 0.3;
-
-            // Outer rectangle with beveled corners
-            shape.moveTo(-w + bevel, -h);
-            shape.lineTo(w - bevel, -h);
-            shape.quadraticCurveTo(w, -h, w, -h + bevel);
-            shape.lineTo(w, h - bevel);
-            shape.quadraticCurveTo(w, h, w - bevel, h);
-            shape.lineTo(-w + bevel, h);
-            shape.quadraticCurveTo(-w, h, -w, h - bevel);
-            shape.lineTo(-w, -h + bevel);
-            shape.quadraticCurveTo(-w, -h, -w + bevel, -h);
-
-            // Inner hole (Courtyard) with beveled corners
-            const holePath = new THREE.Path();
-            const pad = 1.2;
-            holePath.moveTo(-w + pad + 0.2, -h + pad);
-            holePath.lineTo(w - pad - 0.2, -h + pad);
-            holePath.quadraticCurveTo(w - pad, -h + pad, w - pad, -h + pad + 0.2);
-            holePath.lineTo(w - pad, h - pad - 0.2);
-            holePath.quadraticCurveTo(w - pad, h - pad, w - pad - 0.2, h - pad);
-            holePath.lineTo(-w + pad + 0.2, h - pad);
-            holePath.quadraticCurveTo(-w + pad, h - pad, -w + pad, h - pad - 0.2);
-            holePath.lineTo(-w + pad, -h + pad + 0.2);
-            holePath.quadraticCurveTo(-w + pad, -h + pad, -w + pad + 0.2, -h + pad);
-            shape.holes.push(holePath);
-
-            return new THREE.ExtrudeGeometry(shape, { depth: data.height, bevelEnabled: true, bevelThickness: 0.15, bevelSize: 0.1, bevelSegments: 3 });
-        } else if (data.id === 'main-gate' || data.id === 'diamond-gate') {
-            // Archway shape with more detail
-            return new THREE.TorusGeometry(data.size[0] / 3, 0.35, 16, 32, Math.PI);
+            const [w, h] = [data.size[0] / 2, data.size[1] / 2];
+            shape.moveTo(-w, -h); shape.lineTo(w, -h); shape.lineTo(w, h); shape.lineTo(-w, h);
+            const hole = new THREE.Path();
+            const p = 1.2; hole.moveTo(-w+p, -h+p); hole.lineTo(w-p, -h+p); hole.lineTo(w-p, h-p); hole.lineTo(-w+p, h-p);
+            shape.holes.push(hole);
+            return new THREE.ExtrudeGeometry(shape, { depth: data.height, bevelEnabled: true, bevelThickness: 0.05 });
         }
-        // Default Box with better proportions
-        return new THREE.BoxGeometry(data.size[0], data.height, data.size[1], 4, 8, 4);
+        return new THREE.BoxGeometry(data.size[0], data.height, data.size[1]);
     }, [data]);
-
-    useFrame((state) => {
-        if (!mesh.current) return;
-        // Float animation
-        const t = state.clock.getElapsedTime();
-        mesh.current.position.y = (data.height / 2) + Math.sin(t * 2 + data.position[0]) * 0.1;
-
-        // Rotation for archways
-        if (data.id.includes('gate')) {
-            mesh.current.rotation.x = 0; // Reset default rotation for torus
-        }
-    });
-
-    const handlePointerOver = (e: any) => {
-        e.stopPropagation();
-        setHover(true);
-        onHover(data.id);
-        document.body.style.cursor = 'pointer';
-    };
-
-    const handlePointerOut = () => {
-        setHover(false);
-        onHover(null);
-        document.body.style.cursor = 'default';
-    };
 
     return (
         <group position={[data.position[0], 0, data.position[1]]}>
-            {/* The Building Mesh */}
             <mesh
                 ref={mesh}
                 geometry={geometry}
-                onPointerOver={handlePointerOver}
-                onPointerOut={handlePointerOut}
+                rotation={[data.type === 'complex' ? -Math.PI / 2 : 0, data.rotationY || 0, 0]}
+                position={[0, data.height / 2, 0]}
+                onPointerOver={(e) => { e.stopPropagation(); setHover(true); onHover(data.id); }}
+                onPointerOut={() => { setHover(false); onHover(null); }}
                 onClick={() => onClick(data.id)}
-                rotation={[data.type === 'complex' ? -Math.PI / 2 : 0, 0, 0]} // Rotate extruded geo
+                castShadow
+                receiveShadow
             >
-                <HoloMaterial hovered={hovered} color={data.color} />
-                <NeonEdges geometry={geometry} color={data.color || THEME.primary} />
+                {visualMode === 'wireframe' ? (
+                    <meshBasicMaterial color={THEME.primary} wireframe />
+                ) : (
+                    <meshStandardMaterial
+                        map={textures.window}
+                        color={data.color || THEME.building}
+                        roughness={0.4}
+                        metalness={0.1}
+                        emissive={hovered ? THEME.primary : '#000000'}
+                        emissiveIntensity={0.2}
+                    />
+                )}
             </mesh>
+            
+            {data.type === 'complex' && visualMode !== 'wireframe' && (
+                <mesh position={[0, data.height, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <planeGeometry args={[data.size[0], data.size[1]]} />
+                    <meshStandardMaterial color={THEME.roof} roughness={0.9} />
+                </mesh>
+            )}
 
-            {/* Base Glow Plate */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
-                <planeGeometry args={[data.size[0] * 1.2, data.size[1] * 1.2]} />
-                <meshBasicMaterial
-                    color={data.color || THEME.primary}
-                    transparent
-                    opacity={hovered ? 0.3 : 0.05}
-                />
-            </mesh>
-
-            {/* Building Name - Visible After Loading */}
             {showLabels && (
-                <Html
-                    position={[0, data.height + 1.5, 0]}
-                    center
-                    distanceFactor={20}
-                    zIndexRange={[1000, 0]}
-                    occlude="blended"
-                >
-                    <div style={{
-                        background: 'rgba(0, 166, 255, 0.85)',
-                        border: '2px solid #1A1A1A',
-                        padding: '6px 12px',
-                        borderRadius: '8px',
-                        color: '#1A1A1A',
-                        fontFamily: 'Orbitron, sans-serif',
-                        textAlign: 'center',
-                        backdropFilter: 'blur(8px)',
-                        boxShadow: `0 0 20px rgba(255, 94, 31, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.2)`,
-                        fontSize: '0.85em',
-                        fontWeight: 'bold',
-                        whiteSpace: 'nowrap',
-                        pointerEvents: 'none',
-                        transform: 'translateZ(100px)',
-                        textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
-                    }}>
-                        <div style={{ fontSize: '1em', color: '#1A1A1A', letterSpacing: '0.5px' }}>
-                            {data.name}
-                        </div>
-                        {data.hindiName && (
-                            <div style={{ fontSize: '0.75em', color: '#FF5E1F', marginTop: '2px', letterSpacing: '0.3px' }}>
-                                {data.hindiName}
-                            </div>
-                        )}
-                    </div>
-                </Html>
-            )}
-
-            {/* Enhanced Hover Label */}
-            {hovered && (
-                <Html position={[0, data.height + 3.5, 0]} center distanceFactor={20} zIndexRange={[1000, 0]} occlude="blended">
-                    <div style={{
-                        background: 'rgba(255, 85, 192, 0.95)',
-                        border: '3px solid #1A1A1A',
-                        padding: '10px 16px',
-                        borderRadius: '12px',
-                        color: '#1A1A1A',
-                        fontFamily: 'Orbitron, sans-serif',
-                        textAlign: 'center',
-                        backdropFilter: 'blur(12px)',
-                        boxShadow: '0 0 30px rgba(255, 85, 192, 0.8), 0 0 60px rgba(255, 94, 31, 0.4)',
-                        fontSize: '0.95em',
-                        fontWeight: 'bold'
-                    }}>
-                        <div style={{ fontSize: '1.1em', fontWeight: 'bold' }}>📍 {data.icon || '🏢'} {data.name}</div>
-                        <div style={{ fontSize: '0.75em', marginTop: '4px', opacity: 0.8 }}>{data.type?.toUpperCase()}</div>
+                <Html position={[0, data.height + 1.5, 0]} center distanceFactor={15}>
+                    <div className="px-3 py-1 bg-black/80 backdrop-blur-md border border-white/20 rounded-full text-[10px] text-white whitespace-nowrap font-orbitron shadow-xl pointer-events-none">
+                        <span className="text-primary mr-1">●</span> {data.name}
                     </div>
                 </Html>
             )}
@@ -269,231 +209,149 @@ const Building = ({ data, onHover, onClick, showLabels = false }: { data: Buildi
     );
 };
 
-const HoloRoads = () => {
-    // Convert points to Three vectors
-    const lines = useMemo(() => {
-        return ROADS.map(road => {
-            const points = road.points.map(p => new THREE.Vector3(p[0], 0.05, p[1]));
-            return new THREE.BufferGeometry().setFromPoints(points);
-        });
-    }, []);
+const RealisticFoliage = ({ count = 80 }: { count?: number }) => {
+    const trunkGeo = useMemo(() => new THREE.CylinderGeometry(0.1, 0.15, 0.8), []);
+    const leafGeo = useMemo(() => new THREE.SphereGeometry(0.6, 8, 8), []);
+    const trunkMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#402905' }), []);
+    const leafMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#1B4D17', roughness: 0.9 }), []);
 
-    return (
-        <group>
-            {/* Main road lines - Electric Blue glowing roads */}
-            {lines.map((geo, i) => (
-                <group key={i}>
-                    {/* Primary glowing line */}
-                    <lineSegments geometry={geo}>
-                        <lineBasicMaterial color="#00A6FF" transparent opacity={0.8} linewidth={2} />
-                    </lineSegments>
-
-                    {/* Secondary glow effect - Orange */}
-                    <lineSegments geometry={geo}>
-                        <lineBasicMaterial color="#FF5E1F" transparent opacity={0.3} linewidth={4} />
-                    </lineSegments>
-                </group>
-            ))}
-
-            {/* Animated road markers along paths */}
-            {ROADS.map((road, roadIdx) =>
-                road.points.slice(0, -1).map((point, pointIdx) => (
-                    <mesh
-                        key={`marker-${roadIdx}-${pointIdx}`}
-                        position={[point[0], 0.1, point[1]]}
-                        scale={[0.3, 0.1, 0.3]}
-                    >
-                        <boxGeometry args={[1, 1, 1]} />
-                        <meshBasicMaterial color="#B0FF57" transparent opacity={0.6} />
-                    </mesh>
-                ))
-            )}
-        </group>
-    );
-};
-
-const SciFiBase = () => {
-    // The "Projector" look at the bottom
-    return (
-        <group position={[0, -2, 0]}>
-            {/* Main Cylinder Base */}
-            <mesh position={[0, 1, 0]}>
-                <cylinderGeometry args={[28, 20, 2, 64]} />
-                <meshStandardMaterial color="#021014" metalness={0.8} roughness={0.2} />
-            </mesh>
-
-            {/* Glowing Ring */}
-            <mesh position={[0, 2.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                <ringGeometry args={[26, 27, 64]} />
-                <meshBasicMaterial color={THEME.primary} transparent opacity={0.5} side={THREE.DoubleSide} />
-            </mesh>
-
-            {/* Inner Grid Floor */}
-            <gridHelper args={[60, 60, THEME.secondary, '#022026']} position={[0, 2.05, 0]} />
-
-            {/* Decorative Outer Rings */}
-            <mesh position={[0, 0.5, 0]}>
-                <torusGeometry args={[25, 0.5, 16, 100]} />
-                <meshStandardMaterial color="#004455" />
-            </mesh>
-        </group>
-    );
-};
-
-const HolographicTrees = () => {
-    // Use Instances for better performance with many trees
-    const count = 80;
-    const trees = useMemo(() => {
-        const temp = [];
-        // Scatter trees around the campus in clusters
-        for (let i = 0; i < count; i++) {
+    const positions = useMemo(() => {
+        return Array.from({ length: count }, () => {
             const angle = Math.random() * Math.PI * 2;
-            const r = 8 + Math.random() * 18; // scattered around perimeter and throughout
-            const scale = 0.6 + Math.random() * 0.8;
-            temp.push({
-                position: [Math.cos(angle) * r, 0, Math.sin(angle) * r] as [number, number, number],
-                scale: scale,
-                colorVariant: Math.floor(Math.random() * 3) // For color variation
-            });
-        }
-        return temp;
-    }, []);
-
-    const treeColors = [
-        '#B0FF57',    // Lime Green - primary
-        '#00A6FF',    // Electric Blue - accent
-        '#FF85C0',    // Bubblegum Pink - accent
-    ];
+            const r = 22 + Math.random() * 8;
+            return [Math.cos(angle) * r, 0, Math.sin(angle) * r];
+        });
+    }, [count]);
 
     return (
         <group>
-            {/* Large cone-shaped holographic trees */}
-            {trees.map((data, i) => {
-                const treeColor = treeColors[data.colorVariant];
+            <Instances geometry={trunkGeo} material={trunkMat}>
+                {positions.map((p, i) => <Instance key={i} position={[p[0], 0.4, p[2]]} />)}
+            </Instances>
+            <Instances geometry={leafGeo} material={leafMat}>
+                {positions.map((p, i) => <Instance key={i} position={[p[0], 1.2, p[2]]} scale={[1, 1.2, 1]} />)}
+            </Instances>
+        </group>
+    );
+};
+
+const Roads = ({ textures }: any) => {
+    return (
+        <group>
+            {ROADS.map((r, i) => {
+                const dx = r.end[0] - r.start[0];
+                const dz = r.end[1] - r.start[1];
+                const len = Math.sqrt(dx*dx + dz*dz);
+                const angle = Math.atan2(dz, dx);
                 return (
-                    <group key={i} position={data.position}>
-                        {/* Main tree cone */}
-                        <mesh scale={[data.scale, data.scale * 1.5, data.scale]} castShadow>
-                            <coneGeometry args={[0.8, 2, 8]} />
-                            <meshPhysicalMaterial
-                                color={treeColor}
-                                emissive={treeColor}
-                                emissiveIntensity={0.4}
-                                transparent
-                                opacity={0.7}
-                                metalness={0.3}
-                                roughness={0.6}
-                            />
-                        </mesh>
-
-                        {/* Glowing tree outline */}
-                        <mesh scale={[data.scale * 1.05, data.scale * 1.55, data.scale * 1.05]}>
-                            <coneGeometry args={[0.8, 2, 8]} />
-                            <meshBasicMaterial
-                                color={treeColor}
-                                transparent
-                                opacity={0.3}
-                                wireframe
-                            />
-                        </mesh>
-
-                        {/* Tree trunk - darker base */}
-                        <mesh position={[0, -0.5, 0]} scale={[data.scale * 0.3, data.scale * 0.8, data.scale * 0.3]}>
-                            <cylinderGeometry args={[0.4, 0.5, 1, 4]} />
-                            <meshStandardMaterial
-                                color="#1A1A1A"
-                                emissive="#FF5E1F"
-                                emissiveIntensity={0.2}
-                            />
-                        </mesh>
-                    </group>
+                    <mesh key={i} position={[(r.start[0]+r.end[0])/2, 0.02, (r.start[1]+r.end[1])/2]} rotation={[-Math.PI/2, 0, -angle]} receiveShadow>
+                        <planeGeometry args={[len, r.width]} />
+                        <meshStandardMaterial map={textures.road} transparent opacity={0.9} />
+                    </mesh>
                 );
             })}
-
-            {/* Ambient tree particles for depth */}
-            <group>
-                {trees.slice(0, 20).map((data, i) => (
-                    <mesh
-                        key={`particle-${i}`}
-                        position={[data.position[0], 1 + Math.random() * 2, data.position[2]]}
-                        scale={[0.2, 0.2, 0.2]}
-                    >
-                        <sphereGeometry args={[1, 4, 4]} />
-                        <meshBasicMaterial
-                            color={treeColors[i % 3]}
-                            transparent
-                            opacity={0.4}
-                        />
-                    </mesh>
-                ))}
-            </group>
         </group>
     );
 };
 
-// --- Main Export ---
+const Streetlights = ({ count = 12 }: { count?: number }) => {
+    const poleGeo = useMemo(() => new THREE.CylinderGeometry(0.05, 0.05, 2.5), []);
+    const lightGeo = useMemo(() => new THREE.SphereGeometry(0.15, 8, 8), []);
+    const poleMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#333333' }), []);
+    const lightMat = useMemo(() => new THREE.MeshBasicMaterial({ color: '#FFDD33' }), []);
 
-export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading = false }: { onBuildingHover: (id: string | null) => void, onBuildingClick: (id: string) => void, isLoading?: boolean }) {
-    // Rotation logic to match the "Diamond" orientation in the image
-    // The reference image is isometric (Diamond shape). 
-    // We rotate the whole content by 45 degrees (Math.PI / 4)
+    const positions = useMemo(() => [
+        [-18, 0, -18], [18, 0, 18], [0, 0, 22], [0, 0, -22]
+    ], []);
 
+    return (
+        <group>
+            <Instances geometry={poleGeo} material={poleMat}>
+                {positions.map((p, i) => <Instance key={i} position={[p[0], 1.25, p[2]]} />)}
+            </Instances>
+            <Instances geometry={lightGeo} material={lightMat}>
+                {positions.map((p, i) => (
+                    <Instance key={i} position={[p[0], 2.5, p[2]]} />
+                ))}
+            </Instances>
+            {positions.map((p, i) => (
+                <pointLight key={i} position={[p[0], 2.5, p[2]]} intensity={0.8} distance={10} color="#FFDD33" />
+            ))}
+        </group>
+    );
+};
+
+// --- Main Component ---
+
+export function HolographicMap({ onBuildingHover, onBuildingClick, isLoading, visualMode = 'normal' }: any) {
     const [showLabels, setShowLabels] = useState(false);
+    const textures = useMemo(() => generateTextures(), []);
 
     useEffect(() => {
-        if (!isLoading) {
-            // Show labels 0.5s after loading completes
-            const timer = setTimeout(() => setShowLabels(true), 500);
-            return () => clearTimeout(timer);
-        } else {
-            setShowLabels(false);
-        }
+        const timer = setTimeout(() => setShowLabels(!isLoading), 1500);
+        return () => clearTimeout(timer);
     }, [isLoading]);
 
     return (
         <group>
-            {/* Adjust lighting for Hologram effect */}
-            <ambientLight intensity={0.2} />
-            <pointLight position={[10, 20, 10]} intensity={1} color={THEME.primary} distance={50} />
-            <pointLight position={[-10, 20, -10]} intensity={0.5} color="#00ffaa" distance={50} />
-
-            {/* Projector Base */}
-            <SciFiBase />
-
-            {/* The Map Content - Rotated to form Diamond shape */}
-            <group rotation={[0, Math.PI / 4, 0]} position={[0, 0.5, 0]}>
-
-                {/* Ground Plane (Invisible hit target or subtle glow) */}
+            <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+            <Environment preset="city" />
+            <ContactShadows
+                position={[0, 0, 0]}
+                opacity={0.4}
+                scale={60}
+                blur={2.5}
+                far={10}
+                resolution={256}
+                color="#000000"
+                frames={1}
+            />
+            
+            <group rotation={[0, Math.PI / 4, 0]}>
+                {/* Ground */}
                 <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                    <circleGeometry args={[30, 64]} />
-                    <meshBasicMaterial color={THEME.ground} transparent opacity={0.9} />
+                    <circleGeometry args={[35, 64]} />
+                    <meshStandardMaterial color={THEME.ground} roughness={0.8} metalness={0.1} />
                 </mesh>
 
-                <HoloRoads />
-                <HolographicTrees />
+                {/* Grass Areas */}
+                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+                    <circleGeometry args={[34.8, 64]} />
+                    <meshStandardMaterial color={THEME.grass} roughness={1} />
+                </mesh>
 
-                {BUILDINGS.map((building) => (
+                <Roads textures={textures} />
+                <RealisticFoliage count={50} />
+                <Streetlights />
+
+                {BUILDINGS.map((b) => (
                     <Building
-                        key={building.id}
-                        data={building}
+                        key={b.id}
+                        data={b}
                         onHover={onBuildingHover}
                         onClick={onBuildingClick}
                         showLabels={showLabels}
+                        textures={textures}
+                        visualMode={visualMode}
                     />
                 ))}
 
-                {/* Street Names floating */}
-                <Text
-                    position={[-22, 1, 0]}
-                    rotation={[-Math.PI / 2, 0, Math.PI / 2]}
-                    fontSize={1.5}
-                    color={THEME.primary}
-                >
+                <Text position={[-25, 0.1, 0]} rotation={[-Math.PI/2, 0, Math.PI/2]} fontSize={1.5} color={THEME.primary}>
                     MELA ROAD
                 </Text>
-
-
             </group>
+
+            {/* Base Design */}
+            <mesh position={[0, -0.6, 0]}>
+                <cylinderGeometry args={[36, 35, 1, 64]} />
+                <meshStandardMaterial color="#111111" metalness={0.9} roughness={0.1} />
+            </mesh>
+            <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                <ringGeometry args={[35.1, 35.5, 64]} />
+                <meshBasicMaterial color={THEME.primary} transparent opacity={0.3} />
+            </mesh>
         </group>
     );
 }
+
+export { BUILDINGS };

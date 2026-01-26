@@ -1,250 +1,189 @@
 import { MainNavigation } from '@/components/ui/MainNavigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+
+const teamMembers = [
+  {
+    name: 'CORE_DEVELOPER_01',
+    role: 'FRONTEND_ENGINEER',
+    icon: '⚡',
+    contribution: 'Pixel-art UI components and scroll-driven engine.',
+  },
+  {
+    name: 'CORE_DEVELOPER_02',
+    role: 'BACKEND_ARCHITECT',
+    icon: '🔧',
+    contribution: 'Secure data pipelines and event logic infrastructure.',
+  },
+  {
+    name: 'DESIGN_LEAD',
+    role: 'UI/UX DESIGNER',
+    icon: '🎨',
+    contribution: 'Visual identity, branding, and interface design.',
+  },
+  {
+    name: 'PROJECT_LEAD',
+    role: 'COORDINATOR',
+    icon: '👑',
+    contribution: 'Team management and strategic planning.',
+  },
+];
+
+const technologies = [
+  'REACT', 'TYPESCRIPT', 'TAILWIND', 'VITE', 'GSAP', 'FRAMER_MOTION', 'PIXEL_FONTS'
+];
+
+const stats = [
+  { label: 'YEARS ACTIVE', value: '15+' },
+  { label: 'EVENTS HOSTED', value: '200+' },
+  { label: 'PARTICIPANTS', value: '50K+' },
+  { label: 'SPONSORS', value: '100+' },
+];
 
 const AboutUs = () => {
-    const teamMembers = [
-        {
-            name: 'Alex Chen',
-            role: 'Lead Developer',
-            department: 'Computer Science',
-            year: 'Senior',
-            bio: 'Passionate about creating immersive digital experiences and pushing the boundaries of web technology.',
-            skills: ['React', 'Three.js', 'TypeScript', 'UI/UX'],
-            avatar: '🧑‍💻'
-        },
-        {
-            name: 'Maya Rodriguez',
-            role: '3D Graphics Specialist',
-            department: 'Digital Arts',
-            year: 'Junior',
-            bio: 'Combining artistic vision with technical expertise to create stunning 3D environments and animations.',
-            skills: ['Blender', 'WebGL', 'Shaders', 'Animation'],
-            avatar: '👩‍🎨'
-        },
-        {
-            name: 'Jordan Kim',
-            role: 'UX Designer',
-            department: 'Human-Computer Interaction',
-            year: 'Senior',
-            bio: 'Focused on creating intuitive and accessible interfaces that enhance user experience and engagement.',
-            skills: ['Figma', 'User Research', 'Prototyping', 'Accessibility'],
-            avatar: '🧑‍🎨'
-        },
-        {
-            name: 'Sam Taylor',
-            role: 'Backend Developer',
-            department: 'Software Engineering',
-            year: 'Junior',
-            bio: 'Building robust and scalable systems to support our interactive campus exploration platform.',
-            skills: ['Node.js', 'Database', 'APIs', 'Cloud Services'],
-            avatar: '👨‍💻'
-        }
-    ];
+  return (
+    <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black">
+      <MainNavigation />
 
-    const technologies = [
-        { name: 'React 18', category: 'Frontend', description: 'Modern UI framework' },
-        { name: 'Three.js', category: '3D Graphics', description: 'WebGL-based 3D library' },
-        { name: 'TypeScript', category: 'Language', description: 'Type-safe JavaScript' },
-        { name: 'Tailwind CSS', category: 'Styling', description: 'Utility-first CSS framework' },
-        { name: 'Vite', category: 'Build Tool', description: 'Fast development server' },
-        { name: 'React Router', category: 'Navigation', description: 'Client-side routing' }
-    ];
+      <div className="relative pt-40 pb-20 text-center">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
+        <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
+          ABOUT US
+        </h1>
+        <div className="h-1 w-[120px] bg-primary mx-auto shadow-neon" />
+        <p className="mt-8 text-sm md:text-base font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60 max-w-3xl mx-auto px-6">
+          // DOCUMENTATION ON THE CREATORS AND THE TECHNOLOGY
+        </p>
+      </div>
 
-    const achievements = [
-        {
-            title: 'Best Innovation Award',
-            year: '2024',
-            description: 'Recognized for creating an immersive campus exploration experience'
-        },
-        {
-            title: 'Student Project Excellence',
-            year: '2023',
-            description: 'Outstanding technical implementation and user experience design'
-        },
-        {
-            title: 'Campus Impact Recognition',
-            year: '2023',
-            description: 'Significant contribution to campus community engagement'
-        }
-    ];
-
-    return (
-        <div className="min-h-screen bg-background">
-            <MainNavigation />
-
-            {/* Header */}
-            <div className="relative overflow-hidden bg-gradient-to-b from-primary/20 to-transparent py-16">
-                <div className="absolute inset-0 scanlines opacity-10" />
-                <div className="container mx-auto px-6 relative z-10">
-                    <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                        ABOUT US
-                    </h1>
-                    <p className="text-xl text-center text-muted-foreground font-rajdhani max-w-3xl mx-auto">
-                        Meet the team behind Euphoria Campus Explorer and discover our mission to create immersive digital experiences
-                    </p>
-                </div>
-            </div>
-
-            <div className="container mx-auto px-6 py-12">
-                {/* Mission Statement */}
-                <div className="mb-16">
-                    <Card className="border-secondary/30 bg-card/80 backdrop-blur-sm">
-                        <CardHeader>
-                            <CardTitle className="font-orbitron text-2xl text-primary text-center">
-                                Our Mission
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-center text-lg text-muted-foreground font-rajdhani max-w-4xl mx-auto leading-relaxed">
-                                We believe in pushing the boundaries of digital interaction by creating immersive,
-                                accessible, and engaging experiences that bring campus life to life. Our goal is to
-                                bridge the gap between physical and digital spaces, making exploration intuitive and fun.
-                            </p>
-                        </CardContent>
-                    </Card>
-                </div>
-
-                {/* Team Section */}
-                <div className="mb-16">
-                    <h2 className="text-3xl font-orbitron font-bold text-center mb-12 text-primary">
-                        MEET THE TEAM
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {teamMembers.map((member, index) => (
-                            <Card key={index} className="group relative overflow-hidden border-secondary/30 bg-card/80 backdrop-blur-sm hover:border-primary/50 transition-all duration-300">
-                                <div className="h-32 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center relative overflow-hidden">
-                                    <div className="absolute inset-0 scanlines opacity-20" />
-                                    <div className="text-6xl">{member.avatar}</div>
-                                </div>
-
-                                <CardHeader>
-                                    <CardTitle className="font-orbitron text-lg text-primary">
-                                        {member.name}
-                                    </CardTitle>
-                                    <CardDescription className="font-rajdhani">
-                                        {member.role}
-                                    </CardDescription>
-                                    <div className="text-sm text-muted-foreground font-mono">
-                                        {member.department} • {member.year}
-                                    </div>
-                                </CardHeader>
-
-                                <CardContent>
-                                    <p className="text-muted-foreground font-rajdhani text-sm mb-4">
-                                        {member.bio}
-                                    </p>
-
-                                    <div className="flex flex-wrap gap-1">
-                                        {member.skills.map((skill, skillIndex) => (
-                                            <Badge key={skillIndex} variant="outline" className="font-mono text-xs">
-                                                {skill}
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                </CardContent>
-
-                                {/* Hover effect */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Technologies Used */}
-                <div className="mb-16">
-                    <h2 className="text-3xl font-orbitron font-bold text-center mb-12 text-primary">
-                        TECHNOLOGIES WE USE
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {technologies.map((tech, index) => (
-                            <Card key={index} className="border-secondary/30 bg-card/80 backdrop-blur-sm hover:border-primary/50 transition-all duration-300">
-                                <CardHeader>
-                                    <CardTitle className="font-orbitron text-lg text-primary">
-                                        {tech.name}
-                                    </CardTitle>
-                                    <Badge variant="outline" className="font-mono text-xs">
-                                        {tech.category}
-                                    </Badge>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-muted-foreground font-rajdhani text-sm">
-                                        {tech.description}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Achievements */}
-                <div className="mb-16">
-                    <h2 className="text-3xl font-orbitron font-bold text-center mb-12 text-primary">
-                        ACHIEVEMENTS
-                    </h2>
-                    <div className="space-y-6">
-                        {achievements.map((achievement, index) => (
-                            <Card key={index} className="border-secondary/30 bg-card/80 backdrop-blur-sm">
-                                <CardHeader>
-                                    <div className="flex items-center justify-between">
-                                        <CardTitle className="font-orbitron text-lg text-primary">
-                                            {achievement.title}
-                                        </CardTitle>
-                                        <Badge variant="outline" className="font-mono text-sm">
-                                            {achievement.year}
-                                        </Badge>
-                                    </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-muted-foreground font-rajdhani">
-                                        {achievement.description}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Contact & Collaboration */}
-                <div className="mb-16">
-                    <Card className="border-secondary/30 bg-card/80 backdrop-blur-sm">
-                        <CardHeader>
-                            <CardTitle className="font-orbitron text-2xl text-primary text-center">
-                                Let's Collaborate
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-center">
-                                <p className="text-muted-foreground font-rajdhani mb-6 max-w-3xl mx-auto">
-                                    Interested in joining our team or have an idea for collaboration?
-                                    We're always looking for passionate individuals who want to create amazing digital experiences.
-                                </p>
-                                <div className="flex flex-wrap justify-center gap-4">
-                                    <Button className="font-orbitron text-sm tracking-wider">
-                                        JOIN THE TEAM
-                                    </Button>
-                                    <Button variant="outline" className="font-orbitron text-sm tracking-wider">
-                                        COLLABORATE
-                                    </Button>
-                                    <Button variant="outline" className="font-orbitron text-sm tracking-wider">
-                                        GIVE FEEDBACK
-                                    </Button>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
-
-            {/* Footer decoration */}
-            <div className="fixed bottom-6 left-6 w-20 h-0.5 bg-gradient-to-r from-primary to-transparent" />
-            <div className="fixed bottom-6 left-6 w-0.5 h-20 bg-gradient-to-t from-primary to-transparent" />
-            <div className="fixed bottom-6 right-6 w-20 h-0.5 bg-gradient-to-l from-secondary to-transparent" />
-            <div className="fixed bottom-6 right-6 w-0.5 h-20 bg-gradient-to-t from-secondary to-transparent" />
+      <div className="container mx-auto px-6 pb-20">
+        <div className="relative bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-xl overflow-hidden p-10 md:p-16 mb-20">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-50 pointer-events-none" />
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(188, 19, 254, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(188, 19, 254, 0.2) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+          
+          <div className="relative z-10 max-w-4xl mx-auto text-center">
+            <Badge className="bg-primary text-black font-bold tracking-widest text-[8px] rounded-none px-4 py-2 border-none mb-6">
+              MISSION_STATEMENT
+            </Badge>
+            <div className="text-6xl mb-8 drop-shadow-[0_0_20px_rgba(188,19,254,0.4)]">🎮</div>
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-6 tracking-tight">
+              AARUNYA 2026
+            </h2>
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-8 opacity-80">
+              AARUNYA 2026 is a digital-first festival experience designed to merge retro-gaming aesthetics 
+              with modern campus life. Our goal is to create an interactive "Quest-driven" environment 
+              where every participant is a player in a larger narrative.
+            </p>
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed opacity-80">
+              Since its inception, Aarunya has grown into one of Central India's most anticipated 
+              college festivals, bringing together innovation, creativity, and celebration.
+            </p>
+          </div>
         </div>
-    );
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
+          {stats.map((stat) => (
+            <div key={stat.label} className="relative bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-xl overflow-hidden p-8 text-center hover:border-primary/30 transition-all group">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              <div className="relative z-10">
+                <div className="text-3xl md:text-4xl font-black text-primary mb-2">
+                  {stat.value}
+                </div>
+                <div className="font-share-tech text-[8px] text-white/40 tracking-[0.3em] uppercase">
+                  {stat.label}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mb-20">
+          <div className="text-center mb-12">
+            <Badge className="bg-primary text-black font-bold tracking-widest text-[8px] rounded-none px-4 py-2 border-none mb-4">
+              THE_ARCHITECTS
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">
+              MEET THE TEAM
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {teamMembers.map((member) => (
+              <div key={member.name} className="group">
+                <div className="relative h-full bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-xl overflow-hidden hover:border-primary shadow-[0_0_30px_rgba(188,19,254,0.05)] transition-all duration-500 hover:shadow-[0_0_30px_rgba(188,19,254,0.15)] p-8 text-center">
+                  <div className="text-5xl mb-6 drop-shadow-[0_0_20px_rgba(188,19,254,0.4)] group-hover:scale-110 transition-transform">
+                    {member.icon}
+                  </div>
+                  <h3 className="text-lg font-black text-white group-hover:text-primary transition-colors mb-2 tracking-tight">
+                    {member.name}
+                  </h3>
+                  <p className="font-share-tech text-[10px] text-primary/60 tracking-[0.2em] uppercase mb-4">
+                    {member.role}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground leading-relaxed opacity-80">
+                    {member.contribution}
+                  </p>
+                  
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative bg-black/40 border-2 border-white/5 rounded-xl overflow-hidden py-12 mb-20">
+          <div className="flex animate-marquee whitespace-nowrap">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="flex gap-20 px-10">
+                {technologies.map((tech) => (
+                  <span key={tech} className="text-2xl md:text-4xl text-white/10 font-black uppercase tracking-widest hover:text-primary/30 transition-colors">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-xl overflow-hidden p-12 text-center">
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(188, 19, 254, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(188, 19, 254, 0.2) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+          <div className="relative z-10">
+            <div className="text-5xl mb-6 drop-shadow-[0_0_20px_rgba(188,19,254,0.4)]">🚀</div>
+            <h3 className="text-2xl md:text-3xl font-black text-white mb-4 tracking-tight">
+              READY TO COLLABORATE?
+            </h3>
+            <p className="font-share-tech text-[10px] text-white/40 tracking-[0.3em] uppercase leading-relaxed max-w-xl mx-auto mb-8">
+              JOIN US IN CREATING THE NEXT BIG THING
+            </p>
+            <div className="flex justify-center gap-4">
+              <Button
+                className="bg-primary text-black font-orbitron text-[10px] px-10 py-6 rounded-none border-none shadow-neon hover:shadow-[0_0_30px_rgba(188,19,254,0.4)] transition-all tracking-[0.3em] font-bold"
+              >
+                SUBMIT DATA
+              </Button>
+              <Button
+                className="bg-transparent border border-primary/30 text-primary hover:bg-primary hover:text-black transition-all rounded-none text-[10px] tracking-[0.3em] font-bold px-10 py-6"
+              >
+                VIEW SOURCE
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 20s linear infinite;
+        }
+      `}} />
+    </div>
+  );
 };
 
 export default AboutUs;

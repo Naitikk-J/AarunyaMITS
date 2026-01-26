@@ -1,340 +1,108 @@
-import { useState } from 'react';
 import { MainNavigation } from '@/components/ui/MainNavigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
-const Register = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [name, setName] = useState('');
-    const [mobileNumber, setMobileNumber] = useState('');
-    const [collegeName, setCollegeName] = useState('');
-    const [category, setCategory] = useState('student');
-    const [city, setCity] = useState('');
-    const [termsAccepted, setTermsAccepted] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [registrationSuccess, setRegistrationSuccess] = useState(false);
-    const [aarunyaId, setAarunyaId] = useState('');
+export default function Register() {
+  return (
+    <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black">
+      <MainNavigation />
+      
+      <div className="relative pt-40 pb-20 text-center">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
+        <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
+          REGISTER
+        </h1>
+        <div className="h-1 w-[120px] bg-primary mx-auto shadow-neon" />
+        <p className="mt-8 text-sm md:text-base font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60 max-w-3xl mx-auto px-6">
+          // INSERT CREDENTIALS TO JOIN THE NETWORK
+        </p>
+      </div>
 
-    const handleEmailRegister = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!termsAccepted) {
-            alert('Please accept the terms and conditions');
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            alert('Passwords do not match');
-            return;
-        }
-
-        setIsLoading(true);
-
-        try {
-            const response = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name,
-                    email,
-                    password,
-                    mobileNumber,
-                    collegeName,
-                    category,
-                    city,
-                }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                console.log('Registration successful:', data);
-                setAarunyaId(data.aarunyaId);
-                setRegistrationSuccess(true);
-                setEmail('');
-                setPassword('');
-                setConfirmPassword('');
-                setName('');
-                setMobileNumber('');
-                setCollegeName('');
-                setCategory('student');
-                setCity('');
-                setTermsAccepted(false);
-            } else {
-                alert(data.message || 'Registration failed');
-            }
-        } catch (error) {
-            console.error('Registration error:', error);
-            alert('An error occurred during registration');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleGoogleRegister = () => {
-        setIsLoading(true);
-        setTimeout(() => {
-            console.log('Google registration initiated');
-            setIsLoading(false);
-        }, 1500);
-    };
-
-    return (
-        <div className="min-h-screen bg-background">
-            <MainNavigation />
-
-            <div className="relative overflow-hidden bg-gradient-to-b from-primary/20 to-transparent py-16">
-                <div className="absolute inset-0 scanlines opacity-10" />
-                <div className="container mx-auto px-6 relative z-10">
-                    <h1 className="text-5xl font-orbitron font-bold text-center mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                        REGISTER
-                    </h1>
-                    <p className="text-xl text-center text-muted-foreground font-rajdhani max-w-3xl mx-auto">
-                        Join the festival. Access the grid.
-                    </p>
+      <main className="container mx-auto px-6 pb-40">
+        <div className="max-w-md mx-auto">
+          <div className="relative bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-xl overflow-hidden hover:border-primary/30 shadow-[0_0_30px_rgba(188,19,254,0.05)] transition-all duration-500 p-10">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-50 pointer-events-none" />
+            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(188, 19, 254, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(188, 19, 254, 0.2) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+            
+            <div className="relative z-10">
+              <div className="text-center mb-10">
+                <div className="text-5xl mb-6 drop-shadow-[0_0_20px_rgba(188,19,254,0.4)]">🎮</div>
+                <h2 className="text-2xl font-black text-white mb-2 tracking-tight">
+                  PLAYER REGISTRATION
+                </h2>
+                <div className="h-1 w-full bg-white/5 relative overflow-hidden rounded-full">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/60 to-secondary/60 animate-[scan_2s_linear_infinite]" />
                 </div>
-            </div>
+                <p className="font-share-tech text-[10px] text-white/40 mt-4 uppercase tracking-[0.3em]">
+                  INITIALIZE YOUR ACCOUNT
+                </p>
+              </div>
 
-            <div className="container mx-auto px-6 py-12">
-                <div className="max-w-2xl mx-auto">
-                    <Card className="border-secondary/30 bg-card/80 backdrop-blur-sm">
-                        <CardHeader className="text-center">
-                            <CardTitle className="font-orbitron text-2xl text-primary">CREATE ACCOUNT</CardTitle>
-                            <CardDescription className="font-rajdhani">
-                                Register to unlock festival features
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            {registrationSuccess && (
-                                <div className="space-y-4 text-center py-6">
-                                    <div className="inline-block p-3 bg-primary/10 border-2 border-primary rounded-full">
-                                        <svg className="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <h2 className="text-2xl font-orbitron text-primary">REGISTRATION SUCCESS!</h2>
-                                    <p className="text-muted-foreground font-rajdhani">Your AARUNYA ID has been generated</p>
-                                    <div className="p-4 bg-primary/10 border-2 border-primary rounded-lg">
-                                        <p className="text-xs text-muted-foreground mb-2 font-mono uppercase">Your AARUNYA ID</p>
-                                        <p className="text-2xl font-orbitron text-primary tracking-widest">{aarunyaId}</p>
-                                    </div>
-                                    <p className="text-sm text-muted-foreground font-rajdhani">Check your email for confirmation and login details</p>
-                                    <Button
-                                        onClick={() => {
-                                            setRegistrationSuccess(false);
-                                            window.location.href = '/login';
-                                        }}
-                                        className="w-full font-orbitron tracking-wider mt-4"
-                                    >
-                                        GO TO LOGIN
-                                    </Button>
-                                </div>
-                            )}
-                            {!registrationSuccess && (
-                                <>
-                                    <form onSubmit={handleEmailRegister} className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
-                                                Name
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={name}
-                                                onChange={(e) => setName(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
-                                                placeholder="Enter your name"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
-                                                Email
-                                            </label>
-                                            <input
-                                                type="email"
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
-                                                placeholder="your@email.com"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
-                                                Password
-                                            </label>
-                                            <input
-                                                type="password"
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
-                                                placeholder="••••••••••"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
-                                                Confirm Password
-                                            </label>
-                                            <input
-                                                type="password"
-                                                value={confirmPassword}
-                                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
-                                                placeholder="••••••••••"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
-                                                Mobile Number
-                                            </label>
-                                            <input
-                                                type="tel"
-                                                value={mobileNumber}
-                                                onChange={(e) => setMobileNumber(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
-                                                placeholder="+91-XXXXXXXXXX"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
-                                                College Name
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={collegeName}
-                                                onChange={(e) => setCollegeName(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
-                                                placeholder="Your college/university"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
-                                                Category
-                                            </label>
-                                            <select
-                                                value={category}
-                                                onChange={(e) => setCategory(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
-                                                required
-                                            >
-                                                <option value="student">Student</option>
-                                                <option value="working-professional">Working Professional</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
-                                                City
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={city}
-                                                onChange={(e) => setCity(e.target.value)}
-                                                className="w-full px-3 py-2 bg-background/50 border border-secondary/30 rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-rajdhani"
-                                                placeholder="Your city"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div className="flex items-center space-x-3 p-3 bg-primary/5 border border-primary/20 rounded-md">
-                                            <Checkbox
-                                                id="terms"
-                                                checked={termsAccepted}
-                                                onCheckedChange={(checked) => setTermsAccepted(checked as boolean)}
-                                            />
-                                            <label htmlFor="terms" className="text-sm text-muted-foreground font-rajdhani cursor-pointer">
-                                                I accept the{' '}
-                                                <a href="#" className="text-primary hover:text-primary-glow transition-colors underline">
-                                                    terms and conditions
-                                                </a>
-                                            </label>
-                                        </div>
-
-                                        <Button
-                                            type="submit"
-                                            className="w-full font-orbitron tracking-wider"
-                                            disabled={isLoading}
-                                        >
-                                            {isLoading ? 'REGISTERING...' : 'REGISTER'}
-                                        </Button>
-                                    </form>
-
-                                    {/* Divider */}
-                                    <div className="relative">
-                                        <div className="absolute inset-0 flex items-center">
-                                            <span className="w-full border-t border-secondary/30"></span>
-                                        </div>
-                                        <div className="relative flex justify-center text-xs uppercase">
-                                            <span className="bg-card px-2 text-muted-foreground font-mono">OR</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Google Registration */}
-                                    <Button
-                                        variant="outline"
-                                        onClick={handleGoogleRegister}
-                                        className="w-full font-orbitron tracking-wider border-secondary/30 hover:bg-secondary/10"
-                                        disabled={isLoading}
-                                    >
-                                        <span className="flex items-center justify-center gap-2">
-                                            <svg className="w-5 h-5" viewBox="0 0 24 24">
-                                                <path
-                                                    fill="currentColor"
-                                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25-.37a8.01 8.01 0 00-7.44 5.25 9.04 9.04 0 006.38 2.62l-2.2-2.2a6.04 6.04 0 00-4.5-1.94 6.06 6.06 0 00-4.5 1.94l2.2 2.2a8.99 8.99 0 016.38-2.62A8.02 8.02 0 0022.56 12.25zM12 23a8.99 8.99 0 01-6.38-2.62l2.2-2.2a6.04 6.04 0 004.5-1.94 6.06 6.06 0 004.5 1.94l-2.2 2.2A8.99 8.99 0 0112 23zm0-16a8.99 8.99 0 00-6.38 2.62l2.2 2.2a6.04 6.04 0 014.5 1.94 6.06 6.06 0 00-4.5-1.94l-2.2-2.2A8.99 8.99 0 0112 7zm4.5 1.94a6.04 6.04 0 01-4.5 1.94l2.2 2.2a8.99 8.99 0 006.38-2.62 8.02 8.02 0 00-2.25-.37 8.01 8.01 0 00-7.44-5.25 9.04 9.04 0 00-6.38-2.62l2.2-2.2z"
-                                                />
-                                            </svg>
-                                            {isLoading ? 'CONNECTING...' : 'REGISTER WITH GOOGLE'}
-                                        </span>
-                                    </Button>
-
-                                    {/* Login Link */}
-                                    <div className="text-center pt-4 border-t border-secondary/30">
-                                        <p className="text-sm text-muted-foreground font-rajdhani">
-                                            Already have an account?{' '}
-                                            <a href="/login" className="text-primary hover:text-primary-glow transition-colors font-mono">
-                                                LOGIN
-                                            </a>
-                                        </p>
-                                    </div>
-                                </>
-                            )}
-                        </CardContent>
-                    </Card>
-
-                    {/* Feature Badges */}
-                    <div className="mt-8 flex flex-wrap justify-center gap-2">
-                        <Badge variant="outline" className="font-mono text-xs">FESTIVAL ACCESS</Badge>
-                        <Badge variant="outline" className="font-mono text-xs">EVENT REGISTRATION</Badge>
-                        <Badge variant="outline" className="font-mono text-xs">MERCH DROPS</Badge>
-                        <Badge variant="outline" className="font-mono text-xs">COMPETITION ENTRY</Badge>
-                    </div>
+              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                <div className="space-y-2 group">
+                  <Label className="font-share-tech text-[10px] text-white/40 group-focus-within:text-primary transition-colors tracking-[0.3em] uppercase">
+                    USERNAME
+                  </Label>
+                  <Input 
+                    className="bg-black/40 border border-white/10 focus:border-primary rounded-lg font-orbitron text-sm h-12 transition-all placeholder:text-white/20"
+                    placeholder="PLAYER_ONE"
+                  />
                 </div>
-            </div>
 
-            {/* Corner decorations */}
-            <div className="fixed bottom-6 left-6 w-20 h-0.5 bg-gradient-to-r from-primary to-transparent" />
-            <div className="fixed bottom-6 left-6 w-0.5 h-20 bg-gradient-to-t from-primary to-transparent" />
-            <div className="fixed bottom-6 right-6 w-20 h-0.5 bg-gradient-to-l from-secondary to-transparent" />
-            <div className="fixed bottom-6 right-6 w-0.5 h-20 bg-gradient-to-t from-secondary to-transparent" />
+                <div className="space-y-2 group">
+                  <Label className="font-share-tech text-[10px] text-white/40 group-focus-within:text-primary transition-colors tracking-[0.3em] uppercase">
+                    EMAIL ADDRESS
+                  </Label>
+                  <Input 
+                    type="email"
+                    className="bg-black/40 border border-white/10 focus:border-primary rounded-lg font-orbitron text-sm h-12 transition-all placeholder:text-white/20"
+                    placeholder="PLAYER@DOMAIN.COM"
+                  />
+                </div>
+
+                <div className="space-y-2 group">
+                  <Label className="font-share-tech text-[10px] text-white/40 group-focus-within:text-primary transition-colors tracking-[0.3em] uppercase">
+                    PASSWORD
+                  </Label>
+                  <Input 
+                    type="password"
+                    className="bg-black/40 border border-white/10 focus:border-primary rounded-lg font-orbitron text-sm h-12 transition-all placeholder:text-white/20"
+                    placeholder="••••••••"
+                  />
+                </div>
+
+                <Button 
+                  className="w-full bg-primary text-black font-orbitron text-[10px] h-14 rounded-lg border-none shadow-neon hover:shadow-[0_0_30px_rgba(188,19,254,0.4)] transition-all tracking-[0.3em] font-bold"
+                >
+                  INITIALIZE ACCOUNT
+                </Button>
+              </form>
+
+              <div className="mt-8 text-center border-t border-white/5 pt-6">
+                <div className="flex items-center justify-center gap-4">
+                  <span className="font-share-tech text-[8px] text-white/30 tracking-[0.4em] uppercase">
+                    SYSTEM STATUS
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    <span className="font-share-tech text-[10px] text-secondary tracking-[0.2em] font-bold">ONLINE</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    );
-};
+      </main>
 
-export default Register;
+      <div className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes scan {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+      `}} />
+    </div>
+  );
+}

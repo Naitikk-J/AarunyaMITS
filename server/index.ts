@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
+import paymentRoutes from './routes/payment';
+import jwt from 'jsonwebtoken';
 
 dotenv.config();
 
@@ -15,6 +17,25 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);
+
+const authenticateJWT = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (token) {
+    jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', (err, user) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+      // @ts-ignore
+      req.user = user;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
+  }
+};
+
+app.use('/api/payment', authenticateJWT, paymentRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

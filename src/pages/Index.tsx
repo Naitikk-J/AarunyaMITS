@@ -1,111 +1,103 @@
-import { useState, useCallback, useEffect } from 'react';
-import { CampusScene } from '@/components/3d/CampusScene';
+import { useEffect, useRef, useState } from 'react';
+import Lenis from 'lenis';
 import { MainNavigation } from '@/components/ui/MainNavigation';
-import { ControlsGuide } from '@/components/ui/ControlsGuide';
-import { BottomActions } from '@/components/ui/BottomActions';
-import { BuildingInfo } from '@/components/ui/BuildingInfo';
-import { LoadingScreen } from '@/components/ui/LoadingScreen';
+import { TVZoom } from '@/components/TVZoom';
+import { TVIntro } from '@/components/TVIntro';
+import { WelcomeSection } from '@/components/WelcomeSection';
+import { PacmanTimeline } from '@/components/PacManTimeline';
+import { CRTOverlay } from '@/components/CRTOverlay';
+import Footer from '@/components/Footer';
 
 const Index = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const [hoveredBuilding, setHoveredBuilding] = useState<string | null>(null);
-    const [selectedSection, setSelectedSection] = useState<string | null>(null);
-    const [webglSupported, setWebglSupported] = useState(true);
+    const mainRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Lightweight WebGL capability probe so we can fall back gracefully.
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (!gl) {
-            setWebglSupported(false);
-            setIsLoading(false);
-            return;
+        // Initialize Lenis for smooth scrolling
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+            infinite: false,
+            syncTouch: true,
+        });
+
+        function raf(time: number) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
         }
 
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-            // Set initial building immediately after loading completes
-            setTimeout(() => {
-                setHoveredBuilding('main-gate');
-            }, 100);
-        }, 4000);
+        requestAnimationFrame(raf);
 
-        return () => clearTimeout(timer);
-    }, []);
-
-    // After loading finishes, ensure at least one building name/info is visible.
-    useEffect(() => {
-        if (!isLoading && !hoveredBuilding) {
-            setHoveredBuilding('main-gate');
-        }
-    }, [isLoading, hoveredBuilding]);
-
-    const handleBuildingHover = useCallback((building: string | null) => {
-        // Keep showing the last hovered building instead of hiding the panel
-        if (building) {
-            setHoveredBuilding(building);
-        }
-    }, []);
-
-    const handleBuildingClick = useCallback((building: string) => {
-        console.log('Building clicked:', building);
-        // Future: Navigate to section or show modal
+        return () => {
+            lenis.destroy();
+        };
     }, []);
 
     return (
-        <div className="relative w-full h-screen overflow-hidden bg-background">
-            {/* Loading Screen */}
-            {isLoading && <LoadingScreen />}
-
-            {/* Navigation */}
+        <div
+            ref={mainRef}
+            className="relative w-full overflow-x-hidden bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] md:bg-fixed bg-local bg-cover bg-center"
+        >
             <MainNavigation />
+            <CRTOverlay />
 
-            {/* Controls Guide */}
-            <ControlsGuide />
+            <main>
+                {/* Section 1: The Infinite TV Zoom (Hero) */}
+                <TVZoom>
+                    <TVIntro />
+                </TVZoom>
 
-            {/* Building Info Panel - Only show after loading */}
-            {!isLoading && <BuildingInfo buildingId={hoveredBuilding} />}
+                {/* Section 2: Welcome to Aarunya (Standalone Section revealed after TV goes up) */}
+                <WelcomeSection />
 
-            {/* 3D Canvas */}
-            <div className="absolute inset-0">
-                {webglSupported ? (
-                    <CampusScene
-                        onBuildingHover={handleBuildingHover}
-                        onBuildingClick={handleBuildingClick}
-                        isLoading={isLoading}
-                    />
-                ) : (
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#0a1a2a] to-[#050c15] text-center">
-                        <p className="font-orbitron text-lg text-primary">WebGL is not available on this device.</p>
-                        <p className="text-sm text-muted-foreground">Showing a static placeholder instead.</p>
-                        <img src="/placeholder.svg" alt="Campus map placeholder" className="max-w-md opacity-80" />
-                    </div>
-                )}
-            </div>
+                {/* Section 3: The Pac-Man Timeline (Gamified Scroll) */}
+                <PacmanTimeline />
 
-            {/* Scanline overlay */}
-            <div className="absolute inset-0 pointer-events-none scanlines opacity-30" />
+                {/* Additional sections can be added here if needed */}
+            </main>
 
-            {/* Vignette overlay */}
-            <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                    background: 'radial-gradient(ellipse at center, transparent 40%, hsl(240 80% 5% / 0.8) 100%)',
-                }}
-            />
+            <Footer />
 
-            {/* Bottom Actions */}
-            <BottomActions />
-
-            {/* Corner decorations */}
-            <div className="fixed top-20 left-6 w-20 h-0.5 bg-gradient-to-r from-primary to-transparent" />
-            <div className="fixed top-20 left-6 w-0.5 h-20 bg-gradient-to-b from-primary to-transparent" />
-            <div className="fixed top-20 right-6 w-20 h-0.5 bg-gradient-to-l from-secondary to-transparent" />
-            <div className="fixed top-20 right-6 w-0.5 h-20 bg-gradient-to-b from-secondary to-transparent" />
-            <div className="fixed bottom-20 left-6 w-20 h-0.5 bg-gradient-to-r from-secondary to-transparent" />
-            <div className="fixed bottom-20 left-6 w-0.5 h-20 bg-gradient-to-t from-secondary to-transparent" />
-            <div className="fixed bottom-20 right-6 w-20 h-0.5 bg-gradient-to-l from-primary to-transparent" />
-            <div className="fixed bottom-20 right-6 w-0.5 h-20 bg-gradient-to-t from-primary to-transparent" />
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                .glitch {
+                    position: relative;
+                }
+                .glitch::before,
+                .glitch::after {
+                    content: attr(data-text);
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+                .glitch::before {
+                    left: 2px;
+                    text-shadow: -2px 0 #ff00c1;
+                    clip: rect(44px, 450px, 56px, 0);
+                    animation: glitch-anim 5s infinite linear alternate-reverse;
+                }
+                .glitch::after {
+                    left: -2px;
+                    text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
+                    animation: glitch-anim2 1s infinite linear alternate-reverse;
+                }
+                @keyframes glitch-anim {
+                    0% { clip: rect(31px, 9999px, 94px, 0); transform: skew(0.85deg); }
+                    5% { clip: rect(70px, 9999px, 71px, 0); transform: skew(0.85deg); }
+                    /* ... more steps if needed ... */
+                    100% { clip: rect(67px, 9999px, 62px, 0); transform: skew(0.1deg); }
+                }
+                @keyframes glitch-anim2 {
+                    0% { clip: rect(65px, 9999px, 100px, 0); transform: skew(0.15deg); }
+                    100% { clip: rect(10px, 9999px, 20px, 0); transform: skew(0.15deg); }
+                }
+            `}} />
         </div>
     );
 };
