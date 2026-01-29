@@ -40,9 +40,9 @@ export const PacmanTimeline: React.FC = () => {
     }, [scrollYProgress]);
 
     return (
-        <div ref={containerRef} id="timeline" className="relative min-h-[120vh] md:min-h-[150vh] py-24 bg-[#0D001A] overflow-hidden">
+        <div ref={containerRef} id="timeline" className="relative min-h-[120vh] md:min-h-[150vh] py-24  overflow-hidden">
             {/* Animated Background Grid */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none">
+            <div className="absolute inset-0 opacity-0 pointer-events-none">
                 <div className="absolute inset-0" style={{
                     backgroundImage: `linear-gradient(var(--kidcore-blue) 1px, transparent 1px), linear-gradient(90deg, var(--kidcore-blue) 1px, transparent 1px)`,
                     backgroundSize: '100px 100px'
