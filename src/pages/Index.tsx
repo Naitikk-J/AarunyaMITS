@@ -69,7 +69,7 @@ const Index = () => {
 
                 <main>
                     {/* Section 1: The Infinite TV Zoom (Hero) */}
-                    <PromptingIsAllYouNeed />
+                    
                     
                     <TVZoom>
                         
