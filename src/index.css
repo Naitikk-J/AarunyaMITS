@@ -526,40 +526,9 @@ footer * {
         animation: kidcore-shift 8s ease infinite;
     }
 
-    /* VHS Filter Effect - Optimized to reduce flicker */
+    /* VHS Filter Effect - Disabled to prevent flickering */
     .vhs-filter {
-        background:
-            repeating-linear-gradient(0deg,
-                transparent,
-                transparent 2px,
-                hsl(280 100% 60% / 0.03) 2px,
-                hsl(280 100% 60% / 0.03) 4px),
-            repeating-linear-gradient(90deg,
-                hsl(0 0% 0% / 0.02) 0,
-                hsl(0 0% 0% / 0.02) 1px,
-                transparent 1px,
-                transparent 3px);
-        animation: vhs-flicker 0.5s infinite;
-        pointer-events: none;
-        will-change: auto;
-        contain: layout style;
-    }
-
-    /* Disable VHS filter on nav for clarity */
-    nav.glass-card ~ .vhs-filter {
-        opacity: 0;
-    }
-
-    @keyframes vhs-flicker {
-        0%,
-        100% {
-            transform: translateY(0);
-            opacity: 0.2;
-        }
-
-        50% {
-            opacity: 0.2;
-        }
+        display: none; /* Disabled to prevent flickering */
     }
 
     /* Neon glow effects */
@@ -599,14 +568,9 @@ footer * {
         animation: kidcore-shift 8s ease infinite;
     }
 
-    /* Scanline effect */
+    /* Scanline effect - Disabled to prevent flickering */
     .scanlines {
-        background: repeating-linear-gradient(0deg,
-                transparent,
-                transparent 2px,
-                hsl(280 100% 60% / 0.05) 2px,
-                hsl(280 100% 60% / 0.05) 4px);
-        animation: scanline-scroll 20s linear infinite;
+        display: none; /* Disabled to prevent flickering */
     }
 
     /* Grid pattern */
@@ -744,16 +708,7 @@ footer * {
         }
     }
 
-    /* Scanline scroll animation */
-    @keyframes scanline-scroll {
-        0% {
-            transform: translateY(0);
-        }
-
-        100% {
-            transform: translateY(20px);
-        }
-    }
+    /* Scanline scroll animation - Disabled to prevent flickering */
 
     /* Floating animation */
     @keyframes float {
@@ -819,7 +774,7 @@ footer * {
         border-radius: 0 0 0 50%;
     }
 
-    /* Playful highlight */
+    /* Playful highlight - Disabled to prevent flickering */
     .playful-highlight {
         background: linear-gradient(to right,
             transparent 0%,
@@ -828,19 +783,7 @@ footer * {
             transparent 100%);
         padding: 4px 8px;
         border-radius: 8px;
-        animation: highlight-flicker 0.3s ease;
-    }
-
-    @keyframes highlight-flicker {
-        0%, 100% {
-            opacity: 1;
-            transform: scaleX(1);
-        }
-
-        50% {
-            opacity: 0.8;
-            transform: scaleX(1.05);
-        }
+        /* animation: highlight-flicker 0.3s ease; - Disabled to prevent flickering */
     }
 
     /* Color burst effect */
@@ -1090,7 +1033,7 @@ footer * {
     .animate-text-bounce-stagger > span:nth-child(9) { animation-delay: 0.8s; }
     .animate-text-bounce-stagger > span:nth-child(10) { animation-delay: 0.9s; }
 
-    /* CRT Overlay Effects */
+    /* CRT Overlay Effects - Disabled to prevent flickering */
     .crt-overlay {
         position: fixed;
         top: 0;
@@ -1098,14 +1041,8 @@ footer * {
         width: 100%;
         height: 100%;
         pointer-events: none;
-        background: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 2px,
-            hsl(0 0% 0% / 0.03) 2px,
-            hsl(0 0% 0% / 0.03) 4px
-        );
         z-index: 9999;
+        display: none; /* Disabled to prevent flickering */
     }
 
     .noise-overlay {
@@ -1115,23 +1052,8 @@ footer * {
         width: 100%;
         height: 100%;
         pointer-events: none;
-        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise" /><feColorMatrix in="noise" type="saturate" values="0.3"/></filter><rect width="100" height="100" fill="%230D0221" filter="url(%23noise)" opacity="0.1"/></svg>');
-        animation: noise-shift 0.2s infinite;
         z-index: 9998;
-    }
-
-    @keyframes noise-shift {
-        0% { transform: translate(0, 0); }
-        10% { transform: translate(-2px, -2px); }
-        20% { transform: translate(2px, 2px); }
-        30% { transform: translate(-2px, 2px); }
-        40% { transform: translate(2px, -2px); }
-        50% { transform: translate(-1px, 1px); }
-        60% { transform: translate(1px, -1px); }
-        70% { transform: translate(0px, 0px); }
-        80% { transform: translate(-1px, -2px); }
-        90% { transform: translate(2px, 1px); }
-        100% { transform: translate(0, 0); }
+        display: none; /* Disabled to prevent flickering */
     }
 }
 
