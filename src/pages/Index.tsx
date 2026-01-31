@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MainNavigation } from '@/components/ui/MainNavigation';
 import { TVZoom } from '@/components/TVZoom';
 import { TVIntro } from '@/components/TVIntro';
 import { WelcomeSection } from '@/components/WelcomeSection';
+import { PromptingIsAllYouNeed } from '@/components/ui/animated-hero-section';
 import { PacmanTimeline } from '@/components/PacManTimeline';
 import { CRTOverlay } from '@/components/CRTOverlay';
 import Footer from '@/components/Footer';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Index = () => {
     const mainRef = useRef<HTMLDivElement>(null);
@@ -32,39 +37,60 @@ const Index = () => {
 
         requestAnimationFrame(raf);
 
+        // Connect Lenis to GSAP ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.lagSmoothing(0);
+
         return () => {
             lenis.destroy();
+            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
         };
     }, []);
 
     return (
         <div
             ref={mainRef}
-            className="relative w-full overflow-x-hidden bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('/retro-room-bg.jpg')] bg-local bg-cover bg-center"
-            style={{
-                backgroundAttachment: window.innerWidth >= 768 ? 'fixed' : 'scroll',
-                backgroundSize: window.innerWidth < 768 ? 'auto' : undefined
-            }}
+            className="relative w-full overflow-x-hidden min-h-screen"
         >
-            <MainNavigation />
-            <CRTOverlay />
+            {/* Background Image - Scrolls with content */}
+            <div
+                className="absolute top-0 left-0 w-full min-h-full bg-black z-0"
+                style={{
+                    backgroundImage: 'url(/aarunyaa.png)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'top center',
+                    backgroundRepeat: 'repeat-y'
+                }}
+            />
 
-            <main>
-                {/* Section 1: The Infinite TV Zoom (Hero) */}
-                <TVZoom>
-                    <TVIntro />
-                </TVZoom>
+            <div className="relative z-10">
+                <MainNavigation />
+                <CRTOverlay />
 
-                {/* Section 2: Welcome to Aarunya (Zoom effect as you scroll) */}
-                <WelcomeSection />
+                <main>
+                    {/* Section 1: The Infinite TV Zoom (Hero) */}
+                    
+                    
+                    <TVZoom>
+                        
+                <TVIntro />
+                
+                    </TVZoom>
 
-                {/* Section 3: The Pac-Man Timeline (Appears after WelcomeSection zoom) */}
-                <PacmanTimeline />
+                    {/* Section 2: Welcome to Aarunya (Zoom effect as you scroll) */}
+                    <WelcomeSection />
 
-                {/* Additional sections can be added here if needed */}
-            </main>
+                    {/* Section 3: Animated Hero Section with Pong Game
+                    <PromptingIsAllYouNeed /> */}
 
-            <Footer />
+                    {/* Section 4: The Pac-Man Timeline (Appears after WelcomeSection zoom) */}
+                    <PacmanTimeline />
+
+                    {/* Additional sections can be added here if needed */}
+                </main>
+
+                <Footer />
+            </div>
 
             <style dangerouslySetInnerHTML={{
                 __html: `

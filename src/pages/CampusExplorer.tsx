@@ -313,6 +313,12 @@ const SmartFoliage = () => {
 
         for (let x = -60; x <= 60; x += 3.5) {
             for (let z = -60; z <= 60; z += 3.5) {
+<<<<<<< HEAD
+=======
+
+                // --- BOUNDARY CHECK (FIXED) ---
+                // If the point is outside the square campus, skip it
+>>>>>>> 487fb22e5a1fc2dff662a1b797cb07fd0a8e635b
                 if (Math.abs(x) > campusHalfSize || Math.abs(z) > campusHalfSize) {
                     continue;
                 }
@@ -488,7 +494,7 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode, speed }: { carPosit
 
     const isMobile = useMemo(() => {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-               window.innerWidth <= 768;
+            window.innerWidth <= 768;
     }, []);
 
     useEffect(() => {
@@ -501,17 +507,39 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode, speed }: { carPosit
         if (!cameraRef.current) return;
 
         if (viewMode === 'third') {
+<<<<<<< HEAD
             const fixedCameraHeight = 90;
             const centerX = 0;
             const centerZ = 0;
             cameraRef.current.position.set(centerX, fixedCameraHeight, centerZ);
+=======
+            // Fixed top-center camera view - completely static
+            const fixedCameraHeight = 90; // Higher top-down position for better overview
+            const centerX = 0; // Fixed center of campus
+            const centerZ = 0; // Fixed center of campus
+
+            // Set camera to fixed position at top center
+            cameraRef.current.position.set(centerX, fixedCameraHeight, centerZ);
+
+            // Look at the center of the campus
+>>>>>>> 487fb22e5a1fc2dff662a1b797cb07fd0a8e635b
             cameraRef.current.lookAt(centerX, 0, centerZ);
             cameraRef.current.fov = 45;
             cameraRef.current.updateProjectionMatrix();
         } else {
             if (isMobile) {
+<<<<<<< HEAD
                 const driverHeight = 0.55;
                 const forwardOffset = 0.3;
+=======
+                // First-Person Perspective (FPP) - Camera inside the car
+                // Driver head height: slightly above ground
+                // Slightly forward from car center
+                const driverHeight = 0.55; // Driver head height
+                const forwardOffset = 0.3; // Slightly forward from car center
+
+                // Calculate camera position inside the car
+>>>>>>> 487fb22e5a1fc2dff662a1b797cb07fd0a8e635b
                 const cameraX = carPosition[0] + Math.sin(carRotation) * forwardOffset;
                 const cameraZ = carPosition[2] + Math.cos(carRotation) * forwardOffset;
                 const cameraY = carPosition[1] + driverHeight;
@@ -531,11 +559,24 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode, speed }: { carPosit
                 const cameraZ = carPosition[2] + Math.cos(carRotation) * forwardOffset;
                 const cameraY = carPosition[1] + height;
                 smoothedCameraPos.current.lerp(new THREE.Vector3(cameraX, cameraY, cameraZ), 0.25);
+<<<<<<< HEAD
                 const cameraPos = smoothedCameraPos.current;
                 const minX = -35; const maxX = 35;
                 const minZ = -35; const maxZ = 35;
                 cameraPos.x = Math.max(minX, Math.min(maxX, cameraPos.x));
                 cameraPos.z = Math.max(minZ, Math.min(maxZ, cameraPos.z));
+=======
+
+                // Camera boundary constraints for first-person mode
+                const cameraPos = smoothedCameraPos.current;
+                const minX = -35; const maxX = 35;
+                const minZ = -35; const maxZ = 35;
+
+                // Keep camera within bounds to ensure car stays in frame
+                cameraPos.x = Math.max(minX, Math.min(maxX, cameraPos.x));
+                cameraPos.z = Math.max(minZ, Math.min(maxZ, cameraPos.z));
+
+>>>>>>> 487fb22e5a1fc2dff662a1b797cb07fd0a8e635b
                 cameraRef.current.position.copy(cameraPos);
                 const lookAtDistance = 30;
                 const lookAtX = carPosition[0] + Math.sin(carRotation) * lookAtDistance;
@@ -579,39 +620,97 @@ const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
     );
 };
 
-const MobileJoystick = ({ onMove }: { onMove: (x: number, y: number) => void }) => {
-    const joystickRef = useRef<HTMLDivElement>(null);
-    const knobRef = useRef<HTMLDivElement>(null);
-    const [isDragging, setIsDragging] = useState(false);
-    const [knobPos, setKnobPos] = useState({ x: 0, y: 0 });
+const MobileControls = ({ onMove }: { onMove: (x: number, y: number) => void }) => {
+    const [forwardPressed, setForwardPressed] = useState(false);
+    const [backwardPressed, setBackwardPressed] = useState(false);
+    const [leftPressed, setLeftPressed] = useState(false);
+    const [rightPressed, setRightPressed] = useState(false);
 
-    const handleStart = (clientX: number, clientY: number) => { setIsDragging(true); };
-    const handleMove = (clientX: number, clientY: number) => {
-        if (!isDragging || !joystickRef.current) return;
-        const rect = joystickRef.current.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        let deltaX = clientX - centerX;
-        let deltaY = clientY - centerY;
-        const maxRadius = 40;
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        if (distance > maxRadius) { deltaX = (deltaX / distance) * maxRadius; deltaY = (deltaY / distance) * maxRadius; }
-        setKnobPos({ x: deltaX, y: deltaY });
-        onMove(deltaX / maxRadius, -deltaY / maxRadius);
-    };
-    const handleEnd = () => { setIsDragging(false); setKnobPos({ x: 0, y: 0 }); onMove(0, 0); };
+    useEffect(() => {
+        let forwardValue = 0;
+        let backwardValue = 0;
+        let leftValue = 0;
+        let rightValue = 0;
+
+        if (forwardPressed) forwardValue = 1;
+        if (backwardPressed) backwardValue = -1;
+        if (leftPressed) leftValue = -1;
+        if (rightPressed) rightValue = 1;
+
+        const y = forwardValue + backwardValue;
+        const x = leftValue + rightValue;
+
+        onMove(x, y);
+    }, [forwardPressed, backwardPressed, leftPressed, rightPressed, onMove]);
+
+    const ButtonControl = ({ children, onPressIn, onPressOut, className }: { children: React.ReactNode, onPressIn: () => void, onPressOut: () => void, className?: string }) => (
+        <button
+            className={`w-16 h-16 rounded-full z-50 md:hidden ${className}`}
+            style={{
+                background: 'radial-gradient(circle, rgba(188,19,254,0.3) 0%, rgba(0,255,255,0.2) 100%)',
+                border: '3px solid #ff00ff',
+                boxShadow: '0 0 30px rgba(188,19,254,0.5), inset 0 0 20px rgba(0,255,255,0.3)',
+                fontFamily: '"Press Start 2P", monospace',
+                fontSize: '8px',
+                color: '#00ffff',
+                textShadow: '0 0 10px #00ffff',
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                touchAction: 'none',
+                cursor: 'pointer'
+            }}
+            onTouchStart={(e) => { onPressIn(); }}
+            onTouchEnd={onPressOut}
+            onTouchCancel={onPressOut}
+            onMouseDown={(e) => { onPressIn(); }}
+            onMouseUp={onPressOut}
+            onMouseLeave={onPressOut}
+            onPointerDown={(e) => { onPressIn(); }}
+            onPointerUp={onPressOut}
+            onPointerLeave={onPressOut}
+            onPointerCancel={onPressOut}
+        >
+            {children}
+        </button>
+    );
 
     return (
-        <div ref={joystickRef} className="fixed bottom-8 left-8 w-32 h-32 rounded-full z-50 md:hidden"
-            style={{ background: 'radial-gradient(circle, rgba(188,19,254,0.3) 0%, rgba(0,255,255,0.2) 100%)', border: '3px solid #ff00ff', boxShadow: '0 0 30px rgba(188,19,254,0.5), inset 0 0 20px rgba(0,255,255,0.3)' }}
-            onTouchStart={(e) => { e.preventDefault(); handleStart(e.touches[0].clientX, e.touches[0].clientY); }}
-            onTouchMove={(e) => { e.preventDefault(); handleMove(e.touches[0].clientX, e.touches[0].clientY); }}
-            onTouchEnd={handleEnd} onMouseDown={(e) => handleStart(e.clientX, e.clientY)} onMouseMove={(e) => handleMove(e.clientX, e.clientY)} onMouseUp={handleEnd} onMouseLeave={handleEnd}
-        >
-            <div ref={knobRef} className="absolute w-14 h-14 rounded-full"
-                style={{ background: 'linear-gradient(135deg, #ff00ff, #00ffff)', boxShadow: '0 0 20px #ff00ff', left: '50%', top: '50%', transform: `translate(calc(-50% + ${knobPos.x}px), calc(-50% + ${knobPos.y}px))`, transition: isDragging ? 'none' : 'transform 0.2s ease-out' }}
-            />
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '6px', color: '#00ffff', textShadow: '0 0 10px #00ffff' }}>{!isDragging && 'MOVE'}</div>
+        <div className="fixed bottom-24 left-4 z-50 md:hidden">
+            {/* Forward/Backward Controls (Left Side) */}
+            <div className="flex flex-col gap-4">
+                <ButtonControl
+                    onPressIn={() => setForwardPressed(true)}
+                    onPressOut={() => setForwardPressed(false)}
+                    className="bg-gradient-to-b from-[#00ffff] to-[#0088ff] hover:shadow-[0_0_30px_#00ffff]"
+                >
+                    ⬆️
+                </ButtonControl>
+                <ButtonControl
+                    onPressIn={() => setBackwardPressed(true)}
+                    onPressOut={() => setBackwardPressed(false)}
+                    className="bg-gradient-to-b from-[#ff0033] to-[#cc0000] hover:shadow-[0_0_30px_#ff0033]"
+                >
+                    ⬇️
+                </ButtonControl>
+            </div>
+
+            {/* Left/Right Controls (Right Side) */}
+            <div className="fixed bottom-24 right-4 flex flex-col gap-4 z-50">
+                <ButtonControl
+                    onPressIn={() => setLeftPressed(true)}
+                    onPressOut={() => setLeftPressed(false)}
+                    className="bg-gradient-to-b from-[#ff00ff] to-[#cc00cc] hover:shadow-[0_0_30px_#ff00ff]"
+                >
+                    ⬅️
+                </ButtonControl>
+                <ButtonControl
+                    onPressIn={() => setRightPressed(true)}
+                    onPressOut={() => setRightPressed(false)}
+                    className="bg-gradient-to-b from-[#00ffff] to-[#0088ff] hover:shadow-[0_0_30px_#00ffff]"
+                >
+                    ➡️
+                </ButtonControl>
+            </div>
         </div>
     );
 };
@@ -627,6 +726,11 @@ const CampusExplorer = () => {
     const keysPressed = useRef<Set<string>>(new Set());
     const joystickInput = useRef({ x: 0, y: 0 });
     const textures = useMemo(() => generateTextures(), []);
+    const isMobile = useMemo(() => {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+            window.innerWidth <= 768;
+    }, []);
+
 
     useEffect(() => {
         const canvas = document.createElement('canvas');
@@ -656,17 +760,22 @@ const CampusExplorer = () => {
 
     useEffect(() => {
         if (!isDriving) return;
-        
+
         const carPhysicsInterval = setInterval(() => {
             const keys = keysPressed.current;
             let newSpeed = speed;
             let newRotation = carRotation;
+<<<<<<< HEAD
             
+=======
+
+            // Input processing
+>>>>>>> 487fb22e5a1fc2dff662a1b797cb07fd0a8e635b
             const joystickForward = joystickInput.current.y > 0.2;
             const joystickBackward = joystickInput.current.y < -0.2;
             const joystickLeft = joystickInput.current.x < -0.2;
             const joystickRight = joystickInput.current.x > 0.2;
-            
+
             const forward = keys.has('w') || keys.has('arrowup') || joystickForward;
             const backward = keys.has('s') || keys.has('arrowdown') || joystickBackward;
             const left = keys.has('a') || keys.has('arrowleft') || joystickLeft;
@@ -689,7 +798,7 @@ const CampusExplorer = () => {
 
             const moveX = Math.sin(newRotation) * newSpeed;
             const moveZ = Math.cos(newRotation) * newSpeed;
-            
+
             let newX = carPosition[0] + moveX;
             let newZ = carPosition[2] + moveZ;
 
@@ -709,7 +818,27 @@ const CampusExplorer = () => {
     const stopDriving = () => { setIsDriving(false); setSpeed(0); keysPressed.current.clear(); joystickInput.current = { x: 0, y: 0 }; };
 
     return (
-        <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black">
+        <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#ff00ff #1a0030' }}>
+            <style>{`
+                @media (max-width: 768px) {
+                    ::-webkit-scrollbar {
+                        width: 8px;
+                        height: 8px;
+                    }
+                    ::-webkit-scrollbar-track {
+                        background: #1a0030;
+                        border-left: 1px solid #ff00ff40;
+                    }
+                    ::-webkit-scrollbar-thumb {
+                        background: #ff00ff;
+                        border-radius: 4px;
+                        border: 1px solid #ff66ff;
+                    }
+                    ::-webkit-scrollbar-thumb:hover {
+                        background: #ff66ff;
+                    }
+                }
+            `}</style>
             {!isDriving && <MainNavigation />}
             {isLoading && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#05010D]">
@@ -720,22 +849,22 @@ const CampusExplorer = () => {
                     </div>
                 </div>
             )}
-            <div className="relative pt-32 pb-12 text-center">
+            <div className="relative pt-24 pb-8 text-center">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">CAMPUS EXPLORER</h1>
-                <div className="h-1 w-[120px] bg-primary mx-auto shadow-neon" />
-                <p className="mt-6 text-sm font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60 max-w-3xl mx-auto px-6">// EXPLORE MITS CAMPUS IN 3D</p>
-                <div className="mt-8 flex justify-center gap-4 flex-wrap px-6">
+                <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-4">CAMPUS EXPLORER</h1>
+                <div className="h-1 w-[100px] bg-primary mx-auto shadow-neon" />
+                <p className="mt-4 text-xs md:text-sm font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60 max-w-2xl mx-auto px-4">// EXPLORE MITS CAMPUS IN 3D</p>
+                <div className="mt-6 flex justify-center gap-3 flex-wrap px-4">
                     {!isDriving ? (
-                        <Button onClick={startDriving} className="font-orbitron text-[10px] tracking-[0.3em] uppercase px-8 py-6 rounded-none border-2 bg-gradient-to-b from-[#ff00ff] to-[#cc00cc] border-[#ff66ff] text-white hover:shadow-[0_0_30px_#ff00ff] transition-all" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '10px', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff' }}>🚗 DRIVE IN CAMPUS</Button>
+                        <Button onClick={startDriving} className="font-orbitron text-[8px] md:text-[10px] tracking-[0.3em] uppercase px-6 py-4 md:px-8 md:py-6 rounded-none border-2 bg-gradient-to-b from-[#ff00ff] to-[#cc00cc] border-[#ff66ff] text-white hover:shadow-[0_0_30px_#ff00ff] transition-all" style={{ fontFamily: '"Press Start 2P", monospace', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff' }}>🚗 DRIVE IN CAMPUS</Button>
                     ) : (
-                        <Button onClick={stopDriving} className="font-orbitron text-[10px] tracking-[0.3em] uppercase px-8 py-6 rounded-none border-2 bg-gradient-to-b from-[#00ffff] to-[#0088ff] border-[#66ffff] text-black hover:shadow-[0_0_30px_#00ffff] transition-all" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '10px', boxShadow: 'inset -2px -2px 0 #006688, inset 2px 2px 0 #66ffff, 0 0 15px #00ffff' }}>✕ EXIT DRIVING</Button>
+                        <Button onClick={stopDriving} className="font-orbitron text-[8px] md:text-[10px] tracking-[0.3em] uppercase px-6 py-4 md:px-8 md:py-6 rounded-none border-2 bg-gradient-to-b from-[#00ffff] to-[#0088ff] border-[#66ffff] text-black hover:shadow-[0_0_30px_#00ffff] transition-all" style={{ fontFamily: '"Press Start 2P", monospace', boxShadow: 'inset -2px -2px 0 #006688, inset 2px 2px 0 #66ffff, 0 0 15px #00ffff' }}>✕ EXIT DRIVING</Button>
                     )}
                 </div>
             </div>
-            <div className={`container mx-auto px-6 pb-20 ${isDriving ? 'p-0 m-0 max-w-none' : ''}`}>
-                <div className={`relative w-full overflow-hidden transition-all duration-500 ${isDriving ? 'fixed inset-0 z-[100] rounded-none border-0' : 'rounded-xl border-2 border-white/10'}`} style={{ height: isDriving ? '100vh' : 'calc(100vh - 380px)', minHeight: isDriving ? '100vh' : '500px', boxShadow: isDriving ? 'none' : '0 0 60px rgba(188,19,254,0.2), inset 0 0 30px rgba(0,0,0,0.5)' }}>
-                    {isDriving && (<button onClick={stopDriving} className="fixed top-4 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 bg-black/80 border border-primary/50 text-primary text-[8px] font-press-start hover:bg-primary hover:text-black transition-all flex items-center gap-2 shadow-neon-small" style={{ fontFamily: '"Press Start 2P", monospace' }}><span>✕</span> EXIT DRIVING</button>)}
+            <div className={`container mx-auto px-4 pb-12 ${isDriving ? 'p-0 m-0 max-w-none' : ''}`}>
+                <div className={`relative w-full overflow-hidden transition-all duration-500 ${isDriving ? 'fixed inset-0 z-[100] rounded-none border-0' : 'rounded-xl border-2 border-white/10'}`} style={{ height: isDriving ? '100vh' : 'calc(100vh - 320px)', minHeight: isDriving ? '100vh' : '400px', width: isDriving ? '100vw' : '100%', maxWidth: isDriving ? 'none' : '100%', left: isDriving ? '0' : 'auto', right: isDriving ? '0' : 'auto', top: isDriving ? '0' : 'auto', bottom: isDriving ? '0' : 'auto', boxShadow: isDriving ? 'none' : '0 0 60px rgba(188,19,254,0.2), inset 0 0 30px rgba(0,0,0,0.5)', overflow: isDriving ? 'hidden' : 'visible' }}>
+                    {isDriving && (<button onClick={stopDriving} className="fixed top-4 left-1/2 -translate-x-1/2 z-[110] px-3 py-2 bg-black/80 border border-primary/50 text-primary text-[7px] md:text-[8px] font-press-start hover:bg-primary hover:text-black transition-all flex items-center gap-2 shadow-neon-small" style={{ fontFamily: '"Press Start 2P", monospace' }}><span>✕</span> EXIT DRIVING</button>)}
                     {webglSupported ? (
                         <Canvas camera={{ position: [30, 25, 30], fov: 45 }} gl={{ antialias: true, alpha: true, stencil: false, depth: true, powerPreference: 'high-performance' }} dpr={Math.min(window.devicePixelRatio, 2)} style={{ width: '100%', height: '100%' }}>
                             <Suspense fallback={null}>
@@ -758,13 +887,13 @@ const CampusExplorer = () => {
                     ) : (<div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#0a1a2a] to-[#050c15] text-center"><p className="font-orbitron text-lg text-primary">WebGL is not available on this device.</p></div>)}
                     {isDriving && (
                         <>
-                            <MobileJoystick onMove={handleJoystickMove} />
+                            <MobileControls onMove={handleJoystickMove} />
                             {viewMode === 'first' && (
                                 <div className="absolute inset-0 pointer-events-none z-40">
-                                    <div className="absolute bottom-0 left-0 right-0 h-24" style={{ background: 'linear-gradient(to top, rgba(10,0,20,0.95) 0%, rgba(10,0,20,0.7) 50%, transparent 100%)' }} />
-                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[280px] h-16 rounded-t-xl" style={{ background: 'linear-gradient(to bottom, #1a0030, #0a0015)', border: '2px solid #ff00ff40', borderBottom: 'none', boxShadow: '0 0 20px rgba(255,0,255,0.2), inset 0 -10px 30px rgba(0,0,0,0.5)' }}>
-                                        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-[#ff00ff80] flex items-center justify-center" style={{ background: 'radial-gradient(circle, #0a0015 0%, #000 100%)' }}>
-                                            <div className="text-center"><div className="text-[#00ffff] text-lg font-bold" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '14px' }}>{Math.abs(Math.round(speed * 100))}</div><div className="text-[#ff00ff80] text-[6px]" style={{ fontFamily: '"Press Start 2P", monospace' }}>KM/H</div></div>
+                                    <div className="absolute bottom-0 left-0 right-0 h-20 md:h-24" style={{ background: 'linear-gradient(to top, rgba(10,0,20,0.95) 0%, rgba(10,0,20,0.7) 50%, transparent 100%)' }} />
+                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[240px] md:w-[280px] h-14 md:h-16 rounded-t-xl" style={{ background: 'linear-gradient(to bottom, #1a0030, #0a0015)', border: '2px solid #ff00ff40', borderBottom: 'none', boxShadow: '0 0 20px rgba(255,0,255,0.2), inset 0 -10px 30px rgba(0,0,0,0.5)' }}>
+                                        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 md:w-20 h-16 md:h-20 rounded-full border-4 border-[#ff00ff80] flex items-center justify-center" style={{ background: 'radial-gradient(circle, #0a0015 0%, #000 100%)' }}>
+                                            <div className="text-center"><div className="text-[#00ffff] text-base md:text-lg font-bold" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '12px md:14px' }}>{Math.abs(Math.round(speed * 100))}</div><div className="text-[#ff00ff80] text-[5px] md:text-[6px]" style={{ fontFamily: '"Press Start 2P", monospace' }}>KM/H</div></div>
                                         </div>
                                     </div>
                                 </div>
@@ -775,9 +904,15 @@ const CampusExplorer = () => {
                     <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(5,1,13,0.8) 100%)' }} />
                 </div>
                 {!isDriving && (
-                    <>
-                        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">{[{ icon: '🎓', title: 'Main Gate', desc: 'Historic entrance since 1957' }, { icon: '🤖', title: 'AI Department', desc: 'State-of-the-art research facility' }, { icon: '📚', title: 'Central Library', desc: 'Over 100,000 books & resources' }].map((item, idx) => (<div key={idx} className="group relative bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-xl p-6 hover:border-primary transition-all duration-500" style={{ boxShadow: '0 0 30px rgba(188,19,254,0.05)' }}><div className="text-4xl mb-4">{item.icon}</div><h3 className="text-lg font-black text-white group-hover:text-primary transition-colors mb-2">{item.title}</h3><p className="text-sm text-muted-foreground">{item.desc}</p></div>))}</div>
-                    </>
+                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {[{ icon: '🎓', title: 'Main Gate', desc: 'Historic entrance since 1957' }, { icon: '🤖', title: 'AI Department', desc: 'State-of-the-art research facility' }, { icon: '📚', title: 'Central Library', desc: 'Over 100,000 books & resources' }].map((item, idx) => (
+                            <div key={idx} className="group relative bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-lg p-4 hover:border-primary transition-all duration-500" style={{ boxShadow: '0 0 30px rgba(188,19,254,0.05)' }}>
+                                <div className="text-3xl md:text-4xl mb-3">{item.icon}</div>
+                                <h3 className="text-base md:text-lg font-black text-white group-hover:text-primary transition-colors mb-2">{item.title}</h3>
+                                <p className="text-xs md:text-sm text-muted-foreground">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
                 )}
             </div>
             <div className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
