@@ -5,9 +5,8 @@ import { MainNavigation } from '@/components/ui/MainNavigation';
 import { Button } from '@/components/ui/button';
 import * as THREE from 'three';
 import statueModel from '@/components/models/statue.glb?url';
-import { useResponsive } from '@/hooks/use-responsive';
-import { RESPONSIVE_FONTS, RESPONSIVE_SPACING, RESPONSIVE_BUTTON_SIZES, RESPONSIVE_NAV_HEIGHT } from '@/lib/responsive-styles';
 
+// Theme constants
 const THEME = {
     primary: '#BC13FE',
     secondary: '#00FFFF',
@@ -19,39 +18,63 @@ const THEME = {
     windowColor: '#FFDD33'
 };
 
+
 const BUILDINGS = [
     { id: 'main-gate', name: 'MITS Main Gate', hindiName: 'मुख्य द्वार', position: [5, -27], size: [4, 1], height: 6, type: 'gate', icon: '🎓' },
     { id: 'old-building', name: 'CSE & IT Department', hindiName: 'सिविल विभाग', position: [-4, -10], size: [16, 3.5], height: 4, type: 'complex' },
-    { id: 'old-building-2', name: 'CSE & IT Department', hindiName: 'सिविल विभाग', position: [1, -12.5], size: [6, 3.5], height: 2, type: 'complex' },
-    { id: 'old-building-3', name: 'CSE & IT Department', hindiName: 'सिविल विभाग', position: [-9, -12.5], size: [6, 3.5], height: 2, type: 'complex' },
+    { id: 'old-building-2', name: 'CSE Annex 1', hindiName: 'सिविल विभाग', position: [1, -12.5], size: [6, 3.5], height: 2, type: 'complex' },
+    { id: 'old-building-3', name: 'CSE Annex 2', hindiName: 'सिविल विभाग', position: [-9, -12.5], size: [6, 3.5], height: 2, type: 'complex' },
     { id: 'canteen', name: 'Canteen', hindiName: 'कैंटीन', position: [-18, -17], size: [2, 2], height: 2, type: 'simple', icon: '🍽️' },
+    
+    // Unique AI Department (Only one)
     { id: 'ai-department', name: 'AI department', hindiName: 'एआई विभाग', position: [-1, 2], size: [9, 5], height: 8, type: 'simple', icon: '🤖' },
+    
+    // HOSTELS (Distinct IDs, distinct positions)
+    { id: 'girls-hostel', name: 'Girls Hostel', hindiName: 'छात्रावास', position: [22, 29], size: [8, 8], height: 7, type: 'hostel', icon: '🛏️', color: '#e0c0e0' },
+    { id: 'boys-hostel', name: 'Boys Hostel', hindiName: 'छात्रालय', position: [-15, 40], size: [8, 10], height: 7, type: 'hostel', icon: '🛏️', color: '#c0d0e0' },
+    
+    // POWER STATION (New 'power-towers' type - smaller footprint, tall towers)
+    { id: 'power-house', name: 'Power Station', hindiName: 'विद्युत घर', position: [-18, 25], size: [6, 8], height: 0.5, type: 'power-towers', icon: '⚡' },
+    
     { id: 'library', name: 'Central Library', hindiName: 'पुस्तकालय', position: [-14, -12], size: [4, 3], height: 3, type: 'complex', icon: '📚' },
     { id: 'stage-ground', name: 'stage ground', hindiName: 'स्टेज ग्राउंड', position: [-5, -22], size: [15, 6], height: 0.1, type: 'landmark', color: '#2D5A27' },
-    { id: 'parking', name: 'parking', hindiName: 'स्टेज ग्राउंड', position: [-19, -5], size: [3, 20], height: 0.1, type: 'landmark', color: '#2D5A27' },
-    { id: 'garden-circle', name: 'garden circle', hindiName: 'स्टेज ग्राउंड', position: [-19, -5], size: [3, 20], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'parking', name: 'parking', hindiName: 'पार्किंग', position: [-19, -5], size: [3, 20], height: 0.1, type: 'landmark', color: '#2D5A27' },
     { id: 'ai-ground', name: 'AI ground', hindiName: 'एआई ग्राउंड', position: [-1, -4], size: [9, 7], height: 0.1, type: 'landmark', color: '#3A6B35' },
     { id: 'statue-ground', name: 'statue ground', hindiName: 'स्टैच्यू ग्राउंड', position: [15, -18.5], size: [10, 10], height: 0.1, type: 'landmark', color: '#2D5A27' },
-    { id: 'gymnasium', name: 'gymnasium ', hindiName: 'स्टैच्यू ग्राउंड', position: [11, 3.5], size: [10, 10], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'gymnasium', name: 'gymnasium', hindiName: 'जिम', position: [11, 3.5], size: [8, 8], height: 0.1, type: 'landmark', color: '#2D5A27' },
     { id: 'football-ground', name: 'football ground', hindiName: 'फुटबॉल ग्राउंड', position: [0, 19], size: [30, 15], height: 0.1, type: 'landmark', color: '#1B4D17' },
+    
     { id: 'biotech', name: 'Biotech Dept', hindiName: 'जैव प्रौद्योगिकी', position: [15, -11], size: [5, 5], height: 3.5, type: 'simple' },
     { id: 'dispensary', name: 'Dispensary', hindiName: 'औषधालय', position: [11, -3.5], size: [4, 4], height: 2, type: 'simple', icon: 'H' },
-    { id: 'admission', name: 'Admission Sector', hindiName: 'औषधालय', position: [18, 0], size: [4, 12], height: 2, type: 'simple', icon: 'H' },
-    { id: 'amul', name: 'Amul Parlor', hindiName: 'औषधालय', position: [7, -0.5], size: [2, 2], height: 1, type: 'simple', icon: 'H' },
+    { id: 'admission', name: 'Admission Sector', hindiName: 'प्रवेश', position: [18, 0], size: [4, 12], height: 2, type: 'simple', icon: 'H' },
+    { id: 'amul', name: 'Amul Parlor', hindiName: 'अमूल', position: [7, -0.5], size: [2, 2], height: 1, type: 'simple', icon: 'H' },
     { id: 'architecture', name: 'Architecture Dept', hindiName: 'वास्तुकला', position: [-9.5, -6.5], size: [5, 5], height: 4, type: 'complex' },
     { id: 'mechanical-dept', name: 'Mechanical Dept', hindiName: 'मैकेनिकल विभाग', position: [2, -7.25], size: [4, 4], height: 4, type: 'complex' },
     { id: 'statue-base', name: 'statue base', hindiName: 'स्टैच्यू आधार', position: [15, -18.5], size: [2, 2], height: 1, type: 'simple', color: '#A9A9A9' },
-    { id: 'mits-main', name: 'mechanical workshop', hindiName: 'मैकेनिकल वर्कशॉप', position: [-3, 15], size: [7, 5], height: 5, type: 'complex', icon: '⚙️' },
+    { id: 'mits-main', name: 'Mechanical Workshop', hindiName: 'मैकेनिकल वर्कशॉप', position: [-3, 15], size: [7, 4], height: 3, type: 'complex', icon: '⚙️' },
     { id: 'diamond-gate', name: 'Diamond Jubilee Gate', hindiName: 'डायमंड गेट', position: [-24, 9], size: [4, 1], height: 6, type: 'gate', rotationY: Math.PI / 2 },
 ];
 
+
 const ROADS = [
-    { start: [-22, -26], end: [23, -26], width: 2 },
-    { start: [22, -25], end: [22, 11], width: 2 },
-    { start: [-22, 10], end: [-23, -27], width: 2 },
-    { start: [5, -25], end: [5, 11], width: 2 },
-    { start: [-23, 10], end: [23, 10], width: 2 },
+    // Original Grid
+    { start: [-22, -26], end: [23, -26], width: 2 },  // Bottom horizontal
+    { start: [5, -27], end: [5, 11], width: 2 },      // Main vertical spine
+    
+    // Extended Right Side (To Girls Hostel & Admission)
+    { start: [22, -25], end: [22, 25], width: 2 },    // Right vertical extended up
+    //{ start: [7, 11], end: [22, 11], width: 2 },      // Connector to right vertical
+    
+    // Extended Left Side (To Power Station, Diamond Gate, Boys Hostel)
+    { start: [-23, -27], end: [-23, 33.75], width: 2 },  // Left vertical spine
+    { start: [-23, 10], end: [23, 10], width: 2 },     // Middle horizontal connector
+    
+    // Service Roads
+    //{ start: [-20, 20], end: [-20, 20], width: 1.5 }, // Power Station Service Road (Direct connection)
+    { start: [-23, 33], end: [-15, 33], width: 1.5 }, // Boys Hostel Road
+    //{ start: [22, 22], end: [26, 22], width: 1.5 },   // Girls Hostel Road
 ];
+
 
 const generateTextures = () => {
     const windowCanvas = document.createElement('canvas');
@@ -76,11 +99,108 @@ const generateTextures = () => {
     return { window: windowTexture, road: roadTexture };
 };
 
+
+
+const Fence = ({ size }: { size: [number, number] }) => {
+    const width = size[0];
+    const depth = size[1];
+    const halfW = width / 2;
+    const halfD = depth / 2;
+    
+    // Fence Settings
+    const postHeight = 0.8;
+    const postInterval = 2.5; // Distance between posts
+    const fenceColor = '#555555';
+    const railColor = '#888888';
+
+    // Calculate number of posts per side
+    const postsX = Math.ceil(width / postInterval);
+    const postsZ = Math.ceil(depth / postInterval);
+
+    // Generate Post Positions
+    const posts = useMemo(() => {
+        const positions = [];
+        
+        // Top & Bottom Sides (Along X axis)
+        for (let i = 0; i <= postsX; i++) {
+            const x = -halfW + (i * (width / postsX));
+            positions.push([x, 0, -halfD]); // Top
+            positions.push([x, 0, halfD]);  // Bottom
+        }
+
+        // Left & Right Sides (Along Z axis) - skipping corners to avoid duplicates
+        for (let i = 1; i < postsZ; i++) {
+            const z = -halfD + (i * (depth / postsZ));
+            positions.push([-halfW, 0, z]); // Left
+            positions.push([halfW, 0, z]);  // Right
+        }
+        return positions;
+    }, [width, depth, halfW, halfD, postsX, postsZ]);
+
+    return (
+        <group position={[0, 0.05, 0]}> 
+            {/* 1. Fence Posts */}
+            {posts.map((pos, i) => (
+                <mesh key={i} position={[pos[0], postHeight / 2, pos[2]]} castShadow>
+                    <boxGeometry args={[0.15, postHeight, 0.15]} />
+                    <meshStandardMaterial color={fenceColor} roughness={0.7} />
+                </mesh>
+            ))}
+
+            {/* 2. Top Rails (4 Sides) */}
+            <group position={[0, postHeight - 0.1, 0]}>
+                {/* Top Side */}
+                <mesh position={[0, 0, -halfD]}>
+                    <boxGeometry args={[width, 0.05, 0.05]} />
+                    <meshStandardMaterial color={railColor} />
+                </mesh>
+                {/* Bottom Side */}
+                <mesh position={[0, 0, halfD]}>
+                    <boxGeometry args={[width, 0.05, 0.05]} />
+                    <meshStandardMaterial color={railColor} />
+                </mesh>
+                {/* Left Side */}
+                <mesh position={[-halfW, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+                    <boxGeometry args={[depth, 0.05, 0.05]} />
+                    <meshStandardMaterial color={railColor} />
+                </mesh>
+                {/* Right Side */}
+                <mesh position={[halfW, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+                    <boxGeometry args={[depth, 0.05, 0.05]} />
+                    <meshStandardMaterial color={railColor} />
+                </mesh>
+            </group>
+
+             {/* 3. Middle Rails (4 Sides) */}
+             <group position={[0, postHeight / 2, 0]}>
+                <mesh position={[0, 0, -halfD]}><boxGeometry args={[width, 0.05, 0.05]} /><meshStandardMaterial color={railColor} /></mesh>
+                <mesh position={[0, 0, halfD]}><boxGeometry args={[width, 0.05, 0.05]} /><meshStandardMaterial color={railColor} /></mesh>
+                <mesh position={[-halfW, 0, 0]} rotation={[0, Math.PI / 2, 0]}><boxGeometry args={[depth, 0.05, 0.05]} /><meshStandardMaterial color={railColor} /></mesh>
+                <mesh position={[halfW, 0, 0]} rotation={[0, Math.PI / 2, 0]}><boxGeometry args={[depth, 0.05, 0.05]} /><meshStandardMaterial color={railColor} /></mesh>
+            </group>
+        </group>
+    );
+};
+
 const Building = ({ data, textures, showLabels }: any) => {
     const mesh = useRef<THREE.Mesh>(null);
     const [hovered, setHover] = useState(false);
 
     const geometry = useMemo(() => {
+        // HOSTEL LOGIC: U-Shape for hostels
+        if (data.type === 'hostel') {
+            const shape = new THREE.Shape();
+            const w = data.size[0] / 2;
+            const h = data.size[1] / 2;
+            const wingThickness = 2.5;
+            shape.moveTo(-w, -h); shape.lineTo(w, -h); shape.lineTo(w, h);
+            shape.lineTo(w - wingThickness, h); shape.lineTo(w - wingThickness, -h + wingThickness);
+            shape.lineTo(-w + wingThickness, -h + wingThickness); shape.lineTo(-w + wingThickness, h);
+            shape.lineTo(-w, h); shape.lineTo(-w, -h);
+            return new THREE.ExtrudeGeometry(shape, { depth: data.height, bevelEnabled: true, bevelThickness: 0.1 });
+        }
+
+        // COMPLEX LOGIC: Hollow center
         if (data.type === 'complex') {
             const shape = new THREE.Shape();
             const [w, h] = [data.size[0] / 2, data.size[1] / 2];
@@ -90,23 +210,25 @@ const Building = ({ data, textures, showLabels }: any) => {
             shape.holes.push(hole);
             return new THREE.ExtrudeGeometry(shape, { depth: data.height, bevelEnabled: true, bevelThickness: 0.05 });
         }
+
+        // POWER TOWERS LOGIC
+        if (data.type === 'power-towers') return new THREE.BoxGeometry(data.size[0], 0.5, data.size[1]);
+
+        // GATE LOGIC
         if (data.type === 'gate') {
             const shape = new THREE.Shape();
             const width = data.size[0] / 2;
             const height = data.height / 2;
             const thickness = 0.8;
             shape.moveTo(-width, -height);
-            shape.lineTo(-width + thickness, -height);
-            shape.lineTo(-width + thickness, height - 1);
-            shape.lineTo(width - thickness, height - 1);
-            shape.lineTo(width - thickness, -height);
-            shape.lineTo(width, -height);
-            shape.lineTo(width, height);
-            shape.lineTo(-width, height);
+            shape.lineTo(-width + thickness, -height); shape.lineTo(-width + thickness, height - 1);
+            shape.lineTo(width - thickness, height - 1); shape.lineTo(width - thickness, -height);
+            shape.lineTo(width, -height); shape.lineTo(width, height); shape.lineTo(-width, height);
             const geo = new THREE.ExtrudeGeometry(shape, { depth: data.size[1], bevelEnabled: true, bevelThickness: 0.05 });
             geo.center();
             return geo;
         }
+
         return new THREE.BoxGeometry(data.size[0], data.height, data.size[1]);
     }, [data]);
 
@@ -115,31 +237,58 @@ const Building = ({ data, textures, showLabels }: any) => {
             <mesh
                 ref={mesh}
                 geometry={geometry}
-                rotation={[data.type === 'complex' ? -Math.PI / 2 : 0, data.rotationY || 0, 0]}
-                position={[0, data.type === 'complex' || data.type === 'gate' ? 0 : data.height / 2, 0]}
+                rotation={[
+                    (data.type === 'complex' || data.type === 'hostel') ? -Math.PI / 2 : 0, 
+                    data.rotationY || 0, 
+                    0
+                ]}
+                position={[0, (data.type === 'complex' || data.type === 'gate' || data.type === 'hostel') ? 0 : data.height / 2, 0]}
                 onPointerOver={(e) => { e.stopPropagation(); setHover(true); }}
                 onPointerOut={() => setHover(false)}
                 castShadow
                 receiveShadow
             >
                 <meshStandardMaterial
-                    map={textures.window}
+                    map={data.type === 'power-towers' || data.type === 'landmark' ? undefined : textures.window}
                     color={data.color || THEME.building}
-                    roughness={0.4}
-                    metalness={0.1}
+                    roughness={data.type === 'power-towers' ? 0.9 : 0.4}
+                    metalness={data.type === 'power-towers' ? 0.2 : 0.1}
                     emissive={hovered ? THEME.primary : '#000000'}
                     emissiveIntensity={0.2}
                 />
             </mesh>
-            {data.type === 'complex' && (
+
+            {/* --- NEW: RENDER FENCE IF IT IS A GROUND (Landmark) --- */}
+            {data.type === 'landmark' && (
+                <Fence size={data.size} />
+            )}
+
+            {/* Roof for Hollow Buildings */}
+            {(data.type === 'complex' || data.type === 'hostel') && (
                 <mesh position={[0, data.height, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                     <planeGeometry args={[data.size[0], data.size[1]]} />
                     <meshStandardMaterial color={THEME.roof} roughness={0.9} />
                 </mesh>
             )}
-            {/* Remove labels from statue ground and statue base - they will be floating */}
+
+            {/* POWER STATION TOWERS */}
+            {data.type === 'power-towers' && (
+                <group>
+                    {[ -2, 2 ].map((offset, i) => (
+                        <group key={i} position={[offset, 0, 0]}>
+                            <mesh position={[0, 4, 0]}><cylinderGeometry args={[0.1, 0.8, 8, 4]} /><meshStandardMaterial color="#333" roughness={0.5} /></mesh>
+                            <mesh position={[0, 6, 0]}><boxGeometry args={[3, 0.2, 0.2]} /><meshStandardMaterial color="#333" /></mesh>
+                            {i===0 && <mesh position={[0, 7, 0]}><boxGeometry args={[2, 0.2, 0.2]} /><meshStandardMaterial color="#333" /></mesh>}
+                        </group>
+                    ))}
+                    <mesh position={[0, 1, 2]} castShadow><boxGeometry args={[2, 2, 2]} /><meshStandardMaterial color="#444" roughness={0.3} metalness={0.6} /></mesh>
+                    <pointLight position={[0, 8, 0]} color="#ff0000" intensity={2} distance={8} />
+                </group>
+            )}
+
+            {/* Labels */}
             {showLabels && data.id !== 'statue-ground' && data.id !== 'statue-base' && (
-                <Html position={[0, data.height + 1.5, 0]} center distanceFactor={15}>
+                <Html position={[0, data.type === 'power-towers' ? 8 : data.height + 2.5, 0]} center distanceFactor={15}>
                     <div className="px-3 py-1 bg-black/80 backdrop-blur-md border border-white/20 rounded-full text-[10px] text-white whitespace-nowrap font-orbitron shadow-xl pointer-events-none">
                         <span className="text-primary mr-1">●</span> {data.name}
                     </div>
@@ -149,9 +298,7 @@ const Building = ({ data, textures, showLabels }: any) => {
     );
 };
 
-// -------------------------------------------------------------
-// UPDATED COMPONENT: Smart Foliage (With Square Boundary)
-// -------------------------------------------------------------
+
 const SmartFoliage = () => {
     const trunkGeo = useMemo(() => new THREE.CylinderGeometry(0.1, 0.15, 0.8), []);
     const leafGeo = useMemo(() => new THREE.SphereGeometry(0.6, 7, 7), []);
@@ -162,19 +309,13 @@ const SmartFoliage = () => {
         const trees = [];
         const buildingBuffer = 2;
         const roadBuffer = 1.8;
-        const campusHalfSize = 58; // Slightly smaller than ground half-size (60) to stay inside
+        const campusHalfSize = 58;
 
-        // Scan a square grid with square boundary
         for (let x = -60; x <= 60; x += 3.5) {
             for (let z = -60; z <= 60; z += 3.5) {
-
-                // --- BOUNDARY CHECK (NEW) ---
-                // If the point is outside the square campus, skip it
                 if (Math.abs(x) > campusHalfSize || Math.abs(z) > campusHalfSize) {
                     continue;
                 }
-
-                // --- COLLISION CHECK 1: BUILDINGS ---
                 let collision = false;
                 for (const b of BUILDINGS) {
                     const halfW = (b.size[0] / 2) + buildingBuffer;
@@ -185,8 +326,6 @@ const SmartFoliage = () => {
                     }
                 }
                 if (collision) continue;
-
-                // --- COLLISION CHECK 2: ROADS ---
                 for (const r of ROADS) {
                     const minX = Math.min(r.start[0], r.end[0]) - (r.width / 2 + roadBuffer);
                     const maxX = Math.max(r.start[0], r.end[0]) + (r.width / 2 + roadBuffer);
@@ -198,10 +337,8 @@ const SmartFoliage = () => {
                     }
                 }
                 if (collision) continue;
-
-                // --- COLLISION CHECK 3: EXCLUSIONS ---
-                if (Math.abs(x) < 3 && Math.abs(z + 20) < 3) continue; // Car spawn
-                if (Math.abs(x + 24) < 3 && Math.abs(z - 6) < 3) continue; // Huge Tree location
+                if (Math.abs(x) < 3 && Math.abs(z + 20) < 3) continue;
+                if (Math.abs(x + 24) < 3 && Math.abs(z - 6) < 3) continue;
 
                 const offsetX = (Math.random() - 0.5) * 1.5;
                 const offsetZ = (Math.random() - 0.5) * 1.5;
@@ -252,22 +389,7 @@ const SingleHugeTree = ({ position, height }: { position: [number, number, numbe
 };
 
 const StatueModel = ({ position, scale = [1, 1, 1], rotation = [0, 0, 0] }: { position: [number, number, number], scale?: [number, number, number], rotation?: [number, number, number] }) => {
-    const { scene, nodes, materials } = useGLTF(statueModel);
-
-    // Debug logging
-    useEffect(() => {
-        console.log('Statue model loaded:', { scene, nodes, materials });
-        if (scene) {
-            console.log('Scene children:', scene.children);
-            scene.traverse((child) => {
-                if ((child as THREE.Mesh).isMesh) {
-                    console.log('Mesh found:', child.name, (child as THREE.Mesh).geometry);
-                }
-            });
-        }
-    }, [scene, nodes, materials]);
-
-    // Fallback if model fails to load
+    const { scene } = useGLTF(statueModel);
     if (!scene) {
         return (
             <mesh position={position} scale={[1, 1, 1]}>
@@ -276,15 +398,7 @@ const StatueModel = ({ position, scale = [1, 1, 1], rotation = [0, 0, 0] }: { po
             </mesh>
         );
     }
-
-    return (
-        <primitive
-            object={scene}
-            position={position}
-            scale={scale}
-            rotation={rotation}
-        />
-    );
+    return <primitive object={scene} position={position} scale={scale} rotation={rotation} />;
 };
 
 const Roads = ({ textures }: any) => {
@@ -372,7 +486,6 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode, speed }: { carPosit
     const smoothedCameraPos = useRef(new THREE.Vector3());
     const lookAtTarget = useRef(new THREE.Vector3());
 
-    // Detect mobile device
     const isMobile = useMemo(() => {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                window.innerWidth <= 768;
@@ -388,83 +501,48 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode, speed }: { carPosit
         if (!cameraRef.current) return;
 
         if (viewMode === 'third') {
-            // Fixed top-center camera view - completely static
-            const fixedCameraHeight = 90; // Higher top-down position for better overview
-            const centerX = 0; // Fixed center of campus
-            const centerZ = 0; // Fixed center of campus
-            
-            // Set camera to fixed position at top center
+            const fixedCameraHeight = 90;
+            const centerX = 0;
+            const centerZ = 0;
             cameraRef.current.position.set(centerX, fixedCameraHeight, centerZ);
-            
-            // Look at the center of the campus
             cameraRef.current.lookAt(centerX, 0, centerZ);
-
-            // Fixed FOV for consistent top-down view
             cameraRef.current.fov = 45;
             cameraRef.current.updateProjectionMatrix();
         } else {
-            // Mobile FPP mode (when on mobile device)
             if (isMobile) {
-                // First-Person Perspective (FPP) - Camera inside the car
-                // Driver head height: slightly above ground
-                // Slightly forward from car center
-                const driverHeight = 0.55; // Driver head height
-                const forwardOffset = 0.3; // Slightly forward from car center
-                
-                // Calculate camera position inside the car
+                const driverHeight = 0.55;
+                const forwardOffset = 0.3;
                 const cameraX = carPosition[0] + Math.sin(carRotation) * forwardOffset;
                 const cameraZ = carPosition[2] + Math.cos(carRotation) * forwardOffset;
                 const cameraY = carPosition[1] + driverHeight;
-
-                // Set camera position exactly (no smoothing for true FPP)
                 cameraRef.current.position.set(cameraX, cameraY, cameraZ);
-
-                // Camera rotation EXACTLY matches car rotation
                 cameraRef.current.rotation.set(0, carRotation, 0);
-
-                // Look straight ahead (no tilt, pure FPP)
                 const lookAtDistance = 50;
                 const lookAtX = carPosition[0] + Math.sin(carRotation) * lookAtDistance;
                 const lookAtZ = carPosition[2] + Math.cos(carRotation) * lookAtDistance;
                 const lookAtY = carPosition[1] + driverHeight;
-
                 cameraRef.current.lookAt(lookAtX, lookAtY, lookAtZ);
-
-                // FPP FOV for immersive driving experience
                 cameraRef.current.fov = 90;
                 cameraRef.current.updateProjectionMatrix();
             } else {
-                // Desktop first-person view with improved stability
                 const height = 0.55;
                 const forwardOffset = 0.3;
                 const cameraX = carPosition[0] + Math.sin(carRotation) * forwardOffset;
                 const cameraZ = carPosition[2] + Math.cos(carRotation) * forwardOffset;
                 const cameraY = carPosition[1] + height;
-
-                // Smooth camera movement with slight lag for realism
                 smoothedCameraPos.current.lerp(new THREE.Vector3(cameraX, cameraY, cameraZ), 0.25);
-                
-                // Camera boundary constraints for first-person mode
                 const cameraPos = smoothedCameraPos.current;
                 const minX = -35; const maxX = 35;
                 const minZ = -35; const maxZ = 35;
-                
-                // Keep camera within bounds to ensure car stays in frame
                 cameraPos.x = Math.max(minX, Math.min(maxX, cameraPos.x));
                 cameraPos.z = Math.max(minZ, Math.min(maxZ, cameraPos.z));
-                
                 cameraRef.current.position.copy(cameraPos);
-
-                // Look at a point ahead with slight upward tilt
                 const lookAtDistance = 30;
                 const lookAtX = carPosition[0] + Math.sin(carRotation) * lookAtDistance;
                 const lookAtZ = carPosition[2] + Math.cos(carRotation) * lookAtDistance;
-                const lookAtY = carPosition[1] + height + 0.5; // Slight upward tilt
-
+                const lookAtY = carPosition[1] + height + 0.5;
                 lookAtTarget.current.lerp(new THREE.Vector3(lookAtX, lookAtY, lookAtZ), 0.2);
                 cameraRef.current.lookAt(lookAtTarget.current);
-
-                // Wider FOV for first-person immersion
                 cameraRef.current.fov = 85;
                 cameraRef.current.updateProjectionMatrix();
             }
@@ -477,17 +555,14 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode, speed }: { carPosit
 const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
     return (
         <group rotation={[0, Math.PI / 4, 0]}>
-            {/* Square ground base - bigger size */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <planeGeometry args={[120, 120]} />
                 <meshStandardMaterial color={THEME.ground} roughness={0.8} metalness={0.1} />
             </mesh>
-            {/* Square grass area - slightly smaller */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
                 <planeGeometry args={[119, 119]} />
                 <meshStandardMaterial color={THEME.grass} roughness={1} />
             </mesh>
-
             <Roads textures={textures} />
             <SmartFoliage />
             <SingleHugeTree position={[-24, 0, 6]} height={6} />
@@ -561,7 +636,6 @@ const CampusExplorer = () => {
         return () => clearTimeout(timer);
     }, []);
 
-    // Input handling - only modifies car state, never camera
     useEffect(() => {
         if (!isDriving) return;
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -580,7 +654,6 @@ const CampusExplorer = () => {
         return () => { window.removeEventListener('keydown', handleKeyDown, true); window.removeEventListener('keyup', handleKeyUp, true); };
     }, [isDriving]);
 
-    // Car physics - handles movement, rotation, and collision
     useEffect(() => {
         if (!isDriving) return;
         
@@ -589,7 +662,6 @@ const CampusExplorer = () => {
             let newSpeed = speed;
             let newRotation = carRotation;
             
-            // Input processing
             const joystickForward = joystickInput.current.y > 0.2;
             const joystickBackward = joystickInput.current.y < -0.2;
             const joystickLeft = joystickInput.current.x < -0.2;
@@ -600,36 +672,30 @@ const CampusExplorer = () => {
             const left = keys.has('a') || keys.has('arrowleft') || joystickLeft;
             const right = keys.has('d') || keys.has('arrowright') || joystickRight;
 
-            // Car acceleration/deceleration (inertia/friction)
             if (forward) {
                 newSpeed = Math.min(speed + 0.025, 0.35);
             } else if (backward) {
                 newSpeed = Math.max(speed - 0.025, -0.18);
             } else {
-                // Apply friction when no input
                 newSpeed = speed * 0.92;
                 if (Math.abs(newSpeed) < 0.005) newSpeed = 0;
             }
 
-            // Car rotation (steering)
             if (Math.abs(newSpeed) > 0.01) {
                 const rotationSpeed = Math.abs(newSpeed) > 0.1 ? 0.04 : 0.03;
                 if (left) newRotation += rotationSpeed;
                 if (right) newRotation -= rotationSpeed;
             }
 
-            // Car movement based on its own rotation (not world axes)
             const moveX = Math.sin(newRotation) * newSpeed;
             const moveZ = Math.cos(newRotation) * newSpeed;
             
             let newX = carPosition[0] + moveX;
             let newZ = carPosition[2] + moveZ;
 
-            // Bouˀndary collision
             newX = Math.max(-38, Math.min(38, newX));
             newZ = Math.max(-38, Math.min(38, newZ));
 
-            // Update car state
             setCarPosition([newX, 0, newZ]);
             setCarRotation(newRotation);
             setSpeed(newSpeed);
