@@ -313,12 +313,6 @@ const SmartFoliage = () => {
 
         for (let x = -60; x <= 60; x += 3.5) {
             for (let z = -60; z <= 60; z += 3.5) {
-<<<<<<< HEAD
-=======
-
-                // --- BOUNDARY CHECK (FIXED) ---
-                // If the point is outside the square campus, skip it
->>>>>>> 487fb22e5a1fc2dff662a1b797cb07fd0a8e635b
                 if (Math.abs(x) > campusHalfSize || Math.abs(z) > campusHalfSize) {
                     continue;
                 }
@@ -507,39 +501,17 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode, speed }: { carPosit
         if (!cameraRef.current) return;
 
         if (viewMode === 'third') {
-<<<<<<< HEAD
             const fixedCameraHeight = 90;
             const centerX = 0;
             const centerZ = 0;
             cameraRef.current.position.set(centerX, fixedCameraHeight, centerZ);
-=======
-            // Fixed top-center camera view - completely static
-            const fixedCameraHeight = 90; // Higher top-down position for better overview
-            const centerX = 0; // Fixed center of campus
-            const centerZ = 0; // Fixed center of campus
-
-            // Set camera to fixed position at top center
-            cameraRef.current.position.set(centerX, fixedCameraHeight, centerZ);
-
-            // Look at the center of the campus
->>>>>>> 487fb22e5a1fc2dff662a1b797cb07fd0a8e635b
             cameraRef.current.lookAt(centerX, 0, centerZ);
             cameraRef.current.fov = 45;
             cameraRef.current.updateProjectionMatrix();
         } else {
             if (isMobile) {
-<<<<<<< HEAD
                 const driverHeight = 0.55;
                 const forwardOffset = 0.3;
-=======
-                // First-Person Perspective (FPP) - Camera inside the car
-                // Driver head height: slightly above ground
-                // Slightly forward from car center
-                const driverHeight = 0.55; // Driver head height
-                const forwardOffset = 0.3; // Slightly forward from car center
-
-                // Calculate camera position inside the car
->>>>>>> 487fb22e5a1fc2dff662a1b797cb07fd0a8e635b
                 const cameraX = carPosition[0] + Math.sin(carRotation) * forwardOffset;
                 const cameraZ = carPosition[2] + Math.cos(carRotation) * forwardOffset;
                 const cameraY = carPosition[1] + driverHeight;
@@ -559,24 +531,11 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode, speed }: { carPosit
                 const cameraZ = carPosition[2] + Math.cos(carRotation) * forwardOffset;
                 const cameraY = carPosition[1] + height;
                 smoothedCameraPos.current.lerp(new THREE.Vector3(cameraX, cameraY, cameraZ), 0.25);
-<<<<<<< HEAD
                 const cameraPos = smoothedCameraPos.current;
                 const minX = -35; const maxX = 35;
                 const minZ = -35; const maxZ = 35;
                 cameraPos.x = Math.max(minX, Math.min(maxX, cameraPos.x));
                 cameraPos.z = Math.max(minZ, Math.min(maxZ, cameraPos.z));
-=======
-
-                // Camera boundary constraints for first-person mode
-                const cameraPos = smoothedCameraPos.current;
-                const minX = -35; const maxX = 35;
-                const minZ = -35; const maxZ = 35;
-
-                // Keep camera within bounds to ensure car stays in frame
-                cameraPos.x = Math.max(minX, Math.min(maxX, cameraPos.x));
-                cameraPos.z = Math.max(minZ, Math.min(maxZ, cameraPos.z));
-
->>>>>>> 487fb22e5a1fc2dff662a1b797cb07fd0a8e635b
                 cameraRef.current.position.copy(cameraPos);
                 const lookAtDistance = 30;
                 const lookAtX = carPosition[0] + Math.sin(carRotation) * lookAtDistance;
@@ -765,12 +724,7 @@ const CampusExplorer = () => {
             const keys = keysPressed.current;
             let newSpeed = speed;
             let newRotation = carRotation;
-<<<<<<< HEAD
             
-=======
-
-            // Input processing
->>>>>>> 487fb22e5a1fc2dff662a1b797cb07fd0a8e635b
             const joystickForward = joystickInput.current.y > 0.2;
             const joystickBackward = joystickInput.current.y < -0.2;
             const joystickLeft = joystickInput.current.x < -0.2;
