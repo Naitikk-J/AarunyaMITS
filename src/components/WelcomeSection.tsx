@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { RetroButton } from './ui/retro-button';
 import { useNavigate } from "react-router-dom";
@@ -16,13 +16,10 @@ export const WelcomeSection: React.FC = () => {
     const opacity = useTransform(scrollYProgress, [0, 0.1, 0.2, 0.8, 0.9, 1], [0, 0.2, 1, 1, 0.2, 0]);
 
     return (
-        <section ref={containerRef} className="relative min-h-screen w-full flex flex-col items-center justify-center bg-kidcore-cream py-24 overflow-hidden">
+        <section ref={containerRef} className="relative min-h-screen w-full flex flex-col items-center justify-center py-24 overflow-hidden -mt-[50vh] md:-mt-[100vh] bg-transparent">
 
             {/* Gritty Texture Overlay */}
-            <div
-                className="absolute inset-0 opacity-10 pointer-events-none"
-                style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/stardust.png")' }}
-            />
+
 
             {/* Background Decorative Elements */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -62,7 +59,7 @@ export const WelcomeSection: React.FC = () => {
             </div>
 
             {/* Content */}
-            <motion.div 
+            <motion.div
                 style={{ scale, opacity }}
                 className="relative z-10 container mx-auto px-4 flex flex-col items-center"
             >
@@ -135,10 +132,7 @@ export const WelcomeSection: React.FC = () => {
                 </motion.div>
             </motion.div>
 
-            {/* VHS Overlay */}
-            <div className="absolute inset-0 pointer-events-none opacity-10 bg-[url('https://media.giphy.com/media/oEI9uWUicG7vA68tV6/giphy.gif')] bg-cover mix-blend-overlay" />
+            {/* VHS Overlay - Removed external GIF that may cause issues */}
         </section>
     );
 };
-
-import { useRef } from 'react';

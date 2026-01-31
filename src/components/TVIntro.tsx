@@ -3,16 +3,16 @@ import { motion } from 'framer-motion';
 
 export const TVIntro: React.FC = () => {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm relative overflow-hidden">
+    <div className="w-full h-full flex flex-col items-center justify-center bg-black relative overflow-hidden">
       {/* Neon Purple Perspective Grid */}
-      <div className="absolute inset-0 pointer-events-none select-none z-0">
-        <div className="absolute inset-0 [perspective:500px] [perspective-origin:50%_50%]">
+      <div className="absolute inset-0 pointer-events-none bg-black select-none z-0">
+        <div className="absolute inset-0 bg-black [perspective:500px] [perspective-origin:50%_50%]">
           <motion.div 
             animate={{ 
-              backgroundPosition: ['0px 0px', '0px 40px'] 
+              backgroundPosition: ['0px 0px', '0px 0px'] 
             }}
             transition={{ 
-              duration: 2.5, 
+              duration: 5, 
               repeat: Infinity, 
               ease: "linear" 
             }}
@@ -24,7 +24,7 @@ export const TVIntro: React.FC = () => {
               `,
               backgroundSize: '60px 60px',
               transform: 'rotateX(75deg)',
-              filter: 'drop-shadow(0 0 8px rgba(184, 23, 253, 0.8))',
+              filter: 'drop-shadow(0 0 0px rgba(184, 23, 253, 0.8))',
               maskImage: 'radial-gradient(circle at 50% 50%, black 10%, transparent 80%)'
             }}
           />
@@ -33,7 +33,7 @@ export const TVIntro: React.FC = () => {
 
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+        animate={{ scale: 1, opacity: 100 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="text-center px-4 flex flex-col items-center relative z-10"
       >
