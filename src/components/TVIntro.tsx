@@ -5,8 +5,8 @@ export const TVIntro: React.FC = () => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center bg-black relative overflow-hidden">
       {/* Neon Purple Perspective Grid */}
-      <div className="absolute inset-0 pointer-events-none bg-black select-none z-0">
-        <div className="absolute inset-0 bg-black [perspective:500px] [perspective-origin:50%_50%]">
+      <div className="absolute inset-0 pointer-events-none bg-black/0 select-none z-0">
+        <div className="absolute inset-0 bg-black/0 [perspective:500px] [perspective-origin:50%_50%]">
           <motion.div 
             animate={{ 
               backgroundPosition: ['0px 0px', '0px 0px'] 
@@ -25,7 +25,7 @@ export const TVIntro: React.FC = () => {
               backgroundSize: '60px 60px',
               transform: 'rotateX(75deg)',
               filter: 'drop-shadow(0 0 0px rgba(184, 23, 253, 0.8))',
-              maskImage: 'radial-gradient(circle at 50% 50%, black 10%, transparent 80%)'
+              maskImage: 'radial-gradient(circle at 50% 50%, black 10%, transparent 90%)'
             }}
           />
         </div>

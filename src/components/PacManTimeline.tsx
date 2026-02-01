@@ -54,7 +54,7 @@ export const PacmanTimeline: React.FC = () => {
                     TIMELINE
                 </h2>
 
-                <div className="relative h-[700px] md:h-[1600px] w-full rounded-[4vw] md:rounded-[40px] border-[0.8vw] md:border-[6px] border-[#00fff9]/30 bg-black/80 shadow-[0_0_5vw_rgba(0,0,0,0.9)] min-h-[60vh]">
+                <div className="relative h-[700px] md:h-[1600px] w-full rounded-[4vw] md:rounded-[40px] border-[0.8vw] md:border-[6px] border-[#00fff9]/30 bg-black/10 shadow-[0_0_5vw_rgba(0,0,0,0.9)] min-h-[60vh]">
                     <svg
                         viewBox="0 0 800 1600"
                         className="absolute inset-0 w-full h-full overflow-visible"
