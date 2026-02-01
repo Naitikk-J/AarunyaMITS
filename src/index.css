@@ -1085,3 +1085,41 @@ footer * {
 .animate-marquee {
   animation: marquee 20s linear infinite;
 }
+
+/* ================= FONT SIZE FIX (GLOBAL) ================= */
+
+/* Base font size for better readability */
+html {
+  font-size: 18px; /* default was 16px */
+}
+
+/* Desktop & Laptop */
+@media (min-width: 1024px) {
+  html {
+    font-size: 20px;
+  }
+}
+
+/* ================= PAGE CONTENT FONT SCALE ================= */
+/* Only affects selected pages via wrapper class */
+
+.content-scale {
+  font-size: 1.15rem; /* Mobile default */
+  line-height: 1.6;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .content-scale {
+    font-size: 1.25rem;
+  }
+}
+
+/* Laptop / Desktop */
+@media (min-width: 1024px) {
+  .content-scale {
+    font-size: 1.35rem;
+  }
+}
+
+
