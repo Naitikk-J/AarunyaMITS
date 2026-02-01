@@ -5,6 +5,7 @@ import { MainNavigation } from '@/components/ui/MainNavigation';
 import { Button } from '@/components/ui/button';
 import * as THREE from 'three';
 import statueModel from '@/components/models/statue.glb?url';
+import { getCachedModel, cacheModel, getCachedTexture, cacheTexture, getCachedGeometry, cacheGeometry } from '@/utils/cache';
 
 // Theme constants
 const THEME = {
@@ -25,17 +26,17 @@ const BUILDINGS = [
     { id: 'old-building-2', name: 'CSE Annex 1', hindiName: 'सिविल विभाग', position: [1, -12.5], size: [6, 3.5], height: 2, type: 'complex' },
     { id: 'old-building-3', name: 'CSE Annex 2', hindiName: 'सिविल विभाग', position: [-9, -12.5], size: [6, 3.5], height: 2, type: 'complex' },
     { id: 'canteen', name: 'Canteen', hindiName: 'कैंटीन', position: [-18, -17], size: [2, 2], height: 2, type: 'simple', icon: '🍽️' },
-    
+
     // Unique AI Department (Only one)
     { id: 'ai-department', name: 'AI department', hindiName: 'एआई विभाग', position: [-1, 2], size: [9, 5], height: 8, type: 'simple', icon: '🤖' },
-    
+
     // HOSTELS (Distinct IDs, distinct positions)
     { id: 'girls-hostel', name: 'Girls Hostel', hindiName: 'छात्रावास', position: [22, 29], size: [8, 8], height: 7, type: 'hostel', icon: '🛏️', color: '#e0c0e0' },
     { id: 'boys-hostel', name: 'Boys Hostel', hindiName: 'छात्रालय', position: [-15, 40], size: [8, 10], height: 7, type: 'hostel', icon: '🛏️', color: '#c0d0e0' },
-    
+
     // POWER STATION (New 'power-towers' type - smaller footprint, tall towers)
     { id: 'power-house', name: 'Power Station', hindiName: 'विद्युत घर', position: [-18, 25], size: [6, 8], height: 0.5, type: 'power-towers', icon: '⚡' },
-    
+
     { id: 'library', name: 'Central Library', hindiName: 'पुस्तकालय', position: [-14, -12], size: [4, 3], height: 3, type: 'complex', icon: '📚' },
     { id: 'stage-ground', name: 'stage ground', hindiName: 'स्टेज ग्राउंड', position: [-5, -22], size: [15, 6], height: 0.1, type: 'landmark', color: '#2D5A27' },
     { id: 'parking', name: 'parking', hindiName: 'पार्किंग', position: [-19, -5], size: [3, 20], height: 0.1, type: 'landmark', color: '#2D5A27' },
@@ -43,7 +44,7 @@ const BUILDINGS = [
     { id: 'statue-ground', name: 'statue ground', hindiName: 'स्टैच्यू ग्राउंड', position: [15, -18.5], size: [10, 10], height: 0.1, type: 'landmark', color: '#2D5A27' },
     { id: 'gymnasium', name: 'gymnasium', hindiName: 'जिम', position: [11, 3.5], size: [8, 8], height: 0.1, type: 'landmark', color: '#2D5A27' },
     { id: 'football-ground', name: 'football ground', hindiName: 'फुटबॉल ग्राउंड', position: [0, 19], size: [30, 15], height: 0.1, type: 'landmark', color: '#1B4D17' },
-    
+
     { id: 'biotech', name: 'Biotech Dept', hindiName: 'जैव प्रौद्योगिकी', position: [15, -11], size: [5, 5], height: 3.5, type: 'simple' },
     { id: 'dispensary', name: 'Dispensary', hindiName: 'औषधालय', position: [11, -3.5], size: [4, 4], height: 2, type: 'simple', icon: 'H' },
     { id: 'admission', name: 'Admission Sector', hindiName: 'प्रवेश', position: [18, 0], size: [4, 12], height: 2, type: 'simple', icon: 'H' },
@@ -60,15 +61,15 @@ const ROADS = [
     // Original Grid
     { start: [-22, -26], end: [23, -26], width: 2 },  // Bottom horizontal
     { start: [5, -27], end: [5, 11], width: 2 },      // Main vertical spine
-    
+
     // Extended Right Side (To Girls Hostel & Admission)
     { start: [22, -25], end: [22, 25], width: 2 },    // Right vertical extended up
     //{ start: [7, 11], end: [22, 11], width: 2 },      // Connector to right vertical
-    
+
     // Extended Left Side (To Power Station, Diamond Gate, Boys Hostel)
     { start: [-23, -27], end: [-23, 33.75], width: 2 },  // Left vertical spine
     { start: [-23, 10], end: [23, 10], width: 2 },     // Middle horizontal connector
-    
+
     // Service Roads
     //{ start: [-20, 20], end: [-20, 20], width: 1.5 }, // Power Station Service Road (Direct connection)
     { start: [-23, 33], end: [-15, 33], width: 1.5 }, // Boys Hostel Road
@@ -77,6 +78,17 @@ const ROADS = [
 
 
 const generateTextures = () => {
+    // Check cache first
+    const cachedWindowTexture = getCachedTexture('window_texture');
+    const cachedRoadTexture = getCachedTexture('road_texture');
+
+    if (cachedWindowTexture && cachedRoadTexture) {
+        console.log('✅ Using cached textures');
+        return { window: cachedWindowTexture, road: cachedRoadTexture };
+    }
+
+    console.log('🔄 Generating textures...');
+
     const windowCanvas = document.createElement('canvas');
     windowCanvas.width = 128; windowCanvas.height = 128;
     const wctx = windowCanvas.getContext('2d')!;
@@ -96,6 +108,11 @@ const generateTextures = () => {
     const roadTexture = new THREE.CanvasTexture(roadCanvas);
     roadTexture.wrapS = roadTexture.wrapT = THREE.RepeatWrapping;
 
+    // Cache the generated textures
+    cacheTexture('window_texture', windowTexture);
+    cacheTexture('road_texture', roadTexture);
+
+    console.log('💾 Textures cached successfully');
     return { window: windowTexture, road: roadTexture };
 };
 
@@ -106,12 +123,30 @@ const Fence = ({ size }: { size: [number, number] }) => {
     const depth = size[1];
     const halfW = width / 2;
     const halfD = depth / 2;
-    
+
     // Fence Settings
     const postHeight = 0.8;
     const postInterval = 2.5; // Distance between posts
     const fenceColor = '#555555';
     const railColor = '#888888';
+
+    // Check cache for geometry
+    const cachedPostGeo = getCachedGeometry('fence_post_geometry');
+    const cachedRailGeo = getCachedGeometry('fence_rail_geometry');
+
+    let postGeometry = cachedPostGeo;
+    let railGeometry = cachedRailGeo;
+
+    if (!postGeometry || !railGeometry) {
+        console.log('🔄 Generating fence geometries...');
+        postGeometry = new THREE.BoxGeometry(0.15, postHeight, 0.15);
+        railGeometry = new THREE.BoxGeometry(1, 0.05, 0.05);
+
+        // Cache the geometries
+        cacheGeometry('fence_post_geometry', postGeometry);
+        cacheGeometry('fence_rail_geometry', railGeometry);
+        console.log('💾 Fence geometries cached successfully');
+    }
 
     // Calculate number of posts per side
     const postsX = Math.ceil(width / postInterval);
@@ -120,7 +155,7 @@ const Fence = ({ size }: { size: [number, number] }) => {
     // Generate Post Positions
     const posts = useMemo(() => {
         const positions = [];
-        
+
         // Top & Bottom Sides (Along X axis)
         for (let i = 0; i <= postsX; i++) {
             const x = -halfW + (i * (width / postsX));
@@ -138,11 +173,11 @@ const Fence = ({ size }: { size: [number, number] }) => {
     }, [width, depth, halfW, halfD, postsX, postsZ]);
 
     return (
-        <group position={[0, 0.05, 0]}> 
+        <group position={[0, 0.05, 0]}>
             {/* 1. Fence Posts */}
             {posts.map((pos, i) => (
                 <mesh key={i} position={[pos[0], postHeight / 2, pos[2]]} castShadow>
-                    <boxGeometry args={[0.15, postHeight, 0.15]} />
+                    <primitive object={postGeometry} />
                     <meshStandardMaterial color={fenceColor} roughness={0.7} />
                 </mesh>
             ))}
@@ -151,32 +186,32 @@ const Fence = ({ size }: { size: [number, number] }) => {
             <group position={[0, postHeight - 0.1, 0]}>
                 {/* Top Side */}
                 <mesh position={[0, 0, -halfD]}>
-                    <boxGeometry args={[width, 0.05, 0.05]} />
+                    <primitive object={railGeometry} />
                     <meshStandardMaterial color={railColor} />
                 </mesh>
                 {/* Bottom Side */}
                 <mesh position={[0, 0, halfD]}>
-                    <boxGeometry args={[width, 0.05, 0.05]} />
+                    <primitive object={railGeometry} />
                     <meshStandardMaterial color={railColor} />
                 </mesh>
                 {/* Left Side */}
                 <mesh position={[-halfW, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
-                    <boxGeometry args={[depth, 0.05, 0.05]} />
+                    <primitive object={railGeometry} />
                     <meshStandardMaterial color={railColor} />
                 </mesh>
                 {/* Right Side */}
                 <mesh position={[halfW, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
-                    <boxGeometry args={[depth, 0.05, 0.05]} />
+                    <primitive object={railGeometry} />
                     <meshStandardMaterial color={railColor} />
                 </mesh>
             </group>
 
-             {/* 3. Middle Rails (4 Sides) */}
-             <group position={[0, postHeight / 2, 0]}>
-                <mesh position={[0, 0, -halfD]}><boxGeometry args={[width, 0.05, 0.05]} /><meshStandardMaterial color={railColor} /></mesh>
-                <mesh position={[0, 0, halfD]}><boxGeometry args={[width, 0.05, 0.05]} /><meshStandardMaterial color={railColor} /></mesh>
-                <mesh position={[-halfW, 0, 0]} rotation={[0, Math.PI / 2, 0]}><boxGeometry args={[depth, 0.05, 0.05]} /><meshStandardMaterial color={railColor} /></mesh>
-                <mesh position={[halfW, 0, 0]} rotation={[0, Math.PI / 2, 0]}><boxGeometry args={[depth, 0.05, 0.05]} /><meshStandardMaterial color={railColor} /></mesh>
+            {/* 3. Middle Rails (4 Sides) */}
+            <group position={[0, postHeight / 2, 0]}>
+                <mesh position={[0, 0, -halfD]}><primitive object={railGeometry} /><meshStandardMaterial color={railColor} /></mesh>
+                <mesh position={[0, 0, halfD]}><primitive object={railGeometry} /><meshStandardMaterial color={railColor} /></mesh>
+                <mesh position={[-halfW, 0, 0]} rotation={[0, Math.PI / 2, 0]}><primitive object={railGeometry} /><meshStandardMaterial color={railColor} /></mesh>
+                <mesh position={[halfW, 0, 0]} rotation={[0, Math.PI / 2, 0]}><primitive object={railGeometry} /><meshStandardMaterial color={railColor} /></mesh>
             </group>
         </group>
     );
@@ -238,8 +273,8 @@ const Building = ({ data, textures, showLabels }: any) => {
                 ref={mesh}
                 geometry={geometry}
                 rotation={[
-                    (data.type === 'complex' || data.type === 'hostel') ? -Math.PI / 2 : 0, 
-                    data.rotationY || 0, 
+                    (data.type === 'complex' || data.type === 'hostel') ? -Math.PI / 2 : 0,
+                    data.rotationY || 0,
                     0
                 ]}
                 position={[0, (data.type === 'complex' || data.type === 'gate' || data.type === 'hostel') ? 0 : data.height / 2, 0]}
@@ -274,11 +309,11 @@ const Building = ({ data, textures, showLabels }: any) => {
             {/* POWER STATION TOWERS */}
             {data.type === 'power-towers' && (
                 <group>
-                    {[ -2, 2 ].map((offset, i) => (
+                    {[-2, 2].map((offset, i) => (
                         <group key={i} position={[offset, 0, 0]}>
                             <mesh position={[0, 4, 0]}><cylinderGeometry args={[0.1, 0.8, 8, 4]} /><meshStandardMaterial color="#333" roughness={0.5} /></mesh>
                             <mesh position={[0, 6, 0]}><boxGeometry args={[3, 0.2, 0.2]} /><meshStandardMaterial color="#333" /></mesh>
-                            {i===0 && <mesh position={[0, 7, 0]}><boxGeometry args={[2, 0.2, 0.2]} /><meshStandardMaterial color="#333" /></mesh>}
+                            {i === 0 && <mesh position={[0, 7, 0]}><boxGeometry args={[2, 0.2, 0.2]} /><meshStandardMaterial color="#333" /></mesh>}
                         </group>
                     ))}
                     <mesh position={[0, 1, 2]} castShadow><boxGeometry args={[2, 2, 2]} /><meshStandardMaterial color="#444" roughness={0.3} metalness={0.6} /></mesh>
@@ -389,7 +424,16 @@ const SingleHugeTree = ({ position, height }: { position: [number, number, numbe
 };
 
 const StatueModel = ({ position, scale = [1, 1, 1], rotation = [0, 0, 0] }: { position: [number, number, number], scale?: [number, number, number], rotation?: [number, number, number] }) => {
+    // Check cache for statue model
+    const cachedModel = getCachedModel('statue_model');
+
+    if (cachedModel) {
+        console.log('✅ Using cached statue model');
+        return <primitive object={cachedModel.scene} position={position} scale={scale} rotation={rotation} />;
+    }
+
     const { scene } = useGLTF(statueModel);
+
     if (!scene) {
         return (
             <mesh position={position} scale={[1, 1, 1]}>
@@ -398,6 +442,11 @@ const StatueModel = ({ position, scale = [1, 1, 1], rotation = [0, 0, 0] }: { po
             </mesh>
         );
     }
+
+    // Cache the loaded model
+    cacheModel('statue_model', { scene, animations: [], cameras: [], asset: {}, parser: null, scenes: [scene], userData: {} });
+    console.log('💾 Statue model cached successfully');
+    
     return <primitive object={scene} position={position} scale={scale} rotation={rotation} />;
 };
 
@@ -724,7 +773,7 @@ const CampusExplorer = () => {
             const keys = keysPressed.current;
             let newSpeed = speed;
             let newRotation = carRotation;
-            
+
             const joystickForward = joystickInput.current.y > 0.2;
             const joystickBackward = joystickInput.current.y < -0.2;
             const joystickLeft = joystickInput.current.x < -0.2;
