@@ -94,7 +94,7 @@ export const WelcomeSection: React.FC = () => {
                     initial={{ y: 50, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.3, duration: 0.5 }}
-                    className="max-w-3xl w-full bg-black/80 border-4 border-kidcore-blue p-8 md:p-12 relative shadow-[10px_10px_0px_theme(colors.kidcore.blue)] mb-12"
+                    className="max-w-3xl w-full bg-black/10 border-4 border-kidcore-blue p-8 md:p-12 relative shadow-[10px_10px_0px_theme(colors.kidcore.blue)] mb-12"
                 >
                     <div className="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-kidcore-yellow" />
                     <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-kidcore-yellow" />
