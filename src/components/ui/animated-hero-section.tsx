@@ -6,7 +6,7 @@ const COLOR = "#ffffff"
 const HIT_COLOR = "#000000"
 const BACKGROUND_COLOR = "transparent"
 const BALL_COLOR = "#ff7700"
-const PADDLE_COLOR = "#000000"
+const PADDLE_COLOR = "#ffffff"
 const LETTER_SPACING = 1
 const WORD_SPACING = 3
 

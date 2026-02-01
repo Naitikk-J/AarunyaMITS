@@ -10,22 +10,67 @@ import { PromptingIsAllYouNeed } from '@/components/ui/animated-hero-section';
 import { PacmanTimeline } from '@/components/PacManTimeline';
 import { CRTOverlay } from '@/components/CRTOverlay';
 import Footer from '@/components/Footer';
+import { getCachedTexture, cacheTexture } from '@/utils/cache';
+import * as THREE from 'three';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Index = () => {
     const mainRef = useRef<HTMLDivElement>(null);
+    const [backgroundTexture, setBackgroundTexture] = useState<string | null>(null);
 
     useEffect(() => {
+        // Cache the background image for better performance
+        const cacheBackgroundImage = async () => {
+            try {
+                const cachedTexture = getCachedTexture('aarunyamg_background');
+                if (cachedTexture) {
+                    setBackgroundTexture(cachedTexture);
+                    return;
+                }
+
+                // Create a canvas to load and cache the image
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.src = '/aarunyamg.png';
+                
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                });
+
+                // Create a canvas texture
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                    ctx.drawImage(img, 0, 0);
+                    const dataUrl = canvas.toDataURL('image/png');
+                    cacheTexture('aarunyamg_background', dataUrl);
+                    setBackgroundTexture(dataUrl);
+                }
+            } catch (error) {
+                console.warn('Failed to cache background image:', error);
+                // Fallback to original image
+                setBackgroundTexture('/aarunyamg.png');
+            }
+        };
+
+        cacheBackgroundImage();
+
         // Initialize Lenis for smooth scrolling
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                        window.innerWidth <= 768;
+        
         const lenis = new Lenis({
-            duration: 1.2,
+            duration: isMobile ? 1.8 : 1.2, // Slower on mobile
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             orientation: 'vertical',
             gestureOrientation: 'vertical',
             smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 2,
+            wheelMultiplier: isMobile ? 0.6 : 1, // Reduced wheel sensitivity on mobile
+            touchMultiplier: isMobile ? 1.2 : 2, // Reduced touch sensitivity on mobile
             infinite: false,
             syncTouch: true,
         });
@@ -56,7 +101,7 @@ const Index = () => {
             <div
                 className="absolute top-0 left-0 w-full min-h-full bg-black z-0"
                 style={{
-                    backgroundImage: 'url(/aarunyamg.png)',
+                    backgroundImage: backgroundTexture ? `url(${backgroundTexture})` : 'url(/aarunyamg.png)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'top center',
                     backgroundRepeat: 'repeat-y'
@@ -80,8 +125,8 @@ const Index = () => {
                     {/* Section 2: Welcome to Aarunya (Zoom effect as you scroll) */}
                     <WelcomeSection />
 
-                    {/* Section 3: Animated Hero Section with Pong Game
-                    <PromptingIsAllYouNeed /> */}
+                    {/* Section 3: Animated Hero Section with Pong Game*/}
+                    <PromptingIsAllYouNeed /> 
 
                     {/* Section 4: The Pac-Man Timeline (Appears after WelcomeSection zoom) */}
                     <PacmanTimeline />
