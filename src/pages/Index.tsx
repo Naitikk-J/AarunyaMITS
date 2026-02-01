@@ -56,7 +56,7 @@ const Index = () => {
             <div
                 className="absolute top-0 left-0 w-full min-h-full bg-black z-0"
                 style={{
-                    backgroundImage: 'url(/aarunyaa.png)',
+                    backgroundImage: 'url(/aarunyamg.png)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'top center',
                     backgroundRepeat: 'repeat-y'
