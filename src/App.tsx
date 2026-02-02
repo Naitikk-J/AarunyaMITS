@@ -1,4 +1,4 @@
- import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ import Merch from "./pages/Merch";
 import Sponsors from "./pages/Sponsors";
 import Hierarchy from "./pages/Hierarchy";
 import ContactUs from "./pages/ContactUs";
+import Gallery from "./pages/Gallery";
 import ResponsiveTest from "./pages/ResponsiveTest";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
                 <PageTransition>
                     <Routes>
                         <Route path="/" element={<Index />} />
+                        <Route path="/gallery" element={<Gallery />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/view-map" element={<ViewMap />} />
                         <Route path="/campus-explorer" element={<CampusExplorer />} />
