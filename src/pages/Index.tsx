@@ -10,55 +10,13 @@ import { PromptingIsAllYouNeed } from '@/components/ui/animated-hero-section';
 import { PacmanTimeline } from '@/components/PacManTimeline';
 import { CRTOverlay } from '@/components/CRTOverlay';
 import Footer from '@/components/Footer';
-import { getCachedTexture, cacheTexture } from '@/utils/cache';
-import * as THREE from 'three';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Index = () => {
     const mainRef = useRef<HTMLDivElement>(null);
-    const [backgroundTexture, setBackgroundTexture] = useState<string | null>(null);
 
     useEffect(() => {
-        // Cache the background image for better performance
-        const cacheBackgroundImage = async () => {
-            try {
-                const cachedTexture = getCachedTexture('aarunyamg_background');
-                if (cachedTexture) {
-                    setBackgroundTexture(cachedTexture);
-                    return;
-                }
-
-                // Create a canvas to load and cache the image
-                const img = new Image();
-                img.crossOrigin = 'anonymous';
-                img.src = '/aarunyamg.png';
-                
-                await new Promise((resolve, reject) => {
-                    img.onload = resolve;
-                    img.onerror = reject;
-                });
-
-                // Create a canvas texture
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                if (ctx) {
-                    ctx.drawImage(img, 0, 0);
-                    const dataUrl = canvas.toDataURL('image/png');
-                    cacheTexture('aarunyamg_background', dataUrl);
-                    setBackgroundTexture(dataUrl);
-                }
-            } catch (error) {
-                console.warn('Failed to cache background image:', error);
-                // Fallback to original image
-                setBackgroundTexture('/aarunyamg.png');
-            }
-        };
-
-        cacheBackgroundImage();
-
         // Initialize Lenis for smooth scrolling
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                         window.innerWidth <= 768;
@@ -102,10 +60,10 @@ const lenis = new Lenis({
             <div
                 className="absolute top-0 left-0 w-full min-h-full bg-black z-0"
                 style={{
-                    backgroundImage: backgroundTexture ? `url(${backgroundTexture})` : 'url(/aarunyamg.png)',
+                    backgroundImage: 'url(/retro-room-bg.png)',
                     backgroundSize: 'cover',
-                    backgroundPosition: 'top center',
-                    backgroundRepeat: 'repeat-y'
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
                 }}
             />
 

@@ -2,11 +2,14 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PixelStar, PixelHeart } from "./PixelDecorations";
+import { RetroButton } from "./ui/retro-button";
+import { useResponsive } from "../hooks/use-responsive";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
     const footerRef = useRef<HTMLElement>(null);
+    const { isMobile, isTablet, isDesktop } = useResponsive();
 
     useEffect(() => {
         if (!footerRef.current) return;
@@ -43,30 +46,21 @@ const Footer = () => {
         <footer
             ref={footerRef}
             id="contact"
-            className="relative overflow-hidden py-16 px-4 "
+            className={`relative overflow-hidden ${isMobile ? 'py-8 px-2' : isTablet ? 'py-12 px-3' : 'py-16 px-4'}`}
             style={{
-                backgroundImage: `
-          linear-gradient(to right, rgba(26, 26, 26, 0.05) 2px, transparent 2px),
-          linear-gradient(to bottom, rgba(26, 26, 26, 0.05) 2px, transparent 2px)
-        `,
-                backgroundSize: "40px 40px",
+                background: 'linear-gradient(to bottom, #1a0a2e, #0d0520)',
+                borderTop: '4px solid',
+                borderImage: 'repeating-linear-gradient(90deg, #ff00ff, #ff00ff 8px, #00ffff 8px, #00ffff 16px) 1'
             }}
         >
-            {/* CRT Scanlines (Subtle for light theme) */}
-            <div className="absolute inset-0 pointer-events-none scanlines opacity-5" />
-
-            {/* Pixel Rainbow Border */}
-            <div className="absolute top-0 left-0 right-0 h-2 flex">
-                {["#00A6FF", "#FF5E1F", "#FF85C0", "#FFDD33", "#B0FF57"].map(
-                    (c, i) => (
-                        <div key={i} className="flex-1" style={{ background: c }} />
-                    )
-                )}
-            </div>
+            {/* CRT Scanlines */}
+            <div className="absolute inset-0 pointer-events-none" style={{
+                background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.03) 2px, rgba(0,255,255,0.03) 4px)'
+            }} />
 
             {/* Decorations */}
-            <PixelStar className="absolute top-20 left-10 w-8 h-8 text-kidcore-pink animate-pulse" />
-            <PixelHeart className="absolute bottom-20 right-12 w-8 h-8 text-kidcore-orange animate-pulse" />
+            <PixelStar className={`absolute ${isMobile ? 'top-10 left-6 w-6 h-6' : isTablet ? 'top-16 left-8 w-7 h-7' : 'top-20 left-10 w-8 h-8'} text-[#00ffff] animate-pulse`} color="#00ffff" />
+            <PixelHeart className={`absolute ${isMobile ? 'bottom-10 right-6 w-6 h-6' : isTablet ? 'bottom-16 right-8 w-7 h-7' : 'bottom-20 right-12 w-8 h-8'} text-[#ff00ff] animate-pulse`} color="#ff00ff" />
 
             <div className="max-w-10xl mx-auto relative z-10 ">
                 <div
@@ -79,49 +73,62 @@ const Footer = () => {
                         boxShadow: "10px 10px 0px var(--kidcore-pink), 20px 20px 0px var(--kidcore-yellow)",
                     }}
                 >
-                    <div className="bg-white/80 backdrop-blur-sm p-6 md:p-10 border-4 border-kidcore-black">
+                    <div className={`bg-white/80 backdrop-blur-sm ${isMobile ? 'p-4' : isTablet ? 'p-6' : 'p-6 md:p-10'} border-4 border-kidcore-black`}>
                         {/* TOP */}
-                        <div className="flex flex-col md:flex-row justify-between gap-10">
+                        <div className={`flex ${isMobile ? 'flex-col' : 'flex-col md:flex-row'} justify-between gap-10`}>
                             {/* Logo */}
                             <div className="footer-item">
-                                <img
-                                    src="/aarunya-logo.svg"
-                                    className="w-32 pixelated mb-4"
-                                    style={{
-                                        filter: "drop-shadow(4px 4px 0px var(--kidcore-blue))",
-                                    }}
-                                />
-                                <p className="font-pixel text-s text-kidcore-pink">
+                                <a href="#" className={`flex items-center ${isMobile ? 'gap-2' : 'gap-3'} group relative`}>
+                                    <img
+                                        src="/aarunya-logo.svg"
+                                        alt="Aarunya 2026"
+                                        className={`${isMobile ? 'h-8 w-auto' : isTablet ? 'h-10 w-auto' : 'h-12 w-auto'} transition-transform group-hover:scale-105 duration-300`}
+                                        style={{
+                                            imageRendering: 'pixelated',
+                                            filter: 'drop-shadow(0 0 12px #ff00ff) drop-shadow(0 0 24px #00ffff)',
+                                        }}
+                                    />
+                                </a>
+                                <p className={`font-press-start ${isMobile ? 'text-[8px]' : isTablet ? 'text-[9px]' : 'text-[10px]'} text-[#ff99ff] tracking-wider mt-2`} style={{ textShadow: '1px 1px 0 #440044' }}>
                                     MITS GWALIOR
                                 </p>
-                                <p className="font-pixel text-[10px] text-kidcore-pink mt-1">
-                                    KIDCORE MODE ACTIVE
+                                <p className={`font-pixel ${isMobile ? 'text-[8px]' : isTablet ? 'text-[9px]' : 'text-[10px]'} text-[#00ffff] mt-1`} style={{ textShadow: '0 0 8px #00ffff' }}>
+                                    SYSTEM ACTIVE
                                 </p>
                             </div>
 
                             {/* Nav */}
                             <div className="footer-item">
-                                <p className="font-pixel text-kidcore-pink mb-3 text-2xl">
-                                    &gt; NAVIGATION  
-                                </p>
-                                <div className="grid grid-cols-2 gap-x-10 gap-y-3 text-md text-kidcore-pink">
+                                <div className={`flex ${isMobile ? 'flex-wrap justify-center' : 'items-center'} ${isMobile ? 'gap-2' : 'gap-1.5'}`}>
                                     {[
-                                        "EVENTS",
-                                        "SCHEDULE",
-                                        "SPONSORS",
-                                        "ABOUT",
-                                        "CONTACT",
-                                    ].map((l) => (
+                                        { name: 'HOME', path: '/' },
+                                        { name: 'MEMORIES', path: '/gallery' },
+                                        { name: 'MAP', path: '/view-map' },
+                                        { name: 'EVENTS', path: '/events' },
+                                        { name: 'SCHEDULE', path: '/schedule' },
+                                        { name: 'SPONSORS', path: '/sponsors' },
+                                        { name: 'ABOUT', path: '/about' },
+                                        { name: 'CONTACT', path: '/contact' },
+                                        { name: 'REGISTER', path: '/register' },
+                                    ].map((link, idx) => (
                                         <a
-                                            key={l}
-                                            href={`#${l.toLowerCase()}`}
-                                            className="font-pixel text-[10px] text-kidcore-black hover:text-kidcore-blue relative group"
+                                            key={link.path}
+                                            href={link.path}
+                                            className="relative group"
                                         >
-                                            <span className="absolute -left-3 opacity-0 group-hover:opacity-100 text-kidcore-pink">
-                                                ▶
-                                            </span>
-                                            {l}
-                                            <span className="block h-px w-0 group-hover:w-full bg-gradient-to-r from-kidcore-blue to-kidcore-pink transition-all" />
+                                            <div
+                                                className={`relative px-3 py-2.5 font-bold tracking-wider transition-all duration-150 border-2 ${isMobile ? 'text-[7px]' : isTablet ? 'text-[8px]' : 'text-[9px]'}`}
+                                                style={{
+                                                    fontFamily: '"Press Start 2P", "Courier New", monospace',
+                                                    background: 'linear-gradient(to bottom, #1a0a2e, #2a1a4a)',
+                                                    color: '#ff99ff',
+                                                    borderColor: '#440044',
+                                                    textShadow: '1px 1px 0 #220022',
+                                                    boxShadow: 'inset -2px -2px 0 #0a0510, inset 2px 2px 0 #2a1a4a'
+                                                }}
+                                            >
+                                                <span className="relative z-10">{link.name}</span>
+                                            </div>
                                         </a>
                                     ))}
                                 </div>
@@ -129,17 +136,18 @@ const Footer = () => {
 
                             {/* Social */}
                             <div className="footer-item">
-                                <p className="font-pixel text-kidcore-pink mb-4 text-center md:text-left">
-                                    GET IN TOUCH
+                                <p className={`font-pixel text-[#00ffff] mb-4 text-center md:text-left ${isMobile ? 'text-[8px]' : isTablet ? 'text-[9px]' : ''}`} style={{ textShadow: '0 0 8px #00ffff' }}>
+                                    CONNECT
                                 </p>
-                                <div className="flex gap-4 justify-center md:justify-start">
+                                <div className={`flex ${isMobile ? 'gap-2' : 'gap-4'} justify-center md:justify-start`}>
                                     {["🎨", "⚡", "💥", "📌"].map((icon, i) => (
                                         <div
-                                            key={i}
-                                            className="kidcore-btn w-12 h-12 flex items-center justify-center text-xl cursor-pointer"
+                                            className={`${isMobile ? 'w-8 h-8 text-lg' : isTablet ? 'w-10 h-10 text-xl' : 'w-12 h-12 text-xl'} flex items-center justify-center cursor-pointer border-2 border-[#440044] bg-gradient-to-b from-[#1a0a2e] to-[#2a1a4a] text-[#00ffff] hover:text-[#ff00ff] transition-all duration-200`}
                                             style={{
-                                                padding: 0,
-                                                minWidth: "48px",
+                                                fontFamily: '"Press Start 2P", monospace',
+                                                fontSize: isMobile ? '10px' : isTablet ? '11px' : '12px',
+                                                textShadow: '0 0 8px currentColor',
+                                                boxShadow: 'inset -2px -2px 0 #0a0510, inset 2px 2px 0 #2a1a4a'
                                             }}
                                         >
                                             {icon}
@@ -150,25 +158,26 @@ const Footer = () => {
                         </div>
 
                         {/* Bottom */}
-                        <div className="footer-item mt-10 pt-6 border-t-4 border-dashed border-kidcore-blue flex flex-col md:flex-row justify-between items-center gap-6">
-                            <div className="flex items-center gap-2">
-                                <span className="font-pixel text-[10px] text-kidcore-pink">
-                                    ENERGY:
+                        <div className={`footer-item mt-10 pt-6 border-t-4 border-dashed border-[#ff00ff] ${isMobile ? 'flex flex-col' : 'flex flex-col md:flex-row'} justify-between items-center ${isMobile ? 'gap-4' : 'gap-6'}`}>
+                            <div className={`flex items-center ${isMobile ? 'gap-1' : 'gap-2'}`}>
+                                <span className={`font-pixel ${isMobile ? 'text-[8px]' : isTablet ? 'text-[9px]' : 'text-[10px]'} text-[#00ffff]`} style={{ textShadow: '0 0 8px #00ffff' }}>
+                                    STATUS:
                                 </span>
                                 {[1, 2, 3].map((i) => (
                                     <div
                                         key={i}
-                                        className="w-5 h-5 bg-kidcore-yellow border-2 border-kidcore-black"
+                                        className={`${isMobile ? 'w-3 h-3' : isTablet ? 'w-4 h-4' : 'w-5 h-5'} bg-[#00ffff] border-2 border-[#006666]`}
                                         style={{
                                             clipPath: "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)",
+                                            boxShadow: '0 0 8px #00ffff'
                                         }}
                                     />
                                 ))}
                             </div>
 
-                            <div className="font-pixel text-[10px] text-kidcore-pink text-center md:text-right">
+                            <div className={`font-press-start ${isMobile ? 'text-[8px]' : isTablet ? 'text-[9px]' : 'text-[10px]'} text-[#ff99ff] ${isMobile ? 'text-center' : 'text-center md:text-right'} tracking-wider`} style={{ textShadow: '1px 1px 0 #440044' }}>
                                 © 2026 AARUNYA FESTIVAL <br />
-                                MITS GWALIOR • MADE WITH ❤️
+                                MITS GWALIOR • SYSTEM ONLINE
                             </div>
                         </div>
                     </div>
@@ -176,14 +185,33 @@ const Footer = () => {
             </div>
 
             {/* PLAYFUL FOOTER END */}
-            <div className="footer-item mt-16 text-center">
-                <button
+            <div className={`footer-item ${isMobile ? 'mt-8' : 'mt-16'} text-center`}>
+                <div
+                    className={`relative px-6 py-3 font-bold tracking-wider transition-all duration-150 border-2 cursor-pointer ${isMobile ? 'text-[8px]' : isTablet ? 'text-[9px]' : 'text-[9px]'}`}
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    className="kidcore-btn px-8 py-3 text-sm font-pixel"
+                    style={{
+                        fontFamily: '"Press Start 2P", monospace',
+                        background: 'linear-gradient(to bottom, #1a0a2e, #2a1a4a)',
+                        color: '#ff99ff',
+                        borderColor: '#440044',
+                        textShadow: '1px 1px 0 #220022',
+                        boxShadow: 'inset -2px -2px 0 #0a0510, inset 2px 2px 0 #2a1a4a',
+                        transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'linear-gradient(to bottom, #2a1a4a, #1a0a2e)';
+                        e.currentTarget.style.color = '#00ffff';
+                        e.currentTarget.style.textShadow = '0 0 8px #00ffff';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'linear-gradient(to bottom, #1a0a2e, #2a1a4a)';
+                        e.currentTarget.style.color = '#ff99ff';
+                        e.currentTarget.style.textShadow = '1px 1px 0 #220022';
+                    }}
                 >
-                    [ BACK TO TOP ]
-                </button>
-                <p className="font-pixel text-[9px] text-kidcore-orange mt-4">
+                    <span className="relative z-10">[ RETURN TO TOP ]</span>
+                </div>
+                <p className={`font-press-start ${isMobile ? 'text-[8px]' : isTablet ? 'text-[9px]' : 'text-[10px]'} text-[#00ffff] mt-4 tracking-wider`} style={{ textShadow: '0 0 8px #00ffff' }}>
                     SYSTEM ACTIVE • CREATIVITY ∞ • VIBES 100%
                 </p>
             </div>

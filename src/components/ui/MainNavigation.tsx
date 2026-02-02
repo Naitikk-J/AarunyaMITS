@@ -6,6 +6,7 @@ import { RESPONSIVE_NAV_HEIGHT, RESPONSIVE_BUTTON_SIZES } from '@/lib/responsive
 
 const navLinks = [
     { name: 'HOME', path: '/' },
+    { name: 'GALLERY', path: '/gallery' },
     { name: 'MAP', path: '/view-map' },
     { name: 'EVENTS', path: '/events' },
     { name: 'SCHEDULE', path: '/schedule' },

@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { RetroButton } from './ui/retro-button';
 import { useNavigate } from "react-router-dom";
+import { useResponsive } from "../hooks/use-responsive";
 
 export const WelcomeSection: React.FC = () => {
     const navigate = useNavigate();
@@ -10,13 +11,14 @@ export const WelcomeSection: React.FC = () => {
         target: containerRef,
         offset: ["start end", "end start"]
     });
+    const { isMobile, isTablet, isDesktop } = useResponsive();
 
-    // Zoom effect for the WelcomeSection content - more pronounced zoom
-    const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.5, 1, 1.5, 1.8]);
+    // Zoom effect for the WelcomeSection content - stops zooming after initial scroll
+    const scale = useTransform(scrollYProgress, [0, 0.2, 0.3, 1], [0.2, 1, 1, 1]);
     const opacity = useTransform(scrollYProgress, [0, 0.1, 0.2, 0.8, 0.9, 1], [0, 0.2, 1, 1, 0.2, 0]);
 
     return (
-        <section ref={containerRef} className="relative min-h-screen w-full flex flex-col items-center justify-center py-24 overflow-hidden -mt-[50vh] md:-mt-[100vh] bg-transparent">
+        <section ref={containerRef} className={`relative min-h-screen w-full flex flex-col items-center justify-center ${isMobile ? 'py-16' : isTablet ? 'py-20' : 'py-24'} overflow-hidden ${isMobile ? '-mt-[40vh]' : isTablet ? '-mt-[60vh]' : '-mt-[50vh] md:-mt-[100vh]'} bg-transparent`}>
 
             {/* Gritty Texture Overlay */}
 
@@ -28,9 +30,9 @@ export const WelcomeSection: React.FC = () => {
                 <motion.div
                     animate={{ y: [0, -30, 0], rotate: [0, 15, 0] }}
                     transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-20 left-[5%] w-32 h-32 bg-kidcore-yellow border-4 border-black flex items-center justify-center rotate-[-10deg] z-0 shadow-[8px_8px_0px_#000]"
+                    className={`absolute ${isMobile ? 'top-10 left-[5%] w-20 h-20' : isTablet ? 'top-16 left-[5%] w-28 h-28' : 'top-20 left-[5%] w-32 h-32'} bg-kidcore-yellow border-4 border-black flex items-center justify-center rotate-[-10deg] z-0 shadow-[8px_8px_0px_#000]`}
                 >
-                    <span className="text-black font-press-start text-[10px] text-center">
+                    <span className={`text-black font-press-start ${isMobile ? 'text-[8px]' : isTablet ? 'text-[9px]' : 'text-[10px]'} text-center`}>
                         AARUNYA<br />FEST
                     </span>
                 </motion.div>
@@ -38,9 +40,9 @@ export const WelcomeSection: React.FC = () => {
                 <motion.div
                     animate={{ y: [0, 40, 0], rotate: [0, -10, 0] }}
                     transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    className="absolute top-[20%] right-[8%] w-40 h-40 bg-kidcore-pink border-4 border-black flex items-center justify-center rotate-[15deg] rounded-full z-0 shadow-[10px_10px_0px_#000]"
+                    className={`absolute ${isMobile ? 'top-[20%] right-[5%] w-28 h-28' : isTablet ? 'top-[20%] right-[6%] w-36 h-36' : 'top-[20%] right-[8%] w-40 h-40'} bg-kidcore-pink border-4 border-black flex items-center justify-center rotate-[15deg] rounded-full z-0 shadow-[10px_10px_0px_#000]`}
                 >
-                    <span className="text-white font-press-start text-xs text-center px-2 leading-loose">
+                    <span className={`text-white font-press-start ${isMobile ? 'text-[8px]' : isTablet ? 'text-[9px]' : 'text-xs'} text-center px-2 leading-loose`}>
                         RETRO<br />VIBES<br />2K26
                     </span>
                 </motion.div>
@@ -48,14 +50,14 @@ export const WelcomeSection: React.FC = () => {
                 <motion.div
                     animate={{ x: [0, 20, 0], y: [0, 20, 0] }}
                     transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute bottom-[15%] left-[10%] w-24 h-24 bg-kidcore-green border-4 border-black flex items-center justify-center rotate-[-5deg] z-0 shadow-[6px_6px_0px_#000]"
+                    className={`absolute ${isMobile ? 'bottom-[15%] left-[5%] w-16 h-16' : isTablet ? 'bottom-[15%] left-[8%] w-20 h-20' : 'bottom-[15%] left-[10%] w-24 h-24'} bg-kidcore-green border-4 border-black flex items-center justify-center rotate-[-5deg] z-0 shadow-[6px_6px_0px_#000]`}
                 >
-                    <span className="text-black font-press-start text-sm">GG</span>
+                    <span className={`text-black font-press-start ${isMobile ? 'text-[10px]' : isTablet ? 'text-[12px]' : 'text-sm'}`}>GG</span>
                 </motion.div>
 
                 {/* Glow blobs */}
-                <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-kidcore-blue/20 rounded-full blur-3xl" />
-                <div className="absolute -top-20 -left-20 w-80 h-80 bg-kidcore-yellow/20 rounded-full blur-3xl" />
+                <div className={`absolute ${isMobile ? '-bottom-10 -right-10 w-40 h-40' : isTablet ? '-bottom-16 -right-16 w-60 h-60' : '-bottom-20 -right-20 w-80 h-80'} bg-kidcore-blue/20 rounded-full blur-3xl`} />
+                <div className={`absolute ${isMobile ? '-top-10 -left-10 w-40 h-40' : isTablet ? '-top-16 -left-16 w-60 h-60' : '-top-20 -left-20 w-80 h-80'} bg-kidcore-yellow/20 rounded-full blur-3xl`} />
             </div>
 
             {/* Content */}
@@ -72,18 +74,18 @@ export const WelcomeSection: React.FC = () => {
                     transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
                     className="text-center mb-12"
                 >
-                    <h2 className="text-[5vw] md:text-[3vw] font-press-start text-kidcore-orange mb-6 drop-shadow-[4px_4px_0px_#000]">
+                    <h2 className={`${isMobile ? 'text-[8vw]' : isTablet ? 'text-[6vw]' : 'text-[5vw]'} md:text-[3vw] font-press-start text-kidcore-blue mb-6 drop-shadow-[4px_4px_0px_#000]`}>
                         WELCOME TO
                     </h2>
 
-                    <h1 className="text-[12vw] md:text-[10vw] lg:text-[12vw] font-press-start text-white leading-none tracking-tighter">
+                    <h1 className={`${isMobile ? 'text-[16vw]' : isTablet ? 'text-[14vw]' : 'text-[12vw]'} md:text-[10vw] lg:text-[12vw] font-press-start text-white leading-none tracking-tighter`}>
                         <span
-                            className="block text-kidcore-blue drop-shadow-[0.8vw_0.8vw_0px_#000] glitch"
+                            className="block text-kidcore-pink drop-shadow-[0.8vw_0.8vw_0px_#000] glitch"
                             data-text="AARUNYA"
                         >
                             AARUNYA
                         </span>
-                        <span className="block text-kidcore-pink drop-shadow-[0.8vw_0.8vw_0px_#000] -mt-2 md:-mt-6">
+                        <span className="block text-kidcore-green drop-shadow-[0.8vw_0.8vw_0px_#000] -mt-2 md:-mt-6">
                             2.0
                         </span>
                     </h1>
@@ -99,7 +101,7 @@ export const WelcomeSection: React.FC = () => {
                     <div className="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-kidcore-yellow" />
                     <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-kidcore-yellow" />
 
-                    <p className="text-xl md:text-2xl font-vt323 text-kidcore-green text-center leading-relaxed">
+                    <p className={`${isMobile ? 'text-lg' : isTablet ? 'text-xl' : 'text-xl'} md:text-2xl font-vt323 text-kidcore-green text-center leading-relaxed`}>
                         STEP INTO THE ULTIMATE DIGITAL CARNIVAL WHERE PIXELS COME TO LIFE!
                         EXPERIENCE A MULTIDIMENSIONAL FESTIVAL OF TECHNOLOGY, ART, AND MUSIC.
                         FROM RETRO ARCADE VIBES TO FUTURE-TECH INNOVATIONS, AARUNYA 2.0 IS
@@ -112,11 +114,11 @@ export const WelcomeSection: React.FC = () => {
                     initial={{ y: 30, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.5 }}
-                    className="flex flex-wrap justify-center gap-4 sm:gap-8 pointer-events-auto mt-8 md:mt-12"
+                    className={`flex flex-wrap justify-center gap-4 sm:gap-8 pointer-events-auto ${isMobile ? 'mt-6' : 'mt-8 md:mt-12'}`}
                 >
                     <RetroButton
-                        variant="default"
-                        className="scale-110 sm:scale-125 md:scale-150 mx-2 sm:mx-8"
+                        variant="white"
+                        className={`${isMobile ? 'scale-100' : isTablet ? 'scale-110' : 'scale-110'} sm:scale-125 md:scale-150 ${isMobile ? 'mx-1' : 'mx-2 sm:mx-8'}`}
                         onClick={() => navigate("/register")}
                     >
                         REGISTER
@@ -124,7 +126,7 @@ export const WelcomeSection: React.FC = () => {
 
                     <RetroButton
                         variant="white"
-                        className="scale-110 sm:scale-125 md:scale-150 mx-2 sm:mx-8"
+                        className={`${isMobile ? 'scale-100' : isTablet ? 'scale-110' : 'scale-110'} sm:scale-125 md:scale-150 ${isMobile ? 'mx-1' : 'mx-2 sm:mx-8'}`}
                         onClick={() => navigate("/info")}
                     >
                         INFO
