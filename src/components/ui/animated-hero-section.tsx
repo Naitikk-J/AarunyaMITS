@@ -2,13 +2,13 @@
 
 import { useEffect, useRef } from "react"
 
-const COLOR = "#ffffff"
-const HIT_COLOR = "#000000"
+const COLOR = "#4fe7f5"
+const HIT_COLOR = "#ffffff"
 const BACKGROUND_COLOR = "transparent"
 const BALL_COLOR = "#ff7700"
 const PADDLE_COLOR = "#ffffff"
 const LETTER_SPACING = 1
-const WORD_SPACING = 3
+const WORD_SPACING = 1
 
 const PIXEL_MAP = {
     A: [
@@ -267,8 +267,8 @@ export function PromptingIsAllYouNeed() {
 
         const initializeGame = () => {
             const scale = scaleRef.current
-            const LARGE_PIXEL_SIZE = 8 * scale
-            const SMALL_PIXEL_SIZE = 4 * scale
+            const LARGE_PIXEL_SIZE = 14 * scale
+            const SMALL_PIXEL_SIZE = 10 * scale
             const BALL_SPEED = 8 * scale
 
             pixelsRef.current = []
@@ -368,7 +368,7 @@ export function PromptingIsAllYouNeed() {
             }
 
             const paddleWidth = adjustedLargePixelSize
-            const paddleLength = 10 * adjustedLargePixelSize
+            const paddleLength = 12 * adjustedLargePixelSize
 
             paddlesRef.current = [
                 {
