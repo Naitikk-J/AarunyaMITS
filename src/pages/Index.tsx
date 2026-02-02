@@ -63,17 +63,18 @@ const Index = () => {
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                         window.innerWidth <= 768;
         
-        const lenis = new Lenis({
-            duration: isMobile ? 1.8 : 1.2, // Slower on mobile
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            orientation: 'vertical',
-            gestureOrientation: 'vertical',
-            smoothWheel: true,
-            wheelMultiplier: isMobile ? 0.6 : 1, // Reduced wheel sensitivity on mobile
-            touchMultiplier: isMobile ? 1.2 : 2, // Reduced touch sensitivity on mobile
-            infinite: false,
-            syncTouch: true,
-        });
+const lenis = new Lenis({
+        duration: isMobile ? 2.0 : 1.2, // Slower on mobile for better smoothness
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: isMobile ? 0.4 : 1, // Further reduced wheel sensitivity on mobile
+        touchMultiplier: isMobile ? 0.8 : 2, // Significantly reduced touch sensitivity on mobile
+        infinite: false,
+        syncTouch: true,
+        lerp: isMobile ? 0.1 : 0.05, // More smoothing on mobile
+    });
 
         function raf(time: number) {
             lenis.raf(time);

@@ -13,14 +13,14 @@ export const TVZoom: React.FC<TVZoomProps> = ({ children }) => {
     offset: ["start start", "end end"]
   });
 
-    // Smooth scale from 1 to 50 over a longer scroll distance
-    const scale = useTransform(scrollYProgress, [0, 0.2, 0.6, 1], [1, 8, 50, 50]);
+    // Smooth scale from 1 to 50 over a longer scroll distance with more gradual transitions
+    const scale = useTransform(scrollYProgress, [0, 0.1, 0.3, 0.5, 0.7, 0.9, 1], [1, 1.5, 3, 6, 15, 35, 50]);
     
     // Combined opacity for the entire TV element to prevent flickering
     const combinedOpacity = useTransform(scrollYProgress, [0, 0, 1], [1, 1, 0]);
     
     // Y position to make it "go up" at the end - more gradual
-    const tvY = useTransform(scrollYProgress, [0.85, 1], ["0%", "-100%"]);
+    const tvY = useTransform(scrollYProgress, [0.7, 0.8, 0.9, 1], ["0%", "-20%", "-50%", "-100%"]);
     
     // Enable pointer events only when content is visible
     const pointerEvents = useTransform(scrollYProgress, [0.5, 0.51], ["none", "auto"] as any);
