@@ -184,10 +184,13 @@ class AssetCacheManager {
 
   // Geometry caching
   setGeometry(key: string, geometry: any): void {
-    this.cache.geometries.set(key, geometry);
-    this.cache.lastUpdated.set(key, Date.now());
-    this.evictOldest();
-    this.saveCache();
+    // Only cache simple geometries to prevent Three.js errors
+    if (geometry.type === 'BoxGeometry' || geometry.type === 'PlaneGeometry' || geometry.type === 'CylinderGeometry') {
+      this.cache.geometries.set(key, geometry);
+      this.cache.lastUpdated.set(key, Date.now());
+      this.evictOldest();
+      this.saveCache();
+    }
   }
 
   getGeometry(key: string): any | null {
