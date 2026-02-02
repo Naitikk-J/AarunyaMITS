@@ -739,6 +739,13 @@ const CampusExplorer = () => {
             window.innerWidth <= 768;
     }, []);
 
+    // Clear geometry cache on mount to prevent Three.js errors
+    useEffect(() => {
+        import('@/utils/cache').then(({ assetCache }) => {
+            assetCache.clear();
+        });
+    }, []);
+
 
     useEffect(() => {
         const canvas = document.createElement('canvas');
@@ -854,7 +861,7 @@ const CampusExplorer = () => {
             )}
             <div className="relative pt-24 pb-8 text-center">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
-                <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-4">CAMPUS EXPLORER</h1>
+                <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-4">CAMPUS EXPLORER</h1>
                 <div className="h-1 w-[100px] bg-primary mx-auto shadow-neon" />
                 <p className="mt-4 text-xs md:text-sm font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60 max-w-2xl mx-auto px-4">// EXPLORE MITS CAMPUS IN 3D</p>
                 <div className="mt-6 flex justify-center gap-3 flex-wrap px-4">

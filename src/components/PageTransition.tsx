@@ -6,11 +6,12 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // No animations - transitions are now instant
+        // Reset scroll position to top when navigating to a new page
+        window.scrollTo({ top: 0, behavior: 'auto' });
     }, [location.pathname]);
 
     return (
-        <div 
+        <div
             ref={containerRef}
             className="relative w-full transition-opacity"
             style={{

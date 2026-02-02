@@ -18,6 +18,7 @@ import Sponsors from "./pages/Sponsors";
 import Hierarchy from "./pages/Hierarchy";
 import ContactUs from "./pages/ContactUs";
 import Gallery from "./pages/Gallery";
+import { Guidelines } from "./pages/Guidelines";
 import ResponsiveTest from "./pages/ResponsiveTest";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const App = () => (
                         <Route path="/contact" element={<ContactUs />} />
                         <Route path="/about" element={<AboutUs />} />
                         <Route path="/history" element={<History />} />
+                        <Route path="/guidelines" element={<Guidelines />} />
                         <Route path="/responsive-test" element={<ResponsiveTest />} />
                         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                         <Route path="*" element={<NotFound />} />
