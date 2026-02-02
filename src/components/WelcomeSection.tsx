@@ -33,17 +33,17 @@ export const WelcomeSection: React.FC = () => {
                     className={`absolute ${isMobile ? 'top-10 left-[5%] w-20 h-20' : isTablet ? 'top-16 left-[5%] w-28 h-28' : 'top-20 left-[5%] w-32 h-32'} bg-kidcore-yellow border-4 border-black flex items-center justify-center rotate-[-10deg] z-0 shadow-[8px_8px_0px_#000]`}
                 >
                     <span className={`text-black font-press-start ${isMobile ? 'text-[8px]' : isTablet ? 'text-[9px]' : 'text-[10px]'} text-center`}>
-                        AARUNYA<br />FEST
+                        AARUNYA<br />2026
                     </span>
                 </motion.div>
 
                 <motion.div
-                    animate={{ y: [0, 40, 0], rotate: [0, -10, 0] }}
+                    animate={{ y: [0, 300, 0], rotate: [0, -10, 0] }}
                     transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                     className={`absolute ${isMobile ? 'top-[20%] right-[5%] w-28 h-28' : isTablet ? 'top-[20%] right-[6%] w-36 h-36' : 'top-[20%] right-[8%] w-40 h-40'} bg-kidcore-pink border-4 border-black flex items-center justify-center rotate-[15deg] rounded-full z-0 shadow-[10px_10px_0px_#000]`}
                 >
                     <span className={`text-white font-press-start ${isMobile ? 'text-[8px]' : isTablet ? 'text-[9px]' : 'text-xs'} text-center px-2 leading-loose`}>
-                        RETRO<br />VIBES<br />2K26
+                        RETRO<br />VIBES<br />
                     </span>
                 </motion.div>
 
@@ -52,7 +52,7 @@ export const WelcomeSection: React.FC = () => {
                     transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                     className={`absolute ${isMobile ? 'bottom-[15%] left-[5%] w-16 h-16' : isTablet ? 'bottom-[15%] left-[8%] w-20 h-20' : 'bottom-[15%] left-[10%] w-24 h-24'} bg-kidcore-green border-4 border-black flex items-center justify-center rotate-[-5deg] z-0 shadow-[6px_6px_0px_#000]`}
                 >
-                    <span className={`text-black font-press-start ${isMobile ? 'text-[10px]' : isTablet ? 'text-[12px]' : 'text-sm'}`}>GG</span>
+                    <span className={`text-black font-press-start ${isMobile ? 'text-[10px]' : isTablet ? 'text-[12px]' : 'text-sm'}`}>MITS</span>
                 </motion.div>
 
                 {/* Glow blobs */}
@@ -78,7 +78,7 @@ export const WelcomeSection: React.FC = () => {
                         WELCOME TO
                     </h2>
 
-                    <h1 className={`${isMobile ? 'text-[16vw]' : isTablet ? 'text-[14vw]' : 'text-[12vw]'} md:text-[10vw] lg:text-[12vw] font-press-start text-white leading-none tracking-tighter`}>
+                    <h1 className={`${isMobile ? 'text-[16vw]' : isTablet ? 'text-[14vw]' : 'text-[10vw]'} md:text-[8vw] lg:text-[10vw] font-press-start text-white leading-none tracking-tighter`}>
                         <span
                             className="block text-kidcore-pink drop-shadow-[0.8vw_0.8vw_0px_#000] glitch"
                             data-text="AARUNYA"
@@ -101,7 +101,7 @@ export const WelcomeSection: React.FC = () => {
                     <div className="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-kidcore-yellow" />
                     <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-kidcore-yellow" />
 
-                    <p className={`${isMobile ? 'text-lg' : isTablet ? 'text-xl' : 'text-xl'} md:text-2xl font-vt323 text-kidcore-green text-center leading-relaxed`}>
+                    <p className={`${isMobile ? 'text-lg' : isTablet ? 'text-xl' : 'text-xl'} md:text-2xl font-vt323 text-black text-center leading-relaxed`}>
                         STEP INTO THE ULTIMATE DIGITAL CARNIVAL WHERE PIXELS COME TO LIFE!
                         EXPERIENCE A MULTIDIMENSIONAL FESTIVAL OF TECHNOLOGY, ART, AND MUSIC.
                         FROM RETRO ARCADE VIBES TO FUTURE-TECH INNOVATIONS, AARUNYA 2.0 IS
