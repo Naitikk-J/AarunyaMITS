@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import App from "./App.tsx";
+import { LoadingScreen } from "./components/ui/LoadingScreen";
 import "./index.css";
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -21,9 +22,15 @@ if (!googleClientId) {
     </div>
   );
 } else {
-  root.render(
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <App />
-    </GoogleOAuthProvider>
-  );
+  // Show loading screen first
+  root.render(<LoadingScreen />);
+  
+  // After a short delay, render the actual app
+  setTimeout(() => {
+    root.render(
+      <GoogleOAuthProvider clientId={googleClientId}>
+        <App />
+      </GoogleOAuthProvider>
+    );
+  }, 2000); // 2 second loading screen
 }
