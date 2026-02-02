@@ -127,7 +127,7 @@ export const WelcomeSection: React.FC = () => {
                     <RetroButton
                         variant="white"
                         className={`${isMobile ? 'scale-100' : isTablet ? 'scale-110' : 'scale-110'} sm:scale-125 md:scale-150 ${isMobile ? 'mx-1' : 'mx-2 sm:mx-8'}`}
-                        onClick={() => navigate("/info")}
+                        onClick={() => navigate("/about")}
                     >
                         INFO
                     </RetroButton>
