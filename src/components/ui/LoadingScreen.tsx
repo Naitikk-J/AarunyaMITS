@@ -47,8 +47,8 @@ export function LoadingScreen() {
                         alt="Aarunya 2026"
                         className="h-40 w-auto"
                         style={{
-                            filter: 'drop-shadow(3px 3px 0 #FF85C0) drop-shadow(6px 6px 0 #FF5E1F)',
-                            imageRendering: 'pixelated',
+                            filter: 'drop-shadow(3px 3px 0 #ee82b6) drop-shadow(8px 10px 0 #bd0fca)',
+                            imageRendering: 'crisp-edges',
                         }}
                     />
                 </div>
