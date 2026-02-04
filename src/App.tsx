@@ -1,0 +1,64 @@
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { PageTransition } from "@/components/PageTransition";
+import { Suspense, lazy } from "react";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import Index from "./pages/Index";
+import Register from "./pages/Register";
+import NotFound from "./pages/NotFound";
+import ViewMap from "./pages/ViewMap";
+import CampusExplorer from "./pages/CampusExplorer";
+import AboutUs from "./pages/AboutUs";
+import History from "./pages/History";
+import Schedule from "./pages/Schedule";
+import Events from "./pages/Events";
+import Merch from "./pages/Merch";
+import Sponsors from "./pages/Sponsors";
+import Hierarchy from "./pages/Hierarchy";
+import ContactUs from "./pages/ContactUs";
+import { Guidelines } from "./pages/Guidelines";
+import ResponsiveTest from "./pages/ResponsiveTest";
+
+// Lazy load Gallery for better initial load performance and loading screen support
+const Gallery = lazy(() => import("./pages/Gallery"));
+
+const queryClient = new QueryClient();
+
+const App = () => (
+    <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                <PageTransition>
+                    <Suspense fallback={<LoadingScreen />}>
+                        <Routes>
+                            <Route path="/" element={<Index />} />
+                            <Route path="/gallery" element={<Gallery />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/view-map" element={<ViewMap />} />
+                            <Route path="/campus-explorer" element={<CampusExplorer />} />
+                            <Route path="/schedule" element={<Schedule />} />
+                            <Route path="/events" element={<Events />} />
+                            <Route path="/merch" element={<Merch />} />
+                            <Route path="/sponsors" element={<Sponsors />} />
+                            <Route path="/hierarchy" element={<Hierarchy />} />
+                            <Route path="/contact" element={<ContactUs />} />
+                            <Route path="/about" element={<AboutUs />} />
+                            <Route path="/history" element={<History />} />
+                            <Route path="/guidelines" element={<Guidelines />} />
+                            <Route path="/responsive-test" element={<ResponsiveTest />} />
+                            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                            <Route path="*" element={<NotFound />} />
+                        </Routes>
+                    </Suspense>
+                </PageTransition>
+            </BrowserRouter>
+        </TooltipProvider>
+    </QueryClientProvider>
+);
+
+export default App;
