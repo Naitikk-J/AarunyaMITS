@@ -60,7 +60,7 @@ const Index = () => {
             <div
                 className="absolute top-0 left-0 w-full min-h-full bg-black z-0"
                 style={{
-                    backgroundImage: 'url(/retro-room-bg.png)',
+                    backgroundImage: 'url(/retro-room-bg.avif)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat'

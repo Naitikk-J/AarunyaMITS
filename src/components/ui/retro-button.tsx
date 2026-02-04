@@ -9,10 +9,10 @@ const retroButtonVariants = cva(
       variant: {
         default: [
           "text-white",
-          "[--bg-color:theme(colors.orange.500)]",
-          "[--bg-color-active:theme(colors.orange.600)]",
-          "[--shadow-light:theme(colors.orange.300)]",
-          "[--shadow-dark:theme(colors.orange.700)]",
+          "[--bg-color:rgb(244,24,244)]",
+          "[--bg-color-active:theme(colors.pink.600)]",
+          "[--shadow-light:theme(colors.pink.300)]",
+          "[--shadow-dark:theme(colors.pink.700)]",
         ],
         darkGray: [
           "text-white",
