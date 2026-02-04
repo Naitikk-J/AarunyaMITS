@@ -38,7 +38,7 @@ async function optimizeImages() {
                     fit: 'inside',
                     withoutEnlargement: true
                 })
-                .jpeg({ quality: 80, mozjpeg: true }) // Compress
+                .avif({ quality: 80, speed: 6 }) // Compress to AVIF
                 .toFile(outputPath);
 
             console.log(`Saved optimized/${file}`);
