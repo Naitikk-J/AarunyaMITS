@@ -3,8 +3,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { motion, Variants } from 'framer-motion';
+import { GlitchText } from '@/components/GlitchText';
+import { useResponsive } from '@/hooks/use-responsive';
 
 const ContactUs = () => {
+  const { isMobile } = useResponsive();
+
   const contacts = [
     {
       title: 'GENERAL_PASS',
@@ -36,160 +41,207 @@ const ContactUs = () => {
     { icon: '📺', label: 'YouTube', handle: '/aarunya' },
   ];
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut"
+      }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black">
+    <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black overflow-x-hidden">
       <MainNavigation />
 
-      {/* HEADER */}
-      <div className="relative pt-28 md:pt-40 pb-16 md:pb-20 text-center px-4">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
+      <div className="content-scale">
+        {/* HEADER */}
+        <div className="relative pt-32 md:pt-48 pb-12 text-center px-4">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.08)_0%,transparent_70%)] pointer-events-none" />
 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
-          CONTACT
-        </h1>
+          <motion.div
+            initial={{ y: -30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="text-2xl md:text-3xl lg:text-5xl font-black tracking-tight mb-4 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+              <GlitchText text="CONTACT" />
+            </h1>
 
-        <div className="h-1 w-20 md:w-28 bg-primary mx-auto shadow-neon" />
+            <div className="h-0.5 w-16 md:w-24 bg-primary mx-auto shadow-[0_0_10px_#BC13FE]" />
 
-        <p className="mt-6 text-xs sm:text-sm md:text-base lg:text-lg font-share-tech text-muted-foreground uppercase opacity-60 max-w-3xl mx-auto tracking-widest">
-          // BROADCAST YOUR MESSAGE TO THE CORE TEAM
-        </p>
-      </div>
+            <p className="mt-4 text-[9px] sm:text-[10px] md:text-xs font-share-tech text-white/50 uppercase max-w-xl mx-auto tracking-[0.2em]">
+              // BROADCAST YOUR MESSAGE TO THE CORE TEAM
+            </p>
+          </motion.div>
+        </div>
 
-      <div className="container mx-auto px-4 sm:px-6 pb-20">
-        {/* CONTACT CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
-          {contacts.map((c) => (
-            <div
-              key={c.title}
-              className="relative bg-[#0D0221]/60 border-2 border-white/5 rounded-xl p-6 sm:p-8"
-            >
-              <Badge className="absolute top-4 right-4 bg-primary text-black text-xs sm:text-sm tracking-widest px-3 py-1">
-                {c.channel}
+        <div className="container mx-auto px-4 sm:px-6 pb-20 max-w-5xl">
+          {/* CONTACT CARDS */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16"
+          >
+            {contacts.map((c) => (
+              <motion.div
+                key={c.title}
+                variants={itemVariants}
+                whileHover={{ scale: 1.02, backgroundColor: "rgba(188, 19, 254, 0.05)" }}
+                className="relative bg-[#0D0221]/60 border border-white/10 rounded-xl p-6 transition-all duration-300 hover:border-primary/40 group"
+              >
+                <Badge className="absolute top-4 right-4 bg-primary/90 text-black text-[9px] tracking-widest px-2 py-0.5">
+                  {c.channel}
+                </Badge>
+
+                <div className="space-y-4">
+                  <div className="text-3xl grayscale group-hover:grayscale-0 transition-all duration-300">{c.icon}</div>
+                  <h2 className="text-sm font-black text-white/90">{c.title}</h2>
+                  <p className="font-share-tech text-[10px] text-white/40 tracking-[0.1em] uppercase">
+                    {c.description}
+                  </p>
+
+                  <div className="space-y-2 pt-3 border-t border-white/5">
+                    {c.items.map((item) => (
+                      <div key={item} className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_5px_#BC13FE]" />
+                        <span className="text-[10px] tracking-widest text-white/70 group-hover:text-white transition-colors">
+                          {item}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* FORM + INFO */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+          >
+            {/* FORM */}
+            <div className="bg-[#0D0221]/60 border border-white/10 rounded-xl p-6 sm:p-8 hover:border-primary/20 transition-colors duration-500">
+              <Badge className="bg-primary/90 text-black text-[9px] tracking-widest px-2 py-0.5 mb-4">
+                TRANSMISSION
               </Badge>
 
-              <div className="space-y-5">
-                <div className="text-3xl sm:text-4xl md:text-5xl">{c.icon}</div>
+              <div className="text-3xl mb-4 grayscale hover:grayscale-0 transition-all duration-500">📡</div>
 
-                <h2 className=" text-base sm:text-lg md:text-xl lg:text-2xl font-black break-words text-center leading-tight">
-                {c.title}
-                </h2>
+              <h2 className="text-lg sm:text-xl font-black mb-2 text-white/90">
+                BROADCAST MESSAGE
+              </h2>
 
+              <p className="text-[10px] text-white/40 tracking-[0.2em] uppercase mb-6">
+                WE'LL GET BACK TO YOU WITHIN 24 HOURS
+              </p>
 
-                <p className="font-share-tech text-xs sm:text-sm md:text-base text-white/40 tracking-widest uppercase">
-                  {c.description}
-                </p>
+              <form className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-[9px] tracking-[0.2em] uppercase text-white/40">
+                      PLAYER_ID
+                    </Label>
+                    <Input className="h-10 bg-black/40 border-white/10 text-xs focus:border-primary/50 transition-colors" placeholder="ENTER NAME" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[9px] tracking-[0.2em] uppercase text-white/40">
+                      COMM_NODE
+                    </Label>
+                    <Input type="email" className="h-10 bg-black/40 border-white/10 text-xs focus:border-primary/50 transition-colors" placeholder="ENTER EMAIL" />
+                  </div>
+                </div>
 
-                <div className="space-y-3 pt-4 border-t border-white/5">
-                  {c.items.map((item) => (
-                    <div key={item} className="flex items-center gap-3">
-                      <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-                      <span className="text-xs sm:text-sm md:text-base tracking-widest">
-                        {item}
-                      </span>
-                    </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[9px] tracking-[0.2em] uppercase text-white/40">
+                    TRANSMISSION_DATA
+                  </Label>
+                  <textarea className="w-full min-h-[120px] bg-black/40 border border-white/10 rounded-md p-3 resize-none text-xs focus:border-primary/50 transition-colors outline-none text-white/80 placeholder:text-white/20" placeholder="TYPE YOUR MESSAGE..." />
+                </div>
+
+                <Button className="w-full h-12 text-xs tracking-[0.2em] font-bold bg-primary hover:bg-primary/90 text-black transition-all">
+                  SEND SIGNAL
+                </Button>
+              </form>
+            </div>
+
+            {/* RIGHT SIDE */}
+            <div className="space-y-6">
+              {/* SOCIAL */}
+              <div className="bg-[#0D0221]/60 border border-white/10 rounded-xl p-6 sm:p-8 hover:border-primary/20 transition-colors duration-500">
+                <Badge className="bg-secondary/90 text-black text-[9px] tracking-widest px-2 py-0.5 mb-4">
+                  SOCIAL NETWORK
+                </Badge>
+
+                <div className="grid grid-cols-2 gap-3">
+                  {socials.map((s) => (
+                    <motion.div
+                      key={s.label}
+                      whileHover={{ y: -2, backgroundColor: "rgba(255, 255, 255, 0.05)" }}
+                      className="bg-black/40 border border-white/5 rounded-lg p-4 text-center cursor-pointer transition-colors"
+                    >
+                      <div className="text-2xl mb-1">{s.icon}</div>
+                      <div className="text-[9px] tracking-[0.2em] text-white/40 uppercase mb-1">
+                        {s.label}
+                      </div>
+                      <div className="text-xs text-primary font-bold">
+                        {s.handle}
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
 
-        {/* FORM + INFO */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* FORM */}
-          <div className="bg-[#0D0221]/60 border-2 border-white/5 rounded-xl p-6 sm:p-10">
-            <Badge className="bg-primary text-black text-xs sm:text-sm tracking-widest px-3 py-1 mb-6">
-              TRANSMISSION
-            </Badge>
-
-            <div className="text-3xl sm:text-4xl md:text-5xl mb-6">📡</div>
-
-            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black mb-4">
-              BROADCAST MESSAGE
-            </h2>
-
-            <p className="text-xs sm:text-sm md:text-base text-white/40 tracking-widest uppercase mb-8">
-              WE'LL GET BACK TO YOU WITHIN 24 HOURS
-            </p>
-
-            <form className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-xs sm:text-sm md:text-base tracking-widest uppercase text-white/40">
-                    PLAYER_ID
-                  </Label>
-                  <Input className="h-12 bg-black/40 border-white/10 text-sm md:text-base" />
-                </div>
-
-                <div>
-                  <Label className="text-xs sm:text-sm md:text-base tracking-widest uppercase text-white/40">
-                    COMM_NODE
-                  </Label>
-                  <Input type="email" className="h-12 bg-black/40 border-white/10 text-sm md:text-base" />
-                </div>
-              </div>
-
-              <div>
-                <Label className="text-xs sm:text-sm md:text-base tracking-widest uppercase text-white/40">
-                  TRANSMISSION_DATA
-                </Label>
-                <textarea className="w-full min-h-[140px] bg-black/40 border border-white/10 rounded-lg p-4 text-sm md:text-base resize-none" />
-              </div>
-
-              <Button className="w-full h-14 text-sm sm:text-base tracking-widest font-bold">
-                SEND SIGNAL
-              </Button>
-            </form>
-          </div>
-
-          {/* RIGHT SIDE */}
-          <div className="space-y-8">
-            {/* SOCIAL */}
-            <div className="bg-[#0D0221]/60 border-2 border-white/5 rounded-xl p-6 sm:p-10">
-              <Badge className="bg-secondary text-black text-xs sm:text-sm tracking-widest px-3 py-1 mb-6">
-                SOCIAL NETWORK
-              </Badge>
-
-              <div className="grid grid-cols-2 gap-4">
-                {socials.map((s) => (
-                  <div
-                    key={s.label}
-                    className="bg-black/40 border border-white/5 rounded-lg p-4 sm:p-6 text-center"
-                  >
-                    <div className="text-2xl sm:text-3xl mb-2">{s.icon}</div>
-
-                    <div className="text-xs sm:text-sm md:text-base tracking-widest text-white/40 uppercase">
-                      {s.label}
-                    </div>
-
-                    <div className="text-xs sm:text-sm md:text-base text-primary font-bold">
-                      {s.handle}
-                    </div>
+              {/* SIGNAL & LOCATION */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="bg-[#0D0221]/60 border border-white/10 rounded-xl p-5 flex flex-col justify-center gap-2 hover:border-primary/20 transition-colors">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] tracking-[0.2em] uppercase text-white/40">
+                      SIGNAL
+                    </span>
+                    <span className="text-secondary font-bold tracking-[0.1em] text-xs">
+                      MAXIMUM
+                    </span>
                   </div>
-                ))}
-              </div>
-            </div>
+                  <span className="text-[9px] tracking-widest text-white/20">
+                    LATENCY: 4MS
+                  </span>
+                </div>
 
-            {/* LOCATION */}
-            <div className="bg-[#0D0221]/60 border-2 border-white/5 rounded-xl p-6 flex items-center gap-4">
-              <div className="text-2xl sm:text-3xl">📍</div>
-              <div>
-                <div className="text-xs sm:text-sm md:text-base tracking-widest uppercase text-white/30">
-                  LOCATION
-                </div>
-                <div className="text-sm sm:text-base md:text-lg font-bold">
-                  MITS GWALIOR, MP
-                </div>
-                <div className="text-xs sm:text-sm md:text-base tracking-widest uppercase text-primary/60">
-                  MADHYA PRADESH, INDIA
+                <div className="bg-[#0D0221]/60 border border-white/10 rounded-xl p-5 flex items-center gap-3 hover:border-primary/20 transition-colors">
+                  <div className="text-2xl">📍</div>
+                  <div>
+                    <div className="text-[9px] tracking-[0.2em] uppercase text-white/30 mb-0.5">
+                      LOCATION
+                    </div>
+                    <div className="font-bold text-xs text-white/90">MITS GWALIOR</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
 
-      <div className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+        <div className="fixed bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      </div>
     </div>
   );
 };

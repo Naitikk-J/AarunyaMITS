@@ -59,16 +59,15 @@ const Sponsors = () => {
         <div className="relative pt-28 md:pt-40 pb-16 md:pb-20 text-center px-4">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
             SPONSORS
           </h1>
 
           <div className="h-1 w-24 md:w-[120px] bg-primary mx-auto shadow-neon" />
 
-          <p className="mt-6 text-sm sm:text-base md:text-xl tracking-widest text-white/60 max-w-3xl mx-auto font-share-tech uppercase">
-  // THE ALLIANCES POWERING AARUNYA 2026
-</p>
-
+          <p className="mt-6 text-xs sm:text-sm md:text-base font-share-tech text-muted-foreground uppercase opacity-60 max-w-3xl mx-auto tracking-[0.25em] sm:tracking-[0.4em]">
+            // THE ALLIANCES POWERING AARUNYA 2026
+          </p>
         </div>
 
         {/* CONTENT */}
@@ -85,7 +84,7 @@ const Sponsors = () => {
                       <Badge
                         className={`${getLevelColor(
                           tier.level
-                        )} font-bold tracking-widest text-[20px] sm:text-[18px] rounded-none px-3 py-1 mb-6 inline-block`}
+                        )} font-bold tracking-widest text-[11px] sm:text-[12px] rounded-none px-3 py-1 mb-6 inline-block`}
                       >
                         TIER_0{idx + 1}
                       </Badge>
@@ -98,7 +97,7 @@ const Sponsors = () => {
                         {tier.title}
                       </h2>
 
-                      <p className="font-share-tech text-[11px] sm:text-xs md:text-sm lg:text-base text-white/40 uppercase tracking-[0.2em] sm:tracking-[0.3em]">
+                      <p className="font-share-tech text-xs sm:text-sm text-white/40 uppercase tracking-[0.2em] sm:tracking-[0.3em]">
                         {tier.description}
                       </p>
                     </div>
@@ -121,15 +120,15 @@ const Sponsors = () => {
                             />
 
                             <div className="relative z-10 space-y-3">
-                              <div className="text-xl sm:text-2xl md:text-3xl font-bold">
+                              <div className="text-lg sm:text-xl font-bold">
                                 {sponsor.name}
                               </div>
 
-                              <div className="flex items-center justify-between text-[10px] sm:text-xs md:text-sm">
+                              <div className="flex items-center justify-between text-xs sm:text-sm">
                                 <span className="uppercase tracking-[0.25em] text-white/30">
                                   Contribution
                                 </span>
-                                <span className="font-share-tech text-secondary font-bold text-sm sm:text-base md:text-lg">
+                                <span className="font-share-tech text-secondary font-bold">
                                   {sponsor.contribution}
                                 </span>
                               </div>
@@ -160,10 +159,9 @@ const Sponsors = () => {
                   JOIN THE ALLIANCE AND POWER THE NEXT GENERATION OF INNOVATION
                 </p>
 
-                <Button className="bg-primary text-black px-8 sm:px-10 py-5 sm:py-6 text-sm sm:text-base md:text-lg tracking-[0.3em] font-bold">
-  CONTACT US
-</Button>
-
+                <Button className="bg-primary text-black px-8 sm:px-10 py-5 sm:py-6 tracking-[0.25em] font-bold">
+                  CONTACT US
+                </Button>
               </div>
             </div>
           </div>

@@ -122,14 +122,12 @@ const Events = () => {
 
       {/* HEADER */}
       <div className="pt-32 pb-16 text-center px-4">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight bg-gradient-to-b from-white to-white/30 text-transparent bg-clip-text">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight bg-gradient-to-b from-white to-white/30 text-transparent bg-clip-text">
           EVENTS
-          
         </h1>
-        <p className="mt-6 text-sm sm:text-base md:text-xl tracking-widest text-white/60 max-w-3xl mx-auto">
-  // DISCOVER THE MOST EXCITING EVENTS, HEADLINERS, AND COMPETITIONS
-</p>
-
+        <p className="mt-6 text-xs sm:text-sm md:text-base tracking-widest text-white/50 max-w-2xl mx-auto">
+          // DISCOVER THE MOST EXCITING EVENTS, HEADLINERS, AND COMPETITIONS
+        </p>
       </div>
 
       {/* CATEGORY FILTER */}
@@ -139,7 +137,7 @@ const Events = () => {
             <Button
               key={c.id}
               onClick={() => setSelectedCategory(c.id)}
-              className={`px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base md:text-lg tracking-widest rounded-none border ${
+              className={`px-4 py-3 sm:px-6 sm:py-4 text-xs sm:text-sm tracking-widest rounded-none border ${
                 selectedCategory === c.id
                   ? 'bg-primary text-black border-primary'
                   : 'bg-transparent border-white/20 text-white/60'
@@ -155,7 +153,8 @@ const Events = () => {
           {filteredHeadliners.map((e) => (
             <div
               key={e.id}
-              className="bg-[#0D0221]/70 border border-white/10 rounded-xl p-6 flex flex-col">
+              className="bg-[#0D0221]/70 border border-white/10 rounded-xl p-6 flex flex-col"
+            >
               <div className="text-4xl sm:text-5xl mb-4 text-center">
                 {e.category === 'tech'
                   ? '⚡'
@@ -168,14 +167,13 @@ const Events = () => {
               <h3 className="text-lg sm:text-xl font-bold mb-2">
                 {e.title}
               </h3>
-              <p className="text-sm sm:text-base md:text-lg tracking-widest text-primary/70 mb-3">
+              <p className="text-xs tracking-widest text-primary/70 mb-3">
                 {e.date} · {e.attendees} REGISTERED
               </p>
-              <p className="text-base sm:text-lg md:text-xl text-white/70 flex-grow">
+              <p className="text-sm text-white/70 flex-grow">
                 {e.description}
               </p>
-              <Button className="mt-6 w-full rounded-none tracking-widest text-sm sm:text-base md:text-lg">
-
+              <Button className="mt-6 w-full rounded-none tracking-widest text-xs">
                 DETAILS
               </Button>
             </div>
@@ -195,7 +193,7 @@ const Events = () => {
                   {z.title}
                 </h2>
               </div>
-              <p className="text-sm sm:text-base md:text-lg tracking-widest text-white/50 mb-6">
+              <p className="text-xs tracking-widest text-white/40 mb-6">
                 {z.description}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -204,8 +202,8 @@ const Events = () => {
                     key={ev.name}
                     className="border border-white/10 rounded-lg p-4 text-sm"
                   >
-                    <div className="text-lg sm:text-xl md:text-2xl font-bold mb-3">{ev.name}</div>
-                    <Button className="w-full rounded-none text-sm sm:text-base md:text-lg tracking-widest">
+                    <div className="font-bold mb-2">{ev.name}</div>
+                    <Button className="w-full rounded-none text-xs tracking-widest">
                       VIEW
                     </Button>
                   </div>
@@ -224,11 +222,11 @@ const Events = () => {
             >
               <div className="text-5xl mb-4">{c.icon}</div>
               <h3 className="text-xl font-bold mb-2">{c.name}</h3>
-              <p className="text-sm sm:text-base md:text-lg tracking-widest text-primary/60 mb-4">
+              <p className="text-xs tracking-widest text-primary/60 mb-3">
                 BY {c.organizedBy}
               </p>
-              <p className="text-base sm:text-lg md:text-xl text-white/70 flex-grow">{c.desc}</p>
-              <Button className="mt-6 rounded-none tracking-widest text-sm sm:text-base md:text-lg">
+              <p className="text-sm text-white/70 flex-grow">{c.desc}</p>
+              <Button className="mt-6 rounded-none tracking-widest text-xs">
                 ENTER ARENA
               </Button>
             </div>

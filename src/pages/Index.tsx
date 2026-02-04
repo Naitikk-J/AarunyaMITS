@@ -6,7 +6,7 @@ import { MainNavigation } from '@/components/ui/MainNavigation';
 import { TVZoom } from '@/components/TVZoom';
 import { TVIntro } from '@/components/TVIntro';
 import { WelcomeSection } from '@/components/WelcomeSection';
-import { PromptingIsAllYouNeed } from '@/components/ui/animated-hero-section';
+
 import { PacmanTimeline } from '@/components/PacManTimeline';
 import { CRTOverlay } from '@/components/CRTOverlay';
 import Footer from '@/components/Footer';
@@ -19,20 +19,20 @@ const Index = () => {
     useEffect(() => {
         // Initialize Lenis for smooth scrolling
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                        window.innerWidth <= 768;
-        
-const lenis = new Lenis({
-        duration: isMobile ? 2.0 : 1.2, // Slower on mobile for better smoothness
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
-        wheelMultiplier: isMobile ? 0.4 : 1, // Further reduced wheel sensitivity on mobile
-        touchMultiplier: isMobile ? 0.8 : 2, // Significantly reduced touch sensitivity on mobile
-        infinite: false,
-        syncTouch: true,
-        lerp: isMobile ? 0.1 : 0.05, // More smoothing on mobile
-    });
+            window.innerWidth <= 768;
+
+        const lenis = new Lenis({
+            duration: isMobile ? 2.0 : 1.2, // Slower on mobile for better smoothness
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: isMobile ? 0.4 : 1, // Further reduced wheel sensitivity on mobile
+            touchMultiplier: isMobile ? 0.8 : 2, // Significantly reduced touch sensitivity on mobile
+            infinite: false,
+            syncTouch: true,
+            lerp: isMobile ? 0.1 : 0.05, // More smoothing on mobile
+        });
 
         function raf(time: number) {
             lenis.raf(time);
@@ -73,19 +73,18 @@ const lenis = new Lenis({
 
                 <main>
                     {/* Section 1: The Infinite TV Zoom (Hero) */}
-                    
-                    
+
+
                     <TVZoom>
-                        
-                <TVIntro />
-                
+
+                        <TVIntro />
+
                     </TVZoom>
 
                     {/* Section 2: Welcome to Aarunya (Zoom effect as you scroll) */}
                     <WelcomeSection />
 
-                    {/* Section 3: Animated Hero Section with Pong Game*/}
-                    <PromptingIsAllYouNeed /> 
+
 
                     {/* Section 4: The Pac-Man Timeline (Appears after WelcomeSection zoom) */}
                     <PacmanTimeline />
