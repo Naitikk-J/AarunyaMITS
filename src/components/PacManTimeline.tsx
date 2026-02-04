@@ -40,7 +40,7 @@ export const PacmanTimeline: React.FC = () => {
     }, [scrollYProgress]);
 
     return (
-        <div ref={containerRef} id="timeline" className="relative min-h-[120vh] md:min-h-[150vh] py-24  overflow-hidden">
+        <div ref={containerRef} id="timeline" className="relative min-h-[120vh] md:min-h-[150vh] pt-48 pb-24 overflow-hidden">
             {/* Animated Background Grid */}
             <div className="absolute inset-0 opacity-0 pointer-events-none">
                 <div className="absolute inset-0" style={{
@@ -54,7 +54,8 @@ export const PacmanTimeline: React.FC = () => {
                     TIMELINE
                 </h2>
 
-                <div className="relative h-[700px] md:h-[1600px] w-full rounded-[4vw] md:rounded-[40px] border-[0.8vw] md:border-[6px] border-[#00fff9]/30 bg-black/10 shadow-[0_0_5vw_rgba(0,0,0,0.9)] min-h-[60vh]">
+                {/* DESKTOP MAZE VIEW */}
+                <div className="hidden md:block relative h-[700px] md:h-[1600px] w-full rounded-[4vw] md:rounded-[40px] border-[0.8vw] md:border-[6px] border-[#00fff9]/30 bg-black/10 shadow-[0_0_5vw_rgba(0,0,0,0.9)] min-h-[60vh]">
                     <svg
                         viewBox="0 0 800 1600"
                         className="absolute inset-0 w-full h-full overflow-visible"
@@ -270,6 +271,72 @@ export const PacmanTimeline: React.FC = () => {
                         ))}
                     </svg>
                 </div>
+
+                {/* MOBILE TIMELINE VIEW (Vertical Stack) */}
+                <div className="md:hidden space-y-8 relative pl-2">
+                    {/* Vertical Line */}
+                    <div className="absolute left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-kidcore-blue/20 via-kidcore-blue/50 to-kidcore-blue/20 rounded-full" />
+
+                    {/* Mobile Pacman */}
+                    <motion.div
+                        className="absolute left-[13px] top-0 w-6 h-6 z-20 text-kidcore-yellow bg-kidcore-yellow rounded-full shadow-[0_0_15px_currentColor]"
+                        animate={{ top: ["0%", "100%"] }}
+                        transition={{
+                            duration: 10,
+                            repeat: Infinity,
+                            ease: "linear"
+                        }}
+                    >
+                        <div className="relative w-full h-full">
+                            <motion.div
+                                className="absolute inset-0 bg-[#05010D] origin-center"
+                                animate={{
+                                    clipPath: [
+                                        'polygon(100% 0%, 100% 100%, 50% 50%)',
+                                        'polygon(100% 50%, 100% 50%, 50% 50%)',
+                                        'polygon(100% 0%, 100% 100%, 50% 50%)'
+                                    ]
+                                }}
+                                transition={{ duration: 0.25, repeat: Infinity }}
+                                style={{ transform: "rotate(90deg)" }}
+                            />
+                        </div>
+                    </motion.div>
+
+                    {events.map((event, index) => (
+                        <motion.div
+                            key={event.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            className="relative pl-12"
+                        >
+                            {/* Timeline Dot */}
+                            <div className="absolute left-[19px] top-6 w-3 h-3 rounded-full border-2 border-black z-10" style={{ backgroundColor: event.color, boxShadow: `0 0 10px ${event.color}` }} />
+
+                            <div className="p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-xl"
+                                style={{ borderLeft: `4px solid ${event.color}` }}
+                            >
+                                <div className="flex justify-between items-start mb-2">
+                                    <span className="inline-block px-2 py-1 rounded bg-black/30 border border-white/10 text-[10px] font-press-start text-white/80">
+                                        {event.date}
+                                    </span>
+                                    <span className="text-[8px] font-press-start opacity-40 text-white">LVL {index + 1}</span>
+                                </div>
+
+                                <h3 className="text-sm font-press-start mb-2" style={{ color: event.color }}>
+                                    {event.title}
+                                </h3>
+
+                                <p className="font-vt323 text-base text-white/70 leading-normal">
+                                    {event.description}
+                                </p>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+
             </div>
         </div>
     );
