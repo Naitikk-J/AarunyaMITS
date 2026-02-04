@@ -56,13 +56,13 @@ const AboutUs = () => {
         <div className="relative pt-28 md:pt-40 pb-16 md:pb-20 text-center px-4">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
 
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
             ABOUT US
           </h1>
 
           <div className="h-1 w-24 md:w-[120px] bg-primary mx-auto shadow-neon" />
 
-          <p className="mt-6 text-xs sm:text-sm md:text-base font-share-tech text-muted-foreground uppercase opacity-60 max-w-3xl mx-auto tracking-[0.25em] sm:tracking-[0.4em]">
+          <p className="mt-6 text-sm sm:text-base md:text-xl tracking-widest text-white/50 max-w-3xl mx-auto">
             // DOCUMENTATION ON THE CREATORS AND THE TECHNOLOGY
           </p>
         </div>
@@ -73,22 +73,22 @@ const AboutUs = () => {
             <div className="absolute inset-0 opacity-10" />
 
             <div className="relative z-10 max-w-4xl mx-auto text-center">
-              <Badge className="bg-primary text-black font-bold tracking-widest text-[12px] sm:text-[15px] rounded-none px-4 py-2 mb-6">
+              <Badge className="bg-primary text-black font-bold tracking-widest text-sm sm:text-base md:text-lg rounded-none px-5 py-2 mb-6">
                 MISSION_STATEMENT
               </Badge>
 
-              <div className="text-4xl sm:text-6xl mb-8">🎮</div>
+              <div className="text-4xl sm:text-5xl md:text-6xl mb-8">🎮</div>
 
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black mb-6">
                 AARUNYA 2026
               </h2>
 
-              <p className="text-sm sm:text-base text-muted-foreground mb-6 opacity-80">
+              <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-6 opacity-80">
                 AARUNYA 2026 is a digital-first festival experience designed to
                 merge retro-gaming aesthetics with modern campus life.
               </p>
 
-              <p className="text-sm sm:text-base text-muted-foreground opacity-80">
+              <p className="text-sm sm:text-base md:text-lg text-muted-foreground opacity-80">
                 Since its inception, Aarunya has grown into one of Central
                 India's most anticipated college festivals.
               </p>
@@ -102,10 +102,10 @@ const AboutUs = () => {
                 key={stat.label}
                 className="bg-[#0D0221]/60 border-2 border-white/5 rounded-xl p-6 sm:p-8 text-center"
               >
-                <div className="text-2xl sm:text-4xl font-black text-primary mb-2">
+                <div className="text-lg sm:text-xl md:text-2xl font-black text-primary mb-2">
                   {stat.value}
                 </div>
-                <div className="font-share-tech text-[10px] sm:text-[12px] tracking-[0.25em] text-white/40">
+                <div className="font-share-tech text-sm sm:text-base md:text-lg tracking-widest text-white/40">
                   {stat.label}
                 </div>
               </div>
@@ -115,10 +115,12 @@ const AboutUs = () => {
           {/* TEAM */}
           <div className="mb-20">
             <div className="text-center mb-12">
-              <Badge className="bg-primary text-black text-[12px] tracking-widest px-4 py-2 mb-4">
+              <Badge className="bg-primary text-black text-sm sm:text-base md:text-lg tracking-widest px-4 py-2 mb-4">
                 THE_ARCHITECTS
               </Badge>
-              <h2 className="text-2xl sm:text-4xl font-black">MEET THE TEAM</h2>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black">
+                MEET THE TEAM
+              </h2>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -128,11 +130,16 @@ const AboutUs = () => {
                   className="bg-[#0D0221]/60 border-2 border-white/5 rounded-xl p-6 sm:p-8 text-center"
                 >
                   <div className="text-4xl sm:text-5xl mb-6">{member.icon}</div>
-                  <h3 className="text-lg font-black mb-2">{member.name}</h3>
-                  <p className="text-xs sm:text-[15px] text-primary/60 tracking-[0.2em] uppercase mb-4">
+
+                  <h3 className="text-lg sm:text-xl font-black mb-2 break-all text-center">
+                    {member.name}
+                  </h3>
+
+                  <p className="text-sm sm:text-base md:text-lg text-primary/60 tracking-widest uppercase mb-4">
                     {member.role}
                   </p>
-                  <p className="text-sm text-muted-foreground opacity-80">
+
+                  <p className="text-sm sm:text-base md:text-lg text-muted-foreground opacity-80">
                     {member.contribution}
                   </p>
                 </div>
@@ -148,7 +155,7 @@ const AboutUs = () => {
                   {technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="text-xl sm:text-4xl text-white/10 font-black tracking-widest"
+                      className="text-xl sm:text-2xl md:text-3xl text-white/10 font-black tracking-widest"
                     >
                       {tech}
                     </span>
@@ -162,19 +169,20 @@ const AboutUs = () => {
           <div className="bg-[#0D0221]/60 border-2 border-white/5 rounded-xl p-8 sm:p-12 text-center">
             <div className="text-4xl sm:text-5xl mb-6">🚀</div>
 
-            <h3 className="text-xl sm:text-3xl font-black mb-4">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-black mb-4">
               READY TO COLLABORATE?
             </h3>
 
-            <p className="text-xs sm:text-[15px] text-white/40 tracking-[0.2em] sm:tracking-[0.3em] mb-8">
+            <p className="text-sm sm:text-base md:text-lg text-white/40 tracking-widest mb-8">
               JOIN US IN CREATING THE NEXT BIG THING
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button className="bg-primary text-black px-8 py-5 tracking-[0.25em] font-bold">
+              <Button className="bg-primary text-black px-8 sm:px-10 py-5 sm:py-6 text-sm sm:text-base md:text-lg tracking-widest font-bold">
                 SUBMIT DATA
               </Button>
-              <Button className="border border-primary/30 text-primary px-8 py-5 tracking-[0.25em] font-bold">
+
+              <Button className="border border-primary/30 text-black px-8 sm:px-10 py-5 sm:py-6 text-sm sm:text-base md:text-lg tracking-widest font-bold">
                 VIEW SOURCE
               </Button>
             </div>
@@ -186,14 +194,14 @@ const AboutUs = () => {
         <style
           dangerouslySetInnerHTML={{
             __html: `
-            @keyframes marquee {
-              0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); }
-            }
-            .animate-marquee {
-              animation: marquee 20s linear infinite;
-            }
-          `,
+              @keyframes marquee {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+              }
+              .animate-marquee {
+                animation: marquee 20s linear infinite;
+              }
+            `,
           }}
         />
       </div>
