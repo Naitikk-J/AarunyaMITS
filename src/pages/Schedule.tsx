@@ -85,7 +85,7 @@ const Schedule = () => {
       {/* HERO */}
       <div className="pt-32 pb-16 md:pt-40 md:pb-20 text-center relative px-4">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
-        <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
           SCHEDULE
         </h1>
         <div className="h-1 w-24 md:w-[120px] bg-primary mx-auto shadow-neon" />
@@ -151,12 +151,12 @@ const Schedule = () => {
                             </span>
                             <div>
                               <h3 className="text-sm md:text-lg font-bold uppercase">{item.title}</h3>
-                              <span className="text-xs text-white/40 uppercase tracking-widest">
+                              <span className="text-sm md:text-base text-white/50 uppercase tracking-widest">
                                 {item.location}
                               </span>
                             </div>
                           </div>
-                          <span className="self-start md:self-center px-3 py-1 text-xs md:text-[15px] border border-primary/30 rounded-full text-primary uppercase font-bold tracking-widest">
+                          <span className="self-start md:self-center px-3 py-1.2 text-sm md:text-lg border border-primary/40 rounded-full text-primary uppercase font-bold tracking-widest">
                             {item.type}
                           </span>
                         </div>
@@ -173,12 +173,13 @@ const Schedule = () => {
 
       {/* FOOTER */}
       <div className="py-16 md:py-20 border-t border-white/5 bg-black text-center px-4">
-        <div className="text-xs sm:text-sm tracking-[0.25em] md:tracking-[0.5em] text-white/40 uppercase mb-4">
+        <div className="text-sm sm:text-base md:text-lg tracking-[0.25em] md:tracking-[0.5em] text-white/40 uppercase mb-4">
           End of Current Data Stream
         </div>
-        <p className="text-xs text-white/20 font-share-tech">
-          VERSION 2.0.26 // TIMELINE SYNCHRONIZED
-        </p>
+        <p className="text-[10px] sm:text-xs md:text-sm lg:text-base text-white/30 font-share-tech tracking-widest">
+  VERSION 2.0.26 // TIMELINE SYNCHRONIZED
+</p>
+
       </div>
     </div>
   );

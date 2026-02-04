@@ -20,8 +20,8 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
     const { isMobile, isTablet, isDesktop } = useResponsive();
 
     const videoSources: VideoSource[] = [
-        { src: "/bg.mov", type: "video/mp4" },
-        { src: "/tv-bg.mp4", type: "video/mp4" }
+        { src: "/tv-BG2.mp4", type: "video/mp4" },
+        { src: "/tv-BG3.mp4", type: "video/mp4" }
     ];
 
     const handleChannelChange = (channel: number) => {
