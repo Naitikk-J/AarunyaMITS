@@ -3,36 +3,32 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { motion, Variants } from 'framer-motion';
 import { GlitchText } from '@/components/GlitchText';
-import { Linkedin } from 'lucide-react';
 
 const teamGroups = [
   {
-    role: 'UI and UX DESIGNERS',
-    icon: '🎨',
-    description: 'Visual identity, branding and user experience.',
+    role: 'FRONTEND DEVELOPERS',
+    icon: '⚡',
     members: [
-      { name: 'Nemish Nagaria', linkedin: 'https://www.linkedin.com/in/nemish-nagaria-555198313?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app' },
-      { name: 'Shruti Gupta', linkedin: 'https://in.linkedin.com/in/shruti-gupta-200734340' }
+      { name: 'Naitik Jain', link: 'https://www.linkedin.com/in/naitik-jain-9290b8324' },
+      { name: 'Nihari Shrivastava', link: 'https://www.linkedin.com/in/nihari-shrivastava-878739279' }
     ]
   },
   {
-    role: 'FRONTEND DEVELOPERS',
-    icon: '⚡',
-    description: 'Pixel-art UI components and scroll-driven engine.',
+    role: 'UI/UX DESIGNERS',
+    icon: '🎨',
     members: [
-      { name: 'Naitik Jain', linkedin: 'https://www.linkedin.com/in/naitik-jain-9290b8324?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app' },
-      { name: 'Nihari Shrivastava', linkedin: 'https://www.linkedin.com/in/nihari-shrivastava-878739279' }
+      { name: 'Nemish Nagaria', link: 'https://www.linkedin.com/in/nemish-nagaria-555198313' },
+      { name: 'Shruti Gupta', link: 'https://in.linkedin.com/in/shruti-gupta-200734340' }
     ]
   },
   {
     role: 'BACKEND DEVELOPERS',
     icon: '🔧',
-    description: 'Server-side logic, data pipelines and security.',
     members: [
-      { name: 'Sanchit Jain', linkedin: 'https://linkedin.com/in/lnSanchit' },
-      { name: 'Pulastya Bhagwat', linkedin: 'https://www.linkedin.com/in/pulastya-bhagwat/' },
-      { name: 'Viraj Gupta', linkedin: 'https://www.linkedin.com/in/viraj-gupta-ok/' },
-      { name: 'Vishesh Dwivedi', linkedin: 'https://www.linkedin.com/in/vishesh-dwivedi-3917b1377?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app' }
+      { name: 'Sanchit Jain', link: 'https://linkedin.com/in/lnSanchit' },
+      { name: 'Viraj Gupta', link: 'https://www.linkedin.com/in/viraj-gupta-ok/' },
+      { name: 'Pulastya Bhagwat', link: 'https://www.linkedin.com/in/pulastya-bhagwat/' },
+      { name: 'Vishesh Dwivedi', link: 'https://www.linkedin.com/in/vishesh-dwivedi-3917b1377' }
     ]
   }
 ];
@@ -50,9 +46,9 @@ const technologies = [
 
 const stats = [
   { label: 'YEARS ACTIVE', value: '1+' },
-  { label: 'EVENTS HOSTED', value: '100+' },
-  { label: 'PARTICIPANTS', value: '500+' },
-  { label: 'SPONSORS', value: '20+' },
+  { label: 'EVENTS HOSTED', value: '50+' },
+  { label: 'PARTICIPANTS', value: '1000+' },
+  { label: 'SPONSORS', value: '10+' },
 ];
 
 const containerVariants: Variants = {
@@ -181,56 +177,36 @@ const AboutUs = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-6xl mx-auto"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
             >
               {teamGroups.map((group) => (
                 <motion.div
                   key={group.role}
                   variants={itemVariants}
-                  whileHover={{ y: -5, scale: 1.02 }}
-                  className="bg-[#0D0221]/60 border border-white/10 rounded-xl p-5 text-center hover:border-primary/60 hover:shadow-[0_0_20px_rgba(188,19,254,0.15)] hover:bg-primary/5 transition-all duration-300 group flex flex-col h-full relative overflow-hidden"
+                  whileHover={{ y: -5 }}
+                  className="bg-[#0D0221]/60 border border-white/10 rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group flex flex-col h-full"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  <div className="relative w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-white/5 border border-white/10 group-hover:border-primary/50 transition-colors">
+                    <div className="text-2xl sm:text-3xl grayscale group-hover:grayscale-0 transition-all">{group.icon}</div>
+                  </div>
 
-                  <div className="relative z-10">
-                    <div className="relative w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-white/5 border border-white/10 group-hover:border-primary/50 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                      <div className="text-2xl sm:text-3xl grayscale group-hover:grayscale-0 transition-all">{group.icon}</div>
-                    </div>
+                  <h3 className="text-sm font-black mb-4 text-primary tracking-widest uppercase border-b border-white/10 pb-2">
+                    {group.role}
+                  </h3>
 
-                    <h3 className="text-sm sm:text-base font-black mb-1 text-white/90 group-hover:text-primary transition-colors tracking-wider font-orbitron">
-                      {group.role}
-                    </h3>
-
-                    <p className="text-[10px] text-white/50 leading-relaxed mb-4 h-6 font-share-tech tracking-wide line-clamp-2">
-                      {group.description}
-                    </p>
-
-                    <div className="flex flex-col gap-2 mt-auto w-full">
-                      {group.members.map((member) => (
-                        <motion.div
-                          key={member.name}
-                          whileHover={{ x: 5, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
-                          className="flex items-center justify-between bg-white/5 rounded-lg px-3 py-2 hover:border-primary/30 transition-colors border border-white/5 group/item cursor-default"
-                        >
-                          <span className="text-xs sm:text-sm font-bold text-white/90 group-hover/item:text-primary transition-colors">
-                            {member.name}
-                          </span>
-                          {member.linkedin ? (
-                            <a
-                              href={member.linkedin}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-white/40 hover:text-[#0077b5] hover:scale-110 transition-all p-1"
-                              title="LinkedIn Profile"
-                            >
-                              <Linkedin size={14} />
-                            </a>
-                          ) : (
-                            <span className="w-4"></span>
-                          )}
-                        </motion.div>
-                      ))}
-                    </div>
+                  <div className="flex flex-col gap-3 flex-grow justify-center">
+                    {group.members.map((member) => (
+                      <a
+                        key={member.name}
+                        href={member.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white hover:text-[#00ffff] font-bold text-sm sm:text-base tracking-wider transition-colors flex items-center justify-center gap-2 group/member"
+                      >
+                        <span className="opacity-0 group-hover/member:opacity-100 transition-opacity text-primary">›</span>
+                        {member.name}
+                      </a>
+                    ))}
                   </div>
                 </motion.div>
               ))}

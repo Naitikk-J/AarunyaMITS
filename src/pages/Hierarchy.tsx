@@ -7,19 +7,19 @@ const Hierarchy = () => {
         {
             title: 'CORE',
             description: 'Primary coordinators and decision makers.',
-            image: '/hierarchy-core.jpg',
+            image: '/hierarchy-core.avif',
             members: ['Lead A', 'Lead B', 'Lead C'],
         },
         {
             title: 'OPERATIONS',
             description: 'Logistics, venue, and on-ground execution.',
-            image: '/hierarchy-operations.jpg',
+            image: '/hierarchy-operations.avif',
             members: ['Ops A', 'Ops B', 'Ops C'],
         },
         {
             title: 'CREATIVE',
             description: 'Design, content, and stage production.',
-            image: '/hierarchy-creative.jpg',
+            image: '/hierarchy-creative.avif',
             members: ['Creative A', 'Creative B', 'Creative C'],
         },
     ];

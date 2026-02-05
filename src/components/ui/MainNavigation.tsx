@@ -17,7 +17,7 @@ const navLinks = [
     { name: 'REGISTER', path: '/register' },
 ];
 
-export const MainNavigation = () => {
+export const MainNavigation = ({ className }: { className?: string }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [hoverIdx, setHoverIdx] = useState<number | null>(null);
@@ -34,7 +34,8 @@ export const MainNavigation = () => {
         <div className="w-full" style={{ imageRendering: 'pixelated' }}>
             <nav className={cn(
                 "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-                scrolled ? "bg-[#1a0a2e]" : "bg-[#0d0520]"
+                scrolled ? "bg-[#1a0a2e]" : "bg-[#0d0520]",
+                className
             )}>
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute inset-0" style={{
@@ -81,7 +82,7 @@ export const MainNavigation = () => {
                 <div className="absolute bottom-1 right-0 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff, inset 1px 1px 0 #ff66ff' }} />
 
                 <div className="w-full px-6 relative">
-                    <div className="flex items-center justify-between h-24">
+                    <div className="flex items-center justify-between h-16 md:h-20 lg:h-24">
                         {/* Logo on the left */}
                         <Link to="/" className="flex items-center gap-3 group relative">
                             <img

@@ -1,25 +1,26 @@
 import { MainNavigation } from '@/components/ui/MainNavigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 const Merch = () => {
     const items = [
         {
             name: 'NEON TEE',
             desc: 'Festival tee with glow-styled print.',
-            image: '/merch-neon-tee.jpg',
+            image: '/merch-neon-tee.avif',
             tags: ['S-XXL', 'LIMITED'],
         },
         {
             name: 'HOLOGRAPHIC STICKERS',
             desc: 'Shimmer pack for laptops and bottles.',
-            image: '/merch-stickers.jpg',
+            image: '/merch-stickers.avif',
             tags: ['PACK', 'SHINE'],
         },
         {
             name: 'WRISTBAND',
             desc: 'Access band with cyber pattern.',
-            image: '/merch-wristband.jpg',
+            image: '/merch-wristband.avif',
             tags: ['PASS', 'EASY'],
         },
     ];
@@ -53,7 +54,7 @@ const Merch = () => {
                                         className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-[#0D0221] via-transparent to-transparent opacity-60" />
-                                    
+
                                     <div className="absolute top-4 right-4 flex gap-2">
                                         {item.tags.map((t) => (
                                             <Badge key={t} className="bg-primary/20 text-primary border border-primary/30 font-share-tech text-[8px] tracking-widest rounded-none px-3 py-1 backdrop-blur-md">
@@ -62,7 +63,7 @@ const Merch = () => {
                                         ))}
                                     </div>
                                 </div>
-                                
+
                                 <div className="p-8 flex-grow flex flex-col">
                                     <h3 className="text-2xl font-black text-white group-hover:text-primary transition-colors mb-2 tracking-tight uppercase">
                                         {item.name}
@@ -70,16 +71,16 @@ const Merch = () => {
                                     <p className="text-muted-foreground text-sm mb-8 leading-relaxed font-medium opacity-80 group-hover:opacity-100 transition-opacity">
                                         {item.desc}
                                     </p>
-                                    
+
                                     <div className="mt-auto">
-                                        <Button 
+                                        <Button
                                             className="w-full font-orbitron text-[10px] tracking-[0.3em] font-bold py-6 rounded-none border-2 border-primary bg-primary text-black hover:bg-transparent hover:text-primary transition-all shadow-neon uppercase"
                                         >
                                             ACQUIRE ITEM
                                         </Button>
                                     </div>
                                 </div>
-                                
+
                                 <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                             </div>
                         </div>
