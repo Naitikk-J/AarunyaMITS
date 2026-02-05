@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PixelStar, PixelHeart } from "./PixelDecorations";
@@ -75,13 +76,13 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-10">
                     {/* BRANDING */}
                     <div className="md:col-span-4 footer-item flex flex-col items-center md:items-start text-center md:text-left">
-                        <a href="#" className="group relative block mb-4 transform hover:scale-105 transition-transform duration-300">
+                        <Link to="/" className="group relative block mb-4 transform hover:scale-105 transition-transform duration-300">
                             <img
                                 src="/aarunya-logo.svg"
                                 alt="Aarunya 2026"
                                 className="h-14 w-auto filter drop-shadow-[0_0_12px_rgba(255,0,255,0.6)] group-hover:drop-shadow-[0_0_20px_rgba(255,0,255,0.8)] transition-all"
                             />
-                        </a>
+                        </Link>
                         <p className="font-press-start text-xs text-[#ff00ff] tracking-wider mb-2 drop-shadow-[0_0_5px_rgba(255,0,255,0.5)]">
                             MITS GWALIOR
                         </p>
@@ -109,14 +110,14 @@ const Footer = () => {
                         </h3>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
                             {navLinks.map((link) => (
-                                <a
+                                <Link
                                     key={link.path}
-                                    href={link.path}
+                                    to={link.path}
                                     className="text-xs sm:text-sm font-pixel text-gray-300 hover:text-[#ff00ff] hover:translate-x-2 transition-all duration-200 uppercase tracking-wide flex items-center gap-2 group"
                                 >
                                     <span className="text-[#00ffff]/70 text-[10px] group-hover:text-[#00ffff] transition-colors">›</span>
                                     <span className="group-hover:drop-shadow-[0_0_5px_rgba(255,0,255,0.5)]">{link.name}</span>
-                                </a>
+                                </Link>
                             ))}
                         </div>
                     </div>
@@ -128,14 +129,14 @@ const Footer = () => {
                         </h3>
                         <div className="flex flex-col gap-3 items-center md:items-start h-full">
                             {legalLinks.map((link) => (
-                                <a
+                                <Link
                                     key={link.path}
-                                    href={link.path}
+                                    to={link.path}
                                     className="text-xs sm:text-sm font-pixel text-gray-300 hover:text-[#ff00ff] hover:pl-2 transition-all duration-200 uppercase tracking-wide w-full border-b border-white/5 pb-2 md:pb-0 md:border-none flex items-center gap-2 group"
                                 >
                                     <span className="w-1.5 h-1.5 bg-[#ff00ff] rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_5px_#ff00ff]" />
                                     <span className="group-hover:drop-shadow-[0_0_5px_rgba(255,0,255,0.5)]">{link.name}</span>
-                                </a>
+                                </Link>
                             ))}
                         </div>
                     </div>
