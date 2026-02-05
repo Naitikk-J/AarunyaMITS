@@ -21,6 +21,9 @@ import Hierarchy from "./pages/Hierarchy";
 import ContactUs from "./pages/ContactUs";
 import { Guidelines } from "./pages/Guidelines";
 import ResponsiveTest from "./pages/ResponsiveTest";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import ReturnAndRefund from "./pages/ReturnAndRefund";
 
 // Lazy load Gallery for better initial load performance and loading screen support
 const Gallery = lazy(() => import("./pages/Gallery"));
@@ -51,6 +54,9 @@ const App = () => (
                             <Route path="/history" element={<History />} />
                             <Route path="/guidelines" element={<Guidelines />} />
                             <Route path="/responsive-test" element={<ResponsiveTest />} />
+                            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+                            <Route path="/return-and-refund" element={<ReturnAndRefund />} />
                             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                             <Route path="*" element={<NotFound />} />
                         </Routes>

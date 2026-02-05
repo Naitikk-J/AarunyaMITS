@@ -35,10 +35,18 @@ const ContactUs = () => {
   ];
 
   const socials = [
-    { icon: '📷', label: 'Instagram', handle: '@aarunya_mits' },
-    { icon: '🐦', label: 'Twitter', handle: '@aarunya_mits' },
-    { icon: '📘', label: 'Facebook', handle: '/aarunya.mits' },
-    { icon: '📺', label: 'YouTube', handle: '/aarunya' },
+    {
+      icon: '📷',
+      label: 'Instagram',
+      handle: '@aarunya.mits',
+      url: 'https://www.instagram.com/aarunya.mits/'
+    },
+    {
+      icon: '🌐',
+      label: 'Aarunya 1.0',
+      handle: 'View Archive',
+      url: 'https://web.mitsgwalior.in/notifications/aarunya-2025-the-official-fest-of-madhav-institute-of-technology-and-science-mits-du-will-be-held-on-march-7-9-2025'
+    },
   ];
 
   const containerVariants: Variants = {
@@ -193,19 +201,22 @@ const ContactUs = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   {socials.map((s) => (
-                    <motion.div
+                    <motion.a
                       key={s.label}
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       whileHover={{ y: -2, backgroundColor: "rgba(255, 255, 255, 0.05)" }}
-                      className="bg-black/40 border border-white/5 rounded-lg p-4 text-center cursor-pointer transition-colors"
+                      className="bg-black/40 border border-white/5 rounded-lg p-4 text-center cursor-pointer transition-colors block"
                     >
                       <div className="text-2xl mb-1">{s.icon}</div>
                       <div className="text-[9px] tracking-[0.2em] text-white/40 uppercase mb-1">
                         {s.label}
                       </div>
-                      <div className="text-xs text-primary font-bold">
+                      <div className="text-xs text-primary font-bold truncate">
                         {s.handle}
                       </div>
-                    </motion.div>
+                    </motion.a>
                   ))}
                 </div>
               </div>

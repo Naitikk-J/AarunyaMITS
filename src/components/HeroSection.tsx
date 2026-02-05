@@ -8,7 +8,7 @@ import { PixelStar, PixelHeart, PixelMusicNote, PixelGhost, PixelController } fr
 import InteractiveTVControls from "./InteractiveTVControls";
 
 const AarunyaLogo = "/aarunya-logo.svg";
-const retroRoomBg = "/retro-room-bg.png";
+const retroRoomBg = "/retro-room-bg.avif";
 
 gsap.registerPlugin(ScrollTrigger);
 

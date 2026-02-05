@@ -5,27 +5,27 @@ import { useResponsive } from '../hooks/use-responsive';
 import { Loader2 } from 'lucide-react';
 
 const PHOTOS = [
-  '/photos/optimized/0O2A0906.JPG',
-  '/photos/optimized/0O2A0917.JPG',
-  '/photos/optimized/0O2A0922.JPG',
-  '/photos/optimized/0O2A0935.JPG',
-  '/photos/optimized/DSC01955.JPG',
-  '/photos/optimized/IMG_0968.JPG',
-  '/photos/optimized/IMG_1023.JPG',
-  '/photos/optimized/IMG_1034.JPG',
-  '/photos/optimized/IMG_1051.JPG',
-  '/photos/optimized/IMG_1331.JPG',
-  '/photos/optimized/IMG_1892.JPG',
-  '/photos/optimized/IMG_2575.JPG',
-  '/photos/optimized/IMG_2754.JPG',
-  '/photos/optimized/IMG_2886.JPG',
-  '/photos/optimized/IMG_3168.JPG',
-  '/photos/optimized/IMG_7613.JPG',
-  '/photos/optimized/IMG_7641.JPG',
-  '/photos/optimized/IMG_7669.JPG',
-  '/photos/optimized/IMG_7702.JPG',
-  '/photos/optimized/IMG_7806.JPG',
-  '/photos/optimized/IMG_7881.JPG'
+  '/photos/optimized/0O2A0906.avif',
+  '/photos/optimized/0O2A0917.avif',
+  '/photos/optimized/0O2A0922.avif',
+  '/photos/optimized/0O2A0935.avif',
+  '/photos/optimized/DSC01955.avif',
+  '/photos/optimized/IMG_0968.avif',
+  '/photos/optimized/IMG_1023.avif',
+  '/photos/optimized/IMG_1034.avif',
+  '/photos/optimized/IMG_1051.avif',
+  '/photos/optimized/IMG_1331.avif',
+  '/photos/optimized/IMG_1892.avif',
+  '/photos/optimized/IMG_2575.avif',
+  '/photos/optimized/IMG_2754.avif',
+  '/photos/optimized/IMG_2886.avif',
+  '/photos/optimized/IMG_3168.avif',
+  '/photos/optimized/IMG_7613.avif',
+  '/photos/optimized/IMG_7641.avif',
+  '/photos/optimized/IMG_7669.avif',
+  '/photos/optimized/IMG_7702.avif',
+  '/photos/optimized/IMG_7806.avif',
+  '/photos/optimized/IMG_7881.avif'
 ];
 
 // Fallback to non-optimized path if 404

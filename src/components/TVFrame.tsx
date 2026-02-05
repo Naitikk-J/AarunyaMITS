@@ -20,10 +20,9 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
     const { isMobile, isTablet, isDesktop } = useResponsive();
 
     const videoSources: VideoSource[] = [
-  { src: "/tv-bg2.mp4", type: "video/mp4" },
-  { src: "/tv-bg.mp4", type: "video/mp4" }
-];
-
+        { src: "/bg.mov", type: "video/mp4" },
+        { src: "/tv-bg.mp4", type: "video/mp4" }
+    ];
 
     const handleChannelChange = (channel: number) => {
         if (channel === 1) {

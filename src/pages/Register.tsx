@@ -4,168 +4,363 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { motion, Variants } from 'framer-motion';
 import { GlitchText } from '@/components/GlitchText';
+import { RetroButton } from '@/components/ui/retro-button';
+import { useState } from 'react';
 
 export default function Register() {
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
+    const [registrationType, setRegistrationType] = useState<'student' | 'alumni' | 'guest' | 'event'>('student');
+    const containerVariants: Variants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
 
-  const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.4,
-        ease: "easeOut"
-      }
-    }
-  };
+    const itemVariants: Variants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: {
+                duration: 0.4,
+                ease: "easeOut"
+            }
+        }
+    };
 
-  return (
-    <div className="min-h-screen bg-[#05010D] text-white font-vt323 selection:bg-primary selection:text-black overflow-x-hidden">
-      <MainNavigation />
+    const inputStyle = {
+        backgroundColor: '#0d0520',
+        borderColor: '#00ffff',
+        boxShadow: 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'
+    };
 
-      <div className="content-scale">
-        {/* HEADER */}
-        <div className="relative pt-32 md:pt-48 pb-12 text-center">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
+    return (
+        <div className="min-h-screen bg-[#05010D] text-white font-vt323 selection:bg-[#ff00ff] selection:text-black overflow-x-hidden">
+            <MainNavigation />
 
-          <motion.div
-            initial={{ y: -30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-2xl md:text-3xl lg:text-5xl font-black tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] mb-4 sm:mb-6">
-              <GlitchText text="REGISTER" />
-            </h1>
+            <div className="content-scale">
+                {/* MAIN LAYOUT */}
+                <main className="min-h-[calc(100vh-100px)] flex flex-col lg:flex-row">
+                    {/* LEFT SIDEBAR - BUTTONS */}
+                    <div className="lg:w-1/3 flex flex-col justify-start items-center lg:items-start pt-20 lg:pt-32 px-4 sm:px-8">
+                        <motion.div
+                            initial={{ x: -30, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ duration: 0.6 }}
+                            className="w-full flex flex-col gap-4"
+                        >
+                            <div className="text-center lg:text-left mb-6">
+                                <h1 className="text-2xl md:text-3xl font-black tracking-tighter mb-4" style={{
+                                    fontFamily: '"Press Start 2P", "Courier New", monospace',
+                                    color: '#fff5ff',
+                                    textShadow: '0 0 15px #8a6c8a, 2px 2px 0 #880088'
+                                }}>
+                                    <GlitchText text="REGISTER" />
+                                </h1>
+                                <div className="h-0.5 w-16 mb-4" style={{
+                                    background: 'linear-gradient(to right, #ff00ff, #00ffff)',
+                                    boxShadow: '0 0 15px #ff00ff, 0 0 10px #00ffff'
+                                }} />
+                                <p className="text-[10px] sm:text-xs font-vt323 leading-relaxed tracking-wider" style={{
+                                    color: '#00ffff',
+                                    textShadow: '1px 1px 0 #003333'
+                                }}>
+                                    // INSERT CREDENTIALS TO JOIN THE AARUNYA NETWORK
+                                </p>
+                            </div>
 
-            <div className="h-0.5 w-16 md:w-24 bg-primary mx-auto shadow-[0_0_10px_#BC13FE]" />
+                            {/* REGISTRATION TYPE BUTTONS - STACKED */}
+                            <div className="flex flex-col gap-4 w-full sm:max-w-xs lg:max-w-none">
+                                <RetroButton
+                                    variant={registrationType === 'student' ? 'default' : 'white'}
+                                    onClick={() => setRegistrationType('student')}
+                                    className="w-full justify-start text-left "
+                                >
+                                    Other College Students
+                                </RetroButton>
+                                <RetroButton
+                                    variant={registrationType === 'alumni' ? 'default' : 'white'}
+                                    onClick={() => setRegistrationType('alumni')}
+                                    className="w-full justify-start text-left"
+                                >
+                                    MITS Alumni
+                                </RetroButton>
+                                <RetroButton
+                                    variant={registrationType === 'guest' ? 'default' : 'white'}
+                                    onClick={() => setRegistrationType('guest')}
+                                    className="w-full justify-start text-left"
+                                >
+                                    Guests
+                                </RetroButton>
+                                <RetroButton
+                                    variant={registrationType === 'event' ? 'default' : 'white'}
+                                    onClick={() => setRegistrationType('event')}
+                                    className="w-full justify-start text-left"
+                                >
+                                    Event/Competition Registrations
+                                </RetroButton>
+                            </div>
+                        </motion.div>
+                    </div>
 
-            <p className="mt-4 text-[10px] sm:text-xs md:text-sm font-vt323 text-muted-foreground opacity-60 max-w-xl mx-auto px-4 leading-relaxed tracking-wider">
-               // INSERT CREDENTIALS TO JOIN THE AARUNYA NETWORK
-            </p>
-          </motion.div>
-        </div>
+                    {/* RIGHT SIDE - FORM */}
+                    <div className="lg:w-2/3 flex items-start justify-center pt-12 lg:pt-32 px-4 sm:px-6 pb-20">
+                        <motion.div
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="visible"
+                            className="w-full max-w-lg"
+                        >
+                            <motion.div
+                                variants={itemVariants}
+                                className="relative p-6 sm:p-8"
+                                style={{
+                                    background: 'linear-gradient(to bottom, #1a0a2e, #0d0520)',
+                                    border: '2px solid #ff00ff',
+                                    boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 20px #ff00ff, 0 0 40px #00ffff'
+                                }}
+                            >
+                                {/* Corner indicators */}
+                                <span className="absolute -top-1 -left-1 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 10px #00ffff' }} />
+                                <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff' }} />
+                                <span className="absolute -bottom-1 -left-1 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff' }} />
+                                <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 10px #00ffff' }} />
 
-        {/* FORM */}
-        <main className="container mx-auto px-4 sm:px-6 pb-20">
-          <motion.div
-            className="max-w-md mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.div
-              variants={itemVariants}
-              className="relative bg-[#0D0221]/60 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden hover:border-primary/30 shadow-[0_0_30px_rgba(188,19,254,0.05)] transition-all duration-500 p-6 sm:p-8"
-            >
+                                <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
+                                    background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.1) 2px, rgba(0,255,255,0.1) 4px)',
+                                    backgroundSize: '4px 4px'
+                                }} />
 
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-50 pointer-events-none" />
-              <div
-                className="absolute inset-0 opacity-10"
-                style={{
-                  backgroundImage:
-                    'linear-gradient(rgba(188, 19, 254, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(188, 19, 254, 0.2) 1px, transparent 1px)',
-                  backgroundSize: '20px 20px',
-                }}
-              />
+                                <div className="relative z-10">
+                                    {/* TITLE */}
+                                    <div className="text-center mb-6">
+                                        <div className="text-3xl sm:text-4xl mb-4" style={{
+                                            color: '#00ffff',
+                                            textShadow: '0 0 10px #00ffff'
+                                        }}>
+                                            🎮
+                                        </div>
 
-              <div className="relative z-10">
-                {/* TITLE */}
-                <div className="text-center mb-6">
-                  <div className="text-3xl sm:text-4xl mb-4 drop-shadow-[0_0_20px_rgba(188,19,254,0.4)]">
-                    🎮
-                  </div>
+                                        <h2 className="mb-2 tracking-tight uppercase" style={{
+                                            fontFamily: '"Press Start 2P", "Courier New", monospace',
+                                            fontSize: '11px',
+                                            color: '#ff00ff',
+                                            textShadow: '0 0 10px #ff00ff, 2px 2px 0 #880088'
+                                        }}>
+                                            PLAYER REGISTRATION
+                                        </h2>
 
-                  <h2 className="text-lg sm:text-xl font-black text-white mb-2 tracking-tight">
-                    PLAYER REGISTRATION
-                  </h2>
+                                        <div className="h-0.5 w-full relative overflow-hidden rounded-full" style={{
+                                            background: 'linear-gradient(to right, #ff00ff, #00ffff)',
+                                            boxShadow: 'inset 0 0 4px #ff00ff, 0 0 8px #00ffff'
+                                        }} />
 
-                  <div className="h-0.5 w-full bg-white/5 relative overflow-hidden rounded-full">
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/60 to-secondary/60 animate-[scan_2s_linear_infinite]" />
-                  </div>
+                                        <p className="font-vt323 text-[10px] sm:text-xs mt-3 uppercase tracking-wider" style={{
+                                            color: '#00ffff',
+                                            textShadow: '1px 1px 0 #003333'
+                                        }}>
+                                            Initialize your account to access exclusive features.
+                                        </p>
+                                    </div>
 
-                  <p className="font-vt323 text-[10px] sm:text-xs text-white/40 mt-3 uppercase tracking-wider">
-                    Initialize your account to access exclusive features.
-                  </p>
+                                    {/* INPUTS */}
+                                    {registrationType === 'student' && (
+                                        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                    College Name
+                                                </Label>
+                                                <Input
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={(e) => {
+                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
+                                                        e.currentTarget.style.borderColor = '#ff00ff';
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff';
+                                                        e.currentTarget.style.borderColor = '#00ffff';
+                                                    }}
+                                                    placeholder="Your College Name"
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                    College ID
+                                                </Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your College ID" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                    Course
+                                                </Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your Course" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                    Year of Study
+                                                </Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="e.g., 2nd Year" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                    Email Address
+                                                </Label>
+                                                <Input type="email" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="student@college.com" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                    Password
+                                                </Label>
+                                                <Input type="password" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="••••••••" />
+                                            </div>
+                                            <Button className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-4 uppercase tracking-wider" style={{ background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff', fontSize: '9px' }}>
+                                                REGISTER AS COLLEGE STUDENT
+                                            </Button>
+                                        </form>
+                                    )}
+
+                                    {registrationType === 'alumni' && (
+                                        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Graduation Year</Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Year of Graduation" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Department</Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your Department" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}></Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your Current Organization/Position" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Email Address</Label>
+                                                <Input type="email" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="alumni@mitscollege.com" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Password</Label>
+                                                <Input type="password" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="••••••••" />
+                                            </div>
+                                            <Button className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-4 uppercase tracking-wider" style={{ background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff', fontSize: '9px' }}>
+                                                REGISTER AS MITS ALUMNI
+                                            </Button>
+                                        </form>
+                                    )}
+
+                                    {registrationType === 'guest' && (
+                                        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Full Name</Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your Full Name" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Contact Number</Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="+91 1234567890" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Email Address</Label>
+                                                <Input type="email" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="guest@email.com" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Purpose of Visit</Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="e.g., Attending event, Guest lecture" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Password</Label>
+                                                <Input type="password" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="••••••••" />
+                                            </div>
+                                            <Button className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-4 uppercase tracking-wider" style={{ background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff', fontSize: '9px' }}>
+                                                REGISTER AS GUEST
+                                            </Button>
+                                        </form>
+                                    )}
+
+                                    {registrationType === 'event' && (
+                                        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Event/Competition Name</Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Name of Event/Competition" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Team Name</Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your Team Name" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Team Members</Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Names of Team Members" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>College/Organization</Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your College/Organization" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Contact Email</Label>
+                                                <Input type="email" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="team@college.com" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Contact Number</Label>
+                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="+91 1234567890" />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Password</Label>
+                                                <Input type="password" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="••••••••" />
+                                            </div>
+                                            <Button className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-4 uppercase tracking-wider" style={{ background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff', fontSize: '9px' }}>
+                                                REGISTER FOR EVENT/COMPETITION
+                                            </Button>
+                                        </form>
+                                    )}
+
+                                    {/* STATUS */}
+                                    <div className="mt-6 text-center pt-4" style={{ borderTop: '1px dashed #ff00ff' }}>
+                                        <div className="flex items-center justify-center gap-2">
+                                            <span className="font-vt323 text-xs sm:text-sm uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                System Status
+                                            </span>
+                                            <span className="flex items-center gap-1.5">
+                                                <span className="w-1.5 h-1.5 bg-[#00ff00] rounded-full animate-pulse" style={{ boxShadow: '0 0 8px #00ff00' }} />
+                                                <span className="font-vt323 text-xs sm:text-sm font-bold tracking-widest" style={{ color: '#00ff00', textShadow: '0 0 8px #00ff00' }}>
+                                                    Online
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    </div>
+                </main>
+
+                {/* BOTTOM LINE */}
+                <div className="fixed bottom-0 left-0 w-full h-1 flex">
+                    {[...Array(60)].map((_, i) => (
+                        <div
+                            key={i}
+                            className="flex-1 h-full"
+                            style={{
+                                background: i % 2 === 0
+                                    ? 'linear-gradient(to bottom, #ff00ff, #cc00cc)'
+                                    : 'linear-gradient(to bottom, #00ffff, #0088ff)',
+                                boxShadow: i % 2 === 0
+                                    ? '0 0 8px #ff00ff'
+                                    : '0 0 8px #00ffff'
+                            }}
+                        />
+                    ))}
                 </div>
 
-                {/* INPUTS */}
-                <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                  <div className="space-y-1.5 group">
-                    <Label className="font-vt323 text-xs sm:text-[13px] text-white/40 group-focus-within:text-primary transition-colors uppercase tracking-widest">
-                      Username
-                    </Label>
-                    <Input
-                      className="bg-black/40 border border-white/10 focus:border-primary rounded-md font-vt323 text-sm h-10 transition-all placeholder:text-white/20"
-                      placeholder="player_one"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5 group">
-                    <Label className="font-vt323 text-xs sm:text-[13px] text-white/40 group-focus-within:text-primary transition-colors uppercase tracking-widest">
-                      Email Address
-                    </Label>
-                    <Input
-                      type="email"
-                      className="bg-black/40 border border-white/10 focus:border-primary rounded-md font-vt323 text-sm h-10 transition-all placeholder:text-white/20"
-                      placeholder="player@domain.com"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5 group">
-                    <Label className="font-vt323 text-xs sm:text-[13px] text-white/40 group-focus-within:text-primary transition-colors uppercase tracking-widest">
-                      Password
-                    </Label>
-                    <Input
-                      type="password"
-                      className="bg-black/40 border border-white/10 focus:border-primary rounded-md font-vt323 text-sm h-10 transition-all placeholder:text-white/20"
-                      placeholder="••••••••"
-                    />
-                  </div>
-
-                  <Button className="w-full bg-primary text-black font-orbitron text-sm sm:text-base h-12 rounded-md border-none shadow-neon hover:shadow-[0_0_30px_rgba(188,19,254,0.4)] transition-all tracking-[0.2em] font-bold mt-2">
-                    INITIALIZE ACCOUNT
-                  </Button>
-                </form>
-
-                {/* STATUS */}
-                <div className="mt-6 text-center border-t border-white/5 pt-4">
-                  <div className="flex items-center justify-center gap-2">
-                    <span className="font-vt323 text-xs sm:text-sm text-white/30 uppercase tracking-widest">
-                      System Status
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_5px_#22c55e]" />
-                      <span className="font-vt323 text-xs sm:text-sm text-secondary font-bold tracking-widest">
-                        Online
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        </main>
-
-        {/* BOTTOM LINE */}
-        <div className="fixed bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-
-        <style dangerouslySetInnerHTML={{
-          __html: `
+                <style dangerouslySetInnerHTML={{
+                    __html: `
           @keyframes scan {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
           }
         ` }} />
-      </div>
-    </div>
-  );
+            </div>
+        </div>
+    );
 }
