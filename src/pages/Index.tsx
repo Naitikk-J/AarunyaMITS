@@ -54,24 +54,30 @@ const Index = () => {
     return (
         <div
             ref={mainRef}
-            className="relative w-full overflow-x-hidden min-h-screen"
+            className="relative w-full overflow-x-hidden min-h-screen flex flex-col bg-black"
         >
-            {/* Background Image - Scrolls with content */}
-            <div
-                className="absolute top-0 left-0 w-full min-h-full bg-black z-0"
-                style={{
-                    backgroundImage: 'url(/retro-room-bg.avif)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat'
-                }}
-            />
+            {/* 1. Navbar: Static relative position so it takes up space */}
+            <MainNavigation className="relative" />
 
-            <div className="relative z-10">
-                <MainNavigation />
-                <CRTOverlay />
+            {/* CRT Overlay: Fixed on top of everything */}
+            <CRTOverlay />
 
-                <main>
+            {/* 2. Content Area: Fills remaining space */}
+            <div className="relative flex-1 w-full">
+
+                {/* Background Image: Absolute within the content area */}
+                <div
+                    className="absolute inset-0 z-0"
+                    style={{
+                        backgroundImage: 'url(/retro-room-bg.avif)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
+                    }}
+                />
+
+                {/* Main Content: Relative on top of background */}
+                <main className="relative z-10">
                     {/* Section 1: The Infinite TV Zoom (Hero) */}
 
 

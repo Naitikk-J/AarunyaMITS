@@ -27,7 +27,7 @@ export const TVZoom: React.FC<TVZoomProps> = ({ children }) => {
 
   return (
     <div ref={containerRef} className="relative h-[150vh] md:h-[200vh] w-full">
-      <div className="sticky top-20 md:top-24 h-[calc(100vh-5rem)] md:h-[calc(100vh-6rem)] w-full flex items-center justify-center overflow-hidden">
+      <div className="sticky top-16 md:top-24 h-[calc(100vh-4rem)] md:h-[calc(100vh-6rem)] w-full flex items-center justify-center overflow-hidden">
         <motion.div
           style={{
             scale,
