@@ -18,7 +18,7 @@ export const WelcomeSection: React.FC = () => {
     const opacity = useTransform(scrollYProgress, [0, 0.1, 0.2, 0.8, 0.9, 1], [0, 0.2, 1, 1, 0.2, 0]);
 
     return (
-        <section ref={containerRef} className={`relative min-h-screen w-full flex flex-col items-center ${isMobile ? 'justify-start pt-48' : 'justify-center'} ${isMobile ? 'py-16' : isTablet ? 'py-20' : 'py-24'} overflow-hidden ${isMobile ? '-mt-[60vh]' : isTablet ? '-mt-[60vh]' : '-mt-[50vh] md:-mt-[100vh]'} bg-transparent`}>
+        <section ref={containerRef} className={`relative min-h-screen w-full flex flex-col items-center justify-start ${isMobile ? 'pt-24' : 'pt-32 md:pt-40'} ${isMobile ? 'pb-16' : 'pb-24'} overflow-hidden ${isMobile ? '-mt-[60vh]' : isTablet ? '-mt-[60vh]' : '-mt-[50vh] md:-mt-[100vh]'} bg-transparent`}>
 
             {/* Gritty Texture Overlay */}
 

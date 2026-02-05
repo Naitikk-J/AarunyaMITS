@@ -4,31 +4,33 @@ import { Button } from '@/components/ui/button';
 import { motion, Variants } from 'framer-motion';
 import { GlitchText } from '@/components/GlitchText';
 
-const teamMembers = [
+const teamGroups = [
   {
-    name: 'CORE_DEVELOPER_01',
-    role: 'FRONTEND_ENGINEER',
+    role: 'FRONTEND DEVELOPERS',
     icon: '⚡',
-    contribution: 'Pixel-art UI components and scroll-driven engine.',
+    members: [
+      { name: 'Naitik Jain', link: 'https://www.linkedin.com/in/naitik-jain-9290b8324' },
+      { name: 'Nihari Shrivastava', link: 'https://www.linkedin.com/in/nihari-shrivastava-878739279' }
+    ]
   },
   {
-    name: 'CORE_DEVELOPER_02',
-    role: 'BACKEND_ARCHITECT',
-    icon: '🔧',
-    contribution: 'Secure data pipelines and event logic infrastructure.',
-  },
-  {
-    name: 'DESIGN_LEAD',
-    role: 'UI/UX DESIGNER',
+    role: 'UI/UX DESIGNERS',
     icon: '🎨',
-    contribution: 'Visual identity, branding, and interface design.',
+    members: [
+      { name: 'Nemish Nagaria', link: 'https://www.linkedin.com/in/nemish-nagaria-555198313' },
+      { name: 'Shruti Gupta', link: 'https://in.linkedin.com/in/shruti-gupta-200734340' }
+    ]
   },
   {
-    name: 'PROJECT_LEAD',
-    role: 'COORDINATOR',
-    icon: '👑',
-    contribution: 'Team management and strategic planning.',
-  },
+    role: 'BACKEND DEVELOPERS',
+    icon: '🔧',
+    members: [
+      { name: 'Sanchit Jain', link: 'https://linkedin.com/in/lnSanchit' },
+      { name: 'Viraj Gupta', link: 'https://www.linkedin.com/in/viraj-gupta-ok/' },
+      { name: 'Pulastya Bhagwat', link: 'https://www.linkedin.com/in/pulastya-bhagwat/' },
+      { name: 'Vishesh Dwivedi', link: 'https://www.linkedin.com/in/vishesh-dwivedi-3917b1377' }
+    ]
+  }
 ];
 
 const technologies = [
@@ -43,10 +45,10 @@ const technologies = [
 ];
 
 const stats = [
-  { label: 'YEARS ACTIVE', value: '15+' },
-  { label: 'EVENTS HOSTED', value: '200+' },
-  { label: 'PARTICIPANTS', value: '50K+' },
-  { label: 'SPONSORS', value: '100+' },
+  { label: 'YEARS ACTIVE', value: '1+' },
+  { label: 'EVENTS HOSTED', value: '50+' },
+  { label: 'PARTICIPANTS', value: '1000+' },
+  { label: 'SPONSORS', value: '10+' },
 ];
 
 const containerVariants: Variants = {
@@ -175,26 +177,37 @@ const AboutUs = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
             >
-              {teamMembers.map((member) => (
+              {teamGroups.map((group) => (
                 <motion.div
-                  key={member.name}
+                  key={group.role}
                   variants={itemVariants}
-                  whileHover={{ y: -3 }}
-                  className="bg-[#0D0221]/60 border border-white/10 rounded-xl p-5 text-center hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group"
+                  whileHover={{ y: -5 }}
+                  className="bg-[#0D0221]/60 border border-white/10 rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group flex flex-col h-full"
                 >
-                  <div className="relative w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-white/5 border border-white/10 group-hover:border-primary/50 transition-colors">
-                    <div className="text-xl sm:text-2xl grayscale group-hover:grayscale-0 transition-all">{member.icon}</div>
+                  <div className="relative w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-white/5 border border-white/10 group-hover:border-primary/50 transition-colors">
+                    <div className="text-2xl sm:text-3xl grayscale group-hover:grayscale-0 transition-all">{group.icon}</div>
                   </div>
 
-                  <h3 className="text-xs font-black mb-0.5 text-white/90 group-hover:text-primary transition-colors">{member.name}</h3>
-                  <p className="text-[9px] sm:text-[10px] text-primary/70 tracking-[0.1em] uppercase mb-2">
-                    {member.role}
-                  </p>
-                  <p className="text-[10px] text-white/50 leading-relaxed">
-                    {member.contribution}
-                  </p>
+                  <h3 className="text-sm font-black mb-4 text-primary tracking-widest uppercase border-b border-white/10 pb-2">
+                    {group.role}
+                  </h3>
+
+                  <div className="flex flex-col gap-3 flex-grow justify-center">
+                    {group.members.map((member) => (
+                      <a
+                        key={member.name}
+                        href={member.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white hover:text-[#00ffff] font-bold text-sm sm:text-base tracking-wider transition-colors flex items-center justify-center gap-2 group/member"
+                      >
+                        <span className="opacity-0 group-hover/member:opacity-100 transition-opacity text-primary">›</span>
+                        {member.name}
+                      </a>
+                    ))}
+                  </div>
                 </motion.div>
               ))}
             </motion.div>
