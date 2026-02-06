@@ -27,23 +27,36 @@ const BUILDINGS = [
     { id: 'old-building-3', name: 'CSE Annex 2', hindiName: 'सिविल विभाग', position: [-9, -12.5], size: [6, 3.5], height: 2, type: 'complex' },
     { id: 'canteen', name: 'Canteen', hindiName: 'कैंटीन', position: [-18, -17], size: [2, 2], height: 2, type: 'simple', icon: '🍽️' },
 
-    // Unique AI Department (Only one)
+    // Unique AI Department
     { id: 'ai-department', name: 'AI department', hindiName: 'एआई विभाग', position: [-1, 2], size: [9, 5], height: 8, type: 'simple', icon: '🤖' },
+    
+    // --- UPDATED: GOLE KA MANDIR SQUARE (Replaced 'circle') ---
+    { 
+        id: 'gkm-square', 
+        name: 'Gole Ka Mandir Square', 
+        hindiName: 'गोले का मंदिर चौराहा', 
+        position: [40, -35], 
+        size: [12, 12], 
+        height: 0.3, 
+        type: 'landmark', // Renders as a flat ground/roundabout base
+        color: '#444444', 
+        icon: '📍' 
+    },
 
-    // HOSTELS (Distinct IDs, distinct positions)
+    // HOSTELS
     { id: 'girls-hostel', name: 'Girls Hostel', hindiName: 'छात्रावास', position: [22, 29], size: [8, 8], height: 7, type: 'hostel', icon: '🛏️', color: '#e0c0e0' },
     { id: 'boys-hostel', name: 'Boys Hostel', hindiName: 'छात्रालय', position: [-15, 40], size: [8, 10], height: 7, type: 'hostel', icon: '🛏️', color: '#c0d0e0' },
 
-    // POWER STATION (New 'power-towers' type - smaller footprint, tall towers)
+    // POWER STATION
     { id: 'power-house', name: 'Power Station', hindiName: 'विद्युत घर', position: [-18, 25], size: [6, 8], height: 0.5, type: 'power-towers', icon: '⚡' },
 
     { id: 'library', name: 'Central Library', hindiName: 'पुस्तकालय', position: [-14, -12], size: [4, 3], height: 3, type: 'complex', icon: '📚' },
-    { id: 'stage-ground', name: 'stage ground', hindiName: 'स्टेज ग्राउंड', position: [-5, -22], size: [15, 6], height: 0.1, type: 'landmark', color: '#2D5A27' },
-    { id: 'parking', name: 'parking', hindiName: 'पार्किंग', position: [-19, -5], size: [3, 20], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'stage-ground', name: 'Stage Ground', hindiName: 'स्टेज ग्राउंड', position: [-5, -22], size: [15, 6], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'parking', name: 'Parking', hindiName: 'पार्किंग', position: [-19, -5], size: [3, 20], height: 0.1, type: 'landmark', color: '#2D5A27' },
     { id: 'ai-ground', name: 'AI ground', hindiName: 'एआई ग्राउंड', position: [-1, -4], size: [9, 7], height: 0.1, type: 'landmark', color: '#3A6B35' },
-    { id: 'statue-ground', name: 'statue ground', hindiName: 'स्टैच्यू ग्राउंड', position: [15, -18.5], size: [10, 10], height: 0.1, type: 'landmark', color: '#2D5A27' },
-    { id: 'gymnasium', name: 'gymnasium', hindiName: 'जिम', position: [11, 3.5], size: [8, 8], height: 0.1, type: 'landmark', color: '#2D5A27' },
-    { id: 'football-ground', name: 'football ground', hindiName: 'फुटबॉल ग्राउंड', position: [0, 19], size: [30, 15], height: 0.1, type: 'landmark', color: '#1B4D17' },
+    { id: 'statue-ground', name: 'Statue Ground', hindiName: 'स्टैच्यू ग्राउंड', position: [15, -18.5], size: [10, 10], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'gymnasium', name: 'Gymnasium', hindiName: 'जिम', position: [11, 3.5], size: [8, 8], height: 0.1, type: 'landmark', color: '#2D5A27' },
+    { id: 'football-ground', name: 'Football Ground', hindiName: 'फुटबॉल ग्राउंड', position: [0, 19], size: [30, 15], height: 0.1, type: 'landmark', color: '#1B4D17' },
 
     { id: 'biotech', name: 'Biotech Dept', hindiName: 'जैव प्रौद्योगिकी', position: [15, -11], size: [5, 5], height: 3.5, type: 'simple' },
     { id: 'dispensary', name: 'Dispensary', hindiName: 'औषधालय', position: [11, -3.5], size: [4, 4], height: 2, type: 'simple', icon: 'H' },
@@ -51,7 +64,7 @@ const BUILDINGS = [
     { id: 'amul', name: 'Amul Parlor', hindiName: 'अमूल', position: [7, -0.5], size: [2, 2], height: 1, type: 'simple', icon: 'H' },
     { id: 'architecture', name: 'Architecture Dept', hindiName: 'वास्तुकला', position: [-9.5, -6.5], size: [5, 5], height: 4, type: 'complex' },
     { id: 'mechanical-dept', name: 'Mechanical Dept', hindiName: 'मैकेनिकल विभाग', position: [2, -7.25], size: [4, 4], height: 4, type: 'complex' },
-    { id: 'statue-base', name: 'statue base', hindiName: 'स्टैच्यू आधार', position: [15, -18.5], size: [2, 2], height: 1, type: 'simple', color: '#A9A9A9' },
+    { id: 'statue-base', name: 'Statue base', hindiName: 'स्टैच्यू आधार', position: [15, -18.5], size: [2, 2], height: 1, type: 'simple', color: '#A9A9A9' },
     { id: 'mits-main', name: 'Mechanical Workshop', hindiName: 'मैकेनिकल वर्कशॉप', position: [-3, 15], size: [7, 4], height: 3, type: 'complex', icon: '⚙️' },
     { id: 'diamond-gate', name: 'Diamond Jubilee Gate', hindiName: 'डायमंड गेट', position: [-24, 9], size: [4, 1], height: 6, type: 'gate', rotationY: Math.PI / 2 },
 ];
@@ -62,18 +75,29 @@ const ROADS = [
     { start: [-22, -26], end: [23, -26], width: 2 },  // Bottom horizontal
     { start: [5, -27], end: [5, 11], width: 2 },      // Main vertical spine
 
-    // Extended Right Side (To Girls Hostel & Admission)
-    { start: [22, -25], end: [22, 25], width: 2 },    // Right vertical extended up
-    //{ start: [7, 11], end: [22, 11], width: 2 },      // Connector to right vertical
-
-    // Extended Left Side (To Power Station, Diamond Gate, Boys Hostel)
+    // Extended Right Side
+    { start: [22, -25], end: [22, 25], width: 2 },
+    
+    // Extended Left Side (Diamond Gate Area)
     { start: [-23, -27], end: [-23, 33.75], width: 2 },  // Left vertical spine
     { start: [-23, 10], end: [23, 10], width: 2 },     // Middle horizontal connector
 
     // Service Roads
-    //{ start: [-20, 20], end: [-20, 20], width: 1.5 }, // Power Station Service Road (Direct connection)
-    { start: [-23, 33], end: [-15, 33], width: 1.5 }, // Boys Hostel Road
-    //{ start: [22, 22], end: [26, 22], width: 1.5 },   // Girls Hostel Road
+    { start: [-23, 33], end: [-15, 33], width: 1.5 }, 
+
+    // --- NEW: GOLE KA MANDIR SQUARE ROADS (EXTENDED TO ENDS) ---
+    // 1. North Road (Vertical - Parallel to Diamond Gate road) -> Extends to +60 Z
+    { start: [40, -35], end: [40, 60], width: 5 }, 
+    { start: [-40, -35], end: [-40, 60], width: 5 }, 
+    // 2. South Road -> Extends to -60 Z
+    { start: [40, -35], end: [40, -60], width: 5 },
+    { start: [-40, -35], end: [-40, -60], width: 5 },
+    // 3. West Road (Connecting towards Campus) -> Extends to -60 X
+    { start: [40, -35], end: [-60, -35], width: 5 },
+    { start: [40, 50], end: [-60, 50], width: 5 },
+    // 4. East Road -> Extends to +60 X
+    { start: [40, -35], end: [60, -35], width: 5 },
+    { start: [40, 50], end: [60, 50], width: 5 },
 ];
 
 
@@ -116,6 +140,44 @@ const generateTextures = () => {
     return { window: windowTexture, road: roadTexture };
 };
 
+const AreaLabels = () => {
+    const labels = [
+        // Campus Zones
+        { text: "HOSTEL ZONE", position: [3, 0.2, 35], rotation: 0, size: 5, color: "#ffffff", opacity: 0.15 },
+        { text: "ACADEMIC BLOCK", position: [-10, 0.2, 7], rotation: 0, size: 2, color: "#d8cccc", opacity: 0.15 },
+        { text: "FOOTBALL GROUND", position: [0, 0.2, 19], rotation: 0, size: 3, color: "#ffffff", opacity: 0.3 },
+        
+        // Surrounding Areas
+        { text: "MELA GROUND SECTOR", position: [-45, 0.2, 0], rotation: Math.PI / 2, size: 4, color: "#cccccc", opacity: 0.1 },
+        { text: "RESIDENCY AREA", position: [50, 0.2, -20], rotation: -Math.PI / 2, size: 4, color: "#cccccc", opacity: 0.1 },
+       // { text: "CITY CENTER", position: [40, 0.2, -55], rotation: 0, size: 4, color: "#aaaaaa", opacity: 0.1 },
+        { text: "INDUSTRIAL AREA", position: [-40, 0.2, 50], rotation: 0, size: 4, color: "#aaaaaa", opacity: 0.1 },
+        
+        // Road Labels
+        { text: "MELA ROAD", position: [-25, 0.2, 0], rotation: Math.PI / 2, size: 2, color: THEME.primary, opacity: 0.8 },
+        { text: "MORAR ROAD", position: [40, 0.2, 10], rotation: Math.PI / 2, size: 2, color: "#aaaaaa", opacity: 0.5 },
+    ];
+
+    return (
+        <group>
+            {labels.map((label, index) => (
+                <Text
+                    key={index}
+                    position={label.position as [number, number, number]}
+                    rotation={[-Math.PI / 2, 0, label.rotation]}
+                    fontSize={label.size}
+                    color={label.color}
+                    fillOpacity={label.opacity}
+                    anchorX="center"
+                    anchorY="middle"
+                    fontWeight="bold"
+                >
+                    {label.text}
+                </Text>
+            ))}
+        </group>
+    );
+};
 
 
 const Fence = ({ size }: { size: [number, number] }) => {
@@ -217,24 +279,133 @@ const Fence = ({ size }: { size: [number, number] }) => {
     );
 };
 
+const HostelComplex = ({ position, hostelType, size, height }: { position: [number, number], hostelType: 'boys' | 'girls', size: [number, number], height: number }) => {
+    // Create multiple hostel blocks in a complex
+    const blockWidth = size[0] / 3;
+    const blockDepth = size[1] / 2.5;
+    const baseColor = hostelType === 'girls' ? '#e0c0e0' : '#c0d0e0'; // Light purple for girls, light blue for boys
+    const windowColor = hostelType === 'girls' ? '#FF69B4' : '#4169E1'; // Pink accents for girls, blue for boys
+
+    const blocks = [
+        // Block 1 - Front Left
+        { x: -size[0]/2 + blockWidth/2, z: -size[1]/2 + blockDepth/2, label: hostelType === 'girls' ? 'Block A' : 'Block A' },
+        // Block 2 - Front Center
+        { x: 0, z: -size[1]/2 + blockDepth/2, label: hostelType === 'girls' ? 'Block B' : 'Block B' },
+        // Block 3 - Front Right
+        { x: size[0]/2 - blockWidth/2, z: -size[1]/2 + blockDepth/2, label: hostelType === 'girls' ? 'Block C' : 'Block C' },
+        // Block 4 - Back Left
+        { x: -size[0]/2 + blockWidth/2, z: size[1]/2 - blockDepth/2, label: hostelType === 'girls' ? 'Block D' : 'Block D' },
+        // Block 5 - Back Center
+        { x: 0, z: size[1]/2 - blockDepth/2, label: hostelType === 'girls' ? 'Block E' : 'Block E' },
+        // Block 6 - Back Right
+        { x: size[0]/2 - blockWidth/2, z: size[1]/2 - blockDepth/2, label: hostelType === 'girls' ? 'Block F' : 'Block F' },
+    ];
+
+    return (
+        <group position={[position[0], 0, position[1]]}>
+            {/* Central Courtyard/Plaza - ground */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
+                <planeGeometry args={[size[0], size[1]]} />
+                <meshStandardMaterial color="#B8860B" roughness={0.85} />
+            </mesh>
+
+            {/* Hostel Blocks */}
+            {blocks.map((block, i) => (
+                <group key={`hostel-block-${i}`} position={[block.x, 0, block.z]}>
+                    {/* Main building block */}
+                    <mesh castShadow position={[0, height / 2, 0]}>
+                        <boxGeometry args={[blockWidth - 0.5, height, blockDepth - 0.5]} />
+                        <meshStandardMaterial
+                            color={baseColor}
+                            roughness={0.6}
+                            metalness={0.1}
+                            emissive={i % 2 === 0 ? windowColor : '#000000'}
+                            emissiveIntensity={0.1}
+                        />
+                    </mesh>
+
+                    {/* Roof */}
+                    <mesh position={[0, height, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                        <planeGeometry args={[blockWidth - 0.5, blockDepth - 0.5]} />
+                        <meshStandardMaterial color="#333333" roughness={0.9} />
+                    </mesh>
+
+                    {/* Window grid pattern */}
+                    {[...Array(Math.floor((blockWidth - 0.5) / 1.2))].map((_, wi) =>
+                        [...Array(Math.floor(height / 1))].map((_, hi) => (
+                            <mesh key={`window-${wi}-${hi}`} position={[-blockWidth/2 + 1 + wi * 1.2, 1 + hi * 1.2, blockDepth/2 - 0.1]}>
+                                <boxGeometry args={[0.6, 0.6, 0.05]} />
+                                <meshStandardMaterial color={windowColor} emissive={windowColor} emissiveIntensity={0.4} metalness={0.7} />
+                            </mesh>
+                        ))
+                    )}
+
+                    {/* Block name plate */}
+                    <Html position={[0, height + 1, 0]} center distanceFactor={15}>
+                        <div className="px-2 py-1 bg-black/70 rounded text-[8px] text-white font-bold whitespace-nowrap">
+                            {block.label}
+                        </div>
+                    </Html>
+                </group>
+            ))}
+
+            {/* Entrance gate/arch */}
+            <group position={[0, 0, -size[1]/2 + 0.5]}>
+                <mesh castShadow position={[-blockWidth/2, height * 0.8, 0]}>
+                    <boxGeometry args={[blockWidth * 0.6, height * 0.6, 0.2]} />
+                    <meshStandardMaterial color="#8B4513" roughness={0.8} />
+                </mesh>
+                <mesh castShadow position={[blockWidth/2, height * 0.8, 0]}>
+                    <boxGeometry args={[blockWidth * 0.6, height * 0.6, 0.2]} />
+                    <meshStandardMaterial color="#8B4513" roughness={0.8} />
+                </mesh>
+            </group>
+
+            {/* Sports/Recreation area in center */}
+            <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                <circleGeometry args={[2.5, 16]} />
+                <meshStandardMaterial color="#90EE90" roughness={0.85} />
+            </mesh>
+
+            {/* Flagpole in center courtyard */}
+            <mesh position={[0, 1.5, 0]}>
+                <cylinderGeometry args={[0.08, 0.08, 3, 8]} />
+                <meshStandardMaterial color="#333333" roughness={0.7} />
+            </mesh>
+            <mesh position={[0.3, 3.2, -0.1]}>
+                <boxGeometry args={[0.6, 0.3, 0.05]} />
+                <meshStandardMaterial color={hostelType === 'girls' ? '#FF1493' : '#1E90FF'} emissive={hostelType === 'girls' ? '#FF1493' : '#1E90FF'} emissiveIntensity={0.4} />
+            </mesh>
+        </group>
+    );
+};
+
 const Building = ({ data, textures, showLabels }: any) => {
     const mesh = useRef<THREE.Mesh>(null);
     const [hovered, setHover] = useState(false);
 
-    const geometry = useMemo(() => {
-        // HOSTEL LOGIC: U-Shape for hostels
-        if (data.type === 'hostel') {
-            const shape = new THREE.Shape();
-            const w = data.size[0] / 2;
-            const h = data.size[1] / 2;
-            const wingThickness = 2.5;
-            shape.moveTo(-w, -h); shape.lineTo(w, -h); shape.lineTo(w, h);
-            shape.lineTo(w - wingThickness, h); shape.lineTo(w - wingThickness, -h + wingThickness);
-            shape.lineTo(-w + wingThickness, -h + wingThickness); shape.lineTo(-w + wingThickness, h);
-            shape.lineTo(-w, h); shape.lineTo(-w, -h);
-            return new THREE.ExtrudeGeometry(shape, { depth: data.height, bevelEnabled: true, bevelThickness: 0.1 });
-        }
+    // HOSTEL LOGIC: Use HostelComplex for hostels
+    if (data.type === 'hostel') {
+        return (
+            <group>
+                <HostelComplex
+                    position={[data.position[0], data.position[1]]}
+                    hostelType={data.id === 'girls-hostel' ? 'girls' : 'boys'}
+                    size={data.size}
+                    height={data.height}
+                />
+                {showLabels && (
+                    <Html position={[data.position[0], data.height + 4, data.position[1]]} center distanceFactor={20}>
+                        <div className="px-3 py-1 bg-black/80 backdrop-blur-md border border-white/20 rounded-full text-[10px] text-white whitespace-nowrap font-orbitron shadow-xl pointer-events-none">
+                            <span className="text-primary mr-1">●</span> {data.name}
+                        </div>
+                    </Html>
+                )}
+            </group>
+        );
+    }
 
+    const geometry = useMemo(() => {
         // COMPLEX LOGIC: Hollow center
         if (data.type === 'complex') {
             const shape = new THREE.Shape();
@@ -277,7 +448,12 @@ const Building = ({ data, textures, showLabels }: any) => {
                     data.rotationY || 0,
                     0
                 ]}
-                position={[0, (data.type === 'complex' || data.type === 'gate' || data.type === 'hostel') ? 0 : data.height / 2, 0]}
+                position={[
+                    0, 
+                    // UPDATED: Removed 'gate' from this check so it defaults to data.height/2
+                    (data.type === 'complex' || data.type === 'hostel') ? 0 : data.height / 2, 
+                    0
+                ]}
                 onPointerOver={(e) => { e.stopPropagation(); setHover(true); }}
                 onPointerOut={() => setHover(false)}
                 castShadow
@@ -334,6 +510,7 @@ const Building = ({ data, textures, showLabels }: any) => {
 };
 
 
+/*
 const SmartFoliage = () => {
     const trunkGeo = useMemo(() => new THREE.CylinderGeometry(0.1, 0.15, 0.8), []);
     const leafGeo = useMemo(() => new THREE.SphereGeometry(0.6, 7, 7), []);
@@ -403,7 +580,9 @@ const SmartFoliage = () => {
         </group>
     );
 };
+*/
 
+/*
 const SingleHugeTree = ({ position, height }: { position: [number, number, number], height: number }) => {
     const trunkHeight = height * 0.35;
     const trunkRadiusTop = height * 0.08;
@@ -419,6 +598,635 @@ const SingleHugeTree = ({ position, height }: { position: [number, number, numbe
         <group position={position}>
             <mesh geometry={trunkGeo} material={trunkMat} position={[0, trunkHeight / 2, 0]} castShadow receiveShadow />
             <mesh geometry={leafGeo} material={leafMat} position={[0, trunkHeight + foliageRadius * 0.7, 0]} scale={[1, 1.1, 1]} castShadow receiveShadow />
+        </group>
+    );
+};
+*/
+
+// ========================================
+// GOLE KA MANDIR SQUARE - Detailed 3D Model
+// ========================================
+
+// Create realistic road texture with wear, cracks, and markings
+const createRoadTexture = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d')!;
+
+    // Base asphalt
+    ctx.fillStyle = '#2D2D2D';
+    ctx.fillRect(0, 0, 512, 512);
+
+    // Add cracks
+    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 50; i++) {
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * 512, Math.random() * 512);
+        ctx.lineTo(Math.random() * 512, Math.random() * 512);
+        ctx.stroke();
+    }
+
+    // Add dust/dirt spots
+    ctx.fillStyle = 'rgba(139,69,19,0.15)';
+    for (let i = 0; i < 100; i++) {
+        ctx.fillRect(Math.random() * 512, Math.random() * 512, Math.random() * 30, Math.random() * 30);
+    }
+
+    // Add oil stains
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    for (let i = 0; i < 30; i++) {
+        const x = Math.random() * 512;
+        const y = Math.random() * 512;
+        ctx.beginPath();
+        ctx.arc(x, y, Math.random() * 20 + 5, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    return texture;
+};
+
+const GoleKaMandirSquare = () => {
+    const roadTexture = useMemo(() => createRoadTexture(), []);
+    // CENTRAL ROUNDABOUT - Enhanced Choraha (City Square)
+    const CentralMonument = () => {
+        return (
+            <group position={[40, 0, -35]}>
+                {/* Outer circular border/curb - Elevated */}
+                <mesh position={[0, 0.08, 0]}>
+                    <torusGeometry args={[6, 0.4, 16, 100]} />
+                    <meshStandardMaterial color="#FFFFFF" roughness={0.7} metalness={0.3} />
+                </mesh>
+
+                {/* Inner circular grass/green area */}
+                <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[5.8, 64]} />
+                    <meshStandardMaterial color="#3A7D3A" roughness={0.9} />
+                </mesh>
+
+                {/* Circular paved area (lighter shade) */}
+                <mesh position={[0, 0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[5.5, 64]} />
+                    <meshStandardMaterial color="#4A9D4A" roughness={0.85} />
+                </mesh>
+
+                {/* Central circular pedestrian area - very light */}
+                <mesh position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[3, 64]} />
+                    <meshStandardMaterial color="#90EE90" roughness={0.8} />
+                </mesh>
+
+                {/* ENHANCED: Larger monument at center */}
+                <mesh position={[0, 0.3, 0]}>
+                    <cylinderGeometry args={[0.6, 0.8, 0.3, 16]} />
+                    <meshStandardMaterial color="#FFD700" roughness={0.5} metalness={0.6} emissive="#FFD700" emissiveIntensity={0.2} />
+                </mesh>
+
+                {/* Central column/pillar */}
+                <mesh position={[0, 0.8, 0]}>
+                    <cylinderGeometry args={[0.25, 0.3, 1.2, 12]} />
+                    <meshStandardMaterial color="#C0C0C0" roughness={0.4} metalness={0.8} />
+                </mesh>
+
+                {/* Monument top - decorative sphere */}
+                <mesh position={[0, 1.5, 0]}>
+                    <sphereGeometry args={[0.4, 16, 16]} />
+                    <meshStandardMaterial color="#FFD700" roughness={0.3} metalness={0.9} emissive="#FFD700" emissiveIntensity={0.3} />
+                </mesh>
+
+                {/* Light rays from monument */}
+                <pointLight position={[0, 1.5, 0]} intensity={1.5} distance={20} color="#FFD700" />
+
+                {/* Circular walking path markings around center */}
+                {[0, 90, 180, 270].map((angle) => {
+                    const x = Math.cos((angle * Math.PI) / 180) * 2;
+                    const z = Math.sin((angle * Math.PI) / 180) * 2;
+                    return (
+                        <mesh key={`marker-${angle}`} position={[x, 0.06, z]}>
+                            <cylinderGeometry args={[0.25, 0.25, 0.1, 12]} />
+                            <meshStandardMaterial color="#FFD700" roughness={0.5} metalness={0.6} />
+                        </mesh>
+                    );
+                })}
+
+                {/* Additional paved circular ring patterns around center */}
+                {[1.5, 2.5].map((radius, i) => (
+                    <mesh key={`ring-${i}`} position={[0, 0.06, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                        <torusGeometry args={[radius, 0.1, 32, 100]} />
+                        <meshStandardMaterial color="#C0C0C0" roughness={0.7} metalness={0.4} />
+                    </mesh>
+                ))}
+            </group>
+        );
+    };
+
+    // ROADS AND LANE MARKINGS
+    const RoadsAndMarkings = () => {
+        return (
+            <group>
+                {/* Main horizontal road (East-West) */}
+                <mesh position={[40, 0.0, -35]}>
+                    <planeGeometry args={[40, 12]} />
+                    <meshStandardMaterial map={roadTexture} color="#2D2D2D" roughness={0.9} />
+                </mesh>
+
+                {/* Main vertical road (North-South) */}
+                <mesh position={[40, 0.01, -35]}>
+                    <planeGeometry args={[12, 40]} />
+                    <meshStandardMaterial map={roadTexture} color="#2D2D2D" roughness={0.9} />
+                </mesh>
+
+                {/* Yellow center line (horizontal) */}
+                <mesh position={[40, 0.02, -35]}>
+                    <planeGeometry args={[38, 0.3]} />
+                    <meshStandardMaterial color="#FFFF00" emissive="#FFFF00" emissiveIntensity={0.2} />
+                </mesh>
+
+                {/* Yellow center line (vertical) */}
+                <mesh position={[40, 0.02, -35]}>
+                    <planeGeometry args={[0.3, 38]} />
+                    <meshStandardMaterial color="#FFFF00" emissive="#FFFF00" emissiveIntensity={0.2} />
+                </mesh>
+
+                {/* Zebra crossing - horizontal */}
+                {[...Array(10)].map((_, i) => (
+                    <mesh key={`zebra-h-${i}`} position={[40 - 15 + i * 3, 0.022, -35 - 6]}>
+                        <planeGeometry args={[2.5, 0.5]} />
+                        <meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.1} />
+                    </mesh>
+                ))}
+
+                {/* Zebra crossing - vertical */}
+                {[...Array(10)].map((_, i) => (
+                    <mesh key={`zebra-v-${i}`} position={[40 + 6, 0.022, -35 - 15 + i * 3]}>
+                        <planeGeometry args={[0.5, 2.5]} />
+                        <meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.1} />
+                    </mesh>
+                ))}
+
+                {/* Road shoulders and sidewalks */}
+                <mesh position={[40 - 8, 0.015, -35]}>
+                    <planeGeometry args={[2, 40]} />
+                    <meshStandardMaterial color="#696969" roughness={0.95} />
+                </mesh>
+                <mesh position={[40 + 8, 0.015, -35]}>
+                    <planeGeometry args={[2, 40]} />
+                    <meshStandardMaterial color="#696969" roughness={0.95} />
+                </mesh>
+                <mesh position={[40, 0.015, -35 - 8]}>
+                    <planeGeometry args={[40, 2]} />
+                    <meshStandardMaterial color="#696969" roughness={0.95} />
+                </mesh>
+                <mesh position={[40, 0.015, -35 + 8]}>
+                    <planeGeometry args={[40, 2]} />
+                    <meshStandardMaterial color="#696969" roughness={0.95} />
+                </mesh>
+            </group>
+        );
+    };
+
+    // TRAFFIC LIGHTS AND SIGNS - Enhanced System
+    const TrafficInfrastructure = () => {
+        return (
+            <group>
+                {/* Traffic lights at 4 intersections with dual systems */}
+                {[[40 - 7, -35 - 7], [40 + 7, -35 - 7], [40 + 7, -35 + 7], [40 - 7, -35 + 7]].map((pos, i) => (
+                    <group key={`traffic-${i}`} position={[pos[0], 0, pos[1]]}>
+                        {/* Main pole */}
+                        <mesh position={[0, 2, 0]}>
+                            <cylinderGeometry args={[0.12, 0.12, 4, 8]} />
+                            <meshStandardMaterial color="#222222" roughness={0.85} metalness={0.5} />
+                        </mesh>
+
+                        {/* Primary Traffic signal box */}
+                        <mesh position={[0, 4, 0]}>
+                            <boxGeometry args={[0.7, 1.6, 0.25]} />
+                            <meshStandardMaterial color="#1a1a1a" roughness={0.9} metalness={0.4} />
+                        </mesh>
+
+                        {/* Primary Signal Lights */}
+                        {/* Red */}
+                        <mesh position={[0, 4.35, 0.2]}>
+                            <cylinderGeometry args={[0.18, 0.18, 0.12, 16]} />
+                            <meshStandardMaterial color="#FF0000" emissive="#FF0000" emissiveIntensity={0.8} />
+                        </mesh>
+
+                        {/* Yellow */}
+                        <mesh position={[0, 3.85, 0.2]}>
+                            <cylinderGeometry args={[0.18, 0.18, 0.12, 16]} />
+                            <meshStandardMaterial color="#FFDD00" emissive="#FFDD00" emissiveIntensity={0.7} />
+                        </mesh>
+
+                        {/* Green */}
+                        <mesh position={[0, 3.35, 0.2]}>
+                            <cylinderGeometry args={[0.18, 0.18, 0.12, 16]} />
+                            <meshStandardMaterial color="#00FF00" emissive="#00FF00" emissiveIntensity={0.8} />
+                        </mesh>
+
+                        {/* Secondary signal on opposite side */}
+                        <mesh position={[0, 4, -0.15]}>
+                            <boxGeometry args={[0.6, 1.4, 0.2]} />
+                            <meshStandardMaterial color="#1a1a1a" roughness={0.9} metalness={0.4} />
+                        </mesh>
+
+                        {/* Secondary lights - smaller */}
+                        <mesh position={[0, 4.25, -0.25]}>
+                            <cylinderGeometry args={[0.12, 0.12, 0.1, 12]} />
+                            <meshStandardMaterial color="#FF0000" emissive="#FF0000" emissiveIntensity={0.7} />
+                        </mesh>
+                        <mesh position={[0, 3.75, -0.25]}>
+                            <cylinderGeometry args={[0.12, 0.12, 0.1, 12]} />
+                            <meshStandardMaterial color="#FFDD00" emissive="#FFDD00" emissiveIntensity={0.6} />
+                        </mesh>
+                        <mesh position={[0, 3.25, -0.25]}>
+                            <cylinderGeometry args={[0.12, 0.12, 0.1, 12]} />
+                            <meshStandardMaterial color="#00FF00" emissive="#00FF00" emissiveIntensity={0.7} />
+                        </mesh>
+
+                        {/* Enhanced light rays - brighter and more visible */}
+                        <pointLight position={[0, 4.35, 0.8]} intensity={2.5} distance={12} color="#FF0000" />
+                        <pointLight position={[0, 3.85, 0.8]} intensity={2} distance={10} color="#FFDD00" />
+                        <pointLight position={[0, 3.35, 0.8]} intensity={2.5} distance={12} color="#00FF00" />
+
+                        {/* Rear signals light */}
+                        <pointLight position={[0, 4.25, -0.5]} intensity={1.8} distance={10} color="#FF0000" />
+                        <pointLight position={[0, 3.25, -0.5]} intensity={1.8} distance={10} color="#00FF00" />
+                    </group>
+                ))}
+
+                {/* Speed breakers (humps) - White and black striped for visibility */}
+                {[40 - 5, 40 + 5].map((x, i) => (
+                    <group key={`bump-${i}`}>
+                        {/* Horizontal speed breakers */}
+                        <mesh position={[x, 0.1, -35 - 5]}>
+                            <boxGeometry args={[1.2, 0.2, 8]} />
+                            <meshStandardMaterial color="#FFFFFF" roughness={0.7} metalness={0.2} />
+                        </mesh>
+                        <mesh position={[x, 0.1, -35 + 5]}>
+                            <boxGeometry args={[1.2, 0.2, 8]} />
+                            <meshStandardMaterial color="#FFFFFF" roughness={0.7} metalness={0.2} />
+                        </mesh>
+
+                        {/* Black stripes on speed breakers for contrast */}
+                        {[...Array(8)].map((_, j) => (
+                            <mesh key={`stripe-${i}-${j}`} position={[x, 0.11, -35 - 5 + j]}>
+                                <planeGeometry args={[0.2, 1]} />
+                                <meshStandardMaterial color="#000000" />
+                            </mesh>
+                        ))}
+                    </group>
+                ))}
+
+                {/* Additional road markers - white dashed lines */}
+                {[40 - 3, 40 + 3].map((x, i) => (
+                    <group key={`marker-${i}`}>
+                        {[...Array(6)].map((_, j) => (
+                            <mesh key={`dash-${i}-${j}`} position={[x, 0.025, -35 + j * 3 - 7]}>
+                                <planeGeometry args={[0.3, 1.5]} />
+                                <meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.3} />
+                            </mesh>
+                        ))}
+                    </group>
+                ))}
+            </group>
+        );
+    };
+
+    // SURROUNDING BUILDINGS - Mixed Indian Architecture with Shops & Commercial
+    const SurroundingBuildings = () => {
+        const buildings = [
+            // NE corner
+            { pos: [40 + 12, 0, -35 - 12], size: [6, 4, 8], height: 4, color: '#E8D4C0', type: 'shop' },
+            { pos: [40 + 16, 0, -35 - 16], size: [5, 3.5, 6], height: 3, color: '#F5E6D3', type: 'residential' },
+            { pos: [40 + 8, 0, -35 - 8], size: [4, 2.5, 5], height: 2, color: '#D4A76A', type: 'shop' },
+
+            // SE corner
+            { pos: [40 + 12, 0, -35 + 12], size: [7, 4, 8], height: 3.5, color: '#D9D2C5', type: 'shop' },
+            { pos: [40 + 16, 0, -35 + 16], size: [5.5, 3, 7], height: 2.5, color: '#E8D4C0', type: 'residential' },
+            { pos: [40 + 8, 0, -35 + 8], size: [4, 2.5, 5], height: 2.5, color: '#D4A76A', type: 'shop' },
+
+            // NW corner
+            { pos: [40 - 12, 0, -35 - 12], size: [6, 3.5, 8], height: 3, color: '#F0E8DD', type: 'residential' },
+            { pos: [40 - 16, 0, -35 - 16], size: [5, 4, 6], height: 2.5, color: '#E8D4C0', type: 'shop' },
+            { pos: [40 - 8, 0, -35 - 8], size: [4, 2.5, 5], height: 2.2, color: '#D4A76A', type: 'shop' },
+
+            // SW corner
+            { pos: [40 - 12, 0, -35 + 12], size: [7, 3, 8], height: 3.5, color: '#D9D2C5', type: 'shop' },
+            { pos: [40 - 16, 0, -35 + 16], size: [5.5, 4, 7], height: 3, color: '#F5E6D3', type: 'residential' },
+            { pos: [40 - 8, 0, -35 + 8], size: [4, 2.5, 5], height: 2.3, color: '#D4A76A', type: 'shop' },
+        ];
+
+        return (
+            <group>
+                {buildings.map((b, i) => (
+                    <group key={`bldg-${i}`}>
+                        {/* Building body */}
+                        <mesh position={[b.pos[0], b.height / 2, b.pos[2]]}>
+                            <boxGeometry args={[b.size[0], b.height, b.size[2]]} />
+                            <meshStandardMaterial color={b.color} roughness={0.7} metalness={0.1} />
+                        </mesh>
+
+                        {/* Shop front signage for commercial buildings */}
+                        {b.type === 'shop' && (
+                            <mesh position={[b.pos[0], b.height - 0.3, b.pos[2] - b.size[2] / 2 + 0.1]}>
+                                <boxGeometry args={[b.size[0] - 0.5, 0.6, 0.2]} />
+                                <meshStandardMaterial color="#FF6600" emissive="#FF6600" emissiveIntensity={0.3} metalness={0.6} />
+                            </mesh>
+                        )}
+                    </group>
+                ))}
+            </group>
+        );
+    };
+
+    // STREET FURNITURE & UTILITIES
+    const StreetFurniture = () => {
+        return (
+            <group>
+                {/* Electric poles with transformers */}
+                {[[40 - 10, -35 - 10], [40 + 10, -35 - 10], [40 + 10, -35 + 10], [40 - 10, -35 + 10]].map((pos, i) => (
+                    <group key={`pole-${i}`} position={[pos[0], 0, pos[1]]}>
+                        {/* Pole */}
+                        <mesh position={[0, 2.5, 0]}>
+                            <cylinderGeometry args={[0.08, 0.1, 5, 8]} />
+                            <meshStandardMaterial color="#4A4A4A" roughness={0.9} />
+                        </mesh>
+
+                        {/* Transformer box */}
+                        <mesh position={[0, 1, 0]}>
+                            <boxGeometry args={[0.8, 0.8, 0.6]} />
+                            <meshStandardMaterial color="#5A5A5A" roughness={0.8} metalness={0.4} />
+                        </mesh>
+
+                        {/* Power lines connectors */}
+                        <pointLight position={[0, 5, 0]} intensity={0.3} distance={10} />
+                    </group>
+                ))}
+
+                {/* Streetlights */}
+                {[[40 - 6, -35 - 8], [40 + 6, -35 - 8], [40 + 6, -35 + 8], [40 - 6, -35 + 8]].map((pos, i) => (
+                    <group key={`light-${i}`} position={[pos[0], 0, pos[1]]}>
+                        <mesh position={[0, 2.5, 0]}>
+                            <cylinderGeometry args={[0.05, 0.08, 5, 6]} />
+                            <meshStandardMaterial color="#2A2A2A" roughness={0.9} />
+                        </mesh>
+                        <mesh position={[0, 5, 0]}>
+                            <sphereGeometry args={[0.25, 8, 8]} />
+                            <meshStandardMaterial color="#FFDD99" emissive="#FFDD99" emissiveIntensity={0.4} metalness={0.7} />
+                        </mesh>
+                        <pointLight position={[pos[0], 5.2, pos[1]]} intensity={1} distance={15} color="#FFDD99" />
+                    </group>
+                ))}
+
+                {/* Benches */}
+                {[[40 - 8, -35 + 5], [40 + 8, -35 + 5]].map((pos, i) => (
+                    <group key={`bench-${i}`} position={[pos[0], 0, pos[1]]}>
+                        <mesh position={[0, 0.4, 0]}>
+                            <boxGeometry args={[2.5, 0.1, 0.4]} />
+                            <meshStandardMaterial color="#8B7355" roughness={0.8} />
+                        </mesh>
+                        {[[-1, 0], [1, 0]].map((leg, j) => (
+                            <mesh key={`leg-${j}`} position={[leg[0], 0.2, 0]}>
+                                <boxGeometry args={[0.2, 0.4, 0.3]} />
+                                <meshStandardMaterial color="#696969" />
+                            </mesh>
+                        ))}
+                    </group>
+                ))}
+
+                {/* Trees around the square */}
+                {[[40 - 10, -35 - 10], [40 + 10, -35 - 10], [40 + 10, -35 + 10], [40 - 10, -35 + 10], [40 - 5, -35], [40 + 5, -35]].map((pos, i) => (
+                    <group key={`tree-${i}`} position={[pos[0], 0, pos[1]]}>
+                        <mesh position={[0, 1.5, 0]}>
+                            <cylinderGeometry args={[0.2, 0.3, 3, 8]} />
+                            <meshStandardMaterial color="#654321" roughness={0.95} />
+                        </mesh>
+                        <mesh position={[0, 3.5, 0]}>
+                            <sphereGeometry args={[1.5, 12, 12]} />
+                            <meshStandardMaterial color="#2D5A27" roughness={0.85} />
+                        </mesh>
+                    </group>
+                ))}
+            </group>
+        );
+    };
+
+    // VEHICLES - Indian Traffic (Busy Urban Scene with Extended Roads Traffic)
+    const Vehicles = () => {
+        const VehicleModel = ({ pos, rot, type, color }: { pos: [number, number, number], rot: number, type: 'car' | 'bike' | 'auto' | 'bus', color?: string }) => {
+            if (type === 'bike') {
+                const bikeColor = color || "#1A1A1A";
+                return (
+                    <group position={pos} rotation={[0, rot, 0]} castShadow>
+                        <mesh><boxGeometry args={[0.6, 0.5, 1.5]} /><meshStandardMaterial color={bikeColor} metalness={0.8} /></mesh>
+                        <mesh position={[0.3, 0.25, 0.5]}><cylinderGeometry args={[0.2, 0.2, 0.1, 12]} /><meshStandardMaterial color="#333" metalness={0.9} /></mesh>
+                        <mesh position={[-0.3, 0.25, 0.5]}><cylinderGeometry args={[0.2, 0.2, 0.1, 12]} /><meshStandardMaterial color="#333" metalness={0.9} /></mesh>
+                        <mesh position={[0, 0.4, 0]}><boxGeometry args={[0.1, 0.3, 0.8]} /><meshStandardMaterial color="#DAA520" metalness={0.7} /></mesh>
+                    </group>
+                );
+            } else if (type === 'auto') {
+                const autoColor = color || "#FFAA00";
+                return (
+                    <group position={pos} rotation={[0, rot, 0]} castShadow>
+                        <mesh><boxGeometry args={[1.2, 1.2, 2]} /><meshStandardMaterial color={autoColor} metalness={0.4} roughness={0.6} /></mesh>
+                        <mesh position={[0, 1.3, 0]}><boxGeometry args={[1.1, 0.8, 1.2]} /><meshStandardMaterial color={autoColor} opacity={0.7} transparent /></mesh>
+                        <mesh position={[0.4, 0.35, 0.4]}><cylinderGeometry args={[0.25, 0.25, 0.15, 12]} /><meshStandardMaterial color="#222" metalness={0.95} /></mesh>
+                        <mesh position={[-0.4, 0.35, 0.4]}><cylinderGeometry args={[0.25, 0.25, 0.15, 12]} /><meshStandardMaterial color="#222" metalness={0.95} /></mesh>
+                    </group>
+                );
+            } else if (type === 'bus') {
+                const busColor = color || "#FF6600";
+                return (
+                    <group position={pos} rotation={[0, rot, 0]} castShadow>
+                        <mesh><boxGeometry args={[1.8, 2, 4]} /><meshStandardMaterial color={busColor} metalness={0.3} roughness={0.7} /></mesh>
+                        <mesh position={[0, 2.5, 0]}><boxGeometry args={[1.7, 1.5, 3.5]} /><meshStandardMaterial color={busColor} opacity={0.6} transparent /></mesh>
+                        <mesh position={[0.6, 0.5, 0.8]}><cylinderGeometry args={[0.35, 0.35, 0.2, 12]} /><meshStandardMaterial color="#222" metalness={0.95} /></mesh>
+                        <mesh position={[-0.6, 0.5, 0.8]}><cylinderGeometry args={[0.35, 0.35, 0.2, 12]} /><meshStandardMaterial color="#222" metalness={0.95} /></mesh>
+                    </group>
+                );
+            }
+            // car
+            const carColor = color || "#003399";
+            return (
+                <group position={pos} rotation={[0, rot, 0]} castShadow>
+                    <mesh><boxGeometry args={[1.4, 0.8, 3]} /><meshStandardMaterial color={carColor} metalness={0.7} roughness={0.5} /></mesh>
+                    <mesh position={[0, 0.9, 0.2]}><boxGeometry args={[1.2, 0.6, 1.5]} /><meshStandardMaterial color={carColor} opacity={0.6} transparent /></mesh>
+                    <mesh position={[0.4, 0.3, 0.4]}><cylinderGeometry args={[0.25, 0.25, 0.15, 12]} /><meshStandardMaterial color="#222" metalness={0.95} /></mesh>
+                    <mesh position={[-0.4, 0.3, 0.4]}><cylinderGeometry args={[0.25, 0.25, 0.15, 12]} /><meshStandardMaterial color="#222" metalness={0.95} /></mesh>
+                    <mesh position={[0.5, 0.45, 2.8]}><boxGeometry args={[0.4, 0.3, 0.3]} /><meshStandardMaterial color="#FF0000" emissive="#FF0000" emissiveIntensity={0.3} /></mesh>
+                    <mesh position={[-0.5, 0.45, 2.8]}><boxGeometry args={[0.4, 0.3, 0.3]} /><meshStandardMaterial color="#FF0000" emissive="#FF0000" emissiveIntensity={0.3} /></mesh>
+                </group>
+            );
+        };
+
+        return (
+            <group>
+                {/* Central square - East-West road traffic */}
+                <VehicleModel pos={[40 - 3, 0.2, -35 - 3]} rot={0} type="car" color="#003399" />
+                <VehicleModel pos={[40 + 2, 0.2, -35 + 2]} rot={Math.PI} type="auto" color="#FFAA00" />
+                <VehicleModel pos={[40 - 2, 0.2, -35 + 4]} rot={Math.PI / 2} type="bike" color="#FF3300" />
+                <VehicleModel pos={[40 + 4, 0.2, -35 - 4]} rot={-Math.PI / 2} type="bus" color="#FF6600" />
+
+                {/* Central square - North-South road traffic */}
+                <VehicleModel pos={[40 - 5, 0.2, -35 - 3]} rot={Math.PI / 2} type="car" color="#000099" />
+                <VehicleModel pos={[40 + 5, 0.2, -35 + 5]} rot={-Math.PI / 2} type="bike" color="#FF9900" />
+                <VehicleModel pos={[40 - 1, 0.2, -35 - 6]} rot={0} type="auto" color="#FF5500" />
+                <VehicleModel pos={[40 + 3, 0.2, -35 + 3]} rot={Math.PI} type="bike" color="#CC0000" />
+
+                {/* NORTH ROAD (Vertical - extending to +60 Z) */}
+                <VehicleModel pos={[40, 0.2, -10]} rot={Math.PI / 2} type="car" color="#0066CC" />
+                <VehicleModel pos={[40, 0.2, 5]} rot={Math.PI / 2} type="auto" color="#FFCC00" />
+                <VehicleModel pos={[40, 0.2, 20]} rot={Math.PI / 2} type="bus" color="#FF7700" />
+                <VehicleModel pos={[40, 0.2, 35]} rot={Math.PI / 2} type="car" color="#003366" />
+                <VehicleModel pos={[40, 0.2, 50]} rot={Math.PI / 2} type="bike" color="#FF4444" />
+                <VehicleModel pos={[40, 0.2, 58]} rot={Math.PI / 2} type="auto" color="#FF8800" />
+                <VehicleModel pos={[40, 0.2, 45]} rot={-Math.PI / 2} type="bike" color="#990000" />
+
+                {/* SOUTH ROAD (Vertical - extending to -60 Z) */}
+                <VehicleModel pos={[40, 0.2, -50]} rot={-Math.PI / 2} type="car" color="#006699" />
+                <VehicleModel pos={[40, 0.2, -30]} rot={-Math.PI / 2} type="auto" color="#FFBBBB" />
+                <VehicleModel pos={[40, 0.2, -15]} rot={-Math.PI / 2} type="bus" color="#FF5500" />
+                <VehicleModel pos={[40, 0.2, -58]} rot={-Math.PI / 2} type="car" color="#003399" />
+                <VehicleModel pos={[40, 0.2, -45]} rot={-Math.PI / 2} type="bike" color="#FF6666" />
+                <VehicleModel pos={[40, 0.2, -52]} rot={-Math.PI / 2} type="auto" color="#FFAA44" />
+                <VehicleModel pos={[40, 0.2, -38]} rot={Math.PI / 2} type="bike" color="#CC3333" />
+
+                {/* WEST ROAD (Horizontal - extending to -60 X) */}
+                <VehicleModel pos={[10, 0.2, -35]} rot={0} type="car" color="#0033CC" />
+                <VehicleModel pos={[-8, 0.2, -35]} rot={0} type="auto" color="#FFDD00" />
+                <VehicleModel pos={[-25, 0.2, -35]} rot={0} type="bus" color="#FF8800" />
+                <VehicleModel pos={[-45, 0.2, -35]} rot={0} type="car" color="#004488" />
+                <VehicleModel pos={[-58, 0.2, -35]} rot={0} type="bike" color="#FF5555" />
+                <VehicleModel pos={[-40, 0.2, -35]} rot={0} type="auto" color="#FFAA55" />
+                <VehicleModel pos={[-52, 0.2, -35]} rot={Math.PI} type="bike" color="#BB2222" />
+
+                {/* EAST ROAD (Horizontal - extending to +60 X) */}
+                <VehicleModel pos={[58, 0.2, -35]} rot={Math.PI} type="car" color="#0055DD" />
+                <VehicleModel pos={[45, 0.2, -35]} rot={Math.PI} type="auto" color="#FFCC33" />
+                <VehicleModel pos={[60, 0.2, -35]} rot={Math.PI} type="bus" color="#FF7733" />
+                <VehicleModel pos={[50, 0.2, -35]} rot={0} type="car" color="#002266" />
+                <VehicleModel pos={[55, 0.2, -35]} rot={0} type="bike" color="#FF4444" />
+
+                {/* UPPER HORIZONTAL ROADS */}
+                <VehicleModel pos={[10, 0.2, 50]} rot={0} type="car" color="#0033AA" />
+                <VehicleModel pos={[30, 0.2, 50]} rot={0} type="auto" color="#FFBB00" />
+                <VehicleModel pos={[-20, 0.2, 50]} rot={0} type="bike" color="#FF6655" />
+                <VehicleModel pos={[-45, 0.2, 50]} rot={0} type="bus" color="#FF7700" />
+                <VehicleModel pos={[55, 0.2, 50]} rot={Math.PI} type="car" color="#003399" />
+                <VehicleModel pos={[50, 0.2, 50]} rot={Math.PI} type="bike" color="#DD3333" />
+                <VehicleModel pos={[-55, 0.2, 50]} rot={Math.PI} type="auto" color="#FFAA66" />
+                <VehicleModel pos={[25, 0.2, 50]} rot={Math.PI} type="bus" color="#FF6600" />
+            </group>
+        );
+    };
+
+    // PEDESTRIANS - Indian pedestrians with casual and traditional clothing
+    const Pedestrians = () => {
+        const Person = ({ pos, skinColor, shirtColor, clothing }: { pos: [number, number, number], skinColor: string, shirtColor: string, clothing: 'casual' | 'traditional' }) => (
+            <group position={pos} castShadow>
+                {/* Head */}
+                <mesh><sphereGeometry args={[0.15, 10, 10]} /><meshStandardMaterial color={skinColor} roughness={0.9} /></mesh>
+
+                {/* Body - Shirt/Upper clothing */}
+                <mesh position={[0, -0.35, 0]}><boxGeometry args={[0.3, 0.45, 0.25]} /><meshStandardMaterial color={shirtColor} roughness={0.85} /></mesh>
+
+                {/* Pants/Traditional clothing */}
+                {clothing === 'traditional' ? (
+                    <mesh position={[0, -0.65, 0]}><boxGeometry args={[0.35, 0.3, 0.25]} /><meshStandardMaterial color="#4A4A4A" roughness={0.9} /></mesh>
+                ) : (
+                    <mesh position={[0, -0.65, 0]}><boxGeometry args={[0.3, 0.3, 0.25]} /><meshStandardMaterial color="#1A1A1A" roughness={0.85} /></mesh>
+                )}
+
+                {/* Arms - Left */}
+                <mesh position={[-0.2, -0.35, 0]}><boxGeometry args={[0.1, 0.35, 0.12]} /><meshStandardMaterial color={skinColor} roughness={0.9} /></mesh>
+
+                {/* Arms - Right */}
+                <mesh position={[0.2, -0.35, 0]}><boxGeometry args={[0.1, 0.35, 0.12]} /><meshStandardMaterial color={skinColor} roughness={0.9} /></mesh>
+
+                {/* Legs - Left */}
+                <mesh position={[-0.1, -0.75, 0]}><boxGeometry args={[0.12, 0.3, 0.15]} /><meshStandardMaterial color={skinColor} roughness={0.9} /></mesh>
+
+                {/* Legs - Right */}
+                <mesh position={[0.1, -0.75, 0]}><boxGeometry args={[0.12, 0.3, 0.15]} /><meshStandardMaterial color={skinColor} roughness={0.9} /></mesh>
+            </group>
+        );
+
+        return (
+            <group>
+                {/* On zebra crossing */}
+                <Person pos={[40 - 3, 0.05, -35 - 6.5]} skinColor="#C19A6B" shirtColor="#FF6600" clothing="casual" />
+                <Person pos={[40 + 2, 0.05, -35 - 6.5]} skinColor="#D2B48C" shirtColor="#0066FF" clothing="traditional" />
+                <Person pos={[40 - 1, 0.05, -35 - 6.5]} skinColor="#C19A6B" shirtColor="#FFFF00" clothing="casual" />
+
+                {/* On sidewalk south */}
+                <Person pos={[40 + 4.5, 0.05, -35 - 5]} skinColor="#D2B48C" shirtColor="#FF3366" clothing="traditional" />
+                <Person pos={[40 - 4.5, 0.05, -35 - 5.5]} skinColor="#C19A6B" shirtColor="#00FF00" clothing="casual" />
+
+                {/* On zebra crossing - vertical */}
+                <Person pos={[40 + 6.5, 0.05, -35 - 2]} skinColor="#D2B48C" shirtColor="#FF6600" clothing="casual" />
+                <Person pos={[40 + 6.5, 0.05, -35 + 2]} skinColor="#C19A6B" shirtColor="#6600FF" clothing="traditional" />
+
+                {/* On sidewalk - other sides */}
+                <Person pos={[40 - 5, 0.05, -35 - 3]} skinColor="#C19A6B" shirtColor="#00CCFF" clothing="casual" />
+                <Person pos={[40 + 5, 0.05, -35 + 5]} skinColor="#D2B48C" shirtColor="#FF9900" clothing="traditional" />
+            </group>
+        );
+    };
+
+    // SIGNBOARDS AND TEXT
+    const Signboards = () => {
+        return (
+            <group>
+                {/* Street name signs */}
+                <mesh position={[40 - 15, 3, -35]}>
+                    <boxGeometry args={[3, 0.8, 0.1]} />
+                    <meshStandardMaterial color="#FFFFFF" roughness={0.5} metalness={0.5} />
+                </mesh>
+
+                {/* Direction signs */}
+                {[[40 - 10, -35 - 10], [40 + 10, -35 - 10], [40 + 10, -35 + 10], [40 - 10, -35 + 10]].map((pos, i) => (
+                    <group key={`sign-${i}`} position={[pos[0], 2, pos[1]]}>
+                        <mesh><boxGeometry args={[1.5, 0.6, 0.1]} /><meshStandardMaterial color="#FF0000" emissive="#FF0000" emissiveIntensity={0.2} /></mesh>
+                    </group>
+                ))}
+            </group>
+        );
+    };
+
+    // DUST AND ATMOSPHERE
+    const DustParticles = () => (
+        <group>
+            <mesh position={[40, 2, -35]}>
+                <sphereGeometry args={[25, 16, 16]} />
+                <meshStandardMaterial color="#D4A574" transparent opacity={0.05} side={THREE.BackSide} />
+            </mesh>
+        </group>
+    );
+
+    // GROUND
+    const Ground = () => (
+        <mesh position={[40, 0, -35]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <planeGeometry args={[50, 50]} />
+            <meshStandardMaterial color="#5A5A5A" roughness={0.95} />
+        </mesh>
+    );
+
+    return (
+        <group>
+            <Ground />
+            <RoadsAndMarkings />
+            <CentralMonument />
+            {/* COMMENTED OUT: All detailed infrastructure - User requested clean square */}
+            {/* <TrafficInfrastructure /> */}
+            {/* <SurroundingBuildings /> */}
+            {/* <StreetFurniture /> */}
+            {/* <Signboards /> */}
+            {/* <Vehicles /> */}
+            {/* <Pedestrians /> */}
+            {/* <DustParticles /> */}
         </group>
     );
 };
@@ -488,6 +1296,8 @@ const Streetlights = () => {
     );
 };
 
+// COMMENTED OUT: Car component - Driving feature disabled
+/*
 const Car = ({ position, rotation }: { position: [number, number, number], rotation: number }) => {
     const wheelRotation = useRef(0);
     useFrame((_, delta) => { wheelRotation.current += delta * 10; });
@@ -528,7 +1338,10 @@ const Car = ({ position, rotation }: { position: [number, number, number], rotat
         </group>
     );
 };
+*/
 
+// COMMENTED OUT: DrivingCamera component - Driving feature disabled
+/*
 const DrivingCamera = ({ carPosition, carRotation, viewMode, speed }: { carPosition: [number, number, number], carRotation: number, viewMode: 'third' | 'first', speed: number }) => {
     const { set } = useThree();
     const cameraRef = useRef<THREE.PerspectiveCamera>(null);
@@ -600,6 +1413,7 @@ const DrivingCamera = ({ carPosition, carRotation, viewMode, speed }: { carPosit
 
     return <perspectiveCamera ref={cameraRef} fov={viewMode === 'first' ? (isMobile ? 90 : 85) : 60} near={0.1} far={1000} />;
 };
+*/
 
 const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
     return (
@@ -613,114 +1427,37 @@ const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
                 <meshStandardMaterial color={THEME.grass} roughness={1} />
             </mesh>
             <Roads textures={textures} />
-            <SmartFoliage />
-            <SingleHugeTree position={[-24, 0, 6]} height={6} />
+            
+            {/* Added Area Labels Component */}
+            <AreaLabels />
+
+            {/* TREES COMMENTED OUT */}
+            {/* <SmartFoliage /> */}
+            {/* <SingleHugeTree position={[-24, 0, 6]} height={6} /> */}
+
             <Streetlights />
-            {BUILDINGS.map((b) => (
+
+            {/* GOLE KA MANDIR SQUARE - Detailed 3D Model */}
+            <GoleKaMandirSquare />
+
+            {/* Other campus buildings */}
+            {BUILDINGS.filter(b => b.id !== 'gkm-square').map((b) => (
                 <Building key={b.id} data={b} textures={textures} showLabels={!isDriving} />
             ))}
-            <Text position={[-25, 0.1, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} fontSize={1.5} color={THEME.primary}>
-                MELA ROAD
-            </Text>
+            
+            {/* This static label is now handled by AreaLabels component, keeping code clean */}
+            {/* <Text position={[-25, 0.1, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} fontSize={1.5} color={THEME.primary}>MELA ROAD</Text> */}
+            
             <StatueModel position={[15, 1.5, -18.5]} scale={[1.5, 1.5, 1.5]} rotation={[0, Math.PI * 1.5, 0]} />
-            {isDriving && <Car position={carPosition} rotation={carRotation} />}
+            {/* COMMENTED OUT: Car rendering - Driving feature disabled */}
+            {/* {isDriving && <Car position={carPosition} rotation={carRotation} />} */}
         </group>
     );
 };
 
+// COMMENTED OUT: MobileControls component - Driving feature disabled
 const MobileControls = ({ onMove }: { onMove: (x: number, y: number) => void }) => {
-    const [forwardPressed, setForwardPressed] = useState(false);
-    const [backwardPressed, setBackwardPressed] = useState(false);
-    const [leftPressed, setLeftPressed] = useState(false);
-    const [rightPressed, setRightPressed] = useState(false);
-
-    useEffect(() => {
-        let forwardValue = 0;
-        let backwardValue = 0;
-        let leftValue = 0;
-        let rightValue = 0;
-
-        if (forwardPressed) forwardValue = 1;
-        if (backwardPressed) backwardValue = -1;
-        if (leftPressed) leftValue = -1;
-        if (rightPressed) rightValue = 1;
-
-        const y = forwardValue + backwardValue;
-        const x = leftValue + rightValue;
-
-        onMove(x, y);
-    }, [forwardPressed, backwardPressed, leftPressed, rightPressed, onMove]);
-
-    const ButtonControl = ({ children, onPressIn, onPressOut, className }: { children: React.ReactNode, onPressIn: () => void, onPressOut: () => void, className?: string }) => (
-        <button
-            className={`w-16 h-16 rounded-full z-50 md:hidden ${className}`}
-            style={{
-                background: 'radial-gradient(circle, rgba(188,19,254,0.3) 0%, rgba(0,255,255,0.2) 100%)',
-                border: '3px solid #ff00ff',
-                boxShadow: '0 0 30px rgba(188,19,254,0.5), inset 0 0 20px rgba(0,255,255,0.3)',
-                fontFamily: '"Press Start 2P", monospace',
-                fontSize: '8px',
-                color: '#00ffff',
-                textShadow: '0 0 10px #00ffff',
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                touchAction: 'none',
-                cursor: 'pointer'
-            }}
-            onTouchStart={(e) => { onPressIn(); }}
-            onTouchEnd={onPressOut}
-            onTouchCancel={onPressOut}
-            onMouseDown={(e) => { onPressIn(); }}
-            onMouseUp={onPressOut}
-            onMouseLeave={onPressOut}
-            onPointerDown={(e) => { onPressIn(); }}
-            onPointerUp={onPressOut}
-            onPointerLeave={onPressOut}
-            onPointerCancel={onPressOut}
-        >
-            {children}
-        </button>
-    );
-
-    return (
-        <div className="fixed bottom-24 left-4 z-50 md:hidden">
-            {/* Forward/Backward Controls (Left Side) */}
-            <div className="flex flex-col gap-4">
-                <ButtonControl
-                    onPressIn={() => setForwardPressed(true)}
-                    onPressOut={() => setForwardPressed(false)}
-                    className="bg-gradient-to-b from-[#00ffff] to-[#0088ff] hover:shadow-[0_0_30px_#00ffff]"
-                >
-                    ⬆️
-                </ButtonControl>
-                <ButtonControl
-                    onPressIn={() => setBackwardPressed(true)}
-                    onPressOut={() => setBackwardPressed(false)}
-                    className="bg-gradient-to-b from-[#ff0033] to-[#cc0000] hover:shadow-[0_0_30px_#ff0033]"
-                >
-                    ⬇️
-                </ButtonControl>
-            </div>
-
-            {/* Left/Right Controls (Right Side) */}
-            <div className="fixed bottom-24 right-4 flex flex-col gap-4 z-50">
-                <ButtonControl
-                    onPressIn={() => setLeftPressed(true)}
-                    onPressOut={() => setLeftPressed(false)}
-                    className="bg-gradient-to-b from-[#ff00ff] to-[#cc00cc] hover:shadow-[0_0_30px_#ff00ff]"
-                >
-                    ⬅️
-                </ButtonControl>
-                <ButtonControl
-                    onPressIn={() => setRightPressed(true)}
-                    onPressOut={() => setRightPressed(false)}
-                    className="bg-gradient-to-b from-[#00ffff] to-[#0088ff] hover:shadow-[0_0_30px_#00ffff]"
-                >
-                    ➡️
-                </ButtonControl>
-            </div>
-        </div>
-    );
+    return null;
 };
 
 const CampusExplorer = () => {
@@ -755,6 +1492,8 @@ const CampusExplorer = () => {
         return () => clearTimeout(timer);
     }, []);
 
+    // COMMENTED OUT: Keyboard handlers for driving - Driving feature disabled
+    /*
     useEffect(() => {
         if (!isDriving) return;
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -772,7 +1511,10 @@ const CampusExplorer = () => {
         window.addEventListener('keyup', handleKeyUp, true);
         return () => { window.removeEventListener('keydown', handleKeyDown, true); window.removeEventListener('keyup', handleKeyUp, true); };
     }, [isDriving]);
+    */
 
+    // COMMENTED OUT: Physics loop for car driving - Driving feature disabled
+    /*
     useEffect(() => {
         if (!isDriving) return;
 
@@ -822,6 +1564,7 @@ const CampusExplorer = () => {
 
         return () => clearInterval(carPhysicsInterval);
     }, [isDriving, carPosition, carRotation, speed]);
+    */
 
     const handleJoystickMove = useCallback((x: number, y: number) => { joystickInput.current = { x, y }; }, []);
     const startDriving = () => { setIsDriving(true); setCarPosition([0, 0, -20]); setCarRotation(0); setSpeed(0); };
@@ -849,7 +1592,7 @@ const CampusExplorer = () => {
                     }
                 }
             `}</style>
-            {!isDriving && <MainNavigation />}
+            <MainNavigation />
             {isLoading && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#05010D]">
                     <div className="text-center">
@@ -864,26 +1607,24 @@ const CampusExplorer = () => {
                 <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-4">CAMPUS EXPLORER</h1>
                 <div className="h-1 w-[100px] bg-primary mx-auto shadow-neon" />
                 <p className="mt-4 text-xs md:text-sm font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60 max-w-2xl mx-auto px-4">// EXPLORE MITS CAMPUS IN 3D</p>
-                <div className="mt-6 flex justify-center gap-3 flex-wrap px-4">
-                    {!isDriving ? (
-                        <Button onClick={startDriving} className="font-orbitron text-[8px] md:text-[10px] tracking-[0.3em] uppercase px-6 py-4 md:px-8 md:py-6 rounded-none border-2 bg-gradient-to-b from-[#ff00ff] to-[#cc00cc] border-[#ff66ff] text-white hover:shadow-[0_0_30px_#ff00ff] transition-all" style={{ fontFamily: '"Press Start 2P", monospace', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff' }}>🚗 DRIVE IN CAMPUS</Button>
-                    ) : (
-                        <Button onClick={stopDriving} className="font-orbitron text-[8px] md:text-[10px] tracking-[0.3em] uppercase px-6 py-4 md:px-8 md:py-6 rounded-none border-2 bg-gradient-to-b from-[#00ffff] to-[#0088ff] border-[#66ffff] text-black hover:shadow-[0_0_30px_#00ffff] transition-all" style={{ fontFamily: '"Press Start 2P", monospace', boxShadow: 'inset -2px -2px 0 #006688, inset 2px 2px 0 #66ffff, 0 0 15px #00ffff' }}>✕ EXIT DRIVING</Button>
-                    )}
-                </div>
             </div>
-            <div className={`container mx-auto px-4 pb-12 ${isDriving ? 'p-0 m-0 max-w-none' : ''}`}>
-                <div className={`relative w-full overflow-hidden transition-all duration-500 ${isDriving ? 'fixed inset-0 z-[100] rounded-none border-0' : 'rounded-xl border-2 border-white/10'}`} style={{ height: isDriving ? '100vh' : 'calc(100vh - 320px)', minHeight: isDriving ? '100vh' : '400px', width: isDriving ? '100vw' : '100%', maxWidth: isDriving ? 'none' : '100%', left: isDriving ? '0' : 'auto', right: isDriving ? '0' : 'auto', top: isDriving ? '0' : 'auto', bottom: isDriving ? '0' : 'auto', boxShadow: isDriving ? 'none' : '0 0 60px rgba(188,19,254,0.2), inset 0 0 30px rgba(0,0,0,0.5)', overflow: isDriving ? 'hidden' : 'visible' }}>
-                    {isDriving && (<button onClick={stopDriving} className="fixed top-4 left-1/2 -translate-x-1/2 z-[110] px-3 py-2 bg-black/80 border border-primary/50 text-primary text-[7px] md:text-[8px] font-press-start hover:bg-primary hover:text-black transition-all flex items-center gap-2 shadow-neon-small" style={{ fontFamily: '"Press Start 2P", monospace' }}><span>✕</span> EXIT DRIVING</button>)}
+            <div className="container mx-auto px-4 pb-12">
+                <div className="relative w-full overflow-hidden transition-all duration-500 rounded-xl border-2 border-white/10" style={{ height: 'calc(100vh - 320px)', minHeight: '400px', boxShadow: '0 0 60px rgba(188,19,254,0.2), inset 0 0 30px rgba(0,0,0,0.5)' }}>
                     {webglSupported ? (
                         <Canvas camera={{ position: [30, 25, 30], fov: 45 }} gl={{ antialias: true, alpha: true, stencil: false, depth: true, powerPreference: 'high-performance' }} dpr={Math.min(window.devicePixelRatio, 2)} style={{ width: '100%', height: '100%' }}>
                             <Suspense fallback={null}>
                                 <PerspectiveCamera makeDefault position={[30, 25, 30]} fov={45} />
-                                {!isDriving && (<OrbitControls autoRotate={!isDriving} autoRotateSpeed={0.5} enableZoom={true} enablePan={true} minDistance={5} maxDistance={60} minPolarAngle={0} maxPolarAngle={Math.PI / 2} zoomToCursor={true} />)}
-                                {isDriving && (<DrivingCamera carPosition={carPosition} carRotation={carRotation} viewMode={viewMode} speed={speed} />)}
-                                <ambientLight intensity={0.4} />
+                                <OrbitControls autoRotate={true} autoRotateSpeed={0.5} enableZoom={true} enablePan={true} minDistance={5} maxDistance={60} minPolarAngle={0} maxPolarAngle={Math.PI / 2} zoomToCursor={true} />
+                                {/* COMMENTED OUT: DrivingCamera - Driving feature disabled */}
+                                {/* {isDriving && (<DrivingCamera carPosition={carPosition} carRotation={carRotation} viewMode={viewMode} speed={speed} />)} */}
+                                <ambientLight intensity={0.5} />
                                 <pointLight position={[20, 30, 20]} intensity={1.5} />
                                 <pointLight position={[-20, 25, -20]} intensity={0.8} color="#00A6FF" />
+                                {/* Lights for Gole Ka Mandir Square area */}
+                                <pointLight position={[40, 25, -35]} intensity={2} distance={60} color="#FFDD99" />
+                                <pointLight position={[40, 20, -35]} intensity={1.2} distance={50} color="#FFFFFF" />
+                                <directionalLight position={[50, 40, -50]} intensity={0.6} castShadow />
+                                <pointLight position={[40, 8, -35]} intensity={0.8} distance={30} color="#FFAA00" />
                                 <fog attach="fog" args={['#050c15', 50, 300]} />
                                 <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
                                 <Environment preset="city" />
@@ -895,35 +1636,18 @@ const CampusExplorer = () => {
                             </Suspense>
                         </Canvas>
                     ) : (<div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#0a1a2a] to-[#050c15] text-center"><p className="font-orbitron text-lg text-primary">WebGL is not available on this device.</p></div>)}
-                    {isDriving && (
-                        <>
-                            <MobileControls onMove={handleJoystickMove} />
-                            {viewMode === 'first' && (
-                                <div className="absolute inset-0 pointer-events-none z-40">
-                                    <div className="absolute bottom-0 left-0 right-0 h-20 md:h-24" style={{ background: 'linear-gradient(to top, rgba(10,0,20,0.95) 0%, rgba(10,0,20,0.7) 50%, transparent 100%)' }} />
-                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[240px] md:w-[280px] h-14 md:h-16 rounded-t-xl" style={{ background: 'linear-gradient(to bottom, #1a0030, #0a0015)', border: '2px solid #ff00ff40', borderBottom: 'none', boxShadow: '0 0 20px rgba(255,0,255,0.2), inset 0 -10px 30px rgba(0,0,0,0.5)' }}>
-                                        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 md:w-20 h-16 md:h-20 rounded-full border-4 border-[#ff00ff80] flex items-center justify-center" style={{ background: 'radial-gradient(circle, #0a0015 0%, #000 100%)' }}>
-                                            <div className="text-center"><div className="text-[#00ffff] text-base md:text-lg font-bold" style={{ fontFamily: '"Press Start 2P", monospace', fontSize: '12px md:14px' }}>{Math.abs(Math.round(speed * 100))}</div><div className="text-[#ff00ff80] text-[5px] md:text-[6px]" style={{ fontFamily: '"Press Start 2P", monospace' }}>KM/H</div></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </>
-                    )}
                     <div className="absolute inset-0 pointer-events-none scanlines opacity-20" />
                     <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(5,1,13,0.8) 100%)' }} />
                 </div>
-                {!isDriving && (
-                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {[{ icon: '🎓', title: 'Main Gate', desc: 'Historic entrance since 1957' }, { icon: '🤖', title: 'AI Department', desc: 'State-of-the-art research facility' }, { icon: '📚', title: 'Central Library', desc: 'Over 100,000 books & resources' }].map((item, idx) => (
-                            <div key={idx} className="group relative bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-lg p-4 hover:border-primary transition-all duration-500" style={{ boxShadow: '0 0 30px rgba(188,19,254,0.05)' }}>
-                                <div className="text-3xl md:text-4xl mb-3">{item.icon}</div>
-                                <h3 className="text-base md:text-lg font-black text-white group-hover:text-primary transition-colors mb-2">{item.title}</h3>
-                                <p className="text-xs md:text-sm text-muted-foreground">{item.desc}</p>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {[{ icon: '🎓', title: 'Main Gate', desc: 'Historic entrance since 1957' }, { icon: '🤖', title: 'AI Department', desc: 'State-of-the-art research facility' }, { icon: '📚', title: 'Central Library', desc: 'Over 100,000 books & resources' }].map((item, idx) => (
+                        <div key={idx} className="group relative bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-lg p-4 hover:border-primary transition-all duration-500" style={{ boxShadow: '0 0 30px rgba(188,19,254,0.05)' }}>
+                            <div className="text-3xl md:text-4xl mb-3">{item.icon}</div>
+                            <h3 className="text-base md:text-lg font-black text-white group-hover:text-primary transition-colors mb-2">{item.title}</h3>
+                            <p className="text-xs md:text-sm text-muted-foreground">{item.desc}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
             <div className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
         </div>
