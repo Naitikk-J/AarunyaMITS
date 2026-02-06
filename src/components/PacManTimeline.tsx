@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import Lenis from 'lenis';
 
 const events = [
     { id: 1, title: "INAUGURATION", date: "FEB 10", description: "The grand opening ceremony with 8-bit fireworks.", pos: 0.12, color: "var(--kidcore-blue)", side: 'right' },
@@ -11,6 +12,18 @@ const events = [
 export const PacmanTimeline: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [eatenDots, setEatenDots] = useState<number[]>([]);
+
+    useEffect(() => {
+        const lenis = new Lenis({
+            autoRaf: true,
+            wrapper: containerRef.current,
+            content: containerRef.current,
+        });
+
+        return () => {
+            lenis.destroy();
+        };
+    }, []);
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
