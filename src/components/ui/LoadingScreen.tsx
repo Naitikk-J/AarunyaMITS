@@ -40,17 +40,18 @@ export function LoadingScreen() {
         >
             {/* Main Content */}
             <div className="relative z-10 flex flex-col items-center gap-8 px-4">
-                {/* Logo */}
+                {}
                 <div>
-                    <img
-                        src="/aarunya-logo.svg"
-                        alt="Aarunya 2026"
-                        className="h-40 w-auto"
-                        style={{
-                            filter: 'drop-shadow(3px 3px 0 #ee82b6) drop-shadow(8px 10px 0 #bd0fca)',
-                            imageRendering: 'crisp-edges',
-                        }}
-                    />
+<img
+    src="/aarunya-logo.svg"
+    alt="Aarunya 2026"
+    className="h-40 w-auto"
+    style={{
+        filter: 'drop-shadow(3px 3px 0 #ee82b6) drop-shadow(8px 10px 0 #bd0fca) drop-shadow(0 0 20px #ff00ff)',
+        imageRendering: 'crisp-edges',
+        transform: 'translateZ(0)', // Force GPU acceleration for better rendering
+    }}
+/>
                 </div>
 
                 {/* Loading Text */}

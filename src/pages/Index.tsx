@@ -6,6 +6,7 @@ import { MainNavigation } from '@/components/ui/MainNavigation';
 import { TVZoom } from '@/components/TVZoom';
 import { TVIntro } from '@/components/TVIntro';
 import { WelcomeSection } from '@/components/WelcomeSection';
+import { useResponsive } from '@/hooks/use-responsive';
 
 import { PacmanTimeline } from '@/components/PacManTimeline';
 import { CRTOverlay } from '@/components/CRTOverlay';
@@ -15,6 +16,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Index = () => {
     const mainRef = useRef<HTMLDivElement>(null);
+    const { isMobile } = useResponsive();
 
     useEffect(() => {
         // Initialize Lenis for smooth scrolling
@@ -63,18 +65,18 @@ const Index = () => {
             <CRTOverlay />
 
             {/* 2. Content Area: Fills remaining space */}
-            <div className="relative flex-1 w-full">
+            <div className="relative flex-1 w-full pt-16 md:pt-20 lg:pt-24">
 
                 {/* Background Image: Absolute within the content area */}
-                <div
-                    className="absolute inset-0 z-0"
-                    style={{
-                        backgroundImage: 'url(/retro-room-bg.avif)',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                    }}
-                />
+<div
+    className="absolute inset-0 z-0"
+    style={{
+        backgroundImage: isMobile ? 'url(/bg-phone.png)' : 'url(/tv-book.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+    }}
+/>
 
                 {/* Main Content: Relative on top of background */}
                 <main className="relative z-10">
