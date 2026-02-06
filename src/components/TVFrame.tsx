@@ -20,8 +20,10 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
     const { isMobile, isTablet, isDesktop } = useResponsive();
 
     const videoSources: VideoSource[] = [
+        { src: "/tv-bg-aarunya.mp4", type: "video/mp4" },
         { src: "/bg.mov", type: "video/mp4" },
-        { src: "/tv-bg.mp4", type: "video/mp4" }
+        { src: "/tv-bg-aarunya.mp4", type: "video/mp4" },
+        { src: "/tv-bg3.mp4", type: "video/mp4" }
     ];
 
     const handleChannelChange = (channel: number) => {
@@ -29,10 +31,18 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
             // Channel 1: Regular content
             setIsVideoPlaying(false);
             setCurrentVideo(null);
-        } else if (channel >= 2 && channel <= 3) {
-            // Channel 2-3: Video content
+            if (videoRef.current) {
+                videoRef.current.muted = true;
+            }
+        } else if (channel >= 2 && channel <= 4) {
+            // Channel 2-4: Video content
             setIsVideoPlaying(true);
             setCurrentVideo(videoSources[channel - 2]);
+            if (videoRef.current && channel === 4) {
+                videoRef.current.muted = false;
+            } else if (videoRef.current) {
+                videoRef.current.muted = true;
+            }
         }
     };
 
@@ -52,14 +62,13 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
 
                         {/* Content */}
                         {isVideoPlaying ? (
-<video 
-                ref={videoRef}
-                src={currentVideo?.src}
-                autoPlay
-                loop
-                muted
-                className="w-full h-full object-cover"
-              />
+                            <video
+                                ref={videoRef}
+                                src={currentVideo?.src}
+                                autoPlay
+                                loop
+                                className="w-full h-full object-cover"
+                            />
                         ) : (
                             <div className="relative z-0 w-full h-full flex items-center justify-center">
                                 {children}

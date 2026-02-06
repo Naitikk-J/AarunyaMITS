@@ -13,6 +13,20 @@ export const WelcomeSection: React.FC = () => {
     });
     const { isMobile, isTablet, isDesktop } = useResponsive();
 
+    // Enhanced animations for pop out effect
+    const popOutVariants = {
+        initial: { scale: 0.8, opacity: 0 },
+        animate: {
+            scale: [0.8, 1.1, 1],
+            opacity: [0, 1, 1],
+            transition: {
+                duration: 1,
+                ease: "easeOut",
+                times: [0, 0.5, 1]
+            }
+        }
+    };
+
     // Zoom effect for the WelcomeSection content - stops zooming after initial scroll
     const scale = useTransform(scrollYProgress, [0, 0.2, 0.3, 1], [0.2, 1, 1, 1]);
     const opacity = useTransform(scrollYProgress, [0, 0.1, 0.2, 0.8, 0.9, 1], [0, 0.2, 1, 1, 0.2, 0]);
@@ -68,10 +82,10 @@ export const WelcomeSection: React.FC = () => {
 
                 {/* Heading */}
                 <motion.div
-                    initial={{ scale: 0.8, opacity: 0, y: 50 }}
-                    whileInView={{ scale: 1, opacity: 1, y: 0 }}
+                    variants={popOutVariants}
+                    initial="initial"
+                    whileInView="animate"
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
                     className="text-center mb-8 md:mb-12"
                 >
                     <h2 className={`${isMobile ? 'text-[4vw]' : isTablet ? 'text-[3vw]' : 'text-[3vw]'} md:text-[2vw] font-press-start text-kidcore-blue mb-4 md:mb-6 drop-shadow-[2px_2px_0px_#000] md:drop-shadow-[4px_4px_0px_#000]`}>
@@ -93,15 +107,16 @@ export const WelcomeSection: React.FC = () => {
 
                 {/* Description */}
                 <motion.div
-                    initial={{ y: 50, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.3, duration: 0.5 }}
+                    variants={popOutVariants}
+                    initial="initial"
+                    whileInView="animate"
+                    transition={{ delay: 0.3 }}
                     className="max-w-3xl w-full bg-black/10 border-2 md:border-4 border-kidcore-blue p-6 md:p-12 relative shadow-[5px_5px_0px_theme(colors.kidcore.blue)] md:shadow-[10px_10px_0px_theme(colors.kidcore.blue)] mb-8 md:mb-12 rounded-xl md:rounded-none"
                 >
                     <div className="absolute -top-1 -left-1 w-4 h-4 md:w-6 md:h-6 border-t-2 md:border-t-4 border-l-2 md:border-l-4 border-kidcore-yellow" />
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 md:w-6 md:h-6 border-b-2 md:border-b-4 border-r-2 md:border-r-4 border-kidcore-yellow" />
 
-                    <p className={`${isMobile ? 'text-base' : isTablet ? 'text-xl' : 'text-xl'} md:text-2xl font-vt323 text-black text-center leading-relaxed`}>
+                    <p className={`${isMobile ? 'text-base' : isTablet ? 'text-xl' : 'text-xl'} md:text-2xl font-vt323 text-white text-center leading-relaxed`}>
                         STEP INTO THE ULTIMATE DIGITAL CARNIVAL WHERE PIXELS COME TO LIFE!
                         EXPERIENCE A MULTIDIMENSIONAL FESTIVAL OF TECHNOLOGY, ART, AND MUSIC.
                         FROM RETRO ARCADE VIBES TO FUTURE-TECH INNOVATIONS, AARUNYA 2.0 IS
@@ -111,14 +126,15 @@ export const WelcomeSection: React.FC = () => {
 
                 {/* Buttons */}
                 <motion.div
-                    initial={{ y: 30, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
+                    variants={popOutVariants}
+                    initial="initial"
+                    whileInView="animate"
                     transition={{ delay: 0.5 }}
                     className={`flex flex-wrap justify-center gap-4 sm:gap-8 pointer-events-auto ${isMobile ? 'mt-4' : 'mt-8 md:mt-12'}`}
                 >
                     <RetroButton
                         variant="white"
-                        className={`${isMobile ? 'scale-90 px-6 py-2' : isTablet ? 'scale-110' : 'scale-110'} sm:scale-125 md:scale-150 ${isMobile ? 'mx-1' : 'mx-2 sm:mx-8'}`}
+                        className={`${isMobile ? 'scale-90 px-0 py-0' : isTablet ? 'scale-110' : 'scale-110'} sm:scale-125 md:scale-150 ${isMobile ? 'mx-2' : 'mx-0 sm:mx-16'} hover:scale-105 active:scale-95 transition-transform duration-200`}
                         onClick={() => navigate("/register")}
                     >
                         REGISTER
@@ -126,7 +142,7 @@ export const WelcomeSection: React.FC = () => {
 
                     <RetroButton
                         variant="white"
-                        className={`${isMobile ? 'scale-90 px-6 py-2' : isTablet ? 'scale-110' : 'scale-110'} sm:scale-125 md:scale-150 ${isMobile ? 'mx-1' : 'mx-2 sm:mx-8'}`}
+                        className={`${isMobile ? 'scale-90 px-0 py-0' : isTablet ? 'scale-110' : 'scale-110'} sm:scale-125 md:scale-150 ${isMobile ? 'mx-0' : 'mx-0 sm:mx-0'} hover:scale-105 active:scale-95 transition-transform duration-200`}
                         onClick={() => navigate("/about")}
                     >
                         INFO
