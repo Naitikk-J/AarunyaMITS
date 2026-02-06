@@ -32,7 +32,7 @@ export const WelcomeSection: React.FC = () => {
     const opacity = useTransform(scrollYProgress, [0, 0.1, 0.2, 0.8, 0.9, 1], [0, 0.2, 1, 1, 0.2, 0]);
 
     return (
-        <section ref={containerRef} className={`relative min-h-screen w-full flex flex-col items-center justify-start ${isMobile ? 'pt-24' : 'pt-32 md:pt-40'} ${isMobile ? 'pb-16' : 'pb-24'} overflow-hidden ${isMobile ? '-mt-[60vh]' : isTablet ? '-mt-[60vh]' : '-mt-[50vh] md:-mt-[100vh]'} bg-transparent`}>
+        <section ref={containerRef} className={`relative min-h-screen w-full flex flex-col items-center justify-start ${isMobile ? 'pt-24' : 'pt-32 md:pt-40'} ${isMobile ? 'pb-16' : 'pb-24'} overflow-hidden ${isMobile ? '-mt-[20vh]' : isTablet ? '-mt-[40vh]' : '-mt-[50vh] md:-mt-[100vh]'} bg-transparent z-0`}>
 
             {/* Gritty Texture Overlay */}
 
@@ -44,7 +44,7 @@ export const WelcomeSection: React.FC = () => {
                 <motion.div
                     animate={{ y: [0, -30, 0], rotate: [0, 15, 0] }}
                     transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className={`absolute ${isMobile ? 'top-28 left-[5%] w-16 h-16' : isTablet ? 'top-16 left-[5%] w-28 h-28' : 'top-20 left-[5%] w-32 h-32'} bg-kidcore-yellow border-4 border-black flex items-center justify-center rotate-[-10deg] z-0 shadow-[4px_4px_0px_#000] md:shadow-[8px_8px_0px_#000]`}
+                    className={`hidden md:absolute ${isMobile ? 'top-28 left-[5%] w-16 h-16' : isTablet ? 'top-16 left-[5%] w-28 h-28' : 'top-20 left-[5%] w-32 h-32'} bg-kidcore-yellow border-4 border-black flex items-center justify-center rotate-[-10deg] z-0 shadow-[4px_4px_0px_#000] md:shadow-[8px_8px_0px_#000]`}
                 >
                     <span className={`text-black font-press-start ${isMobile ? 'text-[7px]' : isTablet ? 'text-[9px]' : 'text-[10px]'} text-center`}>
                         AARUNYA<br />2026
@@ -54,7 +54,7 @@ export const WelcomeSection: React.FC = () => {
                 <motion.div
                     animate={{ y: [0, 300, 0], rotate: [0, -10, 0] }}
                     transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    className={`absolute ${isMobile ? 'top-[25%] right-[2%] w-20 h-20' : isTablet ? 'top-[20%] right-[6%] w-36 h-36' : 'top-[20%] right-[8%] w-40 h-40'} bg-kidcore-pink border-4 border-black flex items-center justify-center rotate-[15deg] rounded-full z-0 shadow-[5px_5px_0px_#000] md:shadow-[10px_10px_0px_#000]`}
+                    className={`hidden md:absolute ${isMobile ? 'top-[25%] right-[2%] w-20 h-20' : isTablet ? 'top-[20%] right-[6%] w-36 h-36' : 'top-[20%] right-[8%] w-40 h-40'} bg-kidcore-pink border-4 border-black flex items-center justify-center rotate-[15deg] rounded-full z-0 shadow-[5px_5px_0px_#000] md:shadow-[10px_10px_0px_#000]`}
                 >
                     <span className={`text-white font-press-start ${isMobile ? 'text-[7px]' : isTablet ? 'text-[9px]' : 'text-xs'} text-center px-2 leading-loose`}>
                         RETRO<br />VIBES<br />
@@ -64,7 +64,7 @@ export const WelcomeSection: React.FC = () => {
                 <motion.div
                     animate={{ x: [0, 20, 0], y: [0, 20, 0] }}
                     transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                    className={`absolute ${isMobile ? 'bottom-[10%] left-[2%] w-12 h-12' : isTablet ? 'bottom-[15%] left-[8%] w-20 h-20' : 'bottom-[15%] left-[10%] w-24 h-24'} bg-kidcore-green border-4 border-black flex items-center justify-center rotate-[-5deg] z-0 shadow-[4px_4px_0px_#000] md:shadow-[6px_6px_0px_#000]`}
+                    className={`hidden md:absolute ${isMobile ? 'bottom-[10%] left-[2%] w-12 h-12' : isTablet ? 'bottom-[15%] left-[8%] w-20 h-20' : 'bottom-[15%] left-[10%] w-24 h-24'} bg-kidcore-green border-4 border-black flex items-center justify-center rotate-[-5deg] z-0 shadow-[4px_4px_0px_#000] md:shadow-[6px_6px_0px_#000]`}
                 >
                     <span className={`text-black font-press-start ${isMobile ? 'text-[8px]' : isTablet ? 'text-[12px]' : 'text-sm'}`}>MITS</span>
                 </motion.div>
