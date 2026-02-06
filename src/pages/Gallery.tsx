@@ -15,7 +15,7 @@ const Gallery = () => {
         // before the heavy DomeGallery component freezes the UI.
         const timer = setTimeout(() => {
             setIsReady(true);
-        }, 800);
+        }, 2000);
         return () => clearTimeout(timer);
     }, []);
 

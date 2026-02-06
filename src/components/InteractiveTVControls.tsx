@@ -62,7 +62,7 @@ export const InteractiveTVControls = ({
 
   // Handle CHANNEL button
   const handleChannelChange = () => {
-    const newChannel = (channel % 3) + 1;
+    const newChannel = (channel % 4) + 1;
     setChannel(newChannel);
     onChannelChange?.(newChannel);
 
@@ -75,7 +75,7 @@ export const InteractiveTVControls = ({
       .to(screenRef.current, { opacity: 1, duration: 0.05 }, '-=0.03');
 
     gsap.to(screenRef.current, {
-      filter: `hue-rotate(${newChannel * 120}deg)`,
+      filter: 'none',
       duration: 0.3,
     });
 
