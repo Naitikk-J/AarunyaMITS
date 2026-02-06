@@ -49,13 +49,13 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
     return (
         <div className={`relative ${className}`}>
             {/* TV Body */}
-            <div className={`bg-[#1A1A1A] border-[12px] border-[#0A0A0A] rounded-xl shadow-2xl relative overflow-visible ${isMobile ? 'border-[8px]' : isTablet ? 'border-[10px]' : 'border-[12px]'}`}>
+            <div className={`bg-[#1A1A1A] border-[12px] border-[#0A0A0A] rounded-xl shadow-2xl relative overflow-visible ${isMobile ? 'border-[6px]' : isTablet ? 'border-[10px]' : 'border-[12px]'}`}>
                 {/* Main Screen Container */}
                 <div className="flex">
                     {/* Screen area */}
                     <div
                         ref={screenRef}
-                        className={`flex-1 crt-screen aspect-video relative overflow-hidden bg-black rounded-sm ${isMobile ? 'm-1' : isTablet ? 'm-2' : 'm-4'} shadow-[inset_0_0_20px_rgba(0,0,0,1)]`}
+                        className={`flex-1 crt-screen aspect-video relative overflow-hidden bg-black rounded-sm ${isMobile ? 'm-0.5' : isTablet ? 'm-2' : 'm-4'} shadow-[inset_0_0_20px_rgba(0,0,0,1)]`}
                     >
                         {/* Inner glow */}
                         <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/50 pointer-events-none z-10" />
@@ -82,14 +82,14 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
                     </div>
 
                     {/* Integrated Control Panel Space (Right Side) */}
-                    <div className={`bg-[#111111] border-l-4 border-[#0A0A0A] flex flex-col items-center ${isMobile ? 'w-12 py-2' : isTablet ? 'w-14 py-3' : 'w-20 py-4'} relative`}>
+                    <div className={`bg-[#111111] border-l-4 border-[#0A0A0A] flex flex-col items-center ${isMobile ? 'w-10 py-1.5' : isTablet ? 'w-14 py-3' : 'w-20 py-4'} relative`}>
                         <InteractiveTVControls
                             screenRef={screenRef}
                             onChannelChange={handleChannelChange}
                         />
 
                         {/* Small indicator lights at the bottom of panel */}
-                        <div className={`absolute bottom-2 flex gap-1 ${isMobile ? 'gap-1' : isTablet ? 'gap-1.5' : 'gap-2'}`}>
+                        <div className={`absolute bottom-2 flex gap-1 ${isMobile ? 'gap-0.5' : isTablet ? 'gap-1' : 'gap-2'}`}>
                             <div className={`rounded-full bg-lime-green animate-pulse shadow-[0_0_5px_rgba(57,255,20,0.8)] ${isMobile ? 'w-1 h-1' : isTablet ? 'w-1.5 h-1.5' : 'w-2 h-2'}`} />
                             <div className={`rounded-full bg-radical-red shadow-[0_0_5px_rgba(255,0,153,0.8)] ${isMobile ? 'w-1 h-1' : isTablet ? 'w-1.5 h-1.5' : 'w-2 h-2'}`} />
                         </div>
