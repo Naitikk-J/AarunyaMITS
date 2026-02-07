@@ -20,7 +20,9 @@ const Gallery = () => {
     }, []);
 
     if (!isReady) {
-        return <LoadingScreen />;
+
+        return < LoadingScreen />;
+        
     }
 
     return (
