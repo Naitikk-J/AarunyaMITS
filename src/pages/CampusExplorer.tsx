@@ -655,11 +655,7 @@ const GoleKaMandirSquare = () => {
     const CentralMonument = () => {
         return (
             <group position={[40, 0, -35]}>
-                {/* Outer circular border/curb - Elevated */}
-                <mesh position={[0, 0.08, 0]}>
-                    <torusGeometry args={[6, 0.4, 16, 100]} />
-                    <meshStandardMaterial color="#FFFFFF" roughness={0.7} metalness={0.3} />
-                </mesh>
+               
 
                 {/* Inner circular grass/green area */}
                 <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -727,63 +723,7 @@ const GoleKaMandirSquare = () => {
     const RoadsAndMarkings = () => {
         return (
             <group>
-                {/* Main horizontal road (East-West) */}
-                <mesh position={[40, 0.0, -35]}>
-                    <planeGeometry args={[40, 12]} />
-                    <meshStandardMaterial map={roadTexture} color="#2D2D2D" roughness={0.9} />
-                </mesh>
-
-                {/* Main vertical road (North-South) */}
-                <mesh position={[40, 0.01, -35]}>
-                    <planeGeometry args={[12, 40]} />
-                    <meshStandardMaterial map={roadTexture} color="#2D2D2D" roughness={0.9} />
-                </mesh>
-
-                {/* Yellow center line (horizontal) */}
-                <mesh position={[40, 0.02, -35]}>
-                    <planeGeometry args={[38, 0.3]} />
-                    <meshStandardMaterial color="#FFFF00" emissive="#FFFF00" emissiveIntensity={0.2} />
-                </mesh>
-
-                {/* Yellow center line (vertical) */}
-                <mesh position={[40, 0.02, -35]}>
-                    <planeGeometry args={[0.3, 38]} />
-                    <meshStandardMaterial color="#FFFF00" emissive="#FFFF00" emissiveIntensity={0.2} />
-                </mesh>
-
-                {/* Zebra crossing - horizontal */}
-                {[...Array(10)].map((_, i) => (
-                    <mesh key={`zebra-h-${i}`} position={[40 - 15 + i * 3, 0.022, -35 - 6]}>
-                        <planeGeometry args={[2.5, 0.5]} />
-                        <meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.1} />
-                    </mesh>
-                ))}
-
-                {/* Zebra crossing - vertical */}
-                {[...Array(10)].map((_, i) => (
-                    <mesh key={`zebra-v-${i}`} position={[40 + 6, 0.022, -35 - 15 + i * 3]}>
-                        <planeGeometry args={[0.5, 2.5]} />
-                        <meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.1} />
-                    </mesh>
-                ))}
-
-                {/* Road shoulders and sidewalks */}
-                <mesh position={[40 - 8, 0.015, -35]}>
-                    <planeGeometry args={[2, 40]} />
-                    <meshStandardMaterial color="#696969" roughness={0.95} />
-                </mesh>
-                <mesh position={[40 + 8, 0.015, -35]}>
-                    <planeGeometry args={[2, 40]} />
-                    <meshStandardMaterial color="#696969" roughness={0.95} />
-                </mesh>
-                <mesh position={[40, 0.015, -35 - 8]}>
-                    <planeGeometry args={[40, 2]} />
-                    <meshStandardMaterial color="#696969" roughness={0.95} />
-                </mesh>
-                <mesh position={[40, 0.015, -35 + 8]}>
-                    <planeGeometry args={[40, 2]} />
-                    <meshStandardMaterial color="#696969" roughness={0.95} />
-                </mesh>
+                
             </group>
         );
     };
