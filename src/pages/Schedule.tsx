@@ -4,6 +4,7 @@ import { CRTOverlay } from '@/components/CRTOverlay';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX, Trophy, Star, Gamepad2, Calendar, Clock, MapPin, Zap } from 'lucide-react';
 import { useResponsive } from '@/hooks/use-responsive';
+import { GlitchText } from '@/components/GlitchText';
 
 // --- Types ---
 type Level = {
@@ -31,9 +32,10 @@ const LEVELS: Level[] = [
     color: '#BC13FE',
     icon: <Gamepad2 className="w-8 h-8" />,
     events: [
-      { time: '10:00 AM', title: 'Start Game (Inauguration)', location: 'Auditorium', type: 'MAIN' },
-      { time: '12:00 PM', title: 'Treasure Hunt', location: 'Campus Wide', type: 'FUN' },
-      { time: '02:00 PM', title: 'Code Warriors', location: 'Lab 1', type: 'BATTLE' },
+      { time: '02:00 PM', title: 'RASHTRAAY', location: 'SAC', type: 'MAIN' },
+      { time: '02:00 PM', title: 'Code Carnival 2026', location: 'SH 12', type: 'BATTLE' },
+      { time: '02:00 PM', title: 'StartUp Shark Tank', location: 'NR 2', type: 'WORKSHOP' },
+      { time: '06:00 PM', title: 'Navjot Ahuja Performance', location: 'Stage Ground', type: 'MAIN' },
     ]
   },
   {
@@ -44,9 +46,15 @@ const LEVELS: Level[] = [
     color: '#BC13FE', // Yellow
     icon: <Star className="w-8 h-8" />,
     events: [
-      { time: '10:00 AM', title: 'Robo War', location: 'Arena', type: 'BATTLE' },
-      { time: '01:00 PM', title: 'Circuit Design', location: 'Lab 2', type: 'WORKSHOP' },
-      { time: '04:00 PM', title: 'LAN Gaming', location: 'Gaming Zone', type: 'FUN' },
+      { time: '09:00 AM', title: 'CASE 001: REOPENED', location: 'SAC', type: 'BATTLE' },
+      { time: '10:00 AM', title: 'Beyond the Problems', location: 'SH 2', type: 'BATTLE' },
+      { time: '11:00 AM', title: 'Ashubhashan Pratiyogita', location: 'Conclave Center', type: 'FUN' },
+      { time: '01:00 PM', title: 'AI Meets Electronic', location: 'SH 12', type: 'WORKSHOP' },
+      { time: '01:00 PM', title: 'Logic & Laughs', location: 'SAC', type: 'FUN' },
+      { time: '02:00 PM', title: 'Comic Clash', location: 'Colloquium', type: 'FUN' },
+      { time: '02:00 PM', title: 'Goblet Of Fire', location: 'SH 1', type: 'BATTLE' },
+      { time: '03:00 PM', title: 'IETE Event', location: 'SH 6', type: 'WORKSHOP' },
+      { time: '06:00 PM', title: 'Bandish Performance', location: 'Stage Ground', type: 'MAIN' },
     ]
   },
   {
@@ -57,27 +65,18 @@ const LEVELS: Level[] = [
     color: '#BC13FE',
     icon: <Trophy className="w-8 h-8" />,
     events: [
-      { time: '11:00 AM', title: 'Hackathon Finale', location: 'Innovation Hub', type: 'MAIN' },
-      { time: '03:00 PM', title: 'Cultural Night', location: 'Open Air Theatre', type: 'FUN' },
-      { time: '06:00 PM', title: 'Prize Distribution', location: 'Auditorium', type: 'MAIN' },
+      { time: '10:00 AM', title: 'Lafz-e-Bayan', location: 'Conclave Centre', type: 'FUN' },
+      { time: '10:00 AM', title: 'Trade Mark', location: 'SH 12', type: 'BATTLE' },
+      { time: '10:00 AM', title: 'PlayFit Arena', location: 'SAC', type: 'FUN' },
+      { time: '02:00 PM', title: 'Essay Writing', location: 'SH 4', type: 'FUN' },
+      { time: '04:00 PM', title: 'CLOSING CEREMONY', location: 'Main Stage', type: 'MAIN' },
+      { time: '06:00 PM', title: 'DJ Performance', location: 'Stage Ground', type: 'MAIN' },
     ]
   },
 ];
 
 // --- Components ---
-const GlitchText = ({ text }: { text: string }) => {
-  return (
-    <div className="relative inline-block group">
-      <span className="relative z-10">{text}</span>
-      <span className="absolute top-0 left-0 -z-10 w-full h-full text-neon-pink opacity-0 group-hover:opacity-100 group-hover:translate-x-[2px] group-hover:animate-pulse transition-all duration-100 select-none">
-        {text}
-      </span>
-      <span className="absolute top-0 left-0 -z-10 w-full h-full text-neon-cyan opacity-0 group-hover:opacity-100 group-hover:-translate-x-[2px] group-hover:animate-pulse transition-all duration-100 select-none" style={{ animationDelay: '0.1s' }}>
-        {text}
-      </span>
-    </div>
-  );
-};
+
 
 const RetroCharacter = ({ targetX }: { targetX: number }) => {
   return (
@@ -230,20 +229,23 @@ const Schedule = () => {
         <span className="text-[10px] text-white/70 group-hover:text-white">RETRO CHIPTUNE</span>
       </button>
 
-      <div className="pt-36 md:pt-32 pb-12 px-2 md:px-4 max-w-7xl mx-auto relative z-10">
+      <div className="pt-24 md:pt-36 pb-12 px-2 md:px-4 max-w-7xl mx-auto relative z-10">
+
+
+
 
         {/* Header */}
         <div className="text-center mb-4 relative">
-          <h1 className="text-2xl md:text-5xl mb-6 relative z-10">
-            <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
-              <GlitchText text="EVENT SCHEDULE" />
-            </span>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.08)_0%,transparent_70%)] pointer-events-none" />
+
+          <h1 className="text-2xl md:text-3xl lg:text-5xl font-black tracking-tight mb-4 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+            <GlitchText text="EVENT SCHEDULE" />
           </h1>
-          <div className="h-1 w-32 md:w-48 bg-gradient-to-r from-transparent via-neon-cyan to-transparent mx-auto relative">
-            <div className="absolute inset-0 bg-neon-cyan blur-sm" />
-          </div>
-          <p className="text-xs md:text-sm text-neon-blue tracking-[0.3em] mt-4 uppercase opacity-80">
-            select_level_to_start
+
+          <div className="h-0.5 w-16 md:w-24 bg-primary mx-auto shadow-[0_0_10px_#BC13FE]" />
+
+          <p className="text-[9px] sm:text-[10px] md:text-xs text-neon-blue tracking-[0.3em] mt-4 uppercase opacity-80 font-share-tech">
+            // SELECT_LEVEL_TO_START
           </p>
         </div>
 

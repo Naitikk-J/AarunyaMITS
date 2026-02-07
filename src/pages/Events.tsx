@@ -1,237 +1,245 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { MainNavigation } from '@/components/ui/MainNavigation';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { events } from '../data/events';
+import { Calendar, Clock, MapPin, Trophy, Users, Timer, Info, Lightbulb, Code, Music, Palette, Gamepad2, Mic, PenTool, Brain, Zap, Rocket, Smile, Theater } from 'lucide-react';
+import { GlitchText } from '@/components/GlitchText';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 
 const Events = () => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const headliners = [
-    {
-      id: 1,
-      title: 'Campus Tech Summit 2024',
-      category: 'tech',
-      date: 'March 15, 2024',
-      description:
-        'Join us for the biggest tech event of the year featuring AI workshops, hackathons, and networking.',
-      status: 'upcoming',
-      attendees: 500,
-    },
-    {
-      id: 2,
-      title: 'Euphoria Music Festival',
-      category: 'music',
-      date: 'April 20, 2024',
-      description:
-        'Experience the ultimate music festival with top artists and immersive performances.',
-      status: 'featured',
-      attendees: 1200,
-    },
-    {
-      id: 3,
-      title: 'Innovation Challenge',
-      category: 'innovation',
-      date: 'May 5, 2024',
-      description:
-        'Compete in our annual innovation challenge and showcase your creative solutions.',
-      status: 'registration',
-      attendees: 300,
-    },
-    {
-      id: 4,
-      title: 'Cultural Exchange Night',
-      category: 'culture',
-      date: 'June 10, 2024',
-      description:
-        'Celebrate diversity with food, music, and traditions from around the world.',
-      status: 'upcoming',
-      attendees: 800,
-    },
-  ];
+  const categories = ['All', 'Technical', 'Cultural', 'Competitions'];
 
-  const zones = [
-    {
-      title: 'CULTURAL_ZONE',
-      description: 'NEON STAGES, PERFORMANCES, AND ARTISTIC TAKEOVERS.',
-      icon: '🎭',
-      events: [
-        { name: 'GALA_NIGHT', status: 'LIVE' },
-        { name: 'STREET_DANCE', status: 'UPCOMING', timeLeft: '1H 45M' },
-        { name: 'ART_BATTLE', status: 'CLOSED' },
-      ],
-    },
-    {
-      title: 'TECH_ZONE',
-      description: 'HACKER LABS, WORKSHOPS, AND INNOVATION NODES.',
-      icon: '⚡',
-      events: [
-        { name: 'ROBO_WARS', status: 'LIVE' },
-        { name: 'CODE_QUEST', status: 'UPCOMING', timeLeft: '2H 10M' },
-        { name: 'IOT_EXPO', status: 'CLOSED' },
-      ],
-    },
-    {
-      title: 'FUN_ZONE',
-      description: 'ARCADE STREETS, POPUPS, AND SURPRISE QUESTS.',
-      icon: '🎮',
-      events: [
-        { name: 'PIXEL_ARENA', status: 'LIVE' },
-        { name: 'TREASURE_HUNT', status: 'UPCOMING', timeLeft: '50M' },
-        { name: 'VR_WORLD', status: 'CLOSED' },
-      ],
-    },
-  ];
+  const getCategory = (type: string) => {
+    const lowerType = type.toLowerCase();
+    if (['technical', 'coding', 'hackathon', 'technical & research', 'technical competition', 'logic', 'interactive'].some(t => lowerType.includes(t))) {
+      return 'Technical';
+    }
+    if (['cultural', 'poetry', 'shayari', 'wellness', 'literary', 'essay', 'music', 'dance', 'comedy', 'entertainment'].some(t => lowerType.includes(t))) {
+      return 'Cultural';
+    }
+    if (['competition', 'game', 'puzzle', 'sports', 'motorsport', 'drift', 'adventure'].some(t => lowerType.includes(t))) {
+      return 'Competitions';
+    }
+    return 'Technical';
+  };
 
-  const competitions = [
-    {
-      name: 'CODE_SPRINT',
-      desc: 'FAST-PACED ALGORITHMIC COMBAT UNDER NEON PRESSURE.',
-      icon: '⚡',
-      organizedBy: 'TECH_GUILD',
-      tags: ['TEAM', 'TECH', 'TIMED'],
-      difficulty: 'HARD',
-      prize: '50,000 XP',
-    },
-    {
-      name: 'DESIGN_ARENA',
-      desc: 'PIXEL-PERFECT BATTLES WITH BOLD VISUALS.',
-      icon: '🎨',
-      organizedBy: 'CREATIVE_COMMONS',
-      tags: ['UI/UX', 'PITCH'],
-      difficulty: 'MEDIUM',
-      prize: '35,000 XP',
-    },
-  ];
+  const getIcon = (type: string, club: string) => {
+    const lowerType = type.toLowerCase();
+    const lowerClub = club.toLowerCase();
 
-  const categories = [
-    { id: 'all', label: 'All Events' },
-    { id: 'tech', label: 'Technology' },
-    { id: 'music', label: 'Music' },
-    { id: 'innovation', label: 'Innovation' },
-    { id: 'culture', label: 'Culture' },
-  ];
+    if (lowerClub.includes('music')) return <Music className="w-12 h-12 text-[#FFE737]" />; // Yellow
+    if (lowerClub.includes('dance')) return <Users className="w-12 h-12 text-[#FF0099]" />; // Pink
+    if (lowerClub.includes('hackerrank') || lowerType.includes('coding')) return <Code className="w-12 h-12 text-[#00fff9]" />; // Cyan
+    if (lowerType.includes('innovation') || lowerType.includes('project')) return <Lightbulb className="w-12 h-12 text-[#FFE737]" />;
+    if (lowerType.includes('puzzle') || lowerType.includes('logic')) return <Brain className="w-12 h-12 text-[#BC13FE]" />; // Purple
+    if (lowerType.includes('game') || lowerType.includes('drift')) return <Gamepad2 className="w-12 h-12 text-[#39FF14]" />; // Green
+    if (lowerType.includes('poetry') || lowerType.includes('essay')) return <PenTool className="w-12 h-12 text-[#FF0099]" />;
+    if (lowerClub.includes('comedy')) return <Smile className="w-12 h-12 text-[#FFE737]" />;
 
-  const filteredHeadliners =
-    selectedCategory === 'all'
-      ? headliners
-      : headliners.filter((e) => e.category === selectedCategory);
+    return <Zap className="w-12 h-12 text-primary" />;
+  };
+
+  const filteredEvents =
+    selectedCategory === 'All'
+      ? events
+      : events.filter((e) => getCategory(e.type) === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-[#05010D] text-white font-orbitron">
+    <div className="min-h-screen bg-[#05010D] text-white">
       <MainNavigation />
 
+
+
+
       {/* HEADER */}
-      <div className="pt-32 pb-16 text-center px-4">
-        <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight bg-gradient-to-b from-white to-white/30 text-transparent bg-clip-text">
-          EVENTS
+      <div className="relative pt-24 md:pt-36 pb-12 text-center px-4">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.08)_0%,transparent_70%)] pointer-events-none" />
+
+        <h1 className="text-2xl md:text-3xl lg:text-5xl font-black tracking-tight mb-4 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+          <GlitchText text="EVENTS SCHEDULE" />
         </h1>
-        <p className="mt-6 text-xs sm:text-sm md:text-base tracking-widest text-white/50 max-w-2xl mx-auto">
-          // DISCOVER THE MOST EXCITING EVENTS, HEADLINERS, AND COMPETITIONS
+
+        <div className="h-0.5 w-16 md:w-24 bg-primary mx-auto shadow-[0_0_10px_#BC13FE]" />
+
+        <p className="mt-4 text-[9px] sm:text-[10px] md:text-xs font-share-tech text-white/50 uppercase max-w-xl mx-auto tracking-[0.2em]">
+          // EXPLORE TECHNICAL, CULTURAL & COMPETITIVE EVENTS
         </p>
       </div>
 
       {/* CATEGORY FILTER */}
-      <div className="container mx-auto px-4">
-        <div className="flex flex-wrap justify-center gap-3 mb-16">
-          {categories.map((c) => (
-            <Button
-              key={c.id}
-              onClick={() => setSelectedCategory(c.id)}
-              className={`px-4 py-3 sm:px-6 sm:py-4 text-xs sm:text-sm tracking-widest rounded-none border ${
-                selectedCategory === c.id
-                  ? 'bg-primary text-black border-primary'
-                  : 'bg-transparent border-white/20 text-white/60'
-              }`}
-            >
-              {c.label}
-            </Button>
-          ))}
+      <div className="relative z-10 py-6 mb-12">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-center">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-4 bg-white/5 backdrop-blur-md p-2 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(188,19,254,0.1)]">
+              {categories.map((c) => {
+                const isActive = selectedCategory === c;
+                return (
+                  <button
+                    key={c}
+                    onClick={() => setSelectedCategory(c)}
+                    className={`relative px-6 py-2 md:px-8 md:py-3 text-sm md:text-base tracking-widest font-mono transition-colors duration-300 z-[1] ${isActive ? 'text-white font-bold' : 'text-white/60 hover:text-white'
+                      }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeCategory"
+                        className="absolute inset-0 bg-[#BC13FE] rounded-xl z-[-1]"
+                        initial={false}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10 drop-shadow-md">{c.toUpperCase()}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* HEADLINERS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
-          {filteredHeadliners.map((e) => (
-            <div
+      <div className="container mx-auto px-4 pb-24">
+        {/* EVENTS GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredEvents.map((e, index) => (
+            <motion.div
               key={e.id}
-              className="bg-[#0D0221]/70 border border-white/10 rounded-xl p-6 flex flex-col"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 flex flex-col items-center text-center transition-all duration-500 overflow-hidden"
             >
-              <div className="text-4xl sm:text-5xl mb-4 text-center">
-                {e.category === 'tech'
-                  ? '⚡'
-                  : e.category === 'music'
-                  ? '🔊'
-                  : e.category === 'innovation'
-                  ? '💡'
-                  : '🎨'}
+              {/* Icon */}
+              <div className="mb-6 relative z-10 transform group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+                {getIcon(e.type, e.club)}
               </div>
-              <h3 className="text-lg sm:text-xl font-bold mb-2">
+
+              {/* Title */}
+              <h3 className="relative z-10 text-3xl sm:text-4xl font-sans mb-4 leading-none text-white tracking-wide transition-colors duration-300">
                 {e.title}
               </h3>
-              <p className="text-xs tracking-widest text-primary/70 mb-3">
-                {e.date} · {e.attendees} REGISTERED
-              </p>
-              <p className="text-sm text-white/70 flex-grow">
+
+              {/* Meta Info */}
+              <div className="relative z-10 text-sm font-mono text-[#BC13FE] mb-6 tracking-wider uppercase bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                {e.date} • {e.time.split('-')[0]}
+              </div>
+
+              {/* Description */}
+              <p className="relative z-10 text-white/60 text-sm mb-8 leading-relaxed font-mono line-clamp-3 max-w-[90%]">
                 {e.description}
               </p>
-              <Button className="mt-6 w-full rounded-none tracking-widest text-xs">
-                DETAILS
-              </Button>
-            </div>
-          ))}
-        </div>
 
-        {/* ZONES */}
-        <div className="space-y-16 mb-24">
-          {zones.map((z, i) => (
-            <div
-              key={z.title}
-              className="bg-[#0D0221]/70 border border-white/10 rounded-xl p-6"
-            >
-              <div className="flex items-center gap-4 mb-4">
-                <span className="text-4xl">{z.icon}</span>
-                <h2 className="text-xl sm:text-2xl font-bold">
-                  {z.title}
-                </h2>
-              </div>
-              <p className="text-xs tracking-widest text-white/40 mb-6">
-                {z.description}
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {z.events.map((ev) => (
-                  <div
-                    key={ev.name}
-                    className="border border-white/10 rounded-lg p-4 text-sm"
-                  >
-                    <div className="font-bold mb-2">{ev.name}</div>
-                    <Button className="w-full rounded-none text-xs tracking-widest">
-                      VIEW
+              {/* Details Button */}
+              <div className="mt-auto w-full relative z-10">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="w-full bg-[#BC13FE]/20 hover:bg-[#BC13FE] text-white border border-[#BC13FE]/50 hover:border-[#BC13FE] font-sans text-xl py-6 rounded-xl tracking-wider shadow-[0_0_15px_rgba(188,19,254,0.1)] hover:shadow-[0_0_25px_rgba(188,19,254,0.6)] transition-all duration-300 group-hover:scale-[1.02]">
+                      DETAILS
                     </Button>
-                  </div>
-                ))}
+                  </DialogTrigger>
+
+                  {/* DIALOG CONTENT */}
+                  <DialogContent className="bg-[#0D001A]/95 backdrop-blur-xl border-2 border-[#BC13FE]/30 text-white w-[90%] sm:max-w-md rounded-2xl shadow-[0_0_50px_rgba(188,19,254,0.2)] p-6">
+                    <DialogHeader className="text-left space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Badge className="bg-[#00fff9]/10 text-[#00fff9] border border-[#00fff9]/50 font-sans text-[10px] rounded-sm px-2 py-0.5">{e.type}</Badge>
+                        <span className="text-[#BC13FE] font-mono text-[10px]">{e.id}</span>
+                      </div>
+                      <DialogTitle className="text-3xl font-sans text-white leading-none tracking-wide pt-2">
+                        {e.title}
+                      </DialogTitle>
+                      <DialogDescription className="text-[10px] font-mono text-white/50 uppercase tracking-widest">
+                        Organized by <span className="text-[#00fff9]">{e.club}</span>
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="space-y-4 py-4">
+                      {/* Meta Grid */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-white/5 p-3 rounded-xl border border-white/10 space-y-2 hover:border-[#00fff9]/30 transition-colors">
+                          <h4 className="text-[10px] font-mono text-[#BC13FE] uppercase tracking-widest">When</h4>
+                          <div className="space-y-1 font-mono text-[11px]">
+                            <div className="flex items-center gap-2 text-white/90">
+                              <Calendar className="w-3 h-3 text-[#00fff9]" />
+                              <span>{e.date}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-white/90">
+                              <Clock className="w-3 h-3 text-[#00fff9]" />
+                              <span>{e.time}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="bg-white/5 p-3 rounded-xl border border-white/10 space-y-2 hover:border-[#00fff9]/30 transition-colors">
+                          <h4 className="text-[10px] font-mono text-[#BC13FE] uppercase tracking-widest">Where</h4>
+                          <div className="font-mono text-[11px] flex items-center gap-2 text-white/90">
+                            <MapPin className="w-3 h-3 text-[#00fff9]" />
+                            <span>{e.venue}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {e.prizePool && (
+                        <div className="bg-[#FFE737]/10 border border-[#FFE737]/30 p-3 rounded-xl flex items-center justify-between">
+                          <h4 className="text-[10px] font-mono text-[#FFE737] uppercase tracking-widest flex items-center gap-2">
+                            <Trophy className="w-3 h-3" />
+                            Prize Pool
+                          </h4>
+                          <p className="text-lg font-sans text-white font-bold">₹{e.prizePool}</p>
+                        </div>
+                      )}
+
+                      <div className="space-y-2 bg-white/5 p-4 rounded-xl border border-white/10">
+                        <h4 className="text-[10px] font-mono text-[#BC13FE] uppercase tracking-widest">Description</h4>
+                        <p className="text-[11px] text-white/70 leading-relaxed font-mono max-h-[120px] overflow-y-auto custom-scrollbar pr-2">
+                          {e.description}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {e.tags.map(tag => (
+                          <span key={tag} className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-[#00fff9] border border-[#00fff9]/20">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <DialogFooter>
+                      <Button onClick={() => navigate('/register')} className="w-full bg-gradient-to-r from-[#00fff9] to-[#00fff9]/80 text-black hover:brightness-110 font-sans text-base py-6 rounded-xl tracking-widest shadow-[0_0_20px_rgba(0,255,249,0.3)] hover:shadow-[0_0_30px_rgba(0,255,249,0.5)] transition-all transform hover:scale-[1.02] border-0">
+                        REGISTER NOW
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* COMPETITIONS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-24">
-          {competitions.map((c) => (
-            <div
-              key={c.name}
-              className="bg-[#0D0221]/70 border border-white/10 rounded-xl p-6 flex flex-col"
-            >
-              <div className="text-5xl mb-4">{c.icon}</div>
-              <h3 className="text-xl font-bold mb-2">{c.name}</h3>
-              <p className="text-xs tracking-widest text-primary/60 mb-3">
-                BY {c.organizedBy}
-              </p>
-              <p className="text-sm text-white/70 flex-grow">{c.desc}</p>
-              <Button className="mt-6 rounded-none tracking-widest text-xs">
-                ENTER ARENA
-              </Button>
-            </div>
-          ))}
-        </div>
+        {filteredEvents.length === 0 && (
+          <div className="text-center py-24">
+            <p className="text-2xl font-sans text-white/30">NO EVENTS FOUND</p>
+            <Button onClick={() => setSelectedCategory('All')} variant="link" className="text-[#BC13FE] mt-4 font-mono">
+              Reset Filters
+            </Button>
+          </div>
+        )}
+
       </div>
     </div>
   );

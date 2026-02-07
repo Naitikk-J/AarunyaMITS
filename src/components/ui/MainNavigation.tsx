@@ -196,7 +196,7 @@ export const MainNavigation = ({ className }: { className?: string }) => {
             </nav>
 
             {isOpen && (
-                <div className="fixed inset-0 z-40 lg:hidden top-24">
+                <div className="fixed inset-0 z-40 lg:hidden top-16 md:top-20">
                     <div
                         className="fixed inset-0 bg-black/90"
                         onClick={() => setIsOpen(false)}
@@ -206,7 +206,7 @@ export const MainNavigation = ({ className }: { className?: string }) => {
                     />
 
                     <div
-                        className="fixed top-24 left-0 right-0 z-50 overflow-hidden"
+                        className="fixed top-16 md:top-20 left-0 right-0 z-50 overflow-hidden"
                         style={{
                             background: 'linear-gradient(to bottom, #1a0a2e, #0d0520)',
                             borderBottom: '4px solid',

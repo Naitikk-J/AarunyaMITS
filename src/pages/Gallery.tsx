@@ -4,6 +4,7 @@ import { MainNavigation } from '@/components/ui/MainNavigation';
 import { CRTOverlay } from '@/components/CRTOverlay';
 import { useResponsive } from '@/hooks/use-responsive';
 import { LoadingScreen } from '@/components/ui/LoadingScreen';
+import { GlitchText } from '@/components/GlitchText';
 
 
 const Gallery = () => {

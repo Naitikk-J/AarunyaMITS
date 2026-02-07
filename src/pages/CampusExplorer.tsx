@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import * as THREE from 'three';
 import statueModel from '@/components/models/statue.glb?url';
 import { getCachedModel, cacheModel, getCachedTexture, cacheTexture, getCachedGeometry, cacheGeometry } from '@/utils/cache';
+import { GlitchText } from '@/components/GlitchText';
 
 // Theme constants
 const THEME = {
@@ -29,18 +30,18 @@ const BUILDINGS = [
 
     // Unique AI Department
     { id: 'ai-department', name: 'AI department', hindiName: 'एआई विभाग', position: [-1, 2], size: [9, 5], height: 8, type: 'simple', icon: '🤖' },
-    
+
     // --- UPDATED: GOLE KA MANDIR SQUARE (Replaced 'circle') ---
-    { 
-        id: 'gkm-square', 
-        name: 'Gole Ka Mandir Square', 
-        hindiName: 'गोले का मंदिर चौराहा', 
-        position: [40, -35], 
-        size: [12, 12], 
-        height: 0.3, 
+    {
+        id: 'gkm-square',
+        name: 'Gole Ka Mandir Square',
+        hindiName: 'गोले का मंदिर चौराहा',
+        position: [40, -35],
+        size: [12, 12],
+        height: 0.3,
         type: 'landmark', // Renders as a flat ground/roundabout base
-        color: '#444444', 
-        icon: '📍' 
+        color: '#444444',
+        icon: '📍'
     },
 
     // HOSTELS
@@ -77,18 +78,18 @@ const ROADS = [
 
     // Extended Right Side
     { start: [22, -25], end: [22, 25], width: 2 },
-    
+
     // Extended Left Side (Diamond Gate Area)
     { start: [-23, -27], end: [-23, 33.75], width: 2 },  // Left vertical spine
     { start: [-23, 10], end: [23, 10], width: 2 },     // Middle horizontal connector
 
     // Service Roads
-    { start: [-23, 33], end: [-15, 33], width: 1.5 }, 
+    { start: [-23, 33], end: [-15, 33], width: 1.5 },
 
     // --- NEW: GOLE KA MANDIR SQUARE ROADS (EXTENDED TO ENDS) ---
     // 1. North Road (Vertical - Parallel to Diamond Gate road) -> Extends to +60 Z
-    { start: [40, -35], end: [40, 60], width: 5 }, 
-    { start: [-40, -35], end: [-40, 60], width: 5 }, 
+    { start: [40, -35], end: [40, 60], width: 5 },
+    { start: [-40, -35], end: [-40, 60], width: 5 },
     // 2. South Road -> Extends to -60 Z
     { start: [40, -35], end: [40, -60], width: 5 },
     { start: [-40, -35], end: [-40, -60], width: 5 },
@@ -146,13 +147,13 @@ const AreaLabels = () => {
         { text: "HOSTEL ZONE", position: [3, 0.2, 35], rotation: 0, size: 5, color: "#ffffff", opacity: 0.15 },
         { text: "ACADEMIC BLOCK", position: [-10, 0.2, 7], rotation: 0, size: 2, color: "#d8cccc", opacity: 0.15 },
         { text: "FOOTBALL GROUND", position: [0, 0.2, 19], rotation: 0, size: 3, color: "#ffffff", opacity: 0.3 },
-        
+
         // Surrounding Areas
         { text: "MELA GROUND SECTOR", position: [-45, 0.2, 0], rotation: Math.PI / 2, size: 4, color: "#cccccc", opacity: 0.1 },
         { text: "RESIDENCY AREA", position: [50, 0.2, -20], rotation: -Math.PI / 2, size: 4, color: "#cccccc", opacity: 0.1 },
-       // { text: "CITY CENTER", position: [40, 0.2, -55], rotation: 0, size: 4, color: "#aaaaaa", opacity: 0.1 },
+        // { text: "CITY CENTER", position: [40, 0.2, -55], rotation: 0, size: 4, color: "#aaaaaa", opacity: 0.1 },
         { text: "INDUSTRIAL AREA", position: [-40, 0.2, 50], rotation: 0, size: 4, color: "#aaaaaa", opacity: 0.1 },
-        
+
         // Road Labels
         { text: "MELA ROAD", position: [-25, 0.2, 0], rotation: Math.PI / 2, size: 2, color: THEME.primary, opacity: 0.8 },
         { text: "MORAR ROAD", position: [40, 0.2, 10], rotation: Math.PI / 2, size: 2, color: "#aaaaaa", opacity: 0.5 },
@@ -288,17 +289,17 @@ const HostelComplex = ({ position, hostelType, size, height }: { position: [numb
 
     const blocks = [
         // Block 1 - Front Left
-        { x: -size[0]/2 + blockWidth/2, z: -size[1]/2 + blockDepth/2, label: hostelType === 'girls' ? 'Block A' : 'Block A' },
+        { x: -size[0] / 2 + blockWidth / 2, z: -size[1] / 2 + blockDepth / 2, label: hostelType === 'girls' ? 'Block A' : 'Block A' },
         // Block 2 - Front Center
-        { x: 0, z: -size[1]/2 + blockDepth/2, label: hostelType === 'girls' ? 'Block B' : 'Block B' },
+        { x: 0, z: -size[1] / 2 + blockDepth / 2, label: hostelType === 'girls' ? 'Block B' : 'Block B' },
         // Block 3 - Front Right
-        { x: size[0]/2 - blockWidth/2, z: -size[1]/2 + blockDepth/2, label: hostelType === 'girls' ? 'Block C' : 'Block C' },
+        { x: size[0] / 2 - blockWidth / 2, z: -size[1] / 2 + blockDepth / 2, label: hostelType === 'girls' ? 'Block C' : 'Block C' },
         // Block 4 - Back Left
-        { x: -size[0]/2 + blockWidth/2, z: size[1]/2 - blockDepth/2, label: hostelType === 'girls' ? 'Block D' : 'Block D' },
+        { x: -size[0] / 2 + blockWidth / 2, z: size[1] / 2 - blockDepth / 2, label: hostelType === 'girls' ? 'Block D' : 'Block D' },
         // Block 5 - Back Center
-        { x: 0, z: size[1]/2 - blockDepth/2, label: hostelType === 'girls' ? 'Block E' : 'Block E' },
+        { x: 0, z: size[1] / 2 - blockDepth / 2, label: hostelType === 'girls' ? 'Block E' : 'Block E' },
         // Block 6 - Back Right
-        { x: size[0]/2 - blockWidth/2, z: size[1]/2 - blockDepth/2, label: hostelType === 'girls' ? 'Block F' : 'Block F' },
+        { x: size[0] / 2 - blockWidth / 2, z: size[1] / 2 - blockDepth / 2, label: hostelType === 'girls' ? 'Block F' : 'Block F' },
     ];
 
     return (
@@ -333,7 +334,7 @@ const HostelComplex = ({ position, hostelType, size, height }: { position: [numb
                     {/* Window grid pattern */}
                     {[...Array(Math.floor((blockWidth - 0.5) / 1.2))].map((_, wi) =>
                         [...Array(Math.floor(height / 1))].map((_, hi) => (
-                            <mesh key={`window-${wi}-${hi}`} position={[-blockWidth/2 + 1 + wi * 1.2, 1 + hi * 1.2, blockDepth/2 - 0.1]}>
+                            <mesh key={`window-${wi}-${hi}`} position={[-blockWidth / 2 + 1 + wi * 1.2, 1 + hi * 1.2, blockDepth / 2 - 0.1]}>
                                 <boxGeometry args={[0.6, 0.6, 0.05]} />
                                 <meshStandardMaterial color={windowColor} emissive={windowColor} emissiveIntensity={0.4} metalness={0.7} />
                             </mesh>
@@ -350,12 +351,12 @@ const HostelComplex = ({ position, hostelType, size, height }: { position: [numb
             ))}
 
             {/* Entrance gate/arch */}
-            <group position={[0, 0, -size[1]/2 + 0.5]}>
-                <mesh castShadow position={[-blockWidth/2, height * 0.8, 0]}>
+            <group position={[0, 0, -size[1] / 2 + 0.5]}>
+                <mesh castShadow position={[-blockWidth / 2, height * 0.8, 0]}>
                     <boxGeometry args={[blockWidth * 0.6, height * 0.6, 0.2]} />
                     <meshStandardMaterial color="#8B4513" roughness={0.8} />
                 </mesh>
-                <mesh castShadow position={[blockWidth/2, height * 0.8, 0]}>
+                <mesh castShadow position={[blockWidth / 2, height * 0.8, 0]}>
                     <boxGeometry args={[blockWidth * 0.6, height * 0.6, 0.2]} />
                     <meshStandardMaterial color="#8B4513" roughness={0.8} />
                 </mesh>
@@ -449,9 +450,9 @@ const Building = ({ data, textures, showLabels }: any) => {
                     0
                 ]}
                 position={[
-                    0, 
+                    0,
                     // UPDATED: Removed 'gate' from this check so it defaults to data.height/2
-                    (data.type === 'complex' || data.type === 'hostel') ? 0 : data.height / 2, 
+                    (data.type === 'complex' || data.type === 'hostel') ? 0 : data.height / 2,
                     0
                 ]}
                 onPointerOver={(e) => { e.stopPropagation(); setHover(true); }}
@@ -1194,7 +1195,7 @@ const StatueModel = ({ position, scale = [1, 1, 1], rotation = [0, 0, 0] }: { po
     // Cache the loaded model
     cacheModel('statue_model', { scene, animations: [], cameras: [], asset: {}, parser: null, scenes: [scene], userData: {} });
     console.log('💾 Statue model cached successfully');
-    
+
     return <primitive object={scene} position={position} scale={scale} rotation={rotation} />;
 };
 
@@ -1367,7 +1368,7 @@ const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
                 <meshStandardMaterial color={THEME.grass} roughness={1} />
             </mesh>
             <Roads textures={textures} />
-            
+
             {/* Added Area Labels Component */}
             <AreaLabels />
 
@@ -1384,10 +1385,10 @@ const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
             {BUILDINGS.filter(b => b.id !== 'gkm-square').map((b) => (
                 <Building key={b.id} data={b} textures={textures} showLabels={!isDriving} />
             ))}
-            
+
             {/* This static label is now handled by AreaLabels component, keeping code clean */}
             {/* <Text position={[-25, 0.1, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} fontSize={1.5} color={THEME.primary}>MELA ROAD</Text> */}
-            
+
             <StatueModel position={[15, 1.5, -18.5]} scale={[1.5, 1.5, 1.5]} rotation={[0, Math.PI * 1.5, 0]} />
             {/* COMMENTED OUT: Car rendering - Driving feature disabled */}
             {/* {isDriving && <Car position={carPosition} rotation={carRotation} />} */}
@@ -1542,11 +1543,18 @@ const CampusExplorer = () => {
                     </div>
                 </div>
             )}
-            <div className="relative pt-24 pb-8 text-center">
+            <div className="relative pt-24 md:pt-36 pb-8 text-center">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
-                <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-4">CAMPUS EXPLORER</h1>
-                <div className="h-1 w-[100px] bg-primary mx-auto shadow-neon" />
-                <p className="mt-4 text-xs md:text-sm font-share-tech text-muted-foreground tracking-[0.4em] uppercase opacity-60 max-w-2xl mx-auto px-4">// EXPLORE MITS CAMPUS IN 3D</p>
+
+                <h1 className="text-2xl md:text-3xl lg:text-5xl font-black tracking-tight mb-4 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                    <GlitchText text="CAMPUS EXPLORER" />
+                </h1>
+
+                <div className="h-0.5 w-16 md:w-24 bg-primary mx-auto shadow-[0_0_10px_#BC13FE]" />
+
+                <p className="mt-4 text-[9px] sm:text-[10px] md:text-xs font-share-tech text-white/50 uppercase max-w-xl mx-auto tracking-[0.2em]">
+                    // EXPLORE MITS CAMPUS IN 3D
+                </p>
             </div>
             <div className="container mx-auto px-4 pb-12">
                 <div className="relative w-full overflow-hidden transition-all duration-500 rounded-xl border-2 border-white/10" style={{ height: 'calc(100vh - 320px)', minHeight: '400px', boxShadow: '0 0 60px rgba(188,19,254,0.2), inset 0 0 30px rgba(0,0,0,0.5)' }}>
