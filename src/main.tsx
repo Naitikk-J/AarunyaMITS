@@ -23,20 +23,15 @@ if (!googleClientId) {
         </div>
     );
 } else {
-    // Show loading screen first
-    root.render(<LoadingScreen />);
+    // Render the app directly without loading screen
+    root.render(
+        <GoogleOAuthProvider clientId={googleClientId}>
+            <App />
+        </GoogleOAuthProvider>
+    );
 
-    // After a short delay, render the actual app
-    setTimeout(() => {
-        root.render(
-            <GoogleOAuthProvider clientId={googleClientId}>
-                <App />
-            </GoogleOAuthProvider>
-        );
-
-        // Initialize lenis for smooth scrolling
-        const lenis = new Lenis({
-          autoRaf: true,
-        });
-    }, 2000); // 2 second loading screen
+    // Initialize lenis for smooth scrolling
+    const lenis = new Lenis({
+      autoRaf: true,
+    });
 }

@@ -174,7 +174,7 @@ export const InteractiveTVControls = ({
                 <button
                     id="channel-btn"
                     onClick={handleChannelChange}
-                    className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full border-2 border-cyber-blue bg-[#0D1A2A] font-pixel text-[10px] sm:text-xs font-bold flex items-center justify-center text-cyber-blue shadow-[0_0_15px_rgba(0,255,255,0.4)] hover:scale-110 active:scale-95 transition-all cursor-pointer"
+                    className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full border-2 border-cyber-blue bg-[#0D1A2A] font-pixel text-[10px] sm:text-xs font-bold flex items-center justify-center text-cyber-blue shadow-[0_0_15px_rgba(0,255,255,0.4)] hover:scale-110 active:scale-95 transition-all cursor-pointer animate-pulse"
                 >
                     <span className="mt-0.5">{channel}</span>
                 </button>

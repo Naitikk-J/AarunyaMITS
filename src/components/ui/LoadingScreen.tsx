@@ -39,7 +39,9 @@ export function LoadingScreen() {
             }}
         >
             {/* Main Content */}
-            <div className="relative z-10 flex flex-col items-center gap-8 px-4">
+            <div className="relative z-10 flex flex-col items-center gap-8 px-4" style={{
+                marginTop: '100vh' // Add some top margin to prevent it from going too high
+            }}>
                 {}
                 <div>
 <img
