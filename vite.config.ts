@@ -19,4 +19,24 @@ export default defineConfig(({ mode }) => ({
     },
   },
   assetsInclude: ["**/*.glb", "**/*.gltf"],
+  // Configure history API fallback for production builds
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['lucide-react'],
+          three: ['three', '@react-three/fiber', '@react-three/drei'],
+          query: ['@tanstack/react-query'],
+          forms: ['react-hook-form', '@hookform/resolvers', 'zod']
+        }
+      }
+    }
+  },
+  // Handle SPA routing for development and preview
+  preview: {
+    port: 8081,
+    strictPort: true,
+  },
 }));
