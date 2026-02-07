@@ -1,6 +1,7 @@
 import { MainNavigation } from '@/components/ui/MainNavigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { GlitchText } from '@/components/GlitchText';
 
 const Sponsors = () => {
   const tiers = [
@@ -55,17 +56,20 @@ const Sponsors = () => {
       <MainNavigation />
 
       <div className="content-scale">
-        {/* HEADER */}
-        <div className="relative pt-28 md:pt-40 pb-16 md:pb-20 text-center px-4">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1)_0%,transparent_70%)] pointer-events-none" />
 
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 mb-6">
-            SPONSORS
+
+
+        {/* HEADER */}
+        <div className="relative pt-24 md:pt-36 pb-16 md:pb-20 text-center px-4">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.08)_0%,transparent_70%)] pointer-events-none" />
+
+          <h1 className="text-2xl md:text-3xl lg:text-5xl font-black tracking-tight mb-6 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+            <GlitchText text="SPONSORS" />
           </h1>
 
-          <div className="h-1 w-24 md:w-[120px] bg-primary mx-auto shadow-neon" />
+          <div className="h-0.5 w-16 md:w-24 bg-primary mx-auto shadow-[0_0_10px_#BC13FE]" />
 
-          <p className="mt-6 text-xs sm:text-sm md:text-base font-share-tech text-muted-foreground uppercase opacity-60 max-w-3xl mx-auto tracking-[0.25em] sm:tracking-[0.4em]">
+          <p className="mt-6 text-[9px] sm:text-[10px] md:text-xs font-share-tech text-muted-foreground uppercase opacity-60 max-w-3xl mx-auto tracking-[0.25em] sm:tracking-[0.4em]">
             // THE ALLIANCES POWERING AARUNYA 2026
           </p>
         </div>

@@ -6,18 +6,25 @@ import { GlitchText } from '@/components/GlitchText';
 
 const teamGroups = [
   {
+    role: 'TEAM LEAD',
+    icon: '👑',
+    members: [
+      { name: 'Viraj Gupta', link: 'https://www.linkedin.com/in/viraj-gupta-ok/' }
+    ]
+  },
+  {
     role: 'FRONTEND DEVELOPERS',
     icon: '⚡',
     members: [
+      { name: 'Nihari Shrivastava', link: 'https://www.linkedin.com/in/nihari-shrivastava-878739279' },
       { name: 'Naitik Jain', link: 'https://www.linkedin.com/in/naitik-jain-9290b8324' },
-      { name: 'Nihari Shrivastava', link: 'https://www.linkedin.com/in/nihari-shrivastava-878739279' }
+      { name: 'Nemish Nagaria', link: 'https://www.linkedin.com/in/nemish-nagaria-555198313' }
     ]
   },
   {
     role: 'UI/UX DESIGNERS',
     icon: '🎨',
     members: [
-      { name: 'Nemish Nagaria', link: 'https://www.linkedin.com/in/nemish-nagaria-555198313' },
       { name: 'Shruti Gupta', link: 'https://in.linkedin.com/in/shruti-gupta-200734340' }
     ]
   },
@@ -26,7 +33,6 @@ const teamGroups = [
     icon: '🔧',
     members: [
       { name: 'Sanchit Jain', link: 'https://linkedin.com/in/lnSanchit' },
-      { name: 'Viraj Gupta', link: 'https://www.linkedin.com/in/viraj-gupta-ok/' },
       { name: 'Pulastya Bhagwat', link: 'https://www.linkedin.com/in/pulastya-bhagwat/' },
       { name: 'Vishesh Dwivedi', link: 'https://www.linkedin.com/in/vishesh-dwivedi-3917b1377' }
     ]
@@ -80,7 +86,7 @@ const AboutUs = () => {
 
       <div className="content-scale">
         {/* HEADER */}
-        <div className="relative pt-32 md:pt-48 pb-12 text-center px-4">
+        <div className="relative pt-24 md:pt-36 pb-12 text-center px-4">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.08)_0%,transparent_70%)] pointer-events-none" />
 
           <motion.div
@@ -176,8 +182,8 @@ const AboutUs = () => {
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              viewport={{ once: true, margin: "-10px" }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
             >
               {teamGroups.map((group) => (
                 <motion.div

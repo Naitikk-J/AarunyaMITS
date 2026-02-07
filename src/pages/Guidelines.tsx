@@ -92,7 +92,7 @@ export const Guidelines = () => {
             }} />
 
             {/* Content */}
-            <div className="relative z-20 pt-32 pb-12 container mx-auto px-4 max-w-5xl">
+            <div className="relative z-20 pt-24 md:pt-36 pb-12 container mx-auto px-4 max-w-5xl">
                 <MainNavigation />
 
                 <motion.div
