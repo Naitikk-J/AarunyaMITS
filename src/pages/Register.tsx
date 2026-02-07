@@ -8,7 +8,7 @@ import { RetroButton } from '@/components/ui/retro-button';
 import { useState } from 'react';
 
 export default function Register() {
-    const [registrationType, setRegistrationType] = useState<'student' | 'alumni' | 'guest' | 'event'>('student');
+    const [registrationType, setRegistrationType] = useState<'student' | 'alumni' | 'event'>('student');
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
@@ -79,7 +79,7 @@ export default function Register() {
                                     onClick={() => setRegistrationType('student')}
                                     className="w-full justify-start text-left "
                                 >
-                                    Other College Students
+                                    Non-MITS Students
                                 </RetroButton>
                                 <RetroButton
                                     variant={registrationType === 'alumni' ? 'default' : 'white'}
@@ -87,13 +87,6 @@ export default function Register() {
                                     className="w-full justify-start text-left"
                                 >
                                     MITS Alumni
-                                </RetroButton>
-                                <RetroButton
-                                    variant={registrationType === 'guest' ? 'default' : 'white'}
-                                    onClick={() => setRegistrationType('guest')}
-                                    className="w-full justify-start text-left"
-                                >
-                                    Guests
                                 </RetroButton>
                                 <RetroButton
                                     variant={registrationType === 'event' ? 'default' : 'white'}
@@ -251,33 +244,6 @@ export default function Register() {
                                         </form>
                                     )}
 
-                                    {registrationType === 'guest' && (
-                                        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Full Name</Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your Full Name" />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Contact Number</Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="+91 1234567890" />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Email Address</Label>
-                                                <Input type="email" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="guest@email.com" />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Purpose of Visit</Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="e.g., Attending event, Guest lecture" />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Password</Label>
-                                                <Input type="password" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="••••••••" />
-                                            </div>
-                                            <Button className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-4 uppercase tracking-wider" style={{ background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff', fontSize: '9px' }}>
-                                                REGISTER AS GUEST
-                                            </Button>
-                                        </form>
-                                    )}
 
                                     {registrationType === 'event' && (
                                         <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
