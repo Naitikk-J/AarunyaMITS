@@ -1,332 +1,332 @@
-# 🎯 AARUNYA Registration System - Start Here
+# Aarunya MITS Registration System
 
-## 👋 Welcome!
+A secure event & competition registration system for Aarunya (MITS) with authentication, payments, dashboard, QR-based e-pass, and Supabase backend.
 
-You have a **complete, production-ready registration and authentication system** for the AARUNYA Festival. This document will help you get started.
+## 🚀 Features
 
-## ⚡ Quick Navigation
+### Frontend
+- **React + Next.js + Tailwind** - Modern, responsive UI
+- **Retro Cyberpunk Theme** - Unique visual design
+- **Progressive Web App** - Offline capabilities and mobile-friendly
+- **Real-time Updates** - Live data synchronization
 
-### 🚀 Want to Get Started in 5 Minutes?
-👉 **Read:** [QUICKSTART.md](QUICKSTART.md)
+### Authentication & Security
+- **Email OTP Login** - Secure email-based authentication
+- **Google OAuth** - Restricted to MITS domain (@mitsgwl.ac.in)
+- **Domain Validation** - Only MITS students can register
+- **Session Management** - Persistent authentication
+- **Row Level Security (RLS)** - Database-level security policies
 
-### 📖 Want Complete Step-by-Step Guide?
-👉 **Read:** [SETUP_GUIDE.md](SETUP_GUIDE.md)
+### Registration System
+- **Unified Registration Form** - Single form for all events
+- **Event Selection** - Browse and select multiple events
+- **Free & Paid Events** - Aarunya entry free for MITS, competitions paid
+- **Enrollment Validation** - Unique enrollment number enforcement
 
-### 🔧 Want Backend Details?
-👉 **Read:** [BACKEND_SETUP.md](BACKEND_SETUP.md)
+### Payment Integration
+- **Razorpay Integration** - Secure payment processing
+- **Order Management** - Create and track payment orders
+- **Payment Verification** - Verify payment status
+- **Retry Mechanism** - Handle payment failures
 
-### 🏗️ Want to Understand Architecture?
-👉 **Read:** [DATA_FLOW.md](DATA_FLOW.md)
+### E-Pass System
+- **QR Code Generation** - Server-side QR code creation
+- **E-Pass Download** - Downloadable PDF/image passes
+- **Email Automation** - Automatic email delivery
+- **Event Verification** - Scan QR codes at venue
 
-### ✅ Want Implementation Summary?
-👉 **Read:** [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)
+### Backend (Supabase)
+- **Supabase Auth** - User authentication and management
+- **PostgreSQL Database** - Structured data storage
+- **Edge Functions** - Serverless email processing
+- **Storage** - File and media storage
+- **Real-time Subscriptions** - Live data updates
 
-### 📦 Want Full Deliverables List?
-👉 **Read:** [DELIVERABLES.md](DELIVERABLES.md)
+## 🛠️ Tech Stack
 
-## 🎯 What You Have
+### Frontend
+- **React 18** - UI framework
+- **Next.js** - React framework
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+- **React Query** - State management
+- **React Router** - Navigation
 
+### Backend
+- **Supabase** - Backend-as-a-Service
+  - Auth (Email OTP + Google OAuth)
+  - PostgreSQL Database
+  - Edge Functions (Email service)
+  - Storage
+  - Real-time subscriptions
+
+### Payment & Utilities
+- **Razorpay** - Payment processing
+- **QR Code** - QR code generation
+- **Nodemailer** - Email sending (in Edge Functions)
+
+## 📋 Database Schema
+
+### Tables
+- **users** - User profiles with MITS validation
+- **events** - Event and competition details
+- **registrations** - User event registrations
+- **payments** - Payment records and status
+- **epasses** - Generated e-passes with QR codes
+
+### Security Features
+- **RLS Policies** - Row-level security
+- **Domain Restrictions** - MITS email validation
+- **Unique Constraints** - Prevent duplicate enrollments
+- **Cascading Deletes** - Data integrity
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- Supabase project
+- Razorpay account
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/aarunya-mits.git
+   cd aarunya-mits
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables:**
+   ```bash
+   cp .env.example .env.local
+   ```
+
+4. **Configure Supabase:**
+   - Create a Supabase project at [supabase.com](https://supabase.com)
+   - Set up the database schema (see `supabase/schema.sql`)
+   - Configure authentication settings
+   - Set up Google OAuth (restrict to mitsgwl.ac.in domain)
+
+5. **Configure environment variables:**
+   ```env
+   # Supabase Configuration
+   VITE_SUPABASE_URL="https://your-project.supabase.co"
+   VITE_SUPABASE_ANON_KEY="your-anon-key"
+   VITE_SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
+   
+   # Google OAuth
+   VITE_GOOGLE_CLIENT_ID="your-google-client-id"
+   
+   # Razorpay
+   VITE_RAZORPAY_KEY_ID="your-razorpay-key-id"
+   VITE_RAZORPAY_KEY_SECRET="your-razorpay-key-secret"
+   
+   # Email Service
+   VITE_EMAIL_API_URL="https://your-project.supabase.co/functions/v1/send-email"
+   VITE_EMAIL_API_KEY="your-edge-function-api-key"
+   ```
+
+6. **Deploy Edge Functions:**
+   ```bash
+   cd supabase/functions/send-email
+   supabase functions deploy send-email
+   ```
+
+7. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+## 🏗️ Architecture
+
+### Frontend Structure
 ```
-✅ Modern Registration Form
-   ├─ Name, Email, Mobile, College
-   ├─ Category (Student/Professional/Other)
-   ├─ City, Password
-   └─ Terms & Conditions
-
-✅ Unique AARUNYA IDs
-   └─ Format: AAR-XXXXX-XXXXX
-
-✅ Email Notifications
-   ├─ Beautiful HTML template
-   ├─ AARUNYA ID included
-   └─ Cyberpunk design
-
-✅ Multi-Method Login
-   ├─ Email + Password
-   ├─ AARUNYA ID + Password
-   └─ Google OAuth (ready)
-
-✅ Secure Backend
-   ├─ Express.js API
-   ├─ Password hashing
-   └─ JWT authentication
-
-✅ Complete Documentation
-   └─ 5 comprehensive guides
+src/
+├── components/          # Reusable UI components
+├── pages/              # Page components
+├── hooks/              # Custom React hooks
+├── lib/                # Supabase client and utilities
+├── utils/              # Helper functions
+└── types/              # TypeScript type definitions
 ```
 
-## 🚀 Three Steps to Start
-
-### Step 1: Setup (Automatic)
-```bash
-npm install
-cd server && npm install
-cd ..
+### Backend Structure
+```
+supabase/
+├── schema.sql          # Database schema and RLS policies
+└── functions/
+    └── send-email/     # Email service Edge Function
 ```
 
-### Step 2: Configure (1 minute)
-```bash
-# Copy template
-cp .env.example .env
+### Key Components
 
-# Add Gmail password (see QUICKSTART.md)
-# Edit .env with your credentials
-```
+1. **UnifiedRegistration** - Main registration flow
+2. **ProtectedRoute** - Authentication guards
+3. **useAuth** - Authentication hook
+4. **useRazorpay** - Payment integration hook
+5. **Supabase Service** - Database operations
 
-### Step 3: Run (Choose One)
-```bash
-# Option A: Both together
-npm run dev:all
+## 🔐 Security Measures
 
-# Option B: Frontend only
-npm run dev
+### Authentication Security
+- **Email Domain Validation** - Only @mitsgwl.ac.in emails allowed
+- **Google OAuth Domain Restriction** - Enforced via hd parameter
+- **Session Persistence** - Secure token storage
+- **Auto-refresh Tokens** - Automatic token renewal
 
-# Option C: Backend only
-cd server && npm run dev
-```
+### Database Security
+- **Row Level Security (RLS)** - Users can only access their data
+- **Unique Constraints** - Prevent duplicate enrollments
+- **Cascading Deletes** - Maintain data integrity
+- **Service Role Protection** - Server-side operations only
 
-## 📍 Where Everything Is
+### Payment Security
+- **Razorpay Integration** - PCI-compliant payment processing
+- **Order Verification** - Verify payment status server-side
+- **Secure API Keys** - Environment variable storage
 
-### Frontend Pages
-- **Register:** [src/pages/Register.tsx](src/pages/Register.tsx) - Registration form
-- **Login:** [src/pages/Login.tsx](src/pages/Login.tsx) - Login page
+## 📱 Usage
 
-### Backend Server
-- **Main:** [server/index.ts](server/index.ts) - Express setup
-- **Auth API:** [server/routes/auth.ts](server/routes/auth.ts) - All endpoints
-- **Email Config:** [server/config/mailer.ts](server/config/mailer.ts) - Nodemailer
-- **Email Template:** [server/utils/emailTemplate.ts](server/utils/emailTemplate.ts) - HTML email
-- **AARUNYA ID:** [server/utils/idGenerator.ts](server/utils/idGenerator.ts) - ID generation
+### For MITS Students
 
-### Configuration
-- **Environment:** [.env.example](.env.example) - Config template
-- **Server Config:** [server/package.json](server/package.json) - Dependencies
+1. **Visit the registration page**
+2. **Choose authentication method:**
+   - Google OAuth (recommended)
+   - Email OTP
+3. **Verify MITS email domain**
+4. **Browse available events**
+5. **Select desired events**
+6. **Proceed to payment (if applicable)**
+7. **Receive e-pass via email**
+8. **Download and use QR code at venue**
 
-### Documentation
-- **Quick Start:** [QUICKSTART.md](QUICKSTART.md) ⭐ START HERE
-- **Setup Guide:** [SETUP_GUIDE.md](SETUP_GUIDE.md)
-- **Backend Guide:** [BACKEND_SETUP.md](BACKEND_SETUP.md)
-- **Data Flow:** [DATA_FLOW.md](DATA_FLOW.md)
-- **Implementation:** [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)
-- **Deliverables:** [DELIVERABLES.md](DELIVERABLES.md)
+### For Administrators
 
-## 🧪 Testing URLs
+1. **Manage events** via Supabase dashboard
+2. **Monitor registrations** and payments
+3. **Generate reports** from database
+4. **Configure email templates** in Edge Functions
+5. **Monitor system usage** and performance
 
-Once running:
-- **Frontend:** http://localhost:5173
-- **Register:** http://localhost:5173/register
-- **Login:** http://localhost:5173/login
-- **Backend:** http://localhost:3001
-- **Health Check:** http://localhost:3001/health
+## 🎨 Customization
 
-## 🎮 Try It Out
+### Theme Customization
+- Modify Tailwind config in `tailwind.config.ts`
+- Update color schemes in component styles
+- Customize animations in Framer Motion variants
 
-1. Go to http://localhost:5173/register
-2. Fill the form with test data
-3. Click REGISTER
-4. Check your email for AARUNYA ID
-5. Go to http://localhost:5173/login
-6. Login with email or AARUNYA ID
+### Email Templates
+- Edit HTML template in `supabase/functions/send-email/index.ts`
+- Customize styling and content
+- Add additional email types (confirmation, reminders, etc.)
 
-## ❓ Frequently Asked Questions
+### Event Management
+- Add new events via Supabase dashboard
+- Modify event details and pricing
+- Configure free vs. paid events
 
-### Q: How do I add my Gmail?
-A: See [QUICKSTART.md](QUICKSTART.md) - "Get Gmail Password" section
+## 🔧 Development
 
-### Q: Where's my AARUNYA ID?
-A: Check your email inbox (or spam folder)
+### Adding New Features
 
-### Q: How do I login?
-A: Use email + password OR AARUNYA ID + password
+1. **Frontend Components:**
+   - Create new components in `src/components/`
+   - Add TypeScript interfaces in `src/types/`
+   - Update hooks if needed
 
-### Q: Can I use Google login?
-A: Yes, button is there. OAuth framework ready (see docs for setup)
+2. **Database Changes:**
+   - Modify `supabase/schema.sql`
+   - Update TypeScript interfaces
+   - Test RLS policies
 
-### Q: How do I deploy?
-A: See [SETUP_GUIDE.md](SETUP_GUIDE.md) - "Production Deployment" section
+3. **Edge Functions:**
+   - Create new functions in `supabase/functions/`
+   - Deploy with `supabase functions deploy`
+   - Update frontend API calls
 
-### Q: Is it secure?
-A: Yes! Passwords hashed, JWT tokens, input validation, etc.
-
-### Q: Can I use a database?
-A: Currently uses in-memory. See docs for MongoDB/PostgreSQL migration.
-
-### Q: What if email doesn't send?
-A: Check [SETUP_GUIDE.md](SETUP_GUIDE.md) - "Troubleshooting" section
-
-## 📚 Documentation Reading Order
-
-**First Time Setup:**
-1. This file (you are here!)
-2. [QUICKSTART.md](QUICKSTART.md) - 5 min read
-3. Set up environment
-4. Run the system
-5. Test it out
-
-**Understanding the System:**
-1. [DATA_FLOW.md](DATA_FLOW.md) - How data flows
-2. [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) - What was built
-3. [DELIVERABLES.md](DELIVERABLES.md) - What you got
-
-**Deep Dive:**
-1. [SETUP_GUIDE.md](SETUP_GUIDE.md) - Complete guide
-2. [BACKEND_SETUP.md](BACKEND_SETUP.md) - Backend details
-3. Code in [server/](server/) directory
-
-**Production Ready:**
-1. [SETUP_GUIDE.md](SETUP_GUIDE.md) - "Production Deployment"
-2. Setup database
-3. Configure email service
-4. Deploy!
-
-## 🎯 Key Features
-
-### Registration
-- ✅ 8 form fields
-- ✅ Terms checkbox
-- ✅ Success screen with AARUNYA ID
-- ✅ Email confirmation
-
-### AARUNYA ID
-- ✅ Unique format: AAR-XXXXX-XXXXX
-- ✅ Generated automatically
-- ✅ Sent via email
-- ✅ Can be used to login
-
-### Email
-- ✅ Professional design
-- ✅ Cyberpunk theme
-- ✅ Personalized
-- ✅ Includes AARUNYA ID
-- ✅ Thank you note
-
-### Authentication
-- ✅ Email + Password
-- ✅ AARUNYA ID + Password
-- ✅ Google OAuth (ready)
-- ✅ Secure passwords
-- ✅ JWT tokens
-
-## 📊 System Stats
-
-- **Total Backend Code:** 400+ lines
-- **Total Documentation:** 2000+ lines
-- **API Endpoints:** 3 main
-- **Supported Login Methods:** 3
-- **Email Fields:** 1 (extensible)
-- **Security Features:** 5+
-- **Setup Time:** ~5 minutes
-- **Production Ready:** YES
-
-## 🔒 Security Summary
-
-✅ Bcryptjs password hashing
-✅ JWT tokens (7-day expiration)
-✅ Input validation (client + server)
-✅ CORS protection
-✅ Environment variable secrets
-✅ Error messages secure
-✅ No password in logs
-✅ Password never stored plain
-
-## 🌟 What Makes This Special
-
-1. **Complete System** - Both frontend & backend
-2. **Beautiful Design** - Cyberpunk UI
-3. **Professional Emails** - HTML templates
-4. **Multiple Login Methods** - Flexibility
-5. **Unique IDs** - AARUNYA ID format
-6. **Great Documentation** - 5 guides
-7. **Production Ready** - With migration path
-8. **TypeScript** - Type safety
-9. **Best Practices** - Security + performance
-10. **Easy to Extend** - Well structured code
-
-## 🚀 Next Steps
-
-### Right Now
-1. Read [QUICKSTART.md](QUICKSTART.md)
-2. Run `npm install`
-3. Configure `.env`
-4. Run `npm run dev:all`
-5. Test it!
-
-### Next Phase
-1. Deploy to production
-2. Connect real database
-3. Setup email service
-4. Implement Google OAuth fully
-5. Add more features
-
-## 💡 Pro Tips
-
-1. **Save AARUNYA ID** - You'll need it for login
-2. **Check Spam** - Emails might go to spam folder
-3. **Use QUICKSTART** - Read it first (5 min)
-4. **Port Issues** - Change PORT in .env if needed
-5. **Debug Easily** - Check browser console (F12)
-
-## 📞 Help & Support
-
-- **Setup Issues** - See [SETUP_GUIDE.md](SETUP_GUIDE.md) Troubleshooting
-- **Backend Issues** - See [BACKEND_SETUP.md](BACKEND_SETUP.md) Troubleshooting
-- **Email Issues** - Check Gmail credentials in .env
-- **Port Issues** - Change PORT in .env or kill process
-- **CORS Issues** - Ensure both frontend and backend running
-
-## ✅ Checklist Before Going Live
-
-- [ ] Read QUICKSTART.md
-- [ ] Setup .env file
-- [ ] Install dependencies
-- [ ] Run frontend and backend
-- [ ] Test registration
-- [ ] Test login (both methods)
-- [ ] Check email arrives
-- [ ] Test error cases
-- [ ] Review SETUP_GUIDE.md
-- [ ] Plan deployment
-
-## 🎉 You're All Set!
-
-Everything is ready to go. Start with:
+### Testing
 
 ```bash
-# 1. Install
-npm install && cd server && npm install && cd ..
+# Run tests
+npm test
 
-# 2. Configure
-cp .env.example .env
-# Edit .env with Gmail password
+# Run linting
+npm run lint
 
-# 3. Run
-npm run dev:all
+# Check types
+npx tsc --noEmit
 ```
 
-Then visit: **http://localhost:5173/register**
+## 🚀 Deployment
+
+### Vercel Deployment
+1. Connect repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on git push
+
+### Supabase Deployment
+1. Push schema changes: `supabase db push`
+2. Deploy functions: `supabase functions deploy`
+3. Configure production settings
+
+## 📞 Support
+
+### Common Issues
+
+1. **Authentication fails:**
+   - Check Google OAuth configuration
+   - Verify domain restrictions
+   - Ensure email domain validation
+
+2. **Payments not working:**
+   - Verify Razorpay API keys
+   - Check order creation logic
+   - Test payment verification
+
+3. **Emails not sending:**
+   - Configure SMTP settings in Edge Function
+   - Check email service integration
+   - Verify API keys and permissions
+
+### Getting Help
+
+- **GitHub Issues** - Report bugs and feature requests
+- **Supabase Documentation** - Database and auth help
+- **Razorpay Documentation** - Payment integration
+- **React/Next.js Documentation** - Framework help
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Submit a pull request
+
+## 📊 Monitoring
+
+### Key Metrics
+- Registration completion rate
+- Payment success rate
+- Email delivery rate
+- User authentication success
+- System performance and uptime
+
+### Logging
+- Frontend errors via console
+- Backend errors in Supabase logs
+- Payment events in Razorpay dashboard
+- Email delivery in SMTP logs
 
 ---
 
-## 📖 Document Map
-
-```
-START HERE 
-    ↓
-QUICKSTART.md (5 min)
-    ↓
-Try it out
-    ↓
-    ├─→ Working? → SETUP_GUIDE.md (deployment)
-    │
-    └─→ Issues? → See specific troubleshooting
-```
-
----
-
-**Created:** January 22, 2026  
-**Status:** ✅ Production Ready  
-**Version:** 1.0.0  
-
-**Questions?** Check the relevant documentation file above.
-
-**Ready?** [👉 QUICKSTART.md](QUICKSTART.md) (5 minutes)
+**Built with ❤️ for Aarunya MITS**

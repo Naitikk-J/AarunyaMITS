@@ -16,9 +16,9 @@ const teamGroups = [
     role: 'FRONTEND DEVELOPERS',
     icon: '⚡',
     members: [
-      { name: 'Nihari Shrivastava', link: 'https://www.linkedin.com/in/nihari-shrivastava-878739279' },
-      { name: 'Naitik Jain', link: 'https://www.linkedin.com/in/naitik-jain-9290b8324' },
-      { name: 'Nemish Nagaria', link: 'https://www.linkedin.com/in/nemish-nagaria-555198313' }
+        { name: 'Naitik Jain', link: 'https://www.linkedin.com/in/naitik-jain-9290b8324' },
+        { name: 'Nihari Shrivastava', link: 'https://www.linkedin.com/in/nihari-shrivastava-878739279' },
+        { name: 'Nemish Nagaria', link: 'https://www.linkedin.com/in/nemish-nagaria-555198313' }
     ]
   },
   {
@@ -244,36 +244,7 @@ const AboutUs = () => {
           </div>
         </motion.div>
 
-        <div className="container mx-auto px-4 sm:px-6 pb-16 max-w-5xl">
-          {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-[#0D0221]/60 border border-white/10 rounded-xl p-6 sm:p-8 text-center relative overflow-hidden group"
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-
-            <div className="text-2xl sm:text-3xl mb-3 grayscale group-hover:grayscale-0 transition-all duration-500">🚀</div>
-
-            <h3 className="text-lg sm:text-xl font-black mb-2 text-white/90">
-              READY TO COLLABORATE?
-            </h3>
-
-            <p className="text-[9px] sm:text-[10px] text-white/40 tracking-[0.2em] mb-5">
-              JOIN US IN CREATING THE NEXT BIG THING
-            </p>
-
-            <div className="flex flex-col sm:flex-row justify-center gap-3 relative z-10">
-              <Button className="bg-primary hover:bg-primary/90 text-black px-5 py-3 text-[10px] tracking-[0.2em] font-bold">
-                SUBMIT DATA
-              </Button>
-              <Button variant="outline" className="border-primary/30 text-primary hover:bg-primary/10 px-5 py-3 text-[10px] tracking-[0.2em] font-bold bg-transparent">
-                VIEW SOURCE
-              </Button>
-            </div>
-          </motion.div>
-        </div>
+        
 
         <div className="fixed bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 

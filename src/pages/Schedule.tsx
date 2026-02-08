@@ -239,7 +239,7 @@ const Schedule = () => {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.08)_0%,transparent_70%)] pointer-events-none" />
 
           <h1 className="text-2xl md:text-3xl lg:text-5xl font-black tracking-tight mb-4 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-            <GlitchText text="EVENT SCHEDULE" />
+            <GlitchText text="SCHEDULE" />
           </h1>
 
           <div className="h-0.5 w-16 md:w-24 bg-primary mx-auto shadow-[0_0_10px_#BC13FE]" />

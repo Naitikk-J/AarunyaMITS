@@ -21,7 +21,7 @@ const Gallery = () => {
     }, []);
 
     if (!isReady) {
-        return <LoadingScreen />;
+        return <LoadingScreen isGalleryLoading={true} />;
     }
 
     return (
@@ -94,7 +94,7 @@ const Gallery = () => {
 
                 {/* 3D Dome Gallery - Relative Container */}
                 <div className="relative w-full h-[80vh] md:h-[90vh] shrink-0">
-                    <Suspense fallback={<LoadingScreen />}>
+                    <Suspense fallback={<LoadingScreen isGalleryLoading={true} />}>
                         <DomeGallery
                             fit={1}
                             minRadius={isMobile ? 300 : isTablet ? 500 : 800}

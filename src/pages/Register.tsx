@@ -6,9 +6,11 @@ import { motion, Variants } from 'framer-motion';
 import { GlitchText } from '@/components/GlitchText';
 import { RetroButton } from '@/components/ui/retro-button';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
     const [registrationType, setRegistrationType] = useState<'student' | 'alumni' | 'event'>('student');
+    const navigate = useNavigate();
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
@@ -90,7 +92,10 @@ export default function Register() {
                                 </RetroButton>
                                 <RetroButton
                                     variant={registrationType === 'event' ? 'default' : 'white'}
-                                    onClick={() => setRegistrationType('event')}
+                                    onClick={() => {
+                                        // Redirect to the new unified registration system
+                                        navigate('/unified-registration');
+                                    }}
                                     className="w-full justify-start text-left"
                                 >
                                     Event/Competition Registrations
