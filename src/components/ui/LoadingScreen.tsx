@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export function LoadingScreen() {
+export function LoadingScreen({ isGalleryLoading = false }: { isGalleryLoading?: boolean } = {}) {
     const [progress, setProgress] = useState(0);
     const [loadingText, setLoadingText] = useState('Initializing');
 
@@ -31,10 +31,10 @@ export function LoadingScreen() {
             style={{
                 background: 'linear-gradient(180deg, #0A0E27 0%, #0f1535 50%, #1a1f3a 100%)',
                 position: 'fixed',
-                top: 0,
+                top: isGalleryLoading ? '50vh' : '0',
                 left: 0,
                 right: 0,
-                bottom: 0,
+                bottom: isGalleryLoading ? '50vh' : '0',
                 zIndex: 9999,
             }}
         >

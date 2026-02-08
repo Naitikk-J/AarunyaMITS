@@ -6,8 +6,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PageTransition } from "@/components/PageTransition";
 import { Suspense, lazy } from "react";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Register from "./pages/Register";
+import UnifiedRegistration from "./pages/UnifiedRegistration";
 import NotFound from "./pages/NotFound";
 import ViewMap from "./pages/ViewMap";
 import CampusExplorer from "./pages/CampusExplorer";
@@ -42,6 +44,7 @@ const App = () => (
                             <Route path="/" element={<Index />} />
                             <Route path="/gallery" element={<Gallery />} />
                             <Route path="/register" element={<Register />} />
+                            <Route path="/unified-registration" element={<UnifiedRegistration />} />
                             <Route path="/view-map" element={<ViewMap />} />
                             <Route path="/campus-explorer" element={<CampusExplorer />} />
                             <Route path="/schedule" element={<Schedule />} />
