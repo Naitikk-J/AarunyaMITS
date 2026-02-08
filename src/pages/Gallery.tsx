@@ -25,7 +25,7 @@ const Gallery = () => {
     }
 
     return (
-        <div className="fixed inset-0 w-full h-screen overflow-y-auto overflow-x-hidden" style={{
+        <div className="relative w-full min-h-screen overflow-x-hidden" style={{
             background: 'linear-gradient(to-bottom, #0d0520, #1a0a2e)',
             imageRendering: 'pixelated'
         }}>
