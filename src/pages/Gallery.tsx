@@ -93,7 +93,7 @@ const Gallery = () => {
                 </div>
 
                 {/* 3D Dome Gallery - Relative Container */}
-                <div className="relative w-full h-[80vh] md:h-[90vh] shrink-0">
+                <div className="relative w-full h-[70vh] md:h-[80vh] shrink-0">
                     <Suspense fallback={<LoadingScreen isGalleryLoading={true} />}>
                         <DomeGallery
                             fit={1}
@@ -112,7 +112,7 @@ const Gallery = () => {
                 </div>
 
                 {/* Extra space at bottom for scrolling feel */}
-                <div className="h-24 w-full" />
+                <div className="h-16 w-full" />
 
             </div>
 

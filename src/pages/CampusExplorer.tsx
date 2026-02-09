@@ -114,22 +114,93 @@ const generateTextures = () => {
 
     console.log('🔄 Generating textures...');
 
+    // IMPROVED: Realistic Facade Texture
     const windowCanvas = document.createElement('canvas');
-    windowCanvas.width = 128; windowCanvas.height = 128;
+    windowCanvas.width = 512; windowCanvas.height = 512; // Higher resolution
     const wctx = windowCanvas.getContext('2d')!;
-    wctx.fillStyle = '#FFFFFF'; wctx.fillRect(0, 0, 128, 128);
-    wctx.fillStyle = '#222222';
-    for (let x = 10; x < 120; x += 25) for (let y = 10; y < 120; y += 25) wctx.fillRect(x, y, 15, 15);
+
+    // 1. Concrete Base
+    wctx.fillStyle = '#D6D6D6'; // Light grey concrete
+    wctx.fillRect(0, 0, 512, 512);
+
+    // 2. Add Concrete Noise
+    for (let i = 0; i < 5000; i++) {
+        wctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+        const x = Math.random() * 512;
+        const y = Math.random() * 512;
+        const s = Math.random() * 2;
+        wctx.fillRect(x, y, s, s);
+    }
+
+    // 3. Grid of Windows
+    const rows = 4;
+    const cols = 4;
+    const padding = 20;
+    const winW = (512 - (cols + 1) * padding) / cols;
+    const winH = (512 - (rows + 1) * padding) / rows;
+
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            const wx = padding + c * (winW + padding);
+            const wy = padding + r * (winH + padding);
+
+            // Window Frame
+            wctx.fillStyle = '#444444';
+            wctx.fillRect(wx - 2, wy - 2, winW + 4, winH + 4);
+
+            // Window Glass (Gradient for reflection)
+            const gradient = wctx.createLinearGradient(wx, wy, wx, wy + winH);
+            gradient.addColorStop(0, '#2b3a42');
+            gradient.addColorStop(0.5, '#4b6cb7'); // Sky reflection
+            gradient.addColorStop(1, '#182848');
+            wctx.fillStyle = gradient;
+            wctx.fillRect(wx, wy, winW, winH);
+
+            // Window internal reflection/shine
+            wctx.fillStyle = 'rgba(255,255,255,0.2)';
+            wctx.beginPath();
+            wctx.moveTo(wx, wy);
+            wctx.lineTo(wx + winW * 0.6, wy);
+            wctx.lineTo(wx, wy + winH * 0.8);
+            wctx.fill();
+        }
+    }
+
+    // 4. Subtle grime/dirt at bottom
+    const grimeGrad = wctx.createLinearGradient(0, 400, 0, 512);
+    grimeGrad.addColorStop(0, 'rgba(50,50,40,0)');
+    grimeGrad.addColorStop(1, 'rgba(50,50,40,0.2)');
+    wctx.fillStyle = grimeGrad;
+    wctx.fillRect(0, 400, 512, 112);
+
     const windowTexture = new THREE.CanvasTexture(windowCanvas);
     windowTexture.wrapS = windowTexture.wrapT = THREE.RepeatWrapping;
-    windowTexture.repeat.set(2, 2);
+    windowTexture.repeat.set(3, 3); // Adjusted for better density
 
+    // Road Texture (Existing or slightly improved)
     const roadCanvas = document.createElement('canvas');
-    roadCanvas.width = 256; roadCanvas.height = 256;
+    roadCanvas.width = 512; roadCanvas.height = 512;
     const rctx = roadCanvas.getContext('2d')!;
-    rctx.fillStyle = '#1A1A1A'; rctx.fillRect(0, 0, 256, 256);
-    rctx.strokeStyle = '#555555'; rctx.setLineDash([10, 10]); rctx.lineWidth = 4;
-    rctx.beginPath(); rctx.moveTo(128, 0); rctx.lineTo(128, 256); rctx.stroke();
+    rctx.fillStyle = '#1A1A1A'; rctx.fillRect(0, 0, 512, 512);
+
+    // Asphalt noise
+    for (let i = 0; i < 10000; i++) {
+        rctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.1)';
+        rctx.fillRect(Math.random() * 512, Math.random() * 512, 2, 2);
+    }
+
+    rctx.strokeStyle = '#FFFFFF'; // White center line
+    rctx.setLineDash([30, 30]);
+    rctx.lineWidth = 8;
+    rctx.beginPath(); rctx.moveTo(256, 0); rctx.lineTo(256, 512); rctx.stroke();
+
+    // Side lines
+    rctx.strokeStyle = '#FFFFFF';
+    rctx.setLineDash([]);
+    rctx.lineWidth = 6;
+    rctx.beginPath(); rctx.moveTo(20, 0); rctx.lineTo(20, 512); rctx.stroke();
+    rctx.beginPath(); rctx.moveTo(492, 0); rctx.lineTo(492, 512); rctx.stroke();
+
     const roadTexture = new THREE.CanvasTexture(roadCanvas);
     roadTexture.wrapS = roadTexture.wrapT = THREE.RepeatWrapping;
 
@@ -325,8 +396,8 @@ const HostelComplex = ({ position, hostelType, size, height }: { position: [numb
                         />
                     </mesh>
 
-                    {/* Roof */}
-                    <mesh position={[0, height, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    {/* Roof - raised slightly to prevent z-fighting */}
+                    <mesh position={[0, height + 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                         <planeGeometry args={[blockWidth - 0.5, blockDepth - 0.5]} />
                         <meshStandardMaterial color="#333333" roughness={0.9} />
                     </mesh>
@@ -475,9 +546,9 @@ const Building = ({ data, textures, showLabels }: any) => {
                 <Fence size={data.size} />
             )}
 
-            {/* Roof for Hollow Buildings */}
+            {/* Roof for Hollow Buildings - raised slightly to prevent z-fighting */}
             {(data.type === 'complex' || data.type === 'hostel') && (
-                <mesh position={[0, data.height, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                <mesh position={[0, data.height + 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                     <planeGeometry args={[data.size[0], data.size[1]]} />
                     <meshStandardMaterial color={THEME.roof} roughness={0.9} />
                 </mesh>
@@ -494,7 +565,8 @@ const Building = ({ data, textures, showLabels }: any) => {
                         </group>
                     ))}
                     <mesh position={[0, 1, 2]} castShadow><boxGeometry args={[2, 2, 2]} /><meshStandardMaterial color="#444" roughness={0.3} metalness={0.6} /></mesh>
-                    <pointLight position={[0, 8, 0]} color="#ff0000" intensity={2} distance={8} />
+                    {/* Warning light - emissive instead of point light for performance */}
+                    <mesh position={[0, 8, 0]}><sphereGeometry args={[0.2, 8, 8]} /><meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={1} /></mesh>
                 </group>
             )}
 
@@ -656,23 +728,23 @@ const GoleKaMandirSquare = () => {
     const CentralMonument = () => {
         return (
             <group position={[40, 0, -35]}>
-               
+
 
                 {/* Inner circular grass/green area */}
-                <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                    <circleGeometry args={[5.8, 64]} />
+                <mesh position={[0, 0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[5.8, 32]} />
                     <meshStandardMaterial color="#3A7D3A" roughness={0.9} />
                 </mesh>
 
                 {/* Circular paved area (lighter shade) */}
-                <mesh position={[0, 0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                    <circleGeometry args={[5.5, 64]} />
+                <mesh position={[0, 0.06, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[5.5, 32]} />
                     <meshStandardMaterial color="#4A9D4A" roughness={0.85} />
                 </mesh>
 
                 {/* Central circular pedestrian area - very light */}
-                <mesh position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                    <circleGeometry args={[3, 64]} />
+                <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[3, 24]} />
                     <meshStandardMaterial color="#90EE90" roughness={0.8} />
                 </mesh>
 
@@ -690,12 +762,9 @@ const GoleKaMandirSquare = () => {
 
                 {/* Monument top - decorative sphere */}
                 <mesh position={[0, 1.5, 0]}>
-                    <sphereGeometry args={[0.4, 16, 16]} />
-                    <meshStandardMaterial color="#FFD700" roughness={0.3} metalness={0.9} emissive="#FFD700" emissiveIntensity={0.3} />
+                    <sphereGeometry args={[0.4, 12, 12]} />
+                    <meshStandardMaterial color="#FFD700" roughness={0.3} metalness={0.9} emissive="#FFD700" emissiveIntensity={0.4} />
                 </mesh>
-
-                {/* Light rays from monument */}
-                <pointLight position={[0, 1.5, 0]} intensity={1.5} distance={20} color="#FFD700" />
 
                 {/* Circular walking path markings around center */}
                 {[0, 90, 180, 270].map((angle) => {
@@ -711,8 +780,8 @@ const GoleKaMandirSquare = () => {
 
                 {/* Additional paved circular ring patterns around center */}
                 {[1.5, 2.5].map((radius, i) => (
-                    <mesh key={`ring-${i}`} position={[0, 0.06, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                        <torusGeometry args={[radius, 0.1, 32, 100]} />
+                    <mesh key={`ring-${i}`} position={[0, 0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                        <torusGeometry args={[radius, 0.1, 16, 48]} />
                         <meshStandardMaterial color="#C0C0C0" roughness={0.7} metalness={0.4} />
                     </mesh>
                 ))}
@@ -724,7 +793,7 @@ const GoleKaMandirSquare = () => {
     const RoadsAndMarkings = () => {
         return (
             <group>
-                
+
             </group>
         );
     };
@@ -825,7 +894,7 @@ const GoleKaMandirSquare = () => {
                 {[40 - 3, 40 + 3].map((x, i) => (
                     <group key={`marker-${i}`}>
                         {[...Array(6)].map((_, j) => (
-                            <mesh key={`dash-${i}-${j}`} position={[x, 0.025, -35 + j * 3 - 7]}>
+                            <mesh key={`dash-${i}-${j}`} position={[x, 0.04, -35 + j * 3 - 7]}>
                                 <planeGeometry args={[0.3, 1.5]} />
                                 <meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.3} />
                             </mesh>
@@ -1208,7 +1277,7 @@ const Roads = ({ textures }: any) => {
                 const len = Math.sqrt(dx * dx + dz * dz);
                 const angle = Math.atan2(dz, dx);
                 return (
-                    <mesh key={i} position={[(r.start[0] + r.end[0]) / 2, 0.02, (r.start[1] + r.end[1]) / 2]} rotation={[-Math.PI / 2, 0, -angle]} receiveShadow>
+                    <mesh key={i} position={[(r.start[0] + r.end[0]) / 2, 0.03, (r.start[1] + r.end[1]) / 2]} rotation={[-Math.PI / 2, 0, -angle]} receiveShadow>
                         <planeGeometry args={[len, r.width]} />
                         <meshStandardMaterial map={textures.road} transparent opacity={0.9} />
                     </mesh>
@@ -1220,9 +1289,9 @@ const Roads = ({ textures }: any) => {
 
 const Streetlights = () => {
     const poleGeo = useMemo(() => new THREE.CylinderGeometry(0.05, 0.05, 2.5), []);
-    const lightGeo = useMemo(() => new THREE.SphereGeometry(0.15, 8, 8), []);
+    const lightGeo = useMemo(() => new THREE.SphereGeometry(0.15, 6, 6), []);
     const poleMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#333333' }), []);
-    const lightMat = useMemo(() => new THREE.MeshBasicMaterial({ color: '#FFDD33' }), []);
+    const lightMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#FFDD33', emissive: '#FFDD33', emissiveIntensity: 0.6 }), []);
     const positions = useMemo(() => [[-18, 0, -18], [18, 0, 18], [0, 0, 22], [0, 0, -22]], []);
     return (
         <group>
@@ -1232,131 +1301,13 @@ const Streetlights = () => {
             <Instances geometry={lightGeo} material={lightMat}>
                 {positions.map((p, i) => (<Instance key={i} position={[p[0], 2.5, p[2]]} />))}
             </Instances>
-            {positions.map((p, i) => (<pointLight key={i} position={[p[0], 2.5, p[2]]} intensity={0.8} distance={10} color="#FFDD33" />))}
         </group>
     );
 };
 
-// COMMENTED OUT: Car component - Driving feature disabled
-/*
-const Car = ({ position, rotation }: { position: [number, number, number], rotation: number }) => {
-    const wheelRotation = useRef(0);
-    useFrame((_, delta) => { wheelRotation.current += delta * 10; });
 
-    return (
-        <group position={position} rotation={[0, rotation, 0]}>
-            <mesh position={[0, 0.22, 0]} castShadow><boxGeometry args={[1.6, 0.3, 3.8]} /><meshStandardMaterial color="#0a0a0a" metalness={0.95} roughness={0.05} /></mesh>
-            <mesh position={[0, 0.4, 0.3]} castShadow><boxGeometry args={[1.5, 0.25, 2.2]} /><meshStandardMaterial color="#111111" metalness={0.9} roughness={0.1} /></mesh>
-            <mesh position={[0, 0.55, -0.3]} castShadow><boxGeometry args={[1.3, 0.3, 1.4]} /><meshStandardMaterial color="#050505" metalness={0.95} roughness={0.05} /></mesh>
-            <mesh position={[0, 0.62, -0.3]}><boxGeometry args={[1.2, 0.02, 1.2]} /><meshStandardMaterial color="#00ffff" transparent opacity={0.4} emissive="#00ffff" emissiveIntensity={0.5} /></mesh>
-            <mesh position={[0.55, 0.48, -0.3]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.25, 0.02, 1.1]} /><meshStandardMaterial color="#00ffff" transparent opacity={0.3} emissive="#00ffff" emissiveIntensity={0.3} /></mesh>
-            <mesh position={[-0.55, 0.48, -0.3]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.25, 0.02, 1.1]} /><meshStandardMaterial color="#00ffff" transparent opacity={0.3} emissive="#00ffff" emissiveIntensity={0.3} /></mesh>
-            <mesh position={[0, 0.32, 1.9]} castShadow><boxGeometry args={[1.4, 0.15, 0.3]} /><meshStandardMaterial color="#0a0a0a" metalness={0.9} roughness={0.1} /></mesh>
-            <mesh position={[0, 0.32, -1.9]} castShadow><boxGeometry args={[1.4, 0.2, 0.3]} /><meshStandardMaterial color="#0a0a0a" metalness={0.9} roughness={0.1} /></mesh>
-            <mesh position={[0, 0.6, -1.85]}><boxGeometry args={[1.2, 0.08, 0.02]} /><meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={1} /></mesh>
-            <mesh position={[0.6, 0.42, -1.0]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.12, 0.05, 0.4]} /><meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.8} /></mesh>
-            <mesh position={[-0.6, 0.42, -1.0]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.12, 0.05, 0.4]} /><meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.8} /></mesh>
-            <mesh position={[0.6, 0.25, 0]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.03, 0.02, 3.5]} /><meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={0.6} /></mesh>
-            <mesh position={[-0.6, 0.25, 0]} rotation={[0, 0, Math.PI / 2]}><boxGeometry args={[0.03, 0.02, 3.5]} /><meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={0.6} /></mesh>
-            {[[0.7, 0.15, 1.3], [-0.7, 0.15, 1.3], [0.7, 0.15, -1.2], [-0.7, 0.15, -1.2]].map((pos, i) => (
-                <group key={i} position={pos as [number, number, number]}>
-                    <mesh rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.25, 0.25, 0.18, 24]} /><meshStandardMaterial color="#1a1a1a" metalness={0.8} roughness={0.3} /></mesh>
-                    <mesh rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.18, 0.18, 0.2, 6]} /><meshStandardMaterial color="#333333" metalness={0.95} roughness={0.1} /></mesh>
-                    <mesh rotation={[0, 0, Math.PI / 2]} position={[pos[0] > 0 ? 0.1 : -0.1, 0, 0]}><ringGeometry args={[0.12, 0.17, 6]} /><meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.3} side={THREE.DoubleSide} /></mesh>
-                </group>
-            ))}
-            <mesh position={[0.4, 0.32, 1.85]}><boxGeometry args={[0.2, 0.08, 0.05]} /><meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={2} /></mesh>
-            <mesh position={[-0.4, 0.32, 1.85]}><boxGeometry args={[0.2, 0.08, 0.05]} /><meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={2} /></mesh>
-            <mesh position={[0.4, 0.32, 1.83]}><boxGeometry args={[0.25, 0.12, 0.02]} /><meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={1.5} transparent opacity={0.8} /></mesh>
-            <mesh position={[-0.4, 0.32, 1.83]}><boxGeometry args={[0.25, 0.12, 0.02]} /><meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={1.5} transparent opacity={0.8} /></mesh>
-            <mesh position={[0.5, 0.32, -1.85]}><boxGeometry args={[0.3, 0.06, 0.05]} /><meshStandardMaterial color="#ff0033" emissive="#ff0033" emissiveIntensity={1.5} /></mesh>
-            <mesh position={[-0.5, 0.32, -1.85]}><boxGeometry args={[0.3, 0.06, 0.05]} /><meshStandardMaterial color="#ff0033" emissive="#ff0033" emissiveIntensity={1.5} /></mesh>
-            <mesh position={[0, 0.08, 0]}><boxGeometry args={[1.2, 0.02, 3.2]} /><meshStandardMaterial color="#ff00ff" emissive="#ff00ff" emissiveIntensity={0.4} transparent opacity={0.6} /></mesh>
-            <pointLight position={[0.4, 0.35, 2]} intensity={3} distance={15} color="#00ffff" />
-            <pointLight position={[-0.4, 0.35, 2]} intensity={3} distance={15} color="#00ffff" />
-            <pointLight position={[0, 0.35, -2]} intensity={1} distance={5} color="#ff0033" />
-            <pointLight position={[0, 0, 0]} intensity={0.5} distance={4} color="#ff00ff" />
-        </group>
-    );
-};
-*/
 
-// COMMENTED OUT: DrivingCamera component - Driving feature disabled
-/*
-const DrivingCamera = ({ carPosition, carRotation, viewMode, speed }: { carPosition: [number, number, number], carRotation: number, viewMode: 'third' | 'first', speed: number }) => {
-    const { set } = useThree();
-    const cameraRef = useRef<THREE.PerspectiveCamera>(null);
-    const smoothedCameraPos = useRef(new THREE.Vector3());
-    const lookAtTarget = useRef(new THREE.Vector3());
-
-    const isMobile = useMemo(() => {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-            window.innerWidth <= 768;
-    }, []);
-
-    useEffect(() => {
-        if (cameraRef.current) {
-            set({ camera: cameraRef.current });
-        }
-    }, [set]);
-
-    useFrame(() => {
-        if (!cameraRef.current) return;
-
-        if (viewMode === 'third') {
-            const fixedCameraHeight = 90;
-            const centerX = 0;
-            const centerZ = 0;
-            cameraRef.current.position.set(centerX, fixedCameraHeight, centerZ);
-            cameraRef.current.lookAt(centerX, 0, centerZ);
-            cameraRef.current.fov = 45;
-            cameraRef.current.updateProjectionMatrix();
-        } else {
-            if (isMobile) {
-                const driverHeight = 0.55;
-                const forwardOffset = 0.3;
-                const cameraX = carPosition[0] + Math.sin(carRotation) * forwardOffset;
-                const cameraZ = carPosition[2] + Math.cos(carRotation) * forwardOffset;
-                const cameraY = carPosition[1] + driverHeight;
-                cameraRef.current.position.set(cameraX, cameraY, cameraZ);
-                cameraRef.current.rotation.set(0, carRotation, 0);
-                const lookAtDistance = 50;
-                const lookAtX = carPosition[0] + Math.sin(carRotation) * lookAtDistance;
-                const lookAtZ = carPosition[2] + Math.cos(carRotation) * lookAtDistance;
-                const lookAtY = carPosition[1] + driverHeight;
-                cameraRef.current.lookAt(lookAtX, lookAtY, lookAtZ);
-                cameraRef.current.fov = 90;
-                cameraRef.current.updateProjectionMatrix();
-            } else {
-                const height = 0.55;
-                const forwardOffset = 0.3;
-                const cameraX = carPosition[0] + Math.sin(carRotation) * forwardOffset;
-                const cameraZ = carPosition[2] + Math.cos(carRotation) * forwardOffset;
-                const cameraY = carPosition[1] + height;
-                smoothedCameraPos.current.lerp(new THREE.Vector3(cameraX, cameraY, cameraZ), 0.25);
-                const cameraPos = smoothedCameraPos.current;
-                const minX = -35; const maxX = 35;
-                const minZ = -35; const maxZ = 35;
-                cameraPos.x = Math.max(minX, Math.min(maxX, cameraPos.x));
-                cameraPos.z = Math.max(minZ, Math.min(maxZ, cameraPos.z));
-                cameraRef.current.position.copy(cameraPos);
-                const lookAtDistance = 30;
-                const lookAtX = carPosition[0] + Math.sin(carRotation) * lookAtDistance;
-                const lookAtZ = carPosition[2] + Math.cos(carRotation) * lookAtDistance;
-                const lookAtY = carPosition[1] + height + 0.5;
-                lookAtTarget.current.lerp(new THREE.Vector3(lookAtX, lookAtY, lookAtZ), 0.2);
-                cameraRef.current.lookAt(lookAtTarget.current);
-                cameraRef.current.fov = 85;
-                cameraRef.current.updateProjectionMatrix();
-            }
-        }
-    });
-
-    return <perspectiveCamera ref={cameraRef} fov={viewMode === 'first' ? (isMobile ? 90 : 85) : 60} near={0.1} far={1000} />;
-};
-*/
-
-const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
+const CampusMap = ({ textures }: any) => {
     return (
         <group rotation={[0, Math.PI / 4, 0]}>
             <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
@@ -1383,39 +1334,18 @@ const CampusMap = ({ textures, isDriving, carPosition, carRotation }: any) => {
 
             {/* Other campus buildings */}
             {BUILDINGS.filter(b => b.id !== 'gkm-square').map((b) => (
-                <Building key={b.id} data={b} textures={textures} showLabels={!isDriving} />
+                <Building key={b.id} data={b} textures={textures} showLabels={true} />
             ))}
 
-            {/* This static label is now handled by AreaLabels component, keeping code clean */}
-            {/* <Text position={[-25, 0.1, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} fontSize={1.5} color={THEME.primary}>MELA ROAD</Text> */}
-
             <StatueModel position={[15, 1.5, -18.5]} scale={[1.5, 1.5, 1.5]} rotation={[0, Math.PI * 1.5, 0]} />
-            {/* COMMENTED OUT: Car rendering - Driving feature disabled */}
-            {/* {isDriving && <Car position={carPosition} rotation={carRotation} />} */}
         </group>
     );
-};
-
-// COMMENTED OUT: MobileControls component - Driving feature disabled
-const MobileControls = ({ onMove }: { onMove: (x: number, y: number) => void }) => {
-    return null;
 };
 
 const CampusExplorer = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [webglSupported, setWebglSupported] = useState(true);
-    const [isDriving, setIsDriving] = useState(false);
-    const [viewMode, setViewMode] = useState<'third' | 'first'>('third');
-    const [carPosition, setCarPosition] = useState<[number, number, number]>([0, 0, -20]);
-    const [carRotation, setCarRotation] = useState(0);
-    const [speed, setSpeed] = useState(0);
-    const keysPressed = useRef<Set<string>>(new Set());
-    const joystickInput = useRef({ x: 0, y: 0 });
     const textures = useMemo(() => generateTextures(), []);
-    const isMobile = useMemo(() => {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-            window.innerWidth <= 768;
-    }, []);
 
     // Clear geometry cache on mount to prevent Three.js errors
     useEffect(() => {
@@ -1424,7 +1354,6 @@ const CampusExplorer = () => {
         });
     }, []);
 
-
     useEffect(() => {
         const canvas = document.createElement('canvas');
         const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -1432,86 +1361,7 @@ const CampusExplorer = () => {
         const timer = setTimeout(() => setIsLoading(false), 2000);
         return () => clearTimeout(timer);
     }, []);
-
-    // COMMENTED OUT: Keyboard handlers for driving - Driving feature disabled
-    /*
-    useEffect(() => {
-        if (!isDriving) return;
-        const handleKeyDown = (e: KeyboardEvent) => {
-            const key = e.key.toLowerCase();
-            if (key === 'c') { e.preventDefault(); setViewMode(prev => prev === 'third' ? 'first' : 'third'); return; }
-            const movementKeys = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
-            if (movementKeys.includes(key)) { e.preventDefault(); keysPressed.current.add(key); }
-        };
-        const handleKeyUp = (e: KeyboardEvent) => {
-            const key = e.key.toLowerCase();
-            const movementKeys = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
-            if (movementKeys.includes(key)) { keysPressed.current.delete(key); }
-        };
-        window.addEventListener('keydown', handleKeyDown, true);
-        window.addEventListener('keyup', handleKeyUp, true);
-        return () => { window.removeEventListener('keydown', handleKeyDown, true); window.removeEventListener('keyup', handleKeyUp, true); };
-    }, [isDriving]);
-    */
-
-    // COMMENTED OUT: Physics loop for car driving - Driving feature disabled
-    /*
-    useEffect(() => {
-        if (!isDriving) return;
-
-        const carPhysicsInterval = setInterval(() => {
-            const keys = keysPressed.current;
-            let newSpeed = speed;
-            let newRotation = carRotation;
-
-            const joystickForward = joystickInput.current.y > 0.2;
-            const joystickBackward = joystickInput.current.y < -0.2;
-            const joystickLeft = joystickInput.current.x < -0.2;
-            const joystickRight = joystickInput.current.x > 0.2;
-
-            const forward = keys.has('w') || keys.has('arrowup') || joystickForward;
-            const backward = keys.has('s') || keys.has('arrowdown') || joystickBackward;
-            const left = keys.has('a') || keys.has('arrowleft') || joystickLeft;
-            const right = keys.has('d') || keys.has('arrowright') || joystickRight;
-
-            if (forward) {
-                newSpeed = Math.min(speed + 0.025, 0.35);
-            } else if (backward) {
-                newSpeed = Math.max(speed - 0.025, -0.18);
-            } else {
-                newSpeed = speed * 0.92;
-                if (Math.abs(newSpeed) < 0.005) newSpeed = 0;
-            }
-
-            if (Math.abs(newSpeed) > 0.01) {
-                const rotationSpeed = Math.abs(newSpeed) > 0.1 ? 0.04 : 0.03;
-                if (left) newRotation += rotationSpeed;
-                if (right) newRotation -= rotationSpeed;
-            }
-
-            const moveX = Math.sin(newRotation) * newSpeed;
-            const moveZ = Math.cos(newRotation) * newSpeed;
-
-            let newX = carPosition[0] + moveX;
-            let newZ = carPosition[2] + moveZ;
-
-            newX = Math.max(-38, Math.min(38, newX));
-            newZ = Math.max(-38, Math.min(38, newZ));
-
-            setCarPosition([newX, 0, newZ]);
-            setCarRotation(newRotation);
-            setSpeed(newSpeed);
-        }, 16);
-
-        return () => clearInterval(carPhysicsInterval);
-    }, [isDriving, carPosition, carRotation, speed]);
-    */
-
-    const handleJoystickMove = useCallback((x: number, y: number) => { joystickInput.current = { x, y }; }, []);
-    const startDriving = () => { setIsDriving(true); setCarPosition([0, 0, -20]); setCarRotation(0); setSpeed(0); };
-    const stopDriving = () => { setIsDriving(false); setSpeed(0); keysPressed.current.clear(); joystickInput.current = { x: 0, y: 0 }; };
-
-    return (
+return (
         <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#ff00ff #1a0030' }}>
             <style>{`
                 @media (max-width: 768px) {
@@ -1559,42 +1409,28 @@ const CampusExplorer = () => {
             <div className="container mx-auto px-4 pb-12">
                 <div className="relative w-full overflow-hidden transition-all duration-500 rounded-xl border-2 border-white/10" style={{ height: 'calc(100vh - 320px)', minHeight: '400px', boxShadow: '0 0 60px rgba(188,19,254,0.2), inset 0 0 30px rgba(0,0,0,0.5)' }}>
                     {webglSupported ? (
-                        <Canvas camera={{ position: [30, 25, 30], fov: 45 }} gl={{ antialias: true, alpha: true, stencil: false, depth: true, powerPreference: 'high-performance' }} dpr={Math.min(window.devicePixelRatio, 2)} style={{ width: '100%', height: '100%' }}>
+                        <Canvas shadows camera={{ position: [30, 25, 30], fov: 45 }} gl={{ antialias: true, alpha: true, stencil: false, depth: true, powerPreference: 'high-performance', logarithmicDepthBuffer: true }} dpr={Math.min(window.devicePixelRatio, 1.5)} frameloop="always" style={{ width: '100%', height: '100%' }}>
                             <Suspense fallback={null}>
                                 <PerspectiveCamera makeDefault position={[30, 25, 30]} fov={45} />
-                                <OrbitControls autoRotate={true} autoRotateSpeed={0.5} enableZoom={true} enablePan={true} minDistance={5} maxDistance={60} minPolarAngle={0} maxPolarAngle={Math.PI / 2} zoomToCursor={true} />
-                                {/* COMMENTED OUT: DrivingCamera - Driving feature disabled */}
-                                {/* {isDriving && (<DrivingCamera carPosition={carPosition} carRotation={carRotation} viewMode={viewMode} speed={speed} />)} */}
-                                <ambientLight intensity={0.5} />
-                                <pointLight position={[20, 30, 20]} intensity={1.5} />
-                                <pointLight position={[-20, 25, -20]} intensity={0.8} color="#00A6FF" />
-                                {/* Lights for Gole Ka Mandir Square area */}
-                                <pointLight position={[40, 25, -35]} intensity={2} distance={60} color="#FFDD99" />
-                                <pointLight position={[40, 20, -35]} intensity={1.2} distance={50} color="#FFFFFF" />
-                                <directionalLight position={[50, 40, -50]} intensity={0.6} castShadow />
-                                <pointLight position={[40, 8, -35]} intensity={0.8} distance={30} color="#FFAA00" />
-                                <fog attach="fog" args={['#050c15', 50, 300]} />
-                                <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+                                <OrbitControls autoRotate={false} enableZoom={true} enablePan={true} minDistance={5} maxDistance={60} minPolarAngle={0} maxPolarAngle={Math.PI / 2 - 0.1} zoomToCursor={true} />
+                                <ambientLight intensity={0.4} />
+                                <directionalLight position={[30, 40, 30]} intensity={1.5} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0001} />
+                                <directionalLight position={[-20, 25, -20]} intensity={0.5} color="#00A6FF" />
+                                {/* Single light for Gole Ka Mandir Square area */}
+                                <directionalLight position={[40, 30, -35]} intensity={0.8} color="#FFDD99" />
+                                <ContactShadows position={[0, 0.02, 0]} opacity={0.4} scale={120} blur={2} far={4.5} />
+                                <fog attach="fog" args={['#050c15', 80, 350]} />
+                                <Stars radius={100} depth={50} count={1500} factor={4} saturation={0} fade speed={0} />
                                 <Environment preset="city" />
-                                <ContactShadows position={[0, 0, 0]} opacity={0.4} scale={60} blur={2.5} far={10} resolution={256} color="#000000" frames={1} />
-                                <CampusMap textures={textures} isDriving={isDriving} carPosition={carPosition} carRotation={carRotation} />
-                                <mesh position={[0, -0.6, 0]}><cylinderGeometry args={[46, 45, 1, 64]} /><meshStandardMaterial color="#111111" metalness={0.9} roughness={0.1} /></mesh>
-                                <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}><ringGeometry args={[45.1, 45.5, 64]} /><meshBasicMaterial color={THEME.primary} transparent opacity={0.3} /></mesh>
+                                <CampusMap textures={textures} />
+                                <mesh position={[0, -0.6, 0]}><cylinderGeometry args={[46, 45, 1, 32]} /><meshStandardMaterial color="#111111" metalness={0.9} roughness={0.1} /></mesh>
+                                <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}><ringGeometry args={[45.1, 45.5, 32]} /><meshBasicMaterial color={THEME.primary} transparent opacity={0.3} /></mesh>
                                 <Preload all />
                             </Suspense>
                         </Canvas>
                     ) : (<div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#0a1a2a] to-[#050c15] text-center"><p className="font-orbitron text-lg text-primary">WebGL is not available on this device.</p></div>)}
                     <div className="absolute inset-0 pointer-events-none scanlines opacity-20" />
                     <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(5,1,13,0.8) 100%)' }} />
-                </div>
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {[{ icon: '🎓', title: 'Main Gate', desc: 'Historic entrance since 1957' }, { icon: '🤖', title: 'AI Department', desc: 'State-of-the-art research facility' }, { icon: '📚', title: 'Central Library', desc: 'Over 100,000 books & resources' }].map((item, idx) => (
-                        <div key={idx} className="group relative bg-[#0D0221]/60 backdrop-blur-xl border-2 border-white/5 rounded-lg p-4 hover:border-primary transition-all duration-500" style={{ boxShadow: '0 0 30px rgba(188,19,254,0.05)' }}>
-                            <div className="text-3xl md:text-4xl mb-3">{item.icon}</div>
-                            <h3 className="text-base md:text-lg font-black text-white group-hover:text-primary transition-colors mb-2">{item.title}</h3>
-                            <p className="text-xs md:text-sm text-muted-foreground">{item.desc}</p>
-                        </div>
-                    ))}
                 </div>
             </div>
             <div className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />

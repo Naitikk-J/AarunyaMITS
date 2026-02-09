@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useResponsive } from '@/hooks/use-responsive';
 import { RESPONSIVE_NAV_HEIGHT, RESPONSIVE_BUTTON_SIZES } from '@/lib/responsive-styles';
+import { useKidcoreSounds } from './SoundEffects';
 
 const navLinks = [
     { name: 'HOME', path: '/' },
@@ -14,7 +15,7 @@ const navLinks = [
     { name: 'GUIDELINES', path: '/Guidelines' },
     { name: 'ABOUT', path: '/about' },
     { name: 'CONTACT', path: '/contact' },
-    { name: 'REGISTER', path: '/register' },
+    // { name: 'REGISTER', path: '/register' },
 ];
 
 export const MainNavigation = ({ className }: { className?: string }) => {
@@ -23,6 +24,7 @@ export const MainNavigation = ({ className }: { className?: string }) => {
     const [hoverIdx, setHoverIdx] = useState<number | null>(null);
     const location = useLocation();
     const { isMobile, isTablet, isDesktop, isTouch } = useResponsive();
+    const { playSound } = useKidcoreSounds();
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -107,8 +109,12 @@ export const MainNavigation = ({ className }: { className?: string }) => {
                                     <Link
                                         key={link.path}
                                         to={link.path}
-                                        onMouseEnter={() => setHoverIdx(idx)}
+                                        onMouseEnter={() => {
+                                            setHoverIdx(idx);
+                                            playSound('hover');
+                                        }}
                                         onMouseLeave={() => setHoverIdx(null)}
+                                        onClick={() => playSound('click')}
                                         className="relative group"
                                     >
                                         <div
@@ -158,7 +164,10 @@ export const MainNavigation = ({ className }: { className?: string }) => {
                         {/* Mobile Toggle Button on the right */}
                         <button
                             className="lg:hidden relative p-2 transition-all duration-200"
-                            onClick={() => setIsOpen(!isOpen)}
+                            onClick={() => {
+                                setIsOpen(!isOpen);
+                                playSound('buttonPress');
+                            }}
                             aria-label="Toggle menu"
                             style={{
                                 background: isOpen

@@ -132,13 +132,13 @@ export const WelcomeSection: React.FC = () => {
                     transition={{ delay: 0.5 }}
                     className={`flex flex-wrap justify-center gap-4 sm:gap-8 pointer-events-auto ${isMobile ? 'mt-4' : 'mt-8 md:mt-12'}`}
                 >
-                    <RetroButton
+                    {/* <RetroButton
                         variant="white"
                         className={`${isMobile ? 'scale-90 px-0 py-0' : isTablet ? 'scale-110' : 'scale-110'} sm:scale-125 md:scale-150 ${isMobile ? 'mx-2' : 'mx-0 sm:mx-16'} hover:scale-105 active:scale-95 transition-transform duration-200`}
                         onClick={() => navigate("/register")}
                     >
                         REGISTER
-                    </RetroButton>
+                    </RetroButton> */}
 
                     <RetroButton
                         variant="white"
