@@ -76,22 +76,21 @@ const PrivacyPolicy = () => {
                             <div className="space-y-4">
                                 <h3 className="text-xl md:text-2xl font-bold text-primary">3. Data Protection</h3>
                                 <p>
-                                    All data is stored securely and accessed only by authorized members of Team Aarunya.
-                                    We do not sell, rent, or share personal data with third parties, except where required by law or event security protocols.
+                                    All personal data is stored securely and accessed only by authorized members of Team Aarunya. We do not sell, rent, or share personal information with third parties, except when required by law or necessary for event security and operational protocols.
                                 </p>
                             </div>
 
                             <div className="space-y-4">
                                 <h3 className="text-xl md:text-2xl font-bold text-primary">4. Media Usage</h3>
                                 <p>
-                                    By attending Aarunya-26, you consent to being photographed or recorded. These materials may be used for promotional and archival purposes without compensation.
+                                    By attending Aarunya-26, participants grant consent to be photographed or recorded. These images and videos may be used for promotional and archival purposes by Team Aarunya without any compensation.
                                 </p>
                             </div>
 
                             <div className="space-y-4">
                                 <h3 className="text-xl md:text-2xl font-bold text-primary">5. Policy Updates</h3>
                                 <p>
-                                    This policy may be updated at any time without prior notice. Continued participation implies acceptance of the revised policy.
+                                    This privacy policy may be updated at any time without prior notice. Continued participation in Aarunya-26 constitutes acceptance of any revised terms.
                                 </p>
                             </div>
                         </div>

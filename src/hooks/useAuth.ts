@@ -94,16 +94,27 @@ export const useAuth = () => {
                 throw new Error('Only MITS email addresses are allowed');
             }
 
-            const { error } = await supabase.auth.signInWithOtp({
+            console.log('Calling Supabase signInWithOtp for:', email);
+
+            const { data, error } = await supabase.auth.signInWithOtp({
                 email,
                 options: {
-                    emailRedirectTo: window.location.origin + '/register'
+                    emailRedirectTo: window.location.origin + '/unified-registration'
                 }
             });
 
-            if (error) throw error;
+            console.log('Supabase OTP response:', { data, error });
+
+            if (error) {
+                console.error('Supabase OTP error:', error);
+                throw error;
+            }
+
+            console.log('OTP request successful');
         } catch (err: any) {
+            console.error('signInWithOTP error:', err);
             setError(err.message);
+            throw err; // Re-throw to let caller handle it
         } finally {
             setLoading(false);
         }
@@ -139,7 +150,7 @@ export const useAuth = () => {
     }) => {
         setLoading(true);
         setError(null);
-        
+
         try {
             // Validate MITS email domain
             if (!userData.email.endsWith('@mitsgwl.ac.in')) {

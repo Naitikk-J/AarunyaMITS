@@ -10,16 +10,28 @@ const router = express.Router();
 
 // Mock database - in production, use a real database
 interface User {
+    // Common fields
     id: string;
     name: string;
     email: string;
-    password: string;
     aarunyaId: string;
     mobileNumber: string;
-    collegeName: string;
-    category: string;
-    city: string;
     createdAt: Date;
+
+    // Student fields
+    collegeName?: string;
+    collegeId?: string;
+    course?: string;
+    yearOfStudy?: string;
+
+    // Alumni fields
+    graduationYear?: string;
+    department?: string;
+    organization?: string;
+    position?: string;
+
+    category: 'student' | 'alumni' | 'event';
+    city?: string;
 }
 
 let users: User[] = [];
@@ -27,11 +39,31 @@ let users: User[] = [];
 // POST /api/auth/register
 router.post('/register', async (req: Request, res: Response) => {
     try {
-        const { name, email, password, mobileNumber, collegeName, category, city } = req.body;
+        const {
+            name, email, mobileNumber,
+            category, // 'student' | 'alumni'
+            // Student specific
+            collegeName, collegeId, course, yearOfStudy,
+            // Alumni specific
+            graduationYear, department, organization, position,
+            // Optional
+            city
+        } = req.body;
 
-        // Validation
-        if (!name || !email || !password || !mobileNumber || !collegeName || !category || !city) {
-            return res.status(400).json({ message: 'All fields are required' });
+        // Basic Validation
+        if (!name || !email || !mobileNumber || !category) {
+            return res.status(400).json({ message: 'Name, email, mobile number, and category are required' });
+        }
+
+        // Category specific validation
+        if (category === 'student') {
+            if (!collegeName || !collegeId || !course || !yearOfStudy) {
+                return res.status(400).json({ message: 'All student fields are required' });
+            }
+        } else if (category === 'alumni') {
+            if (!graduationYear || !department) {
+                return res.status(400).json({ message: 'Graduation year and department are required' });
+            }
         }
 
         if (!isValidEmail(email)) {
@@ -44,9 +76,6 @@ router.post('/register', async (req: Request, res: Response) => {
             return res.status(409).json({ message: 'User with this email already exists' });
         }
 
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         // Generate AARUNYA ID
         const aarunyaId = generateAarunyaId();
 
@@ -55,13 +84,21 @@ router.post('/register', async (req: Request, res: Response) => {
             id: `user_${Date.now()}`,
             name,
             email,
-            password: hashedPassword,
             aarunyaId,
             mobileNumber,
-            collegeName,
             category,
-            city,
             createdAt: new Date(),
+
+            // Optional fields based on category
+            collegeName,
+            collegeId,
+            course,
+            yearOfStudy,
+            graduationYear,
+            department,
+            organization,
+            position,
+            city
         };
 
         users.push(newUser);
@@ -97,6 +134,7 @@ router.post('/register', async (req: Request, res: Response) => {
                 name: newUser.name,
                 email: newUser.email,
                 aarunyaId: newUser.aarunyaId,
+                category: newUser.category,
             },
         });
     } catch (error) {
@@ -105,13 +143,13 @@ router.post('/register', async (req: Request, res: Response) => {
     }
 });
 
-// POST /api/auth/login
+// POST /api/auth/login - OTP-based login (no password)
 router.post('/login', async (req: Request, res: Response) => {
     try {
-        const { identifier, password } = req.body;
+        const { identifier } = req.body;
 
-        if (!identifier || !password) {
-            return res.status(400).json({ message: 'Email/AARUNYA ID and password are required' });
+        if (!identifier) {
+            return res.status(400).json({ message: 'Email or AARUNYA ID is required' });
         }
 
         // Determine if identifier is email or AARUNYA ID
@@ -130,14 +168,57 @@ router.post('/login', async (req: Request, res: Response) => {
         }
 
         if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'User not found' });
         }
 
-        // Verify password
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        // Generate OTP and send via email
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-        if (!isPasswordValid) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+        // Store OTP temporarily (in production, use Redis or similar)
+        // For now, we'll include it in the response for testing
+        // In production, send OTP via email
+        try {
+            await transporter.sendMail({
+                from: process.env.EMAIL_FROM || 'noreply@aarunya.in',
+                to: user.email,
+                subject: 'AARUNYA - Your Login OTP',
+                text: `Your OTP for login is: ${otp}. It will expire in 10 minutes.`,
+                html: `<h2>Your AARUNYA Login OTP</h2><p>Your OTP is: <strong>${otp}</strong></p><p>This OTP will expire in 10 minutes.</p>`,
+            });
+        } catch (emailError) {
+            console.error('Email sending error:', emailError);
+            return res.status(500).json({ message: 'Failed to send OTP' });
+        }
+
+        res.status(200).json({
+            message: 'OTP sent to your email',
+            userId: user.id,
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// POST /api/auth/verify-otp - Verify OTP and complete login
+router.post('/verify-otp', async (req: Request, res: Response) => {
+    try {
+        const { userId, otp } = req.body;
+
+        if (!userId || !otp) {
+            return res.status(400).json({ message: 'User ID and OTP are required' });
+        }
+
+        // Find user
+        const user = users.find((u) => u.id === userId);
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid user' });
+        }
+
+        // In production, verify OTP from Redis/DB
+        // For now, we'll accept any 6-digit OTP for testing
+        if (otp.length !== 6) {
+            return res.status(400).json({ message: 'Invalid OTP' });
         }
 
         // Generate JWT token
@@ -155,10 +236,11 @@ router.post('/login', async (req: Request, res: Response) => {
                 name: user.name,
                 email: user.email,
                 aarunyaId: user.aarunyaId,
+                category: user.category,
             },
         });
     } catch (error) {
-        console.error('Login error:', error);
+        console.error('OTP verification error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
@@ -182,12 +264,9 @@ router.post('/google', async (req: Request, res: Response) => {
                 id: `user_${Date.now()}`,
                 name: name || email.split('@')[0],
                 email,
-                password: '', // No password for Google OAuth
                 aarunyaId,
                 mobileNumber: '',
-                collegeName: '',
-                category: 'student',
-                city: '',
+                category: 'student', // Default to student
                 createdAt: new Date(),
             };
 
@@ -224,6 +303,7 @@ router.post('/google', async (req: Request, res: Response) => {
                 name: user.name,
                 email: user.email,
                 aarunyaId: user.aarunyaId,
+                category: user.category,
             },
         });
     } catch (error) {

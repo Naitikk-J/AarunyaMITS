@@ -95,9 +95,14 @@ export default function UnifiedRegistration() {
         setLoading(true);
         setError(null);
         try {
+            console.log('Sending OTP to:', otpEmail);
             await signInWithOTP(otpEmail);
+            console.log('OTP sent successfully');
             setStep('otp');
+            // Show success message
+            alert('OTP sent! Please check your email (including spam folder)');
         } catch (err: any) {
+            console.error('OTP Error:', err);
             setError(err.message);
         } finally {
             setLoading(false);
@@ -428,7 +433,7 @@ export default function UnifiedRegistration() {
 
                                                 {/* Google Login */}
                                                 <div>
-                                                    <Label className="font-vt323 text-xs uppercase tracking-wider mb-2" style={{
+                                                    <Label className="font-vt323 text-xs uppercase tracking-wider mb-2 block" style={{
                                                         color: '#00ffff',
                                                         textShadow: '1px 1px 0 #003333'
                                                     }}>
@@ -493,7 +498,7 @@ export default function UnifiedRegistration() {
                                                         <Input
                                                             type="text"
                                                             value={signUpData.enrollment_no}
-                                                            onChange={(e) => setSignUpData({...signUpData, enrollment_no: e.target.value})}
+                                                            onChange={(e) => setSignUpData({ ...signUpData, enrollment_no: e.target.value })}
                                                             placeholder="e.g., 2023UCA1739"
                                                             style={inputStyle}
                                                             onFocus={(e) => {
