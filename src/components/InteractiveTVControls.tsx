@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
+import { useKidcoreSounds } from './ui/SoundEffects';
 
 interface InteractiveTVControlsProps {
     screenRef?: React.RefObject<HTMLDivElement>;
@@ -20,6 +21,7 @@ export const InteractiveTVControls = ({
     const [volume, setVolume] = useState(5);
     const [easterEggCounter, setEasterEggCounter] = useState(0);
     const [showEasterEgg, setShowEasterEgg] = useState(false);
+    const { playSound } = useKidcoreSounds();
 
     // Handle POWER button click with glitch effect
     const handlePowerClick = () => {
@@ -45,6 +47,7 @@ export const InteractiveTVControls = ({
                 }, '-=0.1');
 
             animateControlButton('power-btn');
+            playSound('powerOff');
         } else {
             // Power up effect
             const tl = gsap.timeline();
@@ -57,6 +60,7 @@ export const InteractiveTVControls = ({
             });
 
             animateControlButton('power-btn');
+            playSound('powerOn');
         }
     };
 
@@ -80,6 +84,7 @@ export const InteractiveTVControls = ({
         });
 
         animateControlButton('channel-btn');
+        playSound('channelChange');
 
         setEasterEggCounter((prev) => prev + 1);
         if (easterEggCounter === 2) {
@@ -102,6 +107,7 @@ export const InteractiveTVControls = ({
             ease: 'power2.inOut',
         });
         animateControlButton('volume-btn');
+        playSound('volumeUp');
     };
 
     const handleVolumeDown = () => {
@@ -118,6 +124,7 @@ export const InteractiveTVControls = ({
             ease: 'power2.inOut',
         });
         animateControlButton('volume-btn-down');
+        playSound('volumeDown');
     };
 
     const animateControlButton = (btnId: string) => {
@@ -134,6 +141,7 @@ export const InteractiveTVControls = ({
             ease: 'power2.inOut',
             onComplete: () => {
                 setShowEasterEgg(true);
+                playSound('easterEgg');
                 setTimeout(() => setShowEasterEgg(false), 2000);
             }
         });

@@ -3,10 +3,12 @@ import { RetroButton } from "./ui/retro-button";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useResponsive } from "../hooks/use-responsive";
+import { useKidcoreSounds } from "./ui/SoundEffects";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { isMobile, isTablet, isDesktop } = useResponsive();
+  const { playSound } = useKidcoreSounds();
 
   const navLinks = ["EVENTS", "TIMELINE", "GALLERY", "CONTACT"];
 
@@ -34,13 +36,18 @@ const NavBar = () => {
             <a 
               key={link} 
               href={`/${link.toLowerCase()}`}
+              onClick={() => playSound('click')}
             >
               <RetroButton variant="white" className={`text-[8px] font-pixel ${isMobile ? 'w-20' : isTablet ? 'w-22' : 'w-24'}`}>
                 {link}
               </RetroButton>
             </a>
           ))}
-          <RetroButton variant="default" className={`text-[10px] font-pixel ${isMobile ? 'w-24' : isTablet ? 'w-26' : 'w-28'} ${isMobile ? 'ml-2' : 'ml-4'}`}>
+          <RetroButton 
+            variant="default" 
+            className={`text-[10px] font-pixel ${isMobile ? 'w-24' : isTablet ? 'w-26' : 'w-28'} ${isMobile ? 'ml-2' : 'ml-4'}`}
+            onClick={() => playSound('buttonPress')}
+          >
             REGISTER
           </RetroButton>
         </div>
@@ -48,7 +55,10 @@ const NavBar = () => {
         {/* Mobile Menu Toggle */}
         <div className="md:hidden flex items-center gap-2">
            <button 
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => {
+              setIsOpen(!isOpen);
+              playSound('buttonPress');
+            }}
             className={`kidcore-btn p-2 ${isMobile ? 'w-8 h-8' : 'w-10 h-10'} flex items-center justify-center`}
            >
              {isOpen ? <X size={isMobile ? 16 : 20} /> : <Menu size={isMobile ? 16 : 20} />}
@@ -69,14 +79,21 @@ const NavBar = () => {
             <a 
               key={link} 
               href={`/${link.toLowerCase()}`}
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false);
+                playSound('click');
+              }}
             >
               <RetroButton variant="white" className={`w-full font-pixel ${isMobile ? 'text-[10px]' : 'text-xs'}`}>
                 {link}
               </RetroButton>
             </a>
           ))}
-            <RetroButton variant="default" className={`w-full font-pixel ${isMobile ? 'text-[10px]' : 'text-xs'} ${isMobile ? 'mt-1' : 'mt-2'}`}>
+            <RetroButton 
+              variant="default" 
+              className={`w-full font-pixel ${isMobile ? 'text-[10px]' : 'text-xs'} ${isMobile ? 'mt-1' : 'mt-2'}`}
+              onClick={() => playSound('buttonPress')}
+            >
               REGISTER NOW
             </RetroButton>
           </motion.div>

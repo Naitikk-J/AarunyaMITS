@@ -1,4 +1,5 @@
 import { ReactNode, ButtonHTMLAttributes } from "react";
+import { useKidcoreSounds } from "./ui/SoundEffects";
 
 interface PixelButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
@@ -44,10 +45,19 @@ const PixelButton = ({
   variant = "primary", 
   size = "md",
   className = "",
+  onClick,
   ...props 
 }: PixelButtonProps) => {
   const v = variantStyles[variant];
   const s = sizeStyles[size];
+  const { playSound } = useKidcoreSounds();
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    playSound('buttonPress');
+    if (onClick) {
+      onClick(e);
+    }
+  };
 
   return (
     <button
@@ -64,6 +74,7 @@ const PixelButton = ({
         ${className}
       `}
       style={{ imageRendering: 'pixelated' }}
+      onClick={handleClick}
       {...props}
     >
       {children}

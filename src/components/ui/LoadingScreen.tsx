@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useKidcoreSounds } from './SoundEffects';
 
 export function LoadingScreen({ isGalleryLoading = false }: { isGalleryLoading?: boolean } = {}) {
     const [progress, setProgress] = useState(0);
     const [loadingText, setLoadingText] = useState('Initializing');
+    const { playSound } = useKidcoreSounds();
 
     useEffect(() => {
         const texts = [
@@ -22,8 +24,11 @@ export function LoadingScreen({ isGalleryLoading = false }: { isGalleryLoading?:
             });
         }, 200);
 
+        // Play loading sound effect
+        playSound('retroBeep');
+
         return () => clearInterval(interval);
-    }, []);
+    }, [playSound]);
 
     return (
         <div 

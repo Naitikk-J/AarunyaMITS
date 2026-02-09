@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import Lenis from 'lenis';
+import { useKidcoreSounds } from './ui/SoundEffects';
 
 const events = [
     { id: 1, title: "INAUGURATION", date: "FEB 10", description: "The grand opening ceremony with 8-bit fireworks.", pos: 0.12, color: "var(--kidcore-blue)", side: 'right' },
@@ -12,6 +13,7 @@ const events = [
 export const PacmanTimeline: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [eatenDots, setEatenDots] = useState<number[]>([]);
+    const { playSound } = useKidcoreSounds();
 
     useEffect(() => {
         const lenis = new Lenis({
@@ -44,13 +46,15 @@ export const PacmanTimeline: React.FC = () => {
                     if (latest >= event.pos && !newEaten.includes(event.id)) {
                         newEaten.push(event.id);
                         changed = true;
+                        // Play sound when event is "eaten"
+                        playSound('pixelPop');
                     }
                 });
                 return changed ? newEaten : prev;
             });
         });
         return () => unsubscribe();
-    }, [scrollYProgress]);
+    }, [scrollYProgress, playSound]);
 
     return (
         <div ref={containerRef} id="timeline" className="relative min-h-[120vh] md:min-h-[150vh] pt-48 pb-24 overflow-hidden">

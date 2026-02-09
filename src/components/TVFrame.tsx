@@ -16,14 +16,15 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
     const screenRef = useRef<HTMLDivElement>(null);
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
     const [currentVideo, setCurrentVideo] = useState<VideoSource | null>(null);
+    const [isPowered, setIsPowered] = useState(true);
     const videoRef = useRef<HTMLVideoElement>(null);
     const { isMobile, isTablet, isDesktop } = useResponsive();
 
     const videoSources: VideoSource[] = [
-        { src: "/tv-bg-aarunya.mp4", type: "video/mp4" },
+        { src: "/tv-bg.mp4", type: "video/mp4" },
         { src: "/bg.mov", type: "video/mp4" },
-        { src: "/tv-bg-aarunya.mp4", type: "video/mp4" },
-        { src: "/tv-bg3.mp4", type: "video/mp4" }
+        { src: "/tv-bg.mov", type: "video/mp4" },
+        { src: "/tv-bg.mov", type: "video/mp4" }
     ];
 
     const handleChannelChange = (channel: number) => {
@@ -43,6 +44,15 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
             } else if (videoRef.current) {
                 videoRef.current.muted = true;
             }
+        }
+    };
+
+    const handlePowerToggle = (powered: boolean) => {
+        setIsPowered(powered);
+        
+        // Mute/unmute video when power is toggled
+        if (videoRef.current) {
+            videoRef.current.muted = !powered;
         }
     };
 
@@ -67,6 +77,7 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
                                 src={currentVideo?.src}
                                 autoPlay
                                 loop
+                                muted={!isPowered} // Mute when TV is off
                                 className="w-full h-full object-cover"
                             />
                         ) : (
@@ -74,6 +85,11 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
                                 {children}
                             </div>
                         )}
+
+                        {/* Interactive TV Controls Text */}
+                        <div className="absolute top-2 left-2 text-xs font-mono text-white/60 bg-black/30 px-2 py-1 rounded">
+                            Interactive TV - Use Controls
+                        </div>
 
                         {/* Corner vignette */}
                         <div className="absolute inset-0 pointer-events-none" style={{
@@ -85,6 +101,7 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
                     <div className={`bg-[#111111] border-l-4 border-[#0A0A0A] flex flex-col items-center ${isMobile ? 'w-10 py-1.5' : isTablet ? 'w-14 py-3' : 'w-20 py-4'} relative`}>
                         <InteractiveTVControls
                             screenRef={screenRef}
+                            onPowerToggle={handlePowerToggle}
                             onChannelChange={handleChannelChange}
                         />
 

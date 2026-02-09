@@ -1,6 +1,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
+import { useKidcoreSounds } from "./SoundEffects"
 
 const retroButtonVariants = cva(
   "relative inline-flex items-center justify-center border-2 border-transparent rounded-[2px] bg-[#010101] shadow-[1px_1px_1px_rgba(255,255,255,0.6)]",
@@ -68,11 +69,21 @@ export interface RetroButtonProps
 }
 
 const RetroButton = React.forwardRef<HTMLButtonElement, RetroButtonProps>(
-  ({ className, variant, children, ...props }, ref) => {
+  ({ className, variant, children, onClick, ...props }, ref) => {
+    const { playSound } = useKidcoreSounds();
+
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      playSound('buttonPress');
+      if (onClick) {
+        onClick(e);
+      }
+    };
+
     return (
       <button
         className={cn(retroButtonVariants({ variant, className }))}
         ref={ref}
+        onClick={handleClick}
         {...props}
       >
         <span className={retroButtonInnerVariants()}>{children}</span>

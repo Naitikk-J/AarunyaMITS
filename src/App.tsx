@@ -7,6 +7,7 @@ import { PageTransition } from "@/components/PageTransition";
 import { Suspense, lazy } from "react";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { SoundEffectsProvider } from "@/components/ui/SoundEffects";
 import Index from "./pages/Index";
 import Register from "./pages/Register";
 import UnifiedRegistration from "./pages/UnifiedRegistration";
@@ -34,39 +35,41 @@ const queryClient = new QueryClient();
 
 const App = () => (
     <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-                <PageTransition>
-                    <Suspense fallback={<LoadingScreen />}>
-                        <Routes>
-                            <Route path="/" element={<Index />} />
-                            <Route path="/gallery" element={<Gallery />} />
-                            <Route path="/register" element={<Register />} />
-                            <Route path="/unified-registration" element={<UnifiedRegistration />} />
-                            <Route path="/view-map" element={<ViewMap />} />
-                            <Route path="/campus-explorer" element={<CampusExplorer />} />
-                            <Route path="/schedule" element={<Schedule />} />
-                            <Route path="/events" element={<Events />} />
-                            <Route path="/merch" element={<Merch />} />
-                            <Route path="/sponsors" element={<Sponsors />} />
-                            <Route path="/hierarchy" element={<Hierarchy />} />
-                            <Route path="/contact" element={<ContactUs />} />
-                            <Route path="/about" element={<AboutUs />} />
-                            <Route path="/history" element={<History />} />
-                            <Route path="/guidelines" element={<Guidelines />} />
-                            <Route path="/responsive-test" element={<ResponsiveTest />} />
-                            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-                            <Route path="/return-and-refund" element={<ReturnAndRefund />} />
-                            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                            <Route path="*" element={<NotFound />} />
-                        </Routes>
-                    </Suspense>
-                </PageTransition>
-            </BrowserRouter>
-        </TooltipProvider>
+        <SoundEffectsProvider>
+            <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                    <PageTransition>
+                        <Suspense fallback={<LoadingScreen />}>
+                            <Routes>
+                                <Route path="/" element={<Index />} />
+                                <Route path="/gallery" element={<Gallery />} />
+                                <Route path="/register" element={<Register />} />
+                                <Route path="/unified-registration" element={<UnifiedRegistration />} />
+                                <Route path="/view-map" element={<ViewMap />} />
+                                <Route path="/campus-explorer" element={<CampusExplorer />} />
+                                <Route path="/schedule" element={<Schedule />} />
+                                <Route path="/events" element={<Events />} />
+                                <Route path="/merch" element={<Merch />} />
+                                <Route path="/sponsors" element={<Sponsors />} />
+                                <Route path="/hierarchy" element={<Hierarchy />} />
+                                <Route path="/contact" element={<ContactUs />} />
+                                <Route path="/about" element={<AboutUs />} />
+                                <Route path="/history" element={<History />} />
+                                <Route path="/guidelines" element={<Guidelines />} />
+                                <Route path="/responsive-test" element={<ResponsiveTest />} />
+                                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                                <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+                                <Route path="/return-and-refund" element={<ReturnAndRefund />} />
+                                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                                <Route path="*" element={<NotFound />} />
+                            </Routes>
+                        </Suspense>
+                    </PageTransition>
+                </BrowserRouter>
+            </TooltipProvider>
+        </SoundEffectsProvider>
     </QueryClientProvider>
 );
 
