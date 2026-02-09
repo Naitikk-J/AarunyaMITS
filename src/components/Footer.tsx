@@ -35,15 +35,14 @@ const Footer = () => {
     }, []);
 
     const navLinks = [
-        { name: 'HOME', path: '/' },
-        { name: 'MEMORIES', path: '/gallery' },
+        { name: 'GALLERY', path: '/gallery' },
         { name: 'MAP', path: '/view-map' },
         { name: 'EVENTS', path: '/events' },
         { name: 'SCHEDULE', path: '/schedule' },
         { name: 'SPONSORS', path: '/sponsors' },
         { name: 'ABOUT', path: '/about' },
         { name: 'CONTACT', path: '/contact' },
-        { name: 'REGISTER', path: '/register' },
+     //   { name: 'REGISTER', path: '/register' },
     ];
 
     const legalLinks = [

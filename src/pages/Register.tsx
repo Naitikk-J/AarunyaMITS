@@ -7,10 +7,59 @@ import { GlitchText } from '@/components/GlitchText';
 import { RetroButton } from '@/components/ui/retro-button';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+interface StudentFormData {
+    name: string;
+    email: string;
+    mobileNumber: string;
+    collegeName: string;
+    collegeId: string;
+    course: string;
+    yearOfStudy: string;
+}
+
+interface AlumniFormData {
+    name: string;
+    email: string;
+    mobileNumber: string;
+    graduationYear: string;
+    department: string;
+    organization: string;
+    position: string;
+}
 
 export default function Register() {
     const [registrationType, setRegistrationType] = useState<'student' | 'alumni' | 'event'>('student');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+
+    // Student form state
+    const [studentForm, setStudentForm] = useState<StudentFormData>({
+        name: '',
+        email: '',
+        mobileNumber: '',
+        collegeName: '',
+        collegeId: '',
+        course: '',
+        yearOfStudy: ''
+    });
+
+    // Alumni form state
+    const [alumniForm, setAlumniForm] = useState<AlumniFormData>({
+        name: '',
+        email: '',
+        mobileNumber: '',
+        graduationYear: '',
+        department: '',
+        organization: '',
+        position: ''
+    });
+
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
@@ -37,6 +86,76 @@ export default function Register() {
         backgroundColor: '#0d0520',
         borderColor: '#00ffff',
         boxShadow: 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'
+    };
+
+    const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
+        e.currentTarget.style.borderColor = '#ff00ff';
+    };
+
+    const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff';
+        e.currentTarget.style.borderColor = '#00ffff';
+    };
+
+    const handleStudentSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await axios.post(`${API_URL}/api/auth/register`, {
+                ...studentForm,
+                category: 'student'
+            });
+
+            toast.success('Registration successful! Check your email for confirmation.');
+
+            // Store token if returned
+            if (response.data.token) {
+                localStorage.setItem('authToken', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+            }
+
+            // Redirect to events page or dashboard
+            navigate('/unified-registration');
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
+            setError(errorMessage);
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAlumniSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await axios.post(`${API_URL}/api/auth/register`, {
+                ...alumniForm,
+                category: 'alumni'
+            });
+
+            toast.success('Registration successful! Check your email for confirmation.');
+
+            // Store token if returned
+            if (response.data.token) {
+                localStorage.setItem('authToken', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+            }
+
+            // Redirect to events page or dashboard
+            navigate('/unified-registration');
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
+            setError(errorMessage);
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -164,126 +283,250 @@ export default function Register() {
                                         </p>
                                     </div>
 
-                                    {/* INPUTS */}
+                                    {/* Error Display */}
+                                    {error && (
+                                        <div className="mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-xs font-vt323">
+                                            {error}
+                                        </div>
+                                    )}
+
+                                    {/* STUDENT FORM */}
                                     {registrationType === 'student' && (
-                                        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                                        <form className="space-y-4" onSubmit={handleStudentSubmit}>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                    Full Name
+                                                </Label>
+                                                <Input
+                                                    value={studentForm.name}
+                                                    onChange={(e) => setStudentForm({ ...studentForm, name: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="Your Full Name"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                    Email Address
+                                                </Label>
+                                                <Input
+                                                    type="email"
+                                                    value={studentForm.email}
+                                                    onChange={(e) => setStudentForm({ ...studentForm, email: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="student@college.com"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                    Mobile Number
+                                                </Label>
+                                                <Input
+                                                    type="tel"
+                                                    value={studentForm.mobileNumber}
+                                                    onChange={(e) => setStudentForm({ ...studentForm, mobileNumber: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="+91 1234567890"
+                                                    required
+                                                />
+                                            </div>
                                             <div className="space-y-1.5 group">
                                                 <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
                                                     College Name
                                                 </Label>
                                                 <Input
+                                                    value={studentForm.collegeName}
+                                                    onChange={(e) => setStudentForm({ ...studentForm, collegeName: e.target.value })}
                                                     className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
                                                     style={inputStyle}
-                                                    onFocus={(e) => {
-                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                        e.currentTarget.style.borderColor = '#ff00ff';
-                                                    }}
-                                                    onBlur={(e) => {
-                                                        e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff';
-                                                        e.currentTarget.style.borderColor = '#00ffff';
-                                                    }}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
                                                     placeholder="Your College Name"
+                                                    required
                                                 />
                                             </div>
                                             <div className="space-y-1.5 group">
                                                 <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
                                                     College ID
                                                 </Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your College ID" />
+                                                <Input
+                                                    value={studentForm.collegeId}
+                                                    onChange={(e) => setStudentForm({ ...studentForm, collegeId: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="Your College ID"
+                                                    required
+                                                />
                                             </div>
                                             <div className="space-y-1.5 group">
                                                 <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
                                                     Course
                                                 </Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your Course" />
+                                                <Input
+                                                    value={studentForm.course}
+                                                    onChange={(e) => setStudentForm({ ...studentForm, course: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="Your Course"
+                                                    required
+                                                />
                                             </div>
                                             <div className="space-y-1.5 group">
                                                 <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
                                                     Year of Study
                                                 </Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="e.g., 2nd Year" />
+                                                <Input
+                                                    value={studentForm.yearOfStudy}
+                                                    onChange={(e) => setStudentForm({ ...studentForm, yearOfStudy: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="e.g., 2nd Year"
+                                                    required
+                                                />
+                                            </div>
+                                            <Button
+                                                type="submit"
+                                                disabled={loading}
+                                                className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-4 uppercase tracking-wider disabled:opacity-50"
+                                                style={{ background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff', fontSize: '9px' }}
+                                            >
+                                                {loading ? 'REGISTERING...' : 'REGISTER AS COLLEGE STUDENT'}
+                                            </Button>
+                                        </form>
+                                    )}
+
+                                    {/* ALUMNI FORM */}
+                                    {registrationType === 'alumni' && (
+                                        <form className="space-y-4" onSubmit={handleAlumniSubmit}>
+                                            <div className="space-y-1.5 group">
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                    Full Name
+                                                </Label>
+                                                <Input
+                                                    value={alumniForm.name}
+                                                    onChange={(e) => setAlumniForm({ ...alumniForm, name: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="Your Full Name"
+                                                    required
+                                                />
                                             </div>
                                             <div className="space-y-1.5 group">
                                                 <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
                                                     Email Address
                                                 </Label>
-                                                <Input type="email" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="student@college.com" />
+                                                <Input
+                                                    type="email"
+                                                    value={alumniForm.email}
+                                                    onChange={(e) => setAlumniForm({ ...alumniForm, email: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="alumni@email.com"
+                                                    required
+                                                />
                                             </div>
                                             <div className="space-y-1.5 group">
                                                 <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
-                                                    Password
+                                                    Mobile Number
                                                 </Label>
-                                                <Input type="password" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="••••••••" />
+                                                <Input
+                                                    type="tel"
+                                                    value={alumniForm.mobileNumber}
+                                                    onChange={(e) => setAlumniForm({ ...alumniForm, mobileNumber: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="+91 1234567890"
+                                                    required
+                                                />
                                             </div>
-                                            <Button className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-4 uppercase tracking-wider" style={{ background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff', fontSize: '9px' }}>
-                                                REGISTER AS COLLEGE STUDENT
-                                            </Button>
-                                        </form>
-                                    )}
-
-                                    {registrationType === 'alumni' && (
-                                        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                                             <div className="space-y-1.5 group">
                                                 <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Graduation Year</Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Year of Graduation" />
+                                                <Input
+                                                    value={alumniForm.graduationYear}
+                                                    onChange={(e) => setAlumniForm({ ...alumniForm, graduationYear: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="Year of Graduation"
+                                                    required
+                                                />
                                             </div>
                                             <div className="space-y-1.5 group">
                                                 <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Department</Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your Department" />
+                                                <Input
+                                                    value={alumniForm.department}
+                                                    onChange={(e) => setAlumniForm({ ...alumniForm, department: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="Your Department"
+                                                    required
+                                                />
                                             </div>
                                             <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}></Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your Current Organization/Position" />
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Current Organization</Label>
+                                                <Input
+                                                    value={alumniForm.organization}
+                                                    onChange={(e) => setAlumniForm({ ...alumniForm, organization: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="Your Current Organization"
+                                                />
                                             </div>
                                             <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Email Address</Label>
-                                                <Input type="email" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="alumni@mitscollege.com" />
+                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Position</Label>
+                                                <Input
+                                                    value={alumniForm.position}
+                                                    onChange={(e) => setAlumniForm({ ...alumniForm, position: e.target.value })}
+                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
+                                                    style={inputStyle}
+                                                    onFocus={handleInputFocus}
+                                                    onBlur={handleInputBlur}
+                                                    placeholder="Your Current Position"
+                                                />
                                             </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Password</Label>
-                                                <Input type="password" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="••••••••" />
-                                            </div>
-                                            <Button className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-4 uppercase tracking-wider" style={{ background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff', fontSize: '9px' }}>
-                                                REGISTER AS MITS ALUMNI
+                                            <Button
+                                                type="submit"
+                                                disabled={loading}
+                                                className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-4 uppercase tracking-wider disabled:opacity-50"
+                                                style={{ background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff', fontSize: '9px' }}
+                                            >
+                                                {loading ? 'REGISTERING...' : 'REGISTER AS MITS ALUMNI'}
                                             </Button>
                                         </form>
                                     )}
 
-
+                                    {/* EVENT REGISTRATION - Redirect Message */}
                                     {registrationType === 'event' && (
-                                        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Event/Competition Name</Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Name of Event/Competition" />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Team Name</Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your Team Name" />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Team Members</Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Names of Team Members" />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>College/Organization</Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="Your College/Organization" />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Contact Email</Label>
-                                                <Input type="email" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="team@college.com" />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Contact Number</Label>
-                                                <Input className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="+91 1234567890" />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Password</Label>
-                                                <Input type="password" className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20" style={inputStyle} onFocus={(e) => { e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff'; e.currentTarget.style.borderColor = '#ff00ff'; }} onBlur={(e) => { e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'; e.currentTarget.style.borderColor = '#00ffff'; }} placeholder="••••••••" />
-                                            </div>
-                                            <Button className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-4 uppercase tracking-wider" style={{ background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff', fontSize: '9px' }}>
-                                                REGISTER FOR EVENT/COMPETITION
-                                            </Button>
-                                        </form>
+                                        <div className="text-center py-8">
+                                            <p className="text-sm text-white/70 mb-4">Redirecting to Event Registration...</p>
+                                        </div>
                                     )}
 
                                     {/* STATUS */}

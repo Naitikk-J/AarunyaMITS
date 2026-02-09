@@ -8,6 +8,8 @@ import { Suspense, lazy } from "react";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { SoundEffectsProvider } from "@/components/ui/SoundEffects";
+import { KidcoreCursor } from "@/components/ui/KidcoreCursor";
+import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import Index from "./pages/Index";
 import Register from "./pages/Register";
 import UnifiedRegistration from "./pages/UnifiedRegistration";
@@ -39,6 +41,8 @@ const App = () => (
             <TooltipProvider>
                 <Toaster />
                 <Sonner />
+                <KidcoreCursor />
+                <SmoothScroll />
                 <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                     <PageTransition>
                         <Suspense fallback={<LoadingScreen />}>
