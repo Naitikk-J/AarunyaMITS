@@ -94,7 +94,7 @@ export function LoadingScreen({ isGalleryLoading = false }: { isGalleryLoading?:
                         className="h-full transition-all duration-200"
                         style={{
                             width: `${progress}%`,
-                            background: 'linear-gradient(90deg, #00A6FF, #FFDD33, #FF85C0)',
+                            background: 'linear-gradient(90deg, #2600ff, #8c00ff, #ff00d0)',
                             boxShadow: 'inset 0 0 10px rgba(255, 255, 255, 0.3)'
                         }}
                     />
