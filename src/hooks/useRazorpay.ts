@@ -19,7 +19,7 @@ export const useRazorpay = () => {
                     'Authorization': token ? `Bearer ${token}` : '',
                 },
                 body: JSON.stringify({
-                    amount,
+                    amount: amount * 100, // Convert to paise
                     userId,
                     eventIds
                 }),

@@ -10,8 +10,8 @@ import { motion, Variants } from 'framer-motion';
 import { GlitchText } from '@/components/GlitchText';
 import { RetroButton } from '@/components/ui/retro-button';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { supabase, Event } from '@/lib/supabase';
 import { db } from '@/lib/supabase-service';
-import { Event } from '@/lib/supabase';
 import QRCode from 'react-qr-code';
 import { toast } from 'sonner';
 
@@ -22,7 +22,7 @@ export default function UnifiedRegistration() {
     const location = useLocation();
 
     // State management
-    const [step, setStep] = useState<'login' | 'otp' | 'dashboard' | 'events' | 'payment' | 'success'>('login');
+    const [step, setStep] = useState<'login' | 'otp' | 'events' | 'payment' | 'success'>('login');
     const [otpEmail, setOtpEmail] = useState('');
     const [otpToken, setOtpToken] = useState('');
     const [signUpData, setSignUpData] = useState({
@@ -61,12 +61,18 @@ export default function UnifiedRegistration() {
         boxShadow: 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'
     };
 
-    // Load events on component mount
+    // Load events on component mount using PUBLIC client (anon key)
     useEffect(() => {
         const loadEvents = async () => {
             try {
-                const eventsData = await db.events.getAll();
-                setEvents(eventsData);
+                const { data, error: fetchError } = await supabase
+                    .from('events')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (fetchError) throw fetchError;
+                setEvents(data || []);
+                console.log('Events loaded:', data?.length, 'events');
             } catch (err) {
                 console.error('Error loading events:', err);
                 setError('Failed to load events');
@@ -80,22 +86,33 @@ export default function UnifiedRegistration() {
         if (user) {
             if (step === 'login') {
                 toast.success('Sign in successful!');
-                setStep('dashboard');
+                setStep('events');
             }
             // Load user data (registrations and epass)
             const loadUserData = async () => {
                 try {
-                    // Load registrations
-                    const registrations: any = await db.registrations.findByUser(user.id);
-                    if (registrations) {
+                    // Load registrations using public client (RLS ensures only own data)
+                    const { data: registrations, error: regError } = await supabase
+                        .from('registrations')
+                        .select('*, events(*)')
+                        .eq('user_id', user.id);
+
+                    if (regError) throw regError;
+                    if (registrations && registrations.length > 0) {
                         const ids = registrations.map((r: any) => r.event_id);
                         setRegisteredEventIds(ids);
                     }
 
-                    // Load e-pass
-                    const epass = await db.epasses.findByUser(user.id);
+                    // Load e-pass using public client
+                    const { data: epass, error: epassError } = await supabase
+                        .from('epasses')
+                        .select('*')
+                        .eq('user_id', user.id)
+                        .single();
+
+                    if (epassError && epassError.code !== 'PGRST116') throw epassError;
                     if (epass) {
-                        setQrCodeData(epass.pass_url); // Assuming pass_url is the QR data URL or we can use it
+                        setQrCodeData(epass.pass_url);
                         setEpassUrl(epass.pass_url);
                     }
                 } catch (err) {
@@ -144,7 +161,7 @@ export default function UnifiedRegistration() {
         try {
             await verifyOTP(otpEmail, otpToken);
             toast.success('Sign in successful!');
-            setStep('dashboard');
+            setStep('events');
         } catch (err: any) {
             setError(err.message);
             toast.error('Sign in not successful: ' + err.message);
@@ -159,7 +176,7 @@ export default function UnifiedRegistration() {
         try {
             await signUp(signUpData);
             toast.success('Sign up successful!');
-            setStep('dashboard');
+            setStep('events');
         } catch (err: any) {
             setError(err.message);
             toast.error('Sign up failed: ' + err.message);
@@ -225,13 +242,16 @@ export default function UnifiedRegistration() {
         if (!user) throw new Error('User not authenticated');
 
         try {
-            // Create registrations
+            // Create registrations using public client
             for (const eventId of eventIds) {
-                await db.registrations.create({
-                    user_id: user.id,
-                    event_id: eventId,
-                    payment_status: 'confirmed'
-                });
+                const { error: regError } = await supabase
+                    .from('registrations')
+                    .insert([{
+                        user_id: user.id,
+                        event_id: eventId,
+                        payment_status: 'confirmed'
+                    }]);
+                if (regError) throw regError;
             }
 
             // Generate QR code data
@@ -248,14 +268,19 @@ export default function UnifiedRegistration() {
             const qrCodeDataURL = await generateQRCode(qrData);
             setQrCodeData(qrCodeDataURL);
 
-            // Create e-pass
-            const epass = await db.epasses.create({
-                user_id: user.id,
-                qr_data: qrData,
-                pass_url: qrCodeDataURL
-            });
+            // Create e-pass using public client
+            const { data: epass, error: epassError } = await supabase
+                .from('epasses')
+                .upsert([{
+                    user_id: user.id,
+                    qr_data: qrData,
+                    pass_url: qrCodeDataURL
+                }])
+                .select()
+                .single();
 
-            setEpassUrl(epass.pass_url);
+            if (epassError) throw epassError;
+            if (epass) setEpassUrl(epass.pass_url);
 
             // Send email
             await sendEpassEmail(user, eventIds, qrCodeDataURL);
@@ -365,20 +390,12 @@ export default function UnifiedRegistration() {
                                         1. Authentication
                                     </RetroButton>
                                     <RetroButton
-                                        variant={step === 'dashboard' ? 'default' : 'white'}
-                                        onClick={() => user && setStep('dashboard')}
-                                        className="w-full justify-start text-left text-xs"
-                                        disabled={!user}
-                                    >
-                                        2. Dashboard
-                                    </RetroButton>
-                                    <RetroButton
                                         variant={step === 'events' ? 'default' : 'white'}
                                         onClick={() => user && setStep('events')}
                                         className="w-full justify-start text-left text-xs"
                                         disabled={!user}
                                     >
-                                        3. Events Selection
+                                        2. Events Selection
                                     </RetroButton>
                                     <RetroButton
                                         variant={step === 'payment' ? 'default' : 'white'}
@@ -386,7 +403,7 @@ export default function UnifiedRegistration() {
                                         className="w-full justify-start text-left text-xs"
                                         disabled={!user || selectedEvents.length === 0}
                                     >
-                                        4. Payment
+                                        3. Payment
                                     </RetroButton>
                                     <RetroButton
                                         variant={step === 'success' ? 'default' : 'white'}
@@ -394,7 +411,7 @@ export default function UnifiedRegistration() {
                                         className="w-full justify-start text-left text-xs"
                                         disabled={!user || step !== 'success'}
                                     >
-                                        5. E-Pass Generated
+                                        4. E-Pass Generated
                                     </RetroButton>
                                 </div>
                             </div>
@@ -447,121 +464,106 @@ export default function UnifiedRegistration() {
                                             </p>
                                         </div>
 
-                                        {user ? (
-                                            <div className="text-center">
-                                                <div className="mb-4 p-4 bg-green-900/20 border border-green-500 rounded-lg">
-                                                    <p className="text-green-400 font-vt323 text-sm">✅ Logged in as {user.name}</p>
-                                                    <p className="text-white/70 text-xs">{user.email}</p>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                    <Button onClick={() => setStep('dashboard')} className="flex-1">
-                                                        Continue to Dashboard
-                                                    </Button>
-                                                    <Button onClick={handleLogout} variant="outline" className="flex-1">
-                                                        Logout
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className="space-y-6">
-                                                {error && (
-                                                    <div className="p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-xs font-vt323">
-                                                        {error}
-                                                    </div>
-                                                )}
 
-                                                {/* Google Login */}
-                                                <div>
-                                                    <Label className="font-vt323 text-xs uppercase tracking-wider mb-2 block" style={{
+                                        <div className="space-y-6">
+                                            {error && (
+                                                <div className="p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-xs font-vt323">
+                                                    {error}
+                                                </div>
+                                            )}
+
+                                            {/* Google Login */}
+                                            <div>
+                                                <Label className="font-vt323 text-xs uppercase tracking-wider mb-2 block" style={{
+                                                    color: '#00ffff',
+                                                    textShadow: '1px 1px 0 #003333'
+                                                }}>
+                                                    Continue with Google (MITS Domain Required)
+                                                </Label>
+                                                <Button
+                                                    onClick={handleGoogleLogin}
+                                                    disabled={loading}
+                                                    className="w-full bg-red-600 hover:bg-red-700 border-2 border-red-400"
+                                                >
+                                                    {loading ? 'Loading...' : 'Sign in with Google'}
+                                                </Button>
+                                            </div>
+
+                                            <div className="relative">
+                                                <div className="absolute inset-0 flex items-center">
+                                                    <span className="w-full border-t border-white/20" />
+                                                </div>
+                                                <div className="relative flex justify-center text-xs uppercase">
+                                                    <span className="bg-[#0d0520] px-2 text-white/50" style={{
                                                         color: '#00ffff',
                                                         textShadow: '1px 1px 0 #003333'
                                                     }}>
-                                                        Continue with Google (MITS Domain Required)
-                                                    </Label>
-                                                    <Button
-                                                        onClick={handleGoogleLogin}
-                                                        disabled={loading}
-                                                        className="w-full bg-red-600 hover:bg-red-700 border-2 border-red-400"
-                                                    >
-                                                        {loading ? 'Loading...' : 'Sign in with Google'}
-                                                    </Button>
+                                                        or
+                                                    </span>
                                                 </div>
-
-                                                <div className="relative">
-                                                    <div className="absolute inset-0 flex items-center">
-                                                        <span className="w-full border-t border-white/20" />
-                                                    </div>
-                                                    <div className="relative flex justify-center text-xs uppercase">
-                                                        <span className="bg-[#0d0520] px-2 text-white/50" style={{
-                                                            color: '#00ffff',
-                                                            textShadow: '1px 1px 0 #003333'
-                                                        }}>
-                                                            or
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                {/* OTP Login */}
-                                                <div className="space-y-6">
-                                                    <div>
-                                                        <Label className="font-vt323 text-xs uppercase tracking-wider mb-2" style={{
-                                                            color: '#00ffff',
-                                                            textShadow: '1px 1px 0 #003333'
-                                                        }}>
-                                                            Email OTP Login
-                                                        </Label>
-                                                        <Input
-                                                            type="email"
-                                                            value={otpEmail}
-                                                            onChange={(e) => setOtpEmail(e.target.value)}
-                                                            placeholder="your-email@mitsgwl.ac.in"
-                                                            style={inputStyle}
-                                                            onFocus={(e) => {
-                                                                e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                                e.currentTarget.style.borderColor = '#ff00ff';
-                                                            }}
-                                                            onBlur={(e) => {
-                                                                e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff';
-                                                                e.currentTarget.style.borderColor = '#00ffff';
-                                                            }}
-                                                        />
-                                                        <p className="text-xs text-white/50 mt-1">Must be a valid @mitsgwl.ac.in email</p>
-                                                    </div>
-                                                    <div>
-                                                        <Label className="font-vt323 text-xs uppercase tracking-wider mb-2" style={{
-                                                            color: '#00ffff',
-                                                            textShadow: '1px 1px 0 #003333'
-                                                        }}>
-                                                            Phone Number
-                                                        </Label>
-                                                        <Input
-                                                            type="tel"
-                                                            value={signUpData.enrollment_no}
-                                                            onChange={(e) => setSignUpData({ ...signUpData, enrollment_no: e.target.value })}
-                                                            placeholder="e.g., 9876543210"
-                                                            style={inputStyle}
-                                                            onFocus={(e) => {
-                                                                e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                                e.currentTarget.style.borderColor = '#ff00ff';
-                                                            }}
-                                                            onBlur={(e) => {
-                                                                e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff';
-                                                                e.currentTarget.style.borderColor = '#00ffff';
-                                                            }}
-                                                        />
-                                                        <p className="text-xs text-white/50 mt-1">Enter your phone number</p>
-                                                    </div>
-                                                    <Button
-                                                        onClick={handleOTPLogin}
-                                                        disabled={loading || !otpEmail.endsWith('@mitsgwl.ac.in') || !signUpData.enrollment_no.trim()}
-                                                        className="w-full"
-                                                    >
-                                                        {loading ? 'Sending OTP...' : 'Send OTP'}
-                                                    </Button>
-                                                </div>
-
                                             </div>
-                                        )}
+
+                                            {/* OTP Login */}
+                                            <div className="space-y-6">
+                                                <div>
+                                                    <Label className="font-vt323 text-xs uppercase tracking-wider mb-2" style={{
+                                                        color: '#00ffff',
+                                                        textShadow: '1px 1px 0 #003333'
+                                                    }}>
+                                                        Email OTP Login
+                                                    </Label>
+                                                    <Input
+                                                        type="email"
+                                                        value={otpEmail}
+                                                        onChange={(e) => setOtpEmail(e.target.value)}
+                                                        placeholder="your-email@mitsgwl.ac.in"
+                                                        style={inputStyle}
+                                                        onFocus={(e) => {
+                                                            e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
+                                                            e.currentTarget.style.borderColor = '#ff00ff';
+                                                        }}
+                                                        onBlur={(e) => {
+                                                            e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff';
+                                                            e.currentTarget.style.borderColor = '#00ffff';
+                                                        }}
+                                                    />
+                                                    <p className="text-xs text-white/50 mt-1">Must be a valid @mitsgwl.ac.in email</p>
+                                                </div>
+                                                <div>
+                                                    <Label className="font-vt323 text-xs uppercase tracking-wider mb-2" style={{
+                                                        color: '#00ffff',
+                                                        textShadow: '1px 1px 0 #003333'
+                                                    }}>
+                                                        Phone Number
+                                                    </Label>
+                                                    <Input
+                                                        type="tel"
+                                                        value={signUpData.enrollment_no}
+                                                        onChange={(e) => setSignUpData({ ...signUpData, enrollment_no: e.target.value })}
+                                                        placeholder="e.g., 9876543210"
+                                                        style={inputStyle}
+                                                        onFocus={(e) => {
+                                                            e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
+                                                            e.currentTarget.style.borderColor = '#ff00ff';
+                                                        }}
+                                                        onBlur={(e) => {
+                                                            e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff';
+                                                            e.currentTarget.style.borderColor = '#00ffff';
+                                                        }}
+                                                    />
+                                                    <p className="text-xs text-white/50 mt-1">Enter your phone number</p>
+                                                </div>
+                                                <Button
+                                                    onClick={handleOTPLogin}
+                                                    disabled={loading || !otpEmail.endsWith('@mitsgwl.ac.in') || !signUpData.enrollment_no.trim()}
+                                                    className="w-full"
+                                                >
+                                                    {loading ? 'Sending OTP...' : 'Send OTP'}
+                                                </Button>
+                                            </div>
+
+                                        </div>
+
                                     </div>
                                 </motion.div>
                             )}
@@ -626,71 +628,7 @@ export default function UnifiedRegistration() {
                                 </motion.div>
                             )}
 
-                            {step === 'dashboard' && user && (
-                                <motion.div
-                                    variants={itemVariants}
-                                    className="relative p-6 sm:p-8"
-                                    style={{
-                                        background: 'linear-gradient(to bottom, #1a0a2e, #0d0520)',
-                                        border: '2px solid #ff00ff',
-                                        boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 20px #ff00ff, 0 0 40px #00ffff'
-                                    }}
-                                >
-                                    <div className="relative z-10">
-                                        <div className="text-center mb-6">
-                                            <div className="text-3xl sm:text-4xl mb-4" style={{
-                                                color: '#00ffff',
-                                                textShadow: '0 0 10px #00ffff'
-                                            }}>
-                                                👤
-                                            </div>
-                                            <h2 className="mb-2 tracking-tight uppercase" style={{
-                                                fontFamily: '"Press Start 2P", "Courier New", monospace',
-                                                fontSize: '11px',
-                                                color: '#ff00ff',
-                                                textShadow: '0 0 10px #ff00ff, 2px 2px 0 #880088'
-                                            }}>
-                                                DASHBOARD
-                                            </h2>
-                                            <div className="h-0.5 w-full relative overflow-hidden rounded-full" style={{
-                                                background: 'linear-gradient(to right, #ff00ff, #00ffff)',
-                                                boxShadow: 'inset 0 0 4px #ff00ff, 0 0 8px #00ffff'
-                                            }} />
-                                        </div>
 
-                                        <div className="space-y-4">
-                                            <div className="p-4 bg-white/5 border border-white/20 rounded-lg">
-                                                <h3 className="font-vt323 text-xs uppercase tracking-wider mb-2" style={{
-                                                    color: '#00ffff',
-                                                    textShadow: '1px 1px 0 #003333'
-                                                }}>
-                                                    Student Information
-                                                </h3>
-                                                <div className="grid grid-cols-2 gap-2 text-xs">
-                                                    <div><span className="text-white/50">Name:</span> {user.name}</div>
-                                                    <div><span className="text-white/50">UID:</span> {user.uid}</div>
-                                                    <div><span className="text-white/50">Email:</span> {user.email}</div>
-                                                    <div><span className="text-white/50">Enrollment:</span> {user.enrollment_no}</div>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex gap-2">
-                                                <Button onClick={() => setStep('events')} className="flex-1">
-                                                    Select Events
-                                                </Button>
-                                                {epassUrl && (
-                                                    <Button onClick={() => setStep('success')} variant="secondary" className="flex-1 bg-green-900/50 hover:bg-green-800/50 text-green-400 border border-green-500/50">
-                                                        View E-Pass
-                                                    </Button>
-                                                )}
-                                                <Button onClick={handleLogout} variant="outline" className="flex-1">
-                                                    Logout
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )}
 
                             {step === 'events' && user && (
                                 <motion.div
@@ -703,6 +641,23 @@ export default function UnifiedRegistration() {
                                     }}
                                 >
                                     <div className="relative z-10">
+                                        {/* User Info Header */}
+                                        <div className="mb-6 px-4 py-3 bg-white/5 border border-white/20 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2">
+                                            <div className="text-xs">
+                                                <span className="text-white/50">Logged in as:</span> <span className="text-[#00ffff]">{user.name}</span>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                {epassUrl && (
+                                                    <Button onClick={() => setStep('success')} size="sm" variant="secondary" className="h-6 text-[10px] bg-green-900/50 hover:bg-green-800/50 text-green-400 border border-green-500/50">
+                                                        View E-Pass
+                                                    </Button>
+                                                )}
+                                                <Button onClick={handleLogout} size="sm" variant="outline" className="h-6 text-[10px]">
+                                                    Logout
+                                                </Button>
+                                            </div>
+                                        </div>
+
                                         <div className="text-center mb-6">
                                             <div className="text-3xl sm:text-4xl mb-4" style={{
                                                 color: '#00ffff',
@@ -793,9 +748,6 @@ export default function UnifiedRegistration() {
                                                     <Button onClick={handleProceedToPayment} disabled={loading} className="flex-1">
                                                         {loading ? 'Processing...' : 'Proceed to Payment'}
                                                     </Button>
-                                                    <Button onClick={() => setStep('dashboard')} variant="outline" className="flex-1">
-                                                        Back
-                                                    </Button>
                                                 </div>
                                             </div>
                                         )}
@@ -868,8 +820,8 @@ export default function UnifiedRegistration() {
                                             )}
 
                                             <div className="flex gap-2">
-                                                <Button onClick={() => setStep('dashboard')} className="flex-1">
-                                                    Back to Dashboard
+                                                <Button onClick={() => setStep('events')} className="flex-1">
+                                                    Back to Selection
                                                 </Button>
                                                 <Button onClick={handleLogout} variant="outline" className="flex-1">
                                                     Logout
