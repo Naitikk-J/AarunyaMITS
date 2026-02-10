@@ -9,10 +9,14 @@ export const useRazorpay = () => {
         setError(null);
 
         try {
-            const response = await fetch('/api/create-order', {
+            const { data: { session } } = await import('@/lib/supabase').then(m => m.supabase.auth.getSession());
+            const token = session?.access_token;
+
+            const response = await fetch('/api/payment/create-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : '',
                 },
                 body: JSON.stringify({
                     amount,
@@ -40,15 +44,19 @@ export const useRazorpay = () => {
         setError(null);
 
         try {
-            const response = await fetch('/api/verify-payment', {
+            const { data: { session } } = await import('@/lib/supabase').then(m => m.supabase.auth.getSession());
+            const token = session?.access_token;
+
+            const response = await fetch('/api/payment/verify-payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : '',
                 },
                 body: JSON.stringify({
-                    paymentId,
-                    orderId,
-                    signature
+                    razorpay_order_id: orderId,
+                    razorpay_payment_id: paymentId,
+                    razorpay_signature: signature
                 }),
             });
 
