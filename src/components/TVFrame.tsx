@@ -21,13 +21,10 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
     const { isMobile, isTablet, isDesktop } = useResponsive();
 
     const videoSources: VideoSource[] = [
-        { src: "/tv-bg.webm", type: "video/webm" },
+
         { src: "/tv-bg.mp4", type: "video/mp4" },
-        { src: "/bg.webm", type: "video/webm" },
         { src: "/bg.mov", type: "video/mp4" },
-        { src: "/tv-bg.webm", type: "video/webm" },
         { src: "/tv-bg.mov", type: "video/mp4" },
-        { src: "/tv-bg.webm", type: "video/webm" },
         { src: "/tv-bg.mov", type: "video/mp4" }
     ];
 
