@@ -111,16 +111,13 @@ export const WelcomeSection: React.FC = () => {
                     initial="initial"
                     whileInView="animate"
                     transition={{ delay: 0.3 }}
-                    className="max-w-3xl w-full bg-black/10 border-2 md:border-4 border-kidcore-blue p-6 md:p-12 relative shadow-[5px_5px_0px_theme(colors.kidcore.blue)] md:shadow-[10px_10px_0px_theme(colors.kidcore.blue)] mb-8 md:mb-12 rounded-xl md:rounded-none"
+                    className="max-w-4xl w-full bg-black/10 border-2 md:border-4 border-kidcore-blue p-6 md:p-12 relative shadow-[5px_5px_0px_theme(colors.kidcore.blue)] md:shadow-[10px_10px_0px_theme(colors.kidcore.blue)] mb-8 md:mb-12 rounded-xl md:rounded-none"
                 >
-                    <div className="absolute -top-1 -left-1 w-4 h-4 md:w-6 md:h-6 border-t-2 md:border-t-4 border-l-2 md:border-l-4 border-kidcore-yellow" />
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 md:w-6 md:h-6 border-b-2 md:border-b-4 border-r-2 md:border-r-4 border-kidcore-yellow" />
+                    <div className="absolute -top-1 -left-1 w-4 h-4 md:w-6 md:h-6 border-t-2 md:border-t-4 border-l-2 md:border-l-4 border-kidcore-yellow"/>
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 md:w-6 md:h-6 border-b-2 md:border-b-4 border-r-2 md:border-r-4 border-kidcore-yellow"/>
 
-                    <p className={`${isMobile ? 'text-base' : isTablet ? 'text-xl' : 'text-xl'} md:text-2xl font-vt323 text-white text-center leading-relaxed`}>
-                        STEP INTO THE ULTIMATE DIGITAL CARNIVAL WHERE PIXELS COME TO LIFE!
-                        EXPERIENCE A MULTIDIMENSIONAL FESTIVAL OF TECHNOLOGY, ART, AND MUSIC.
-                        FROM RETRO ARCADE VIBES TO FUTURE-TECH INNOVATIONS, AARUNYA 2.0 IS
-                        WHERE THE ANALOG PAST MEETS THE DIGITAL FUTURE.
+                    <p className={`${isMobile ? 'text-base' : isTablet ? 'text-xl' : 'text-2xl'} md:text-xl font-vt323 text-white text-center leading-relaxed `}>
+                        Aarunya is the annual fest of MITS Gwalior, where innovation meets expression and competition meets celebration. Step into a world of high-energy events, creative showcases, and unforgettable performances. From tech battles to cultural brilliance, Aarunya is where passion powers play.
                     </p>
                 </motion.div>
 
