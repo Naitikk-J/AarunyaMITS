@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useRazorpay } from '@/hooks/useRazorpay';
@@ -34,6 +35,7 @@ export default function UnifiedRegistration() {
     const [error, setError] = useState<string | null>(null);
     const [qrCodeData, setQrCodeData] = useState<string>('');
     const [epassUrl, setEpassUrl] = useState<string>('');
+    const [registeredEventIds, setRegisteredEventIds] = useState<string[]>([]);
 
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
@@ -74,8 +76,31 @@ export default function UnifiedRegistration() {
 
     // Handle post-authentication redirect
     useEffect(() => {
-        if (user && step === 'login') {
-            setStep('dashboard');
+        if (user) {
+            if (step === 'login') {
+                setStep('dashboard');
+            }
+            // Load user data (registrations and epass)
+            const loadUserData = async () => {
+                try {
+                    // Load registrations
+                    const registrations: any = await db.registrations.findByUser(user.id);
+                    if (registrations) {
+                        const ids = registrations.map((r: any) => r.event_id);
+                        setRegisteredEventIds(ids);
+                    }
+
+                    // Load e-pass
+                    const epass = await db.epasses.findByUser(user.id);
+                    if (epass) {
+                        setQrCodeData(epass.pass_url); // Assuming pass_url is the QR data URL or we can use it
+                        setEpassUrl(epass.pass_url);
+                    }
+                } catch (err) {
+                    console.error("Error loading user data", err);
+                }
+            };
+            loadUserData();
         }
     }, [user, step]);
 
@@ -493,13 +518,13 @@ export default function UnifiedRegistration() {
                                                             color: '#00ffff',
                                                             textShadow: '1px 1px 0 #003333'
                                                         }}>
-                                                            Enrollment Number
+                                                            Phone Number
                                                         </Label>
                                                         <Input
-                                                            type="text"
+                                                            type="tel"
                                                             value={signUpData.enrollment_no}
                                                             onChange={(e) => setSignUpData({ ...signUpData, enrollment_no: e.target.value })}
-                                                            placeholder="e.g., 2023UCA1739"
+                                                            placeholder="e.g., 9876543210"
                                                             style={inputStyle}
                                                             onFocus={(e) => {
                                                                 e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
@@ -510,7 +535,7 @@ export default function UnifiedRegistration() {
                                                                 e.currentTarget.style.borderColor = '#00ffff';
                                                             }}
                                                         />
-                                                        <p className="text-xs text-white/50 mt-1">Enter your MITS enrollment number</p>
+                                                        <p className="text-xs text-white/50 mt-1">Enter your phone number</p>
                                                     </div>
                                                     <Button
                                                         onClick={handleOTPLogin}
@@ -639,6 +664,11 @@ export default function UnifiedRegistration() {
                                                 <Button onClick={() => setStep('events')} className="flex-1">
                                                     Select Events
                                                 </Button>
+                                                {epassUrl && (
+                                                    <Button onClick={() => setStep('success')} variant="secondary" className="flex-1 bg-green-900/50 hover:bg-green-800/50 text-green-400 border border-green-500/50">
+                                                        View E-Pass
+                                                    </Button>
+                                                )}
                                                 <Button onClick={handleLogout} variant="outline" className="flex-1">
                                                     Logout
                                                 </Button>
@@ -681,43 +711,56 @@ export default function UnifiedRegistration() {
                                         </div>
 
                                         <div className="space-y-4 max-h-96 overflow-y-auto">
-                                            {events.map((event) => (
-                                                <div
-                                                    key={event.id}
-                                                    className={`border rounded-lg p-4 cursor-pointer transition-all ${selectedEvents.includes(event.id)
-                                                        ? 'border-[#00ffff] bg-white/5'
-                                                        : 'border-white/20 hover:border-white/40'
-                                                        }`}
-                                                    onClick={() => handleEventSelection(event.id)}
-                                                >
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <div>
-                                                            <h3 className="font-bold text-sm" style={{ color: '#00ffff' }}>
-                                                                {event.event_name}
-                                                            </h3>
-                                                            <p className="text-xs text-white/70">{event.club_name}</p>
+                                            {events.map((event) => {
+                                                const isRegistered = registeredEventIds.includes(event.id);
+                                                return (
+                                                    <div
+                                                        key={event.id}
+                                                        className={`border rounded-lg p-4 cursor-pointer transition-all ${isRegistered
+                                                                ? 'border-green-500 bg-green-900/10 cursor-default'
+                                                                : selectedEvents.includes(event.id)
+                                                                    ? 'border-[#00ffff] bg-white/5'
+                                                                    : 'border-white/20 hover:border-white/40'
+                                                            }`}
+                                                        onClick={() => !isRegistered && handleEventSelection(event.id)}
+                                                    >
+                                                        <div className="flex justify-between items-start mb-2">
+                                                            <div>
+                                                                <h3 className="font-bold text-sm" style={{ color: '#00ffff' }}>
+                                                                    {event.event_name}
+                                                                </h3>
+                                                                <p className="text-xs text-white/70">{event.club_name}</p>
+                                                            </div>
+                                                            <div className="text-right">
+                                                                <div className={`text-xs font-bold ${event.is_free ? 'text-green-400' : 'text-red-400'
+                                                                    }`}>
+                                                                    {event.is_free ? 'FREE' : `₹${event.fee}`}
+                                                                </div>
+                                                                <div className="text-xs text-white/50">
+                                                                    {isRegistered ? 'Registered' : selectedEvents.includes(event.id) ? 'Selected' : 'Click to Select'}
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div className="text-right">
-                                                            <div className={`text-xs font-bold ${event.is_free ? 'text-green-400' : 'text-red-400'
-                                                                }`}>
-                                                                {event.is_free ? 'FREE' : `₹${event.fee}`}
-                                                            </div>
-                                                            <div className="text-xs text-white/50">
-                                                                {selectedEvents.includes(event.id) ? 'Selected' : 'Click to Select'}
-                                                            </div>
+                                                        <div className="flex items-center gap-2">
+                                                            {isRegistered ? (
+                                                                <span className="text-xs text-green-400 flex items-center gap-1">
+                                                                    ✓ Already Registered
+                                                                </span>
+                                                            ) : (
+                                                                <>
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={selectedEvents.includes(event.id)}
+                                                                        onChange={() => handleEventSelection(event.id)}
+                                                                        className="w-4 h-4"
+                                                                    />
+                                                                    <span className="text-xs text-white/70">Select this event</span>
+                                                                </>
+                                                            )}
                                                         </div>
                                                     </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedEvents.includes(event.id)}
-                                                            onChange={() => handleEventSelection(event.id)}
-                                                            className="w-4 h-4"
-                                                        />
-                                                        <span className="text-xs text-white/70">Select this event</span>
-                                                    </div>
-                                                </div>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
 
                                         {selectedEvents.length > 0 && (

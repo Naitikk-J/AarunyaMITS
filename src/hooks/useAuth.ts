@@ -72,7 +72,8 @@ export const useAuth = () => {
                 options: {
                     queryParams: {
                         hd: 'mitsgwl.ac.in' // Restrict to MITS domain
-                    }
+                    },
+                    redirectTo: window.location.origin + '/unified-registration'
                 }
             });
 
