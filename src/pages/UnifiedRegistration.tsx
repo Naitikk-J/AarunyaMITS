@@ -13,6 +13,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { db } from '@/lib/supabase-service';
 import { Event } from '@/lib/supabase';
 import QRCode from 'react-qr-code';
+import { toast } from 'sonner';
 
 export default function UnifiedRegistration() {
     const { user, loading: authLoading, signInWithGoogle, signInWithOTP, verifyOTP, signUp, signOut, error: authError } = useAuth();
@@ -78,6 +79,7 @@ export default function UnifiedRegistration() {
     useEffect(() => {
         if (user) {
             if (step === 'login') {
+                toast.success('Sign in successful!');
                 setStep('dashboard');
             }
             // Load user data (registrations and epass)
@@ -111,6 +113,7 @@ export default function UnifiedRegistration() {
             await signInWithGoogle();
         } catch (err: any) {
             setError(err.message);
+            toast.error('Sign in not successful: ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -125,10 +128,11 @@ export default function UnifiedRegistration() {
             console.log('OTP sent successfully');
             setStep('otp');
             // Show success message
-            alert('OTP sent! Please check your email (including spam folder)');
+            toast.success('OTP sent! Please check your email (including spam folder)');
         } catch (err: any) {
             console.error('OTP Error:', err);
             setError(err.message);
+            toast.error('Failed to send OTP: ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -139,9 +143,11 @@ export default function UnifiedRegistration() {
         setError(null);
         try {
             await verifyOTP(otpEmail, otpToken);
+            toast.success('Sign in successful!');
             setStep('dashboard');
         } catch (err: any) {
             setError(err.message);
+            toast.error('Sign in not successful: ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -152,9 +158,11 @@ export default function UnifiedRegistration() {
         setError(null);
         try {
             await signUp(signUpData);
+            toast.success('Sign up successful!');
             setStep('dashboard');
         } catch (err: any) {
             setError(err.message);
+            toast.error('Sign up failed: ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -181,6 +189,7 @@ export default function UnifiedRegistration() {
             if (totalAmount === 0) {
                 // Free events - register directly
                 await handleRegistration(selectedEvents);
+                toast.success('Registration successful!');
                 setStep('success');
             } else {
                 // Paid events - create order and proceed to payment
@@ -195,15 +204,18 @@ export default function UnifiedRegistration() {
                         try {
                             await verifyPayment(response.razorpay_payment_id, response.razorpay_order_id, response.razorpay_signature);
                             await handleRegistration(selectedEvents);
+                            toast.success('Registration and payment successful!');
                             setStep('success');
                         } catch (err: any) {
                             setError('Payment verification failed');
+                            toast.error('Payment verification failed');
                         }
                     }
                 );
             }
         } catch (err: any) {
             setError(err.message);
+            toast.error('Payment process failed: ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -293,8 +305,10 @@ export default function UnifiedRegistration() {
             setSelectedEvents([]);
             setQrCodeData('');
             setEpassUrl('');
+            toast.success('Logged out successfully');
         } catch (err: any) {
             setError(err.message);
+            toast.error('Logout failed: ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -717,10 +731,10 @@ export default function UnifiedRegistration() {
                                                     <div
                                                         key={event.id}
                                                         className={`border rounded-lg p-4 cursor-pointer transition-all ${isRegistered
-                                                                ? 'border-green-500 bg-green-900/10 cursor-default'
-                                                                : selectedEvents.includes(event.id)
-                                                                    ? 'border-[#00ffff] bg-white/5'
-                                                                    : 'border-white/20 hover:border-white/40'
+                                                            ? 'border-green-500 bg-green-900/10 cursor-default'
+                                                            : selectedEvents.includes(event.id)
+                                                                ? 'border-[#00ffff] bg-white/5'
+                                                                : 'border-white/20 hover:border-white/40'
                                                             }`}
                                                         onClick={() => !isRegistered && handleEventSelection(event.id)}
                                                     >
