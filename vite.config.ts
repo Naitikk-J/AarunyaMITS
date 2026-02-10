@@ -8,6 +8,10 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8700,
+    allowedHosts:
+[
+      "aarunya.in"
+],
     hmr: {
       overlay: false,
     },

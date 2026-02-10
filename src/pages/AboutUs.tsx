@@ -101,7 +101,7 @@ const AboutUs = () => {
             <div className="h-0.5 w-16 md:w-24 bg-primary mx-auto shadow-[0_0_10px_#BC13FE]" />
 
             <p className="mt-4 text-[9px] sm:text-[10px] md:text-xs font-share-tech text-white/50 uppercase max-w-xl mx-auto tracking-[0.2em]">
-                // DOCUMENTATION ON THE CREATORS AND THE TECHNOLOGY
+                // DOCUMENTATION ON THE CREATORS AND THE FEST
             </p>
           </motion.div>
         </div>
@@ -127,14 +127,14 @@ const AboutUs = () => {
                 AARUNYA 2026
               </h2>
 
-              <p className="text-xs md:text-sm text-white/70 mb-3 leading-relaxed">
-                AARUNYA 2026 is a digital-first festival experience designed to
-                merge retro-gaming aesthetics with modern campus life.
+              <p className="text-xs md:text-lg text-white/70 mb-3 leading-relaxed">
+                Aarunya 2026 is the annual cultural and technical fest of Madhav Institute of Technology & Science (Deemed University), Gwalior:  a celebration where creativity, culture, and technology collide.
+Blending high-energy performances, competitive events, innovation showcases, and immersive experiences, Aarunya brings together students from diverse backgrounds to celebrate talent, teamwork, and youth spirit.
+
               </p>
 
-              <p className="text-xs md:text-sm text-white/60 leading-relaxed">
-                Since its inception, Aarunya has grown into one of Central
-                India's most anticipated college festivals.
+              <p className="text-xs md:text-lg text-white/60 leading-relaxed">
+                From thought-provoking discussions to electrifying stages and cutting-edge tech events, Aarunya isn’t just a fest : it’s a shared experience built by the students, for the students.
               </p>
             </div>
           </motion.div>
