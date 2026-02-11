@@ -220,9 +220,9 @@ const Events = () => {
                     </div>
 
                     <DialogFooter>
-                      <Button onClick={() => navigate('/register')} className="w-full bg-gradient-to-r from-[#00fff9] to-[#00fff9]/80 text-black hover:brightness-110 font-sans text-base py-6 rounded-xl tracking-widest shadow-[0_0_20px_rgba(0,255,249,0.3)] hover:shadow-[0_0_30px_rgba(0,255,249,0.5)] transition-all transform hover:scale-[1.02] border-0">
+                      {/* <Button onClick={() => navigate('/register')} className="w-full bg-gradient-to-r from-[#00fff9] to-[#00fff9]/80 text-black hover:brightness-110 font-sans text-base py-6 rounded-xl tracking-widest shadow-[0_0_20px_rgba(0,255,249,0.3)] hover:shadow-[0_0_30px_rgba(0,255,249,0.5)] transition-all transform hover:scale-[1.02] border-0">
                         REGISTER NOW
-                      </Button>
+                      </Button> */}
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>

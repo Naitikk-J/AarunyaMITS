@@ -1361,7 +1361,7 @@ const CampusExplorer = () => {
         const timer = setTimeout(() => setIsLoading(false), 2000);
         return () => clearTimeout(timer);
     }, []);
-return (
+    return (
         <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#ff00ff #1a0030' }}>
             <style>{`
                 @media (max-width: 768px) {
@@ -1409,18 +1409,58 @@ return (
             <div className="container mx-auto px-4 pb-12">
                 <div className="relative w-full overflow-hidden transition-all duration-500 rounded-xl border-2 border-white/10" style={{ height: 'calc(100vh - 320px)', minHeight: '400px', boxShadow: '0 0 60px rgba(188,19,254,0.2), inset 0 0 30px rgba(0,0,0,0.5)' }}>
                     {webglSupported ? (
-                        <Canvas shadows camera={{ position: [30, 25, 30], fov: 45 }} gl={{ antialias: true, alpha: true, stencil: false, depth: true, powerPreference: 'high-performance', logarithmicDepthBuffer: true }} dpr={Math.min(window.devicePixelRatio, 1.5)} frameloop="always" style={{ width: '100%', height: '100%' }}>
+
+                        <Canvas
+                            shadows
+                            camera={{ position: [30, 25, 30], fov: 45, near: 0.1, far: 1000 }}
+                            gl={{
+                                antialias: false, // Disable AA for performance on high-DPI screens
+                                alpha: false, // Disable alpha buffer since we have background
+                                stencil: false,
+                                depth: true,
+                                powerPreference: 'high-performance'
+                                // logarithmicDepthBuffer removed for performance
+                            }}
+                            dpr={[1, 1.5]} // Clamp DPR
+                            frameloop="demand" // Only render when needed
+                            style={{ width: '100%', height: '100%' }}
+                        >
                             <Suspense fallback={null}>
                                 <PerspectiveCamera makeDefault position={[30, 25, 30]} fov={45} />
-                                <OrbitControls autoRotate={false} enableZoom={true} enablePan={true} minDistance={5} maxDistance={60} minPolarAngle={0} maxPolarAngle={Math.PI / 2 - 0.1} zoomToCursor={true} />
+                                <OrbitControls
+                                    autoRotate={false}
+                                    enableZoom={true}
+                                    enablePan={true}
+                                    minDistance={5}
+                                    maxDistance={60}
+                                    minPolarAngle={0}
+                                    maxPolarAngle={Math.PI / 2 - 0.1}
+                                    zoomToCursor={true}
+                                    makeDefault // Ensure it controls the camera
+                                />
                                 <ambientLight intensity={0.4} />
-                                <directionalLight position={[30, 40, 30]} intensity={1.5} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0001} />
+                                <directionalLight
+                                    position={[30, 40, 30]}
+                                    intensity={1.5}
+                                    castShadow
+                                    shadow-mapSize={[1024, 1024]} // Reduced shadow map size
+                                    shadow-bias={-0.0001}
+                                />
                                 <directionalLight position={[-20, 25, -20]} intensity={0.5} color="#00A6FF" />
                                 {/* Single light for Gole Ka Mandir Square area */}
                                 <directionalLight position={[40, 30, -35]} intensity={0.8} color="#FFDD99" />
-                                <ContactShadows position={[0, 0.02, 0]} opacity={0.4} scale={120} blur={2} far={4.5} />
+                                <ContactShadows
+                                    position={[0, 0.02, 0]}
+                                    opacity={0.4}
+                                    scale={120}
+                                    blur={2}
+                                    far={4.5}
+                                    frames={1} // Bake shadows once
+                                    resolution={512} // Lower resolution
+                                />
                                 <fog attach="fog" args={['#050c15', 80, 350]} />
-                                <Stars radius={100} depth={50} count={1500} factor={4} saturation={0} fade speed={0} />
+                                <color attach="background" args={['#050c15']} /> {/* Explicit background color */}
+                                <Stars radius={100} depth={50} count={1000} factor={4} saturation={0} fade speed={0} /> {/* Reduced star count */}
                                 <Environment preset="city" />
                                 <CampusMap textures={textures} />
                                 <mesh position={[0, -0.6, 0]}><cylinderGeometry args={[46, 45, 1, 32]} /><meshStandardMaterial color="#111111" metalness={0.9} roughness={0.1} /></mesh>
@@ -1434,7 +1474,7 @@ return (
                 </div>
             </div>
             <div className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-        </div>
+        </div >
     );
 };
 
