@@ -1,9 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useKidcoreSounds } from './SoundEffects';
 
-export function LoadingScreen({ isGalleryLoading = false }: { isGalleryLoading?: boolean } = {}) {
-    const [progress, setProgress] = useState(0);
-    const [loadingText, setLoadingText] = useState('Initializing');
+interface LoadingScreenProps {
+    isGalleryLoading?: boolean;
+    progress?: number;
+    loadingText?: string;
+}
+
+export function LoadingScreen({ isGalleryLoading = false, progress: externalProgress, loadingText: externalText }: LoadingScreenProps = {}) {
+    const [internalProgress, setInternalProgress] = useState(0);
+    const [internalText, setInternalText] = useState('Initializing');
+
+    // Use external props if provided, otherwise use internal state
+    const progress = externalProgress !== undefined ? externalProgress : internalProgress;
+    const loadingText = externalText !== undefined ? externalText : internalText;
+
     const { playSound } = useKidcoreSounds();
 
     useEffect(() => {
@@ -15,11 +26,13 @@ export function LoadingScreen({ isGalleryLoading = false }: { isGalleryLoading?:
             'Entering Euphoria'
         ];
 
+        if (externalProgress !== undefined) return;
+
         const interval = setInterval(() => {
-            setProgress((prev) => {
+            setInternalProgress((prev) => {
                 const newProgress = Math.min(prev + Math.random() * 15, 95);
                 const textIndex = Math.min(Math.floor(newProgress / 25), texts.length - 1);
-                setLoadingText(texts[textIndex]);
+                setInternalText(texts[textIndex]);
                 return newProgress;
             });
         }, 200);
@@ -31,7 +44,7 @@ export function LoadingScreen({ isGalleryLoading = false }: { isGalleryLoading?:
     }, [playSound]);
 
     return (
-        <div 
+        <div
             className="fixed inset-0 w-full h-full z-[9999] flex flex-col items-center justify-center"
             style={{
                 background: 'linear-gradient(180deg, #0A0E27 0%, #0f1535 50%, #1a1f3a 100%)',
@@ -45,23 +58,23 @@ export function LoadingScreen({ isGalleryLoading = false }: { isGalleryLoading?:
         >
             {/* Main Content */}
             <div className="relative z-10 flex flex-col items-center gap-8 px-4">
-                {}
+                { }
                 <div>
-<img
-    src="/aarunya-logo.svg"
-    alt="Aarunya 2026"
-    className="h-40 w-auto"
-    style={{
-        filter: 'drop-shadow(3px 3px 0 #ee82b6) drop-shadow(8px 10px 0 #bd0fca) drop-shadow(0 0 20px #ff00ff)',
-        imageRendering: 'crisp-edges',
-        transform: 'translateZ(0)', // Force GPU acceleration for better rendering
-    }}
-/>
+                    <img
+                        src="/aarunya-logo.svg"
+                        alt="Aarunya 2026"
+                        className="h-40 w-auto"
+                        style={{
+                            filter: 'drop-shadow(3px 3px 0 #ee82b6) drop-shadow(8px 10px 0 #bd0fca) drop-shadow(0 0 20px #ff00ff)',
+                            imageRendering: 'crisp-edges',
+                            transform: 'translateZ(0)', // Force GPU acceleration for better rendering
+                        }}
+                    />
                 </div>
 
                 {/* Loading Text */}
                 <div className="text-center">
-                    <p 
+                    <p
                         className="font-orbitron text-2xl font-bold mb-2"
                         style={{
                             color: progress < 25 ? '#00A6FF' : progress < 50 ? '#FFDD33' : progress < 75 ? '#B0FF57' : '#FF85C0',
@@ -70,7 +83,7 @@ export function LoadingScreen({ isGalleryLoading = false }: { isGalleryLoading?:
                     >
                         {loadingText}
                     </p>
-                    <p 
+                    <p
                         className="text-sm font-orbitron tracking-widest font-bold"
                         style={{
                             color: '#FF5E1F',
@@ -82,7 +95,7 @@ export function LoadingScreen({ isGalleryLoading = false }: { isGalleryLoading?:
                 </div>
 
                 {/* Progress Bar */}
-                <div 
+                <div
                     className="w-64 h-6 border-4 overflow-hidden"
                     style={{
                         borderColor: '#FF85C0',
@@ -101,7 +114,7 @@ export function LoadingScreen({ isGalleryLoading = false }: { isGalleryLoading?:
                 </div>
 
                 {/* Loading Message */}
-                <p 
+                <p
                     className="font-orbitron text-lg font-bold mt-4"
                     style={{
                         color: '#B0FF57',

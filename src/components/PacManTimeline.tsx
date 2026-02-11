@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import Lenis from 'lenis';
+
 import { useKidcoreSounds } from './ui/SoundEffects';
 
 const events = [
@@ -15,17 +15,8 @@ export const PacmanTimeline: React.FC = () => {
     const [eatenDots, setEatenDots] = useState<number[]>([]);
     const { playSound } = useKidcoreSounds();
 
-    useEffect(() => {
-        const lenis = new Lenis({
-            autoRaf: true,
-            wrapper: containerRef.current,
-            content: containerRef.current,
-        });
+    // Lenis is handled globally in Index.tsx
 
-        return () => {
-            lenis.destroy();
-        };
-    }, []);
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
