@@ -76,12 +76,14 @@ export const Guidelines = () => {
 
     return (
         <div className="min-h-screen bg-[#05010D] relative overflow-x-hidden">
-            {/* Animated Backgrounds - Toned Down */}
+            {/* Animated Backgrounds - Glowing Stars */}
             <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(188,19,254,0.05),transparent_70%)]" />
-                <div className="absolute inset-0" style={{
-                    backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)',
-                    backgroundSize: '30px 30px'
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(188,19,254,0.1),transparent_70%)]" />
+                {/* Moving Stars */}
+                <div className="absolute inset-0 animate-[pulse_4s_infinite]" style={{
+                    backgroundImage: 'radial-gradient(white 1px, transparent 1px)',
+                    backgroundSize: '50px 50px',
+                    opacity: 0.1
                 }} />
             </div>
 

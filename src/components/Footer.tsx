@@ -42,7 +42,7 @@ const Footer = () => {
         { name: 'SPONSORS', path: '/sponsors' },
         { name: 'ABOUT', path: '/about' },
         { name: 'CONTACT', path: '/contact' },
-     //   { name: 'REGISTER', path: '/register' },
+        //   { name: 'REGISTER', path: '/register' },
     ];
 
     const legalLinks = [
