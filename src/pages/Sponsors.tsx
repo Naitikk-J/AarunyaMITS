@@ -15,27 +15,27 @@ const Sponsors = () => {
                 { name: 'FUTURE INC', contribution: '500,000 XP' },
             ],
         },
-        {
-            title: 'GOLD SPONSORS',
-            description: 'BOOSTERS THAT KEEP THE NEON RUNNING ALL NIGHT.',
-            icon: '⭐',
-            level: 'GOLD',
-            sponsors: [
-                { name: 'INNOVATE LTD', contribution: '250,000 XP' },
-                { name: 'DIGITAL DYNAMICS', contribution: '250,000 XP' },
-                { name: 'NEXUS LABS', contribution: '250,000 XP' },
-            ],
-        },
-        {
-            title: 'COMMUNITY PARTNERS',
-            description: 'FRIENDS OF THE FEST AND LOCAL COLLABORATORS.',
-            icon: '🤝',
-            level: 'SILVER',
-            sponsors: [
-                { name: 'LOCAL CAFE', contribution: '50,000 XP' },
-                { name: 'CAMPUS STORE', contribution: '50,000 XP' },
-            ],
-        },
+        // {
+        //     title: 'GOLD SPONSORS',
+        //     description: 'BOOSTERS THAT KEEP THE NEON RUNNING ALL NIGHT.',
+        //     icon: '⭐',
+        //     level: 'GOLD',
+        //     sponsors: [
+        //         { name: 'INNOVATE LTD', contribution: '250,000 XP' },
+        //         { name: 'DIGITAL DYNAMICS', contribution: '250,000 XP' },
+        //         { name: 'NEXUS LABS', contribution: '250,000 XP' },
+        //     ],
+        // },
+        // {
+        //     title: 'COMMUNITY PARTNERS',
+        //     description: 'FRIENDS OF THE FEST AND LOCAL COLLABORATORS.',
+        //     icon: '🤝',
+        //     level: 'SILVER',
+        //     sponsors: [
+        //         { name: 'LOCAL CAFE', contribution: '50,000 XP' },
+        //         { name: 'CAMPUS STORE', contribution: '50,000 XP' },
+        //     ],
+        // },
     ];
 
     const getLevelColor = (level: string) => {
