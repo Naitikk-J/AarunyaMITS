@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapboxMap } from '@/components/3d/MapboxMap';
 import { MainNavigation } from '@/components/ui/MainNavigation';
 import { Button } from '@/components/ui/button';
+
+// Lazy load MapboxMap to reduce initial bundle size
+const MapboxMap = lazy(() => import('@/components/3d/MapboxMap'));
 
 const ViewMap = () => {
     const navigate = useNavigate();
@@ -33,7 +35,18 @@ const ViewMap = () => {
 
             {/* Mapbox Map Container */}
             <div className="absolute inset-0 pt-16">
-                <MapboxMap />
+                <Suspense
+                    fallback={
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
+                            <div className="text-center">
+                                <div className="w-12 h-12 mx-auto mb-4 border-4 border-kidcore-cyan border-t-kidcore-pink rounded-full animate-spin" />
+                                <p className="text-kidcore-cyan font-orbitron text-sm tracking-wider">Loading map...</p>
+                            </div>
+                        </div>
+                    }
+                >
+                    <MapboxMap />
+                </Suspense>
             </div>
 
             {/* Explore Campus Button */}

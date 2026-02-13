@@ -68,7 +68,7 @@ const DEFAULTS = {
   maxVerticalRotationDeg: 5,
   dragSensitivity: 20,
   enlargeTransitionMs: 300,
-  segments: 35,
+  segments: 25,
   autoRotationSpeed: 0.1
 };
 
@@ -140,36 +140,81 @@ function computeItemBaseRotation(offsetX: number, offsetY: number, sizeX: number
   return { rotateX, rotateY };
 }
 
-const ImageWithLoader = ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+interface ImageWithLoaderProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  src?: string;
+  alt?: string;
+  priority?: boolean;
+}
+
+const ImageWithLoader = ({ src, alt, priority = false, ...props }: ImageWithLoaderProps) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
-  const [imgSrc, setImgSrc] = useState(src);
+  const [imgSrc, setImgSrc] = useState<string | null>(priority ? src || null : null);
+  const [isVisible, setIsVisible] = useState(priority);
+  const imgRef = useRef<HTMLDivElement>(null);
+
+  // Intersection Observer for lazy loading only when tile is near viewport
+  useEffect(() => {
+    if (priority) return; // Skip for high-priority images
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        root: null,
+        rootMargin: '150px', // Start loading 150px before tile comes into view
+        threshold: 0
+      }
+    );
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+
+    return () => {
+      if (imgRef.current) {
+        observer.unobserve(imgRef.current);
+      }
+    };
+  }, [priority]);
+
+  useEffect(() => {
+    if (isVisible && !imgSrc && src) {
+      setImgSrc(src);
+    }
+  }, [isVisible, src, imgSrc]);
 
   const handleError = () => {
-    if (!error && src && src.includes('/optimized')) {
+    if (!error && imgSrc && imgSrc.includes('/optimized')) {
       // Try fallback to original image
-      setImgSrc(getFallbackPath(src));
+      setImgSrc(getFallbackPath(imgSrc));
       setError(true);
     }
   };
 
   return (
-    <div className="relative w-full h-full">
-      {!loaded && (
+    <div ref={imgRef} className="relative w-full h-full">
+      {!loaded && isVisible && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/20">
           <Loader2 className="w-6 h-6 animate-spin text-white/50" />
         </div>
       )}
-      <img
-        src={imgSrc}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        onLoad={() => setLoaded(true)}
-        onError={handleError}
-        className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
-        {...props}
-      />
+      {imgSrc && (
+        <img
+          src={imgSrc}
+          alt={alt}
+          decoding="async"
+          fetchPriority={priority ? 'high' : 'low'}
+          onLoad={() => setLoaded(true)}
+          onError={handleError}
+          className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          {...props}
+        />
+      )}
     </div>
   );
 };
@@ -276,11 +321,18 @@ export default function DomeGallery({
   };
 
   const lockedRadiusRef = useRef<number | null>(null);
+  const resizeTimeoutRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    const ro = new ResizeObserver(entries => {
+  const handleResize = useCallback((entries: ResizeObserverEntry[]) => {
+    // Debounce resize handler to avoid excessive recalculations
+    if (resizeTimeoutRef.current) {
+      clearTimeout(resizeTimeoutRef.current);
+    }
+
+    resizeTimeoutRef.current = window.setTimeout(() => {
+      const root = rootRef.current;
+      if (!root) return;
+
       const cr = entries[0].contentRect;
       const w = Math.max(1, cr.width),
         h = Math.max(1, cr.height);
@@ -344,9 +396,7 @@ export default function DomeGallery({
           enlargedOverlay.style.height = `${frameR.height}px`;
         }
       }
-    });
-    ro.observe(root);
-    return () => ro.disconnect();
+    }, 150); // Debounce delay
   }, [
     fit,
     fitBasis,
@@ -362,16 +412,36 @@ export default function DomeGallery({
   ]);
 
   useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ro = new ResizeObserver(handleResize);
+    ro.observe(root);
+    return () => {
+      ro.disconnect();
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+    };
+  }, [handleResize]);
+
+  useEffect(() => {
     applyTransform(rotationRef.current.x, rotationRef.current.y);
   }, []);
 
-  // Auto-rotation effect
+  // Auto-rotation effect with frame skipping on mobile for better performance
   useEffect(() => {
+    const frameSkip = isMobile ? 2 : 1; // Skip frames on mobile to reduce CPU
+    let frameCount = 0;
+
     const loop = () => {
+      frameCount++;
       if (!isInteractingRef.current && !draggingRef.current && !openingRef.current && !inertiaRAF.current) {
-        const nextY = wrapAngleSigned(rotationRef.current.y + autoRotationSpeed);
-        rotationRef.current.y = nextY;
-        applyTransform(rotationRef.current.x, nextY);
+        // Only update every frameSkip frames
+        if (frameCount % frameSkip === 0) {
+          const nextY = wrapAngleSigned(rotationRef.current.y + autoRotationSpeed);
+          rotationRef.current.y = nextY;
+          applyTransform(rotationRef.current.x, nextY);
+        }
       }
       autoRotateRAF.current = requestAnimationFrame(loop);
     };
@@ -379,7 +449,7 @@ export default function DomeGallery({
     return () => {
       if (autoRotateRAF.current) cancelAnimationFrame(autoRotateRAF.current);
     }
-  }, [autoRotationSpeed]);
+  }, [autoRotationSpeed, isMobile]);
 
   const stopInertia = useCallback(() => {
     if (inertiaRAF.current) {
@@ -751,34 +821,40 @@ export default function DomeGallery({
       <main ref={mainRef} className="sphere-main">
         <div className="stage">
           <div ref={sphereRef} className="sphere">
-            {items.map((it, i) => (
-              <div
-                key={`${it.x},${it.y},${i}`}
-                className="item"
-                data-src={it.src}
-                data-offset-x={it.x}
-                data-offset-y={it.y}
-                data-size-x={it.sizeX}
-                data-size-y={it.sizeY}
-                style={{
-                  '--offset-x': it.x,
-                  '--offset-y': it.y,
-                  '--item-size-x': it.sizeX,
-                  '--item-size-y': it.sizeY
-                } as React.CSSProperties}
-              >
+            {items.map((it, i) => {
+              // First 12 unique images are critical/high-priority
+              const sourceImageIndex = i % (images?.length || 54);
+              const isCritical = sourceImageIndex < 12;
+
+              return (
                 <div
-                  className="item__image"
-                  role="button"
-                  tabIndex={0}
-                  aria-label={it.alt || 'Open image'}
-                  onClick={onTileClick}
-                  onPointerUp={onTilePointerUp}
+                  key={`${it.x},${it.y},${i}`}
+                  className="item"
+                  data-src={it.src}
+                  data-offset-x={it.x}
+                  data-offset-y={it.y}
+                  data-size-x={it.sizeX}
+                  data-size-y={it.sizeY}
+                  style={{
+                    '--offset-x': it.x,
+                    '--offset-y': it.y,
+                    '--item-size-x': it.sizeX,
+                    '--item-size-y': it.sizeY
+                  } as React.CSSProperties}
                 >
-                  <ImageWithLoader src={it.src} alt={it.alt} draggable={false} />
+                  <div
+                    className="item__image"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={it.alt || 'Open image'}
+                    onClick={onTileClick}
+                    onPointerUp={onTilePointerUp}
+                  >
+                    <ImageWithLoader src={it.src} alt={it.alt} priority={isCritical} draggable={false} />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

@@ -12,8 +12,9 @@ const navLinks = [
     { name: 'EVENTS', path: '/events' },
     { name: 'SCHEDULE', path: '/schedule' },
     { name: 'SPONSORS', path: '/sponsors' },
+    // { name: 'SCAN', path: '/scan' },
     { name: 'GUIDELINES', path: '/Guidelines' },
-    { name: 'ABOUT', path: '/about' },
+    { name: 'MEET THE TEAM', path: '/about' },
     { name: 'CONTACT', path: '/contact' },
     // { name: 'REGISTER', path: '/register' },
 ];

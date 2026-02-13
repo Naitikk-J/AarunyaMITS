@@ -29,6 +29,7 @@ import ResponsiveTest from "./pages/ResponsiveTest";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import ReturnAndRefund from "./pages/ReturnAndRefund";
+import Scan from "./pages/Scan";
 
 // Lazy load Gallery for better initial load performance and loading screen support
 const Gallery = lazy(() => import("./pages/Gallery"));
@@ -58,6 +59,7 @@ const App = () => (
                                 <Route path="/merch" element={<Merch />} />
                                 <Route path="/sponsors" element={<Sponsors />} />
                                 <Route path="/hierarchy" element={<Hierarchy />} />
+                                {/* <Route path="/scan" element={<Scan />} /> */}
                                 <Route path="/contact" element={<ContactUs />} />
                                 <Route path="/about" element={<AboutUs />} />
                                 <Route path="/history" element={<History />} />
