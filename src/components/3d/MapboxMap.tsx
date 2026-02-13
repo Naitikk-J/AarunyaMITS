@@ -29,7 +29,7 @@ const MITS_CENTER = {
     lng: 78.20717
 };
 
-export function MapboxMap({
+function MapboxMap({
     onBuildingHover,
     onBuildingClick,
     isDayMode = false
@@ -230,3 +230,6 @@ export function MapboxMap({
         />
     );
 }
+
+export { MapboxMap };
+export default MapboxMap;
