@@ -18,6 +18,9 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
     const [currentVideo, setCurrentVideo] = useState<VideoSource | null>(null);
     const [isPowered, setIsPowered] = useState(true);
     const [isVideoLoading, setIsVideoLoading] = useState(false);
+    const [volume, setVolume] = useState(5);
+    const [userHasInteracted, setUserHasInteracted] = useState(false);
+
     const videoRef = useRef<HTMLVideoElement>(null);
     const { isMobile, isTablet, isDesktop } = useResponsive();
 
@@ -34,44 +37,40 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
             setIsVideoPlaying(false);
             setCurrentVideo(null);
             setIsVideoLoading(false);
-            if (videoRef.current) {
-                videoRef.current.muted = true;
-            }
         } else if (channel >= 2 && channel <= 5) {
             // Channel 2-5: Video content
             setIsVideoPlaying(true);
             setIsVideoLoading(true);
             setCurrentVideo(videoSources[Math.min(channel - 2, videoSources.length - 1)]);
-
-            if (videoRef.current) {
-                // If it's channel 4 or if we are not on mobile, try to unmute if powered
-                if (channel === 4 && isPowered && !isMobile) {
-                    videoRef.current.muted = false;
-                } else {
-                    videoRef.current.muted = true;
-                }
-            }
         }
     };
 
     const handleVideoLoad = () => {
         setIsVideoLoading(false);
+        if (videoRef.current) {
+            videoRef.current.volume = volume / 10;
+            // On mobile, video MUST start muted to autoplay. 
+            // We only unmute if user has interacted with volume controls.
+            videoRef.current.muted = !isPowered || (isMobile && !userHasInteracted);
+        }
     };
 
     const handlePowerToggle = (powered: boolean) => {
         setIsPowered(powered);
 
-        // Mute/unmute video when power is toggled
         if (videoRef.current) {
-            // On mobile, keep it muted to prevent playback issues unless specifically unmuted
-            videoRef.current.muted = !powered || isMobile;
+            // When turning on, we might stay muted especially on mobile
+            videoRef.current.muted = !powered || (isMobile && !userHasInteracted);
         }
     };
 
-    const handleVolumeChange = (volume: number) => {
+    const handleVolumeChange = (newVolume: number) => {
+        setVolume(newVolume);
+        setUserHasInteracted(true);
+
         if (videoRef.current) {
-            videoRef.current.volume = volume / 10;
-            if (volume > 0 && isPowered) {
+            videoRef.current.volume = newVolume / 10;
+            if (newVolume > 0 && isPowered) {
                 videoRef.current.muted = false;
             } else {
                 videoRef.current.muted = true;
@@ -110,7 +109,7 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
                                     autoPlay
                                     loop
                                     onLoadedData={handleVideoLoad}
-                                    muted={!isPowered || isMobile} // Mute when TV is off or on mobile (for autoplay)
+                                    muted={!isPowered || (isMobile && !userHasInteracted)}
                                     playsInline
                                     preload="auto"
                                     className={`w-full h-full object-cover transition-opacity duration-500 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`}
@@ -144,6 +143,8 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
                     <div className={`bg-[#111111] border-l-[3px] sm:border-l-4 border-[#0A0A0A] flex flex-col items-center justify-center ${isMobile ? 'w-8 py-1' : isTablet ? 'w-12 py-2' : 'w-24 py-4'} relative`}>
                         <InteractiveTVControls
                             screenRef={screenRef}
+                            isPowered={isPowered}
+                            volume={volume}
                             onPowerToggle={handlePowerToggle}
                             onChannelChange={handleChannelChange}
                             onVolumeChange={handleVolumeChange}

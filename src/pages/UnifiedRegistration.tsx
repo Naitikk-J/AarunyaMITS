@@ -15,11 +15,27 @@ import { toast } from 'sonner';
 
 interface Event {
     id: string;
-    event_name: string;
-    club_name: string;
+    name: string;
+    club: string;
+    description?: string;
+    category: string;
+    date: string;
+    venue: string;
     fee: number;
-    is_free: boolean;
-    created_at: string;
+    requiresPayment: boolean;
+    maxParticipants?: number;
+    currentRegistrations: number;
+    isTeamEvent: boolean;
+    teamSize?: {
+        min: number;
+        max: number;
+    };
+    registrationCloseTime: string;
+    isActive: boolean;
+    prizePool?: string;
+    contactEmail?: string;
+    contactPhone?: string;
+    createdBy: string;
 }
 
 export default function UnifiedRegistration() {
@@ -29,7 +45,8 @@ export default function UnifiedRegistration() {
     const location = useLocation();
 
     // State management
-    const [step, setStep] = useState<'login' | 'otp' | 'events' | 'payment' | 'success'>('login');
+    const [step, setStep] = useState<'auth' | 'otp' | 'dashboard' | 'payment' | 'success'>('auth');
+    const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
     const [otpEmail, setOtpEmail] = useState('');
     const [otpToken, setOtpToken] = useState('');
     const [otpSent, setOtpSent] = useState(false);
@@ -41,7 +58,7 @@ export default function UnifiedRegistration() {
         branch: '',
         year: ''
     });
-    const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
+    const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -77,9 +94,67 @@ export default function UnifiedRegistration() {
         const loadEvents = async () => {
             // Mock Data
             const MOCK_EVENTS: Event[] = [
-                { id: '1', event_name: 'Code Marathon', club_name: 'CSI', fee: 0, is_free: true, created_at: new Date().toISOString() },
-                { id: '2', event_name: 'Robo Race', club_name: 'Robotics Club', fee: 200, is_free: false, created_at: new Date().toISOString() },
-                { id: '3', event_name: 'Design Derby', club_name: 'Design Club', fee: 100, is_free: false, created_at: new Date().toISOString() },
+                {
+                    id: '1',
+                    name: 'Code Marathon',
+                    club: 'CSI',
+                    description: 'A 24-hour coding challenge to solve real-world problems.',
+                    category: 'Technical',
+                    date: '2026-02-21',
+                    venue: 'SAC Hall',
+                    fee: 0,
+                    requiresPayment: false,
+                    maxParticipants: 100,
+                    currentRegistrations: 45,
+                    isTeamEvent: true,
+                    teamSize: { min: 2, max: 4 },
+                    registrationCloseTime: new Date(Date.now() + 86400000 * 5).toISOString(),
+                    isActive: true,
+                    prizePool: '₹50,000',
+                    contactEmail: 'csi@mitsgwl.ac.in',
+                    contactPhone: '9876543210',
+                    createdBy: 'admin-1'
+                },
+                {
+                    id: '2',
+                    name: 'Robo Race',
+                    club: 'Robotics Club',
+                    description: 'Fast-paced robot racing event on a challenging track.',
+                    category: 'Technical',
+                    date: '2026-02-22',
+                    venue: 'Open Auditorium',
+                    fee: 200,
+                    requiresPayment: true,
+                    maxParticipants: 50,
+                    currentRegistrations: 20,
+                    isTeamEvent: false,
+                    registrationCloseTime: new Date(Date.now() + 86400000 * 3).toISOString(),
+                    isActive: true,
+                    prizePool: '₹20,000',
+                    contactEmail: 'robotics@mitsgwl.ac.in',
+                    contactPhone: '9876543211',
+                    createdBy: 'admin-2'
+                },
+                {
+                    id: '3',
+                    name: 'Design Derby',
+                    club: 'Design Club',
+                    description: 'UI/UX design competition focused on creativity and accessibility.',
+                    category: 'Creative',
+                    date: '2026-02-23',
+                    venue: 'SH-4',
+                    fee: 100,
+                    requiresPayment: true,
+                    maxParticipants: 80,
+                    currentRegistrations: 35,
+                    isTeamEvent: false,
+                    registrationCloseTime: new Date(Date.now() + 86400000 * 4).toISOString(),
+                    isActive: true,
+                    prizePool: '₹15,000',
+                    contactEmail: 'design@mitsgwl.ac.in',
+                    contactPhone: '9876543212',
+                    createdBy: 'admin-3'
+                },
             ];
             setEvents(MOCK_EVENTS);
             console.log('Events loaded (Mock):', MOCK_EVENTS.length, 'events');
@@ -90,9 +165,9 @@ export default function UnifiedRegistration() {
     // Handle post-authentication redirect
     useEffect(() => {
         if (user) {
-            if (step === 'login') {
+            if (step === 'auth' || step === 'otp') {
                 toast.success('Sign in successful!');
-                setStep('events');
+                setStep('dashboard');
             }
             // Load user data (Mock)
             const loadUserData = async () => {
@@ -126,7 +201,11 @@ export default function UnifiedRegistration() {
     const handleSendOTP = async () => {
         setLoading(true);
         setError(null);
-        const emailToUse = signUpData.email;
+        const emailToUse = authMode === 'register' ? signUpData.email : otpEmail;
+        if (!emailToUse || !isValidEmail(emailToUse)) {
+            toast.error('Please enter a valid MITS email');
+            return;
+        }
         try {
             console.log('Sending OTP to:', emailToUse);
             await signInWithOTP(emailToUse);
@@ -149,8 +228,8 @@ export default function UnifiedRegistration() {
         setError(null);
         try {
             await verifyOTP(otpEmail, otpToken);
-            toast.success('Registration successful!');
-            setStep('events');
+            toast.success('Auth successful!');
+            setStep('dashboard');
         } catch (err: any) {
             setError(err.message);
             toast.error('Verification failed: ' + err.message);
@@ -165,7 +244,7 @@ export default function UnifiedRegistration() {
         try {
             await signUp(signUpData);
             toast.success('Sign up successful!');
-            setStep('events');
+            setStep('dashboard');
         } catch (err: any) {
             setError(err.message);
             toast.error('Sign up failed: ' + err.message);
@@ -175,11 +254,7 @@ export default function UnifiedRegistration() {
     };
 
     const handleEventSelection = (eventId: string) => {
-        setSelectedEvents(prev =>
-            prev.includes(eventId)
-                ? prev.filter(id => id !== eventId)
-                : [...prev, eventId]
-        );
+        setSelectedEventId(prev => prev === eventId ? null : eventId);
     };
 
     const handleProceedToPayment = async () => {
@@ -189,27 +264,30 @@ export default function UnifiedRegistration() {
         try {
             if (!user) throw new Error('User not authenticated');
 
-            const selectedEventsData = events.filter(e => selectedEvents.includes(e.id));
-            const totalAmount = selectedEventsData.reduce((sum, event) => sum + event.fee, 0);
+            if (!selectedEventId) throw new Error('No event selected');
+            const selectedEventData = events.find(e => e.id === selectedEventId);
+            if (!selectedEventData) throw new Error('Event not found');
+
+            const totalAmount = selectedEventData.fee;
 
             if (totalAmount === 0) {
                 // Free events - register directly
-                await handleRegistration(selectedEvents);
+                await handleRegistration([selectedEventId]);
                 toast.success('Registration successful!');
                 setStep('success');
             } else {
                 // Paid events - create order and proceed to payment
-                const orderData = await createOrder(totalAmount, user.id, selectedEvents);
+                const orderData = await createOrder(totalAmount, user.id, [selectedEventId]);
                 await openPaymentModal(
                     orderData.id,
                     totalAmount,
                     'INR',
                     'Aarunya MITS',
-                    `Payment for ${selectedEventsData.length} events`,
+                    `Payment for ${selectedEventData.name}`,
                     async (response: any) => {
                         try {
                             await verifyPayment(response.razorpay_payment_id, response.razorpay_order_id, response.razorpay_signature);
-                            await handleRegistration(selectedEvents);
+                            await handleRegistration([selectedEventId]);
                             toast.success('Registration and payment successful!');
                             setStep('success');
                         } catch (err: any) {
@@ -280,8 +358,8 @@ export default function UnifiedRegistration() {
         setLoading(true);
         try {
             await signOut();
-            setStep('login');
-            setSelectedEvents([]);
+            setStep('auth');
+            setAuthMode('login');
             setQrCodeData('');
             setEpassUrl('');
             toast.success('Logged out successfully');
@@ -303,87 +381,95 @@ export default function UnifiedRegistration() {
         <div className="min-h-screen bg-[#05010D] text-white font-vt323 selection:bg-[#ff00ff] selection:text-black overflow-x-hidden">
             <div className="content-scale">
                 <main className="min-h-[calc(100vh-100px)] flex flex-col lg:flex-row">
-                    {/* LEFT SIDEBAR - NAVIGATION */}
-                    <div className="lg:w-1/3 flex flex-col justify-start items-center lg:items-start pt-20 lg:pt-32 px-4 sm:px-8">
+                    {/* LEFT SIDEBAR - NAVIGATION/STATUS */}
+                    <div className="lg:w-1/3 flex flex-col justify-start items-center lg:items-start pt-20 lg:pt-32 px-4 sm:px-8 bg-black/20 backdrop-blur-sm border-r border-white/5">
                         <motion.div
                             initial={{ x: -30, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             transition={{ duration: 0.6 }}
-                            className="w-full flex flex-col gap-4"
+                            className="w-full flex flex-col gap-6"
                         >
-                            <div className="text-center lg:text-left mb-6">
+                            <div className="text-center lg:text-left">
                                 <h1 className="text-2xl md:text-3xl font-black tracking-tighter mb-4" style={{
                                     fontFamily: '"Press Start 2P", "Courier New", monospace',
                                     color: '#fff5ff',
                                     textShadow: '0 0 15px #8a6c8a, 2px 2px 0 #880088'
                                 }}>
-                                    <GlitchText text="AARUNYA REGISTRATION" />
+                                    <GlitchText text="EVENTS" />
                                 </h1>
-                                <div className="h-0.5 w-16 mb-4" style={{
+                                <div className="h-0.5 w-16 mb-6 mx-auto lg:mx-0" style={{
                                     background: 'linear-gradient(to right, #ff00ff, #00ffff)',
                                     boxShadow: '0 0 15px #ff00ff, 0 0 10px #00ffff'
                                 }} />
-                                <p className="text-[10px] sm:text-xs font-vt323 leading-relaxed tracking-wider" style={{
-                                    color: '#00ffff',
-                                    textShadow: '1px 1px 0 #003333'
-                                }}>
-                                    // SECURE EVENT & COMPETITION REGISTRATION
-                                </p>
+
+                                {user ? (
+                                    <div className="space-y-4">
+                                        <div className="p-4 bg-white/5 border border-[#ff00ff]/30 rounded-2xl flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-[#ff00ff] flex items-center justify-center text-xl shadow-[0_0_10px_#ff00ff]">👤</div>
+                                            <div>
+                                                <div className="text-[10px] text-white/50 uppercase tracking-widest">Explorer</div>
+                                                <div className="text-sm font-bold text-[#00ffff]">{user.name}</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-col gap-2">
+                                            <RetroButton
+                                                variant={step === 'dashboard' ? 'default' : 'white'}
+                                                onClick={() => setStep('dashboard')}
+                                                className="w-full justify-start text-xs"
+                                            >
+                                                Event Catalog
+                                            </RetroButton>
+                                            {epassUrl && (
+                                                <RetroButton
+                                                    variant={step === 'success' ? 'default' : 'white'}
+                                                    onClick={() => setStep('success')}
+                                                    className="w-full justify-start text-xs"
+                                                >
+                                                    Your E-Pass
+                                                </RetroButton>
+                                            )}
+                                            <RetroButton
+                                                variant="white"
+                                                onClick={handleLogout}
+                                                className="w-full justify-start text-xs opacity-70 hover:opacity-100"
+                                            >
+                                                Sign Out
+                                            </RetroButton>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <p className="text-[10px] sm:text-xs font-vt323 leading-relaxed tracking-wider text-[#00ffff]">
+                                        // LOGIN TO REGISTER FOR COMPETITIONS
+                                    </p>
+                                )}
                             </div>
 
-                            {/* STEP INDICATORS - Hidden on mobile */}
-                            <div className="hidden sm:flex flex-col gap-2">
-                                <div className="text-xs font-vt323 text-[#00ffff] uppercase tracking-wider mb-2">PROGRESS</div>
-                                <div className="space-y-2">
-                                    <RetroButton
-                                        variant={step === 'login' ? 'default' : 'white'}
-                                        onClick={() => setStep('login')}
-                                        className="w-full justify-start text-left text-xs"
-                                        disabled={user ? true : false}
-                                    >
-                                        1. Authentication
-                                    </RetroButton>
-                                    <RetroButton
-                                        variant={step === 'events' ? 'default' : 'white'}
-                                        onClick={() => user && setStep('events')}
-                                        className="w-full justify-start text-left text-xs"
-                                        disabled={!user}
-                                    >
-                                        2. Events Selection
-                                    </RetroButton>
-                                    <RetroButton
-                                        variant={step === 'payment' ? 'default' : 'white'}
-                                        onClick={() => user && selectedEvents.length > 0 && setStep('payment')}
-                                        className="w-full justify-start text-left text-xs"
-                                        disabled={!user || selectedEvents.length === 0}
-                                    >
-                                        3. Payment
-                                    </RetroButton>
-                                    <RetroButton
-                                        variant={step === 'success' ? 'default' : 'white'}
-                                        onClick={() => user && step === 'success' && setStep('success')}
-                                        className="w-full justify-start text-left text-xs"
-                                        disabled={!user || step !== 'success'}
-                                    >
-                                        4. E-Pass Generated
-                                    </RetroButton>
+                            {/* System Status */}
+                            <div className="hidden lg:block mt-auto pt-8 border-t border-white/5">
+                                <div className="flex items-center gap-2">
+                                    <span className="font-vt323 text-[10px] uppercase tracking-widest text-white/40">Status:</span>
+                                    <span className="flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 bg-[#00ff00] rounded-full animate-pulse" />
+                                        <span className="font-vt323 text-[10px] font-bold tracking-widest text-[#00ff00]">SECURE_LINK_ACTIVE</span>
+                                    </span>
                                 </div>
                             </div>
                         </motion.div>
                     </div>
 
-                    {/* RIGHT SIDE - CONTENT */}
-                    <div className="lg:w-2/3 flex items-start justify-center pt-12 lg:pt-32 px-4 sm:px-6 pb-20">
+                    {/* RIGHT CONTENT AREA */}
+                    <div className="lg:w-2/3 flex items-start justify-center pt-12 lg:pt-32 px-4 sm:px-6 pb-20 overflow-y-auto">
                         <motion.div
                             variants={containerVariants}
                             initial="hidden"
                             animate="visible"
-                            className="w-full max-w-lg"
+                            className="w-full max-w-6xl"
                         >
-                            {step === 'login' && (
+                            {step === 'auth' && (
                                 <motion.div
                                     variants={itemVariants}
-                                    className="relative p-6 sm:p-8"
+                                    className="relative p-6 sm:p-8 w-full"
                                     style={{
                                         background: 'linear-gradient(to bottom, #1a0a2e, #0d0520)',
                                         border: '2px solid #ff00ff',
@@ -403,11 +489,28 @@ export default function UnifiedRegistration() {
 
                                     <div className="relative z-10">
                                         <div className="text-center mb-6">
-                                            <div className="text-3xl sm:text-4xl mb-4" style={{
-                                                color: '#00ffff',
-                                                textShadow: '0 0 10px #00ffff'
+                                            <h1 className="text-xl md:text-2xl font-black tracking-tighter mb-4" style={{
+                                                fontFamily: '"Press Start 2P", "Courier New", monospace',
+                                                color: '#fff5ff',
+                                                textShadow: '0 0 15px #8a6c8a, 2px 2px 0 #880088'
                                             }}>
-                                                🔐
+                                                <GlitchText text="AARUNYA 6.0" />
+                                            </h1>
+                                            <div className="flex justify-center mb-6">
+                                                <div className="inline-flex border-2 border-[#ff00ff] rounded-full p-1 bg-black/40">
+                                                    <button
+                                                        onClick={() => { setAuthMode('login'); setOtpSent(false); }}
+                                                        className={`px-6 py-1.5 rounded-full text-xs font-bold transition-all ${authMode === 'login' ? 'bg-[#ff00ff] text-white shadow-[0_0_10px_#ff00ff]' : 'text-white/50 hover:text-white'}`}
+                                                    >
+                                                        LOGIN
+                                                    </button>
+                                                    <button
+                                                        onClick={() => { setAuthMode('register'); setOtpSent(false); }}
+                                                        className={`px-6 py-1.5 rounded-full text-xs font-bold transition-all ${authMode === 'register' ? 'bg-[#ff00ff] text-white shadow-[0_0_10px_#ff00ff]' : 'text-white/50 hover:text-white'}`}
+                                                    >
+                                                        REGISTER
+                                                    </button>
+                                                </div>
                                             </div>
                                             <h2 className="mb-2 tracking-tight uppercase" style={{
                                                 fontFamily: '"Press Start 2P", "Courier New", monospace',
@@ -415,18 +518,12 @@ export default function UnifiedRegistration() {
                                                 color: '#ff00ff',
                                                 textShadow: '0 0 10px #ff00ff, 2px 2px 0 #880088'
                                             }}>
-                                                AARUNYA REGISTRATION
+                                                {authMode === 'login' ? 'ACCESS DASHBOARD' : 'SIGN UP FOR AARUNYA'}
                                             </h2>
                                             <div className="h-0.5 w-full relative overflow-hidden rounded-full" style={{
                                                 background: 'linear-gradient(to right, #ff00ff, #00ffff)',
                                                 boxShadow: 'inset 0 0 4px #ff00ff, 0 0 8px #00ffff'
                                             }} />
-                                            <p className="font-vt323 text-xs mt-3 uppercase tracking-wider" style={{
-                                                color: '#00ffff',
-                                                textShadow: '1px 1px 0 #003333'
-                                            }}>
-                                                // SECURE EVENT & COMPETITION REGISTRATION
-                                            </p>
                                         </div>
 
                                         {error && (
@@ -436,165 +533,118 @@ export default function UnifiedRegistration() {
                                         )}
 
                                         <div className="space-y-4">
-                                            {/* Enrollment Number */}
-                                            <div className="space-y-1">
-                                                <Input
-                                                    value={signUpData.enrollment_no}
-                                                    onChange={(e) => setSignUpData({ ...signUpData, enrollment_no: e.target.value })}
-                                                    placeholder="Enrollment Number"
-                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5"
-                                                    style={inputStyle}
-                                                    onFocus={(e) => {
-                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                        e.currentTarget.style.borderColor = '#ff00ff';
-                                                    }}
-                                                    onBlur={(e) => {
-                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
-                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
-                                                    }}
-                                                    required
-                                                />
-                                                <p className="text-xs font-bold text-white/70 ml-2">Must be unique</p>
-                                            </div>
-
-                                            {/* Name */}
-                                            <div>
-                                                <Input
-                                                    value={signUpData.name}
-                                                    onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
-                                                    placeholder="Name"
-                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5"
-                                                    style={inputStyle}
-                                                    onFocus={(e) => {
-                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                        e.currentTarget.style.borderColor = '#ff00ff';
-                                                    }}
-                                                    onBlur={(e) => {
-                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
-                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
-                                                    }}
-                                                    required
-                                                />
-                                            </div>
-
-                                            {/* Email + Send OTP button */}
-                                            <div className="space-y-1">
-                                                <div className="flex gap-2 items-center">
-                                                    <Input
-                                                        type="email"
-                                                        value={signUpData.email}
-                                                        onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
-                                                        placeholder="Email (@mitsgwl.ac.in or @mitsgwalior.in)"
-                                                        className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
-                                                        style={inputStyle}
-                                                        onFocus={(e) => {
-                                                            e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                            e.currentTarget.style.borderColor = '#ff00ff';
-                                                        }}
-                                                        onBlur={(e) => {
-                                                            e.currentTarget.style.boxShadow = inputStyle.boxShadow;
-                                                            e.currentTarget.style.borderColor = inputStyle.borderColor;
-                                                        }}
-                                                        required
-                                                    />
-                                                    <Button
-                                                        type="button"
-                                                        onClick={handleSendOTP}
-                                                        disabled={loading || !isValidEmail(signUpData.email)}
-                                                        className="h-11 px-4 rounded-full text-xs font-bold whitespace-nowrap shrink-0"
-                                                        style={{
-                                                            background: isValidEmail(signUpData.email) ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : '#333',
-                                                            boxShadow: isValidEmail(signUpData.email) ? '0 0 12px rgba(59,130,246,0.5)' : 'none',
-                                                            border: 'none'
-                                                        }}
-                                                    >
-                                                        {loading && !otpSent ? 'Sending...' : otpSent ? 'Resend OTP' : 'Send OTP'}
-                                                    </Button>
+                                            {authMode === 'login' ? (
+                                                <div className="space-y-4">
+                                                    <div className="space-y-1">
+                                                        <div className="flex gap-2 items-center">
+                                                            <Input
+                                                                type="email"
+                                                                value={otpEmail}
+                                                                onChange={(e) => setOtpEmail(e.target.value)}
+                                                                placeholder="Email (@mitsgwl.ac.in)"
+                                                                className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                                style={inputStyle}
+                                                                required
+                                                            />
+                                                            <Button
+                                                                type="button"
+                                                                onClick={handleSendOTP}
+                                                                disabled={loading || !isValidEmail(otpEmail)}
+                                                                className="h-11 px-6 rounded-full text-xs font-bold whitespace-nowrap shrink-0"
+                                                                style={{
+                                                                    background: isValidEmail(otpEmail) ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : '#333',
+                                                                    boxShadow: isValidEmail(otpEmail) ? '0 0 12px rgba(59,130,246,0.5)' : 'none',
+                                                                    border: 'none'
+                                                                }}
+                                                            >
+                                                                {loading ? '...' : otpSent ? 'RESEND' : 'SEND OTP'}
+                                                            </Button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <p className="text-xs font-bold text-white/70 ml-2">Must be @mitsgwl.ac.in or @mitsgwalior.in</p>
-                                            </div>
+                                            ) : (
+                                                <div className="space-y-4">
+                                                    <div className="flex gap-3">
+                                                        <Input
+                                                            value={signUpData.enrollment_no}
+                                                            onChange={(e) => setSignUpData({ ...signUpData, enrollment_no: e.target.value })}
+                                                            placeholder="Enrollment No."
+                                                            className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                            style={inputStyle}
+                                                            required
+                                                        />
+                                                        <Input
+                                                            value={signUpData.name}
+                                                            onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
+                                                            placeholder="Full Name"
+                                                            className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                            style={inputStyle}
+                                                            required
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <div className="flex gap-2 items-center">
+                                                            <Input
+                                                                type="email"
+                                                                value={signUpData.email}
+                                                                onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
+                                                                placeholder="MITS Email"
+                                                                className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                                style={inputStyle}
+                                                                required
+                                                            />
+                                                            <Button
+                                                                type="button"
+                                                                onClick={handleSendOTP}
+                                                                disabled={loading || !isValidEmail(signUpData.email)}
+                                                                className="h-11 px-6 rounded-full text-xs font-bold whitespace-nowrap shrink-0"
+                                                                style={{
+                                                                    background: isValidEmail(signUpData.email) ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : '#333',
+                                                                    boxShadow: isValidEmail(signUpData.email) ? '0 0 12px rgba(59,130,246,0.5)' : 'none',
+                                                                    border: 'none'
+                                                                }}
+                                                            >
+                                                                {loading ? '...' : otpSent ? 'RESEND' : 'SEND OTP'}
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex gap-3">
+                                                        <Input
+                                                            type="tel"
+                                                            value={signUpData.phone}
+                                                            onChange={(e) => setSignUpData({ ...signUpData, phone: e.target.value })}
+                                                            placeholder="Phone"
+                                                            className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                            style={inputStyle}
+                                                            required
+                                                        />
+                                                        <Input
+                                                            value={signUpData.branch}
+                                                            onChange={(e) => setSignUpData({ ...signUpData, branch: e.target.value })}
+                                                            placeholder="Branch"
+                                                            className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                            style={inputStyle}
+                                                            required
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
 
-                                            {/* Phone */}
-                                            <div>
-                                                <Input
-                                                    type="tel"
-                                                    value={signUpData.phone}
-                                                    onChange={(e) => setSignUpData({ ...signUpData, phone: e.target.value })}
-                                                    placeholder="Phone"
-                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5"
-                                                    style={inputStyle}
-                                                    onFocus={(e) => {
-                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                        e.currentTarget.style.borderColor = '#ff00ff';
-                                                    }}
-                                                    onBlur={(e) => {
-                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
-                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
-                                                    }}
-                                                    required
-                                                />
-                                            </div>
-
-                                            {/* Branch + Year side by side */}
-                                            <div className="flex gap-3">
-                                                <Input
-                                                    value={signUpData.branch}
-                                                    onChange={(e) => setSignUpData({ ...signUpData, branch: e.target.value })}
-                                                    placeholder="Branch"
-                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
-                                                    style={inputStyle}
-                                                    onFocus={(e) => {
-                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                        e.currentTarget.style.borderColor = '#ff00ff';
-                                                    }}
-                                                    onBlur={(e) => {
-                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
-                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
-                                                    }}
-                                                    required
-                                                />
-                                                <Input
-                                                    value={signUpData.year}
-                                                    onChange={(e) => setSignUpData({ ...signUpData, year: e.target.value })}
-                                                    placeholder="Year"
-                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
-                                                    style={inputStyle}
-                                                    onFocus={(e) => {
-                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                        e.currentTarget.style.borderColor = '#ff00ff';
-                                                    }}
-                                                    onBlur={(e) => {
-                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
-                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
-                                                    }}
-                                                    required
-                                                />
-                                            </div>
-
-                                            {/* OTP Field */}
                                             <div className="space-y-1">
                                                 <Input
                                                     value={otpToken}
                                                     onChange={(e) => setOtpToken(e.target.value)}
-                                                    placeholder="OTP (check email or server logs)"
-                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5"
+                                                    placeholder="Enter 6-digit OTP"
+                                                    className="border-2 font-vt323 text-sm h-11 transition-all text-center tracking-[1em] placeholder:tracking-normal placeholder:text-white/30 rounded-full px-5"
                                                     style={inputStyle}
-                                                    onFocus={(e) => {
-                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                        e.currentTarget.style.borderColor = '#ff00ff';
-                                                    }}
-                                                    onBlur={(e) => {
-                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
-                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
-                                                    }}
                                                     disabled={!otpSent}
+                                                    maxLength={6}
                                                 />
                                             </div>
 
-                                            {/* Register Button */}
                                             <Button
                                                 onClick={handleVerifyAndRegister}
-                                                disabled={loading || !otpSent || !otpToken.trim() || !signUpData.enrollment_no.trim() || !signUpData.name.trim() || !signUpData.phone.trim() || !signUpData.branch.trim() || !signUpData.year.trim()}
+                                                disabled={loading || !otpSent || otpToken.length < 6}
                                                 className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-2 uppercase tracking-wider disabled:opacity-50 h-11 rounded-full"
                                                 style={{
                                                     background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)',
@@ -602,31 +652,14 @@ export default function UnifiedRegistration() {
                                                     fontSize: '11px'
                                                 }}
                                             >
-                                                {loading ? 'VERIFYING & REGISTERING...' : 'VERIFY & REGISTER'}
+                                                {loading ? 'VERIFYING...' : authMode === 'login' ? 'LOGIN TO DASHBOARD' : 'COMPLETE REGISTRATION'}
                                             </Button>
-                                        </div>
-
-                                        {/* STATUS */}
-                                        <div className="mt-6 text-center pt-4" style={{ borderTop: '1px dashed #ff00ff' }}>
-                                            <div className="flex items-center justify-center gap-2">
-                                                <span className="font-vt323 text-xs sm:text-sm uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
-                                                    System Status
-                                                </span>
-                                                <span className="flex items-center gap-1.5">
-                                                    <span className="w-1.5 h-1.5 bg-[#00ff00] rounded-full animate-pulse" style={{ boxShadow: '0 0 8px #00ff00' }} />
-                                                    <span className="font-vt323 text-xs sm:text-sm font-bold tracking-widest" style={{ color: '#00ff00', textShadow: '0 0 8px #00ff00' }}>
-                                                        Online
-                                                    </span>
-                                                </span>
-                                            </div>
                                         </div>
                                     </div>
                                 </motion.div>
                             )}
 
-
-
-                            {step === 'events' && user && (
+                            {step === 'dashboard' && user && (
                                 <motion.div
                                     variants={itemVariants}
                                     className="relative p-6 sm:p-8"
@@ -637,115 +670,168 @@ export default function UnifiedRegistration() {
                                     }}
                                 >
                                     <div className="relative z-10">
+                                        {/* Corner indicators */}
+                                        <span className="absolute -top-1 -left-1 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 10px #00ffff' }} />
+                                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff' }} />
+                                        <span className="absolute -bottom-1 -left-1 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff' }} />
+                                        <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 10px #00ffff' }} />
+
+                                        <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
+                                            background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.1) 2px, rgba(0,255,255,0.1) 4px)',
+                                            backgroundSize: '4px 4px'
+                                        }} />
+
                                         {/* User Info Header */}
-                                        <div className="mb-6 px-4 py-3 bg-white/5 border border-white/20 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2">
-                                            <div className="text-xs">
-                                                <span className="text-white/50">Logged in as:</span> <span className="text-[#00ffff]">{user.name}</span>
+                                        <div className="mb-8 px-5 py-4 bg-white/5 border border-[#ff00ff]/30 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4 shadow-[0_0_15px_rgba(255,0,255,0.1)] relative">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-[#ff00ff] flex items-center justify-center text-xl shadow-[0_0_10px_#ff00ff]">
+                                                    👤
+                                                </div>
+                                                <div>
+                                                    <div className="text-[10px] text-white/50 uppercase tracking-widest">Aarunya Explorer</div>
+                                                    <div className="text-sm font-bold text-[#00ffff]">{user.name}</div>
+                                                </div>
                                             </div>
-                                            <div className="flex gap-2">
+
+                                            <div className="absolute -top-12 right-0 flex gap-2">
                                                 {epassUrl && (
-                                                    <Button onClick={() => setStep('success')} size="sm" variant="secondary" className="h-6 text-[10px] bg-green-900/50 hover:bg-green-800/50 text-green-400 border border-green-500/50">
-                                                        View E-Pass
+                                                    <Button onClick={() => setStep('success')} size="sm" variant="secondary" className="h-8 rounded-full text-[10px] bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/50 px-4">
+                                                        VIEW E-PASS
                                                     </Button>
                                                 )}
-                                                <Button onClick={handleLogout} size="sm" variant="outline" className="h-6 text-[10px]">
-                                                    Logout
+                                                <Button onClick={handleLogout} size="sm" variant="outline" className="h-9 rounded-full text-[10px] border-[#ff00ff] bg-black/60 hover:bg-[#ff00ff] hover:text-white transition-all shadow-[0_0_15px_rgba(255,0,255,0.3)] font-black tracking-widest px-6">
+                                                    SIGN OUT
                                                 </Button>
                                             </div>
                                         </div>
 
-                                        <div className="text-center mb-6">
-                                            <div className="text-3xl sm:text-4xl mb-4" style={{
-                                                color: '#00ffff',
-                                                textShadow: '0 0 10px #00ffff'
-                                            }}>
-                                                📋
-                                            </div>
+                                        <div className="text-center mb-8">
                                             <h2 className="mb-2 tracking-tight uppercase" style={{
                                                 fontFamily: '"Press Start 2P", "Courier New", monospace',
-                                                fontSize: '11px',
+                                                fontSize: '14px',
                                                 color: '#ff00ff',
-                                                textShadow: '0 0 10px #ff00ff, 2px 2px 0 #880088'
+                                                textShadow: '0 0 10px #ff00ff'
                                             }}>
-                                                EVENT SELECTION
+                                                SELECT YOUR EVENTS
                                             </h2>
-                                            <div className="h-0.5 w-full relative overflow-hidden rounded-full" style={{
-                                                background: 'linear-gradient(to right, #ff00ff, #00ffff)',
-                                                boxShadow: 'inset 0 0 4px #ff00ff, 0 0 8px #00ffff'
-                                            }} />
+                                            <p className="text-[10px] text-[#00ffff] uppercase tracking-[0.2em] mb-4">Pick one event to continue</p>
                                         </div>
 
-                                        <div className="space-y-4 max-h-96 overflow-y-auto">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar p-2">
                                             {events.map((event) => {
                                                 const isRegistered = registeredEventIds.includes(event.id);
+                                                const isSelected = selectedEventId === event.id;
                                                 return (
                                                     <div
                                                         key={event.id}
-                                                        className={`border rounded-lg p-4 cursor-pointer transition-all ${isRegistered
-                                                            ? 'border-green-500 bg-green-900/10 cursor-default'
-                                                            : selectedEvents.includes(event.id)
-                                                                ? 'border-[#00ffff] bg-white/5'
-                                                                : 'border-white/20 hover:border-white/40'
+                                                        className={`relative overflow-hidden border-2 rounded-2xl p-5 cursor-pointer transition-all duration-300 ${isRegistered
+                                                            ? 'border-green-500/50 bg-green-500/5 cursor-default'
+                                                            : isSelected
+                                                                ? 'border-[#00ffff] bg-[#00ffff]/5 shadow-[0_0_20px_rgba(0,255,255,0.2)]'
+                                                                : 'border-white/10 bg-black/40 hover:border-[#ff00ff]/50'
                                                             }`}
                                                         onClick={() => !isRegistered && handleEventSelection(event.id)}
                                                     >
-                                                        <div className="flex justify-between items-start mb-2">
-                                                            <div>
-                                                                <h3 className="font-bold text-sm" style={{ color: '#00ffff' }}>
-                                                                    {event.event_name}
-                                                                </h3>
-                                                                <p className="text-xs text-white/70">{event.club_name}</p>
-                                                            </div>
-                                                            <div className="text-right">
-                                                                <div className={`text-xs font-bold ${event.is_free ? 'text-green-400' : 'text-red-400'
-                                                                    }`}>
-                                                                    {event.is_free ? 'FREE' : `₹${event.fee}`}
-                                                                </div>
-                                                                <div className="text-xs text-white/50">
-                                                                    {isRegistered ? 'Registered' : selectedEvents.includes(event.id) ? 'Selected' : 'Click to Select'}
-                                                                </div>
-                                                            </div>
+                                                        {/* Category Badge */}
+                                                        <div className="absolute top-0 right-0 px-4 py-1 rounded-bl-xl text-[8px] font-bold uppercase tracking-widest bg-white/10 text-white/70">
+                                                            {event.category}
                                                         </div>
-                                                        <div className="flex items-center gap-2">
-                                                            {isRegistered ? (
-                                                                <span className="text-xs text-green-400 flex items-center gap-1">
-                                                                    ✓ Already Registered
-                                                                </span>
-                                                            ) : (
-                                                                <>
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        checked={selectedEvents.includes(event.id)}
-                                                                        onChange={() => handleEventSelection(event.id)}
-                                                                        className="w-4 h-4"
-                                                                    />
-                                                                    <span className="text-xs text-white/70">Select this event</span>
-                                                                </>
-                                                            )}
+
+                                                        <div className="flex flex-col gap-3">
+                                                            <div className="flex justify-between items-start">
+                                                                <div className="flex-1">
+                                                                    <h3 className="text-lg font-black tracking-tight text-white mb-0.5">
+                                                                        {event.name}
+                                                                    </h3>
+                                                                    <p className="text-[10px] text-[#ff00ff] font-bold uppercase mb-2">Hosted by {event.club}</p>
+                                                                    <p className="text-xs text-white/60 line-clamp-2 mb-3 leading-relaxed">
+                                                                        {event.description}
+                                                                    </p>
+                                                                </div>
+                                                                <div className="text-right flex flex-col items-end">
+                                                                    <div className={`text-xl font-black mb-1 ${event.fee === 0 ? 'text-green-400' : 'text-white'}`}>
+                                                                        {event.fee === 0 ? 'FREE' : `₹${event.fee}`}
+                                                                    </div>
+                                                                    {event.prizePool && (
+                                                                        <div className="text-[9px] bg-[#ffea00]/20 text-[#ffea00] px-2 py-0.5 rounded-full font-bold">
+                                                                            🏆 {event.prizePool} PRIZE
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-white/5 pt-3">
+                                                                <div className="flex items-center gap-2 text-[10px] text-white/50">
+                                                                    <span className="text-sm">📅</span> {event.date}
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-[10px] text-white/50">
+                                                                    <span className="text-sm">📍</span> {event.venue}
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-[10px] text-white/50">
+                                                                    <span className="text-sm">👥</span> {event.isTeamEvent ? `Team (${event.teamSize?.min}-${event.teamSize?.max})` : 'Individual'}
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-[10px] text-white/50">
+                                                                    <span className="text-sm">📞</span> {event.contactPhone}
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-[10px] text-white/50">
+                                                                    <span className="text-sm">📧</span> {event.contactEmail}
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-[10px] text-white/30 truncate">
+                                                                    <span className="text-sm">⏰</span> Closes: {new Date(event.registrationCloseTime).toLocaleDateString()}
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="flex items-center justify-between mt-2 pt-3 border-t border-white/5">
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className={`w-2 h-2 rounded-full ${event.isActive ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                                                                    <span className="text-[9px] text-white/40 uppercase tracking-widest">
+                                                                        {event.currentRegistrations}/{event.maxParticipants} Registered
+                                                                    </span>
+                                                                </div>
+
+                                                                {isRegistered ? (
+                                                                    <span className="text-[10px] font-bold text-green-400 uppercase tracking-widest flex items-center gap-1">
+                                                                        ✓ ENROLLED
+                                                                    </span>
+                                                                ) : (
+                                                                    <div className={`px-4 py-1.5 rounded-full text-[10px] font-bold transition-all ${isSelected ? 'bg-[#00ffff] text-black shadow-[0_0_10px_#00ffff]' : 'bg-white/10 text-white'}`}>
+                                                                        {isSelected ? 'SELECTED' : 'SELECT EVENT'}
+                                                                    </div>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 );
                                             })}
                                         </div>
 
-                                        {selectedEvents.length > 0 && (
-                                            <div className="mt-6 p-4 bg-white/5 border border-white/20 rounded-lg">
-                                                <h3 className="font-vt323 text-xs uppercase tracking-wider mb-2" style={{
-                                                    color: '#00ffff',
-                                                    textShadow: '1px 1px 0 #003333'
-                                                }}>
-                                                    Summary
-                                                </h3>
-                                                <div className="grid grid-cols-2 gap-2 text-xs">
-                                                    <div><span className="text-white/50">Events Selected:</span> {selectedEvents.length}</div>
-                                                    <div><span className="text-white/50">Total Amount:</span> ₹{events.filter(e => selectedEvents.includes(e.id)).reduce((sum, e) => sum + e.fee, 0)}</div>
+                                        {selectedEventId && (
+                                            <motion.div
+                                                initial={{ y: 20, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                className="mt-8 p-6 bg-gradient-to-br from-[#ff00ff]/10 to-[#00ffff]/10 border-2 border-[#ff00ff]/40 rounded-3xl backdrop-blur-md shadow-[0_0_30px_rgba(255,0,255,0.1)] sticky bottom-0 z-20"
+                                            >
+                                                <div className="flex justify-between items-center mb-6">
+                                                    <div>
+                                                        <h3 className="text-sm font-black text-[#00ffff] uppercase tracking-widest mb-1">Payment Strategy</h3>
+                                                        <p className="text-[10px] text-white/50">{events.find(e => e.id === selectedEventId)?.name}</p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <div className="text-2xl font-black text-white">₹{events.find(e => e.id === selectedEventId)?.fee}</div>
+                                                        <div className="text-[10px] text-[#ff00ff] font-bold uppercase">Total Payable</div>
+                                                    </div>
                                                 </div>
-                                                <div className="flex gap-2 mt-4">
-                                                    <Button onClick={handleProceedToPayment} disabled={loading} className="flex-1">
-                                                        {loading ? 'Processing...' : 'Proceed to Payment'}
-                                                    </Button>
-                                                </div>
-                                            </div>
+                                                <Button
+                                                    onClick={handleProceedToPayment}
+                                                    disabled={loading}
+                                                    className="w-full h-12 rounded-full font-black text-xs uppercase tracking-widest border-2 border-[#ff00ff] shadow-[0_0_15px_rgba(255,0,255,0.3)] transition-all hover:scale-[1.02] active:scale-95"
+                                                    style={{
+                                                        background: 'linear-gradient(to right, #ff00ff, #8a2be2)',
+                                                    }}
+                                                >
+                                                    {loading ? 'PROCESSING SECURE PAYMENT...' : `PAY ₹${events.find(e => e.id === selectedEventId)?.fee} & REGISTER NOW`}
+                                                </Button>
+                                            </motion.div>
                                         )}
                                     </div>
                                 </motion.div>
@@ -816,7 +902,7 @@ export default function UnifiedRegistration() {
                                             )}
 
                                             <div className="flex gap-2">
-                                                <Button onClick={() => setStep('events')} className="flex-1">
+                                                <Button onClick={() => setStep('dashboard')} className="flex-1">
                                                     Back to Selection
                                                 </Button>
                                                 <Button onClick={handleLogout} variant="outline" className="flex-1">

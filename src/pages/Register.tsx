@@ -22,18 +22,9 @@ interface StudentFormData {
     yearOfStudy: string;
 }
 
-interface AlumniFormData {
-    name: string;
-    email: string;
-    mobileNumber: string;
-    graduationYear: string;
-    department: string;
-    organization: string;
-    position: string;
-}
 
 export default function Register() {
-    const [registrationType, setRegistrationType] = useState<'student' | 'alumni' | 'event'>('student');
+    const [registrationType, setRegistrationType] = useState<'student' | 'event'>('student');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
@@ -49,16 +40,6 @@ export default function Register() {
         yearOfStudy: ''
     });
 
-    // Alumni form state
-    const [alumniForm, setAlumniForm] = useState<AlumniFormData>({
-        name: '',
-        email: '',
-        mobileNumber: '',
-        graduationYear: '',
-        department: '',
-        organization: '',
-        position: ''
-    });
 
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
@@ -128,35 +109,6 @@ export default function Register() {
         }
     };
 
-    const handleAlumniSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await axios.post(`${API_URL}/api/auth/register`, {
-                ...alumniForm,
-                category: 'alumni'
-            });
-
-            toast.success('Registration successful! Check your email for confirmation.');
-
-            // Store token if returned
-            if (response.data.token) {
-                localStorage.setItem('authToken', response.data.token);
-                localStorage.setItem('user', JSON.stringify(response.data.user));
-            }
-
-            // Redirect to events page or dashboard
-            navigate('/unified-registration');
-        } catch (err: any) {
-            const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
-            setError(errorMessage);
-            toast.error(errorMessage);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     return (
         <div className="min-h-screen bg-[#05010D] text-white font-vt323 selection:bg-[#ff00ff] selection:text-black overflow-x-hidden">
@@ -203,8 +155,8 @@ export default function Register() {
                                     Non-MITS Students
                                 </RetroButton>
                                 <RetroButton
-                                    variant={registrationType === 'alumni' ? 'default' : 'white'}
-                                    onClick={() => setRegistrationType('alumni')}
+                                    variant="white"
+                                    onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLScJVxRKU2EBzHgLrhTcMS1d7IqE8UhUGyX_CWCR9gIqSFCDeA/viewform?usp=preview', '_blank')}
                                     className="w-full justify-start text-left"
                                 >
                                     MITS Alumni
@@ -411,116 +363,6 @@ export default function Register() {
                                         </form>
                                     )}
 
-                                    {/* ALUMNI FORM */}
-                                    {registrationType === 'alumni' && (
-                                        <form className="space-y-4" onSubmit={handleAlumniSubmit}>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
-                                                    Full Name
-                                                </Label>
-                                                <Input
-                                                    value={alumniForm.name}
-                                                    onChange={(e) => setAlumniForm({ ...alumniForm, name: e.target.value })}
-                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
-                                                    style={inputStyle}
-                                                    onFocus={handleInputFocus}
-                                                    onBlur={handleInputBlur}
-                                                    placeholder="Your Full Name"
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
-                                                    Email Address
-                                                </Label>
-                                                <Input
-                                                    type="email"
-                                                    value={alumniForm.email}
-                                                    onChange={(e) => setAlumniForm({ ...alumniForm, email: e.target.value })}
-                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
-                                                    style={inputStyle}
-                                                    onFocus={handleInputFocus}
-                                                    onBlur={handleInputBlur}
-                                                    placeholder="alumni@email.com"
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
-                                                    Mobile Number
-                                                </Label>
-                                                <Input
-                                                    type="tel"
-                                                    value={alumniForm.mobileNumber}
-                                                    onChange={(e) => setAlumniForm({ ...alumniForm, mobileNumber: e.target.value })}
-                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
-                                                    style={inputStyle}
-                                                    onFocus={handleInputFocus}
-                                                    onBlur={handleInputBlur}
-                                                    placeholder="+91 1234567890"
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Graduation Year</Label>
-                                                <Input
-                                                    value={alumniForm.graduationYear}
-                                                    onChange={(e) => setAlumniForm({ ...alumniForm, graduationYear: e.target.value })}
-                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
-                                                    style={inputStyle}
-                                                    onFocus={handleInputFocus}
-                                                    onBlur={handleInputBlur}
-                                                    placeholder="Year of Graduation"
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Department</Label>
-                                                <Input
-                                                    value={alumniForm.department}
-                                                    onChange={(e) => setAlumniForm({ ...alumniForm, department: e.target.value })}
-                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
-                                                    style={inputStyle}
-                                                    onFocus={handleInputFocus}
-                                                    onBlur={handleInputBlur}
-                                                    placeholder="Your Department"
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Current Organization</Label>
-                                                <Input
-                                                    value={alumniForm.organization}
-                                                    onChange={(e) => setAlumniForm({ ...alumniForm, organization: e.target.value })}
-                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
-                                                    style={inputStyle}
-                                                    onFocus={handleInputFocus}
-                                                    onBlur={handleInputBlur}
-                                                    placeholder="Your Current Organization"
-                                                />
-                                            </div>
-                                            <div className="space-y-1.5 group">
-                                                <Label className="font-vt323 text-xs sm:text-[13px] group-focus-within:text-[#ff00ff] transition-colors uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>Position</Label>
-                                                <Input
-                                                    value={alumniForm.position}
-                                                    onChange={(e) => setAlumniForm({ ...alumniForm, position: e.target.value })}
-                                                    className="border-2 font-vt323 text-xs sm:text-sm h-10 transition-all placeholder:text-white/20"
-                                                    style={inputStyle}
-                                                    onFocus={handleInputFocus}
-                                                    onBlur={handleInputBlur}
-                                                    placeholder="Your Current Position"
-                                                />
-                                            </div>
-                                            <Button
-                                                type="submit"
-                                                disabled={loading}
-                                                className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-4 uppercase tracking-wider disabled:opacity-50"
-                                                style={{ background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)', boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff', fontSize: '9px' }}
-                                            >
-                                                {loading ? 'REGISTERING...' : 'REGISTER AS MITS ALUMNI'}
-                                            </Button>
-                                        </form>
-                                    )}
 
                                     {/* EVENT REGISTRATION - Redirect Message */}
                                     {registrationType === 'event' && (
