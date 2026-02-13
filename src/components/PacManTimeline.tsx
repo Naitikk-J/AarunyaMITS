@@ -212,22 +212,24 @@ export const PacmanTimeline: React.FC = () => {
                             }}
                             className="pointer-events-none"
                         >
-                            <foreignObject x="-40" y="-40" width="80" height="80">
-                                <div className="w-full h-full bg-kidcore-yellow rounded shadow-[0_0_30px_#FFE737] border-2 border-white/50 relative">
-                                    <div className="absolute top-1/4 right-1/4 w-2 h-2 bg-black rounded-full" />
-                                    <motion.div
-                                        className="absolute inset-0 bg-[#0D001A] origin-center"
-                                        animate={{
-                                            clipPath: [
-                                                'polygon(50% 50%, 100% 20%, 100% 80%)',
-                                                'polygon(50% 50%, 100% 50%, 100% 50%)',
-                                                'polygon(50% 50%, 100% 20%, 100% 80%)'
-                                            ]
-                                        }}
-                                        transition={{ duration: 0.25, repeat: Infinity }}
-                                    />
-                                </div>
-                            </foreignObject>
+                            {/* Pac-Man body - pure SVG circle */}
+                            <circle r="28" fill="#FFE737" />
+                            {/* Eye */}
+                            <circle cx="5" cy="-12" r="4" fill="#0D001A" />
+                            {/* Mouth chomp - animated wedge */}
+                            <motion.path
+                                fill="#0D001A"
+                                animate={{
+                                    d: [
+                                        'M 0 0 L 30 -14 L 30 14 Z',
+                                        'M 0 0 L 30 -2 L 30 2 Z',
+                                        'M 0 0 L 30 -14 L 30 14 Z'
+                                    ]
+                                }}
+                                transition={{ duration: 0.25, repeat: Infinity }}
+                            />
+                            {/* Glow effect */}
+                            <circle r="28" fill="none" stroke="#FFE737" strokeWidth="2" opacity="0.5" filter="url(#maze-glow)" />
                         </motion.g>
 
                         {/* Event Cards inside SVG for perfect positioning */}
