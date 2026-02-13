@@ -5,18 +5,18 @@
 @font-face {
   font-family: 'Orbitron';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 400 900;
   font-display: swap;
-  src: url('./fonts/orbitron-v31-latin-700.woff2') format('woff2');
+  src: url('/fonts/orbitron/Orbitron-VariableFont_wght.woff2') format('woff2');
 }
 
 /* Fredoka - Used for your Sticker Labels */
 @font-face {
   font-family: 'Fredoka';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 300 700;
   font-display: swap;
-  src: url('./fonts/fredoka-v14-latin-700.woff2') format('woff2');
+  src: url('/fonts/fredoka-one/Fredoka-VariableFont_wdth,wght.woff2') format('woff2');
 }
 
 @tailwind base;

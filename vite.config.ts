@@ -22,4 +22,17 @@ export default defineConfig(({ mode }) => ({
         },
     },
     assetsInclude: ["**/*.glb", "**/*.gltf"],
+    build: {
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+                    'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
+                    'vendor-utils': ['framer-motion', 'lucide-react', 'date-fns', 'clsx', 'tailwind-merge'],
+                    'vendor-supabase': ['@supabase/supabase-js'],
+                },
+            },
+        },
+    },
 }));
