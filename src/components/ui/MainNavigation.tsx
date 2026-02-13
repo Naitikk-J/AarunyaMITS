@@ -91,6 +91,8 @@ export const MainNavigation = ({ className }: { className?: string }) => {
                             <img
                                 src="/aarunya-logo.svg"
                                 alt="Aarunya 2026"
+                                width="120"
+                                height="48"
                                 className="h-12 w-auto transition-transform group-hover:scale-105 duration-300"
                                 style={{
                                     imageRendering: 'pixelated',

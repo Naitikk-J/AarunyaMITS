@@ -5,7 +5,7 @@ import { useRazorpay } from '@/hooks/useRazorpay';
 import { generateQRCode, downloadQRCode } from '@/utils/qrCode';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+
 import { motion, Variants } from 'framer-motion';
 import { GlitchText } from '@/components/GlitchText';
 import { RetroButton } from '@/components/ui/retro-button';
@@ -32,10 +32,14 @@ export default function UnifiedRegistration() {
     const [step, setStep] = useState<'login' | 'otp' | 'events' | 'payment' | 'success'>('login');
     const [otpEmail, setOtpEmail] = useState('');
     const [otpToken, setOtpToken] = useState('');
+    const [otpSent, setOtpSent] = useState(false);
     const [signUpData, setSignUpData] = useState({
+        enrollment_no: '',
         name: '',
         email: '',
-        enrollment_no: ''
+        phone: '',
+        branch: '',
+        year: ''
     });
     const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
     const [events, setEvents] = useState<Event[]>([]);
@@ -115,14 +119,20 @@ export default function UnifiedRegistration() {
         }
     };
 
-    const handleOTPLogin = async () => {
+    const isValidEmail = (email: string) => {
+        return email.endsWith('@mitsgwl.ac.in') || email.endsWith('@mitsgwalior.in');
+    };
+
+    const handleSendOTP = async () => {
         setLoading(true);
         setError(null);
+        const emailToUse = signUpData.email;
         try {
-            console.log('Sending OTP to:', otpEmail);
-            await signInWithOTP(otpEmail);
+            console.log('Sending OTP to:', emailToUse);
+            await signInWithOTP(emailToUse);
             console.log('OTP sent successfully');
-            setStep('otp');
+            setOtpSent(true);
+            setOtpEmail(emailToUse);
             // Show success message
             toast.success('OTP sent! Please check your email (including spam folder)');
         } catch (err: any) {
@@ -134,16 +144,16 @@ export default function UnifiedRegistration() {
         }
     };
 
-    const handleOTPVerification = async () => {
+    const handleVerifyAndRegister = async () => {
         setLoading(true);
         setError(null);
         try {
             await verifyOTP(otpEmail, otpToken);
-            toast.success('Sign in successful!');
+            toast.success('Registration successful!');
             setStep('events');
         } catch (err: any) {
             setError(err.message);
-            toast.error('Sign in not successful: ' + err.message);
+            toast.error('Verification failed: ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -380,6 +390,17 @@ export default function UnifiedRegistration() {
                                         boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 20px #ff00ff, 0 0 40px #00ffff'
                                     }}
                                 >
+                                    {/* Corner indicators */}
+                                    <span className="absolute -top-1 -left-1 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 10px #00ffff' }} />
+                                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff' }} />
+                                    <span className="absolute -bottom-1 -left-1 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff' }} />
+                                    <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 10px #00ffff' }} />
+
+                                    <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
+                                        background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.1) 2px, rgba(0,255,255,0.1) 4px)',
+                                        backgroundSize: '4px 4px'
+                                    }} />
+
                                     <div className="relative z-10">
                                         <div className="text-center mb-6">
                                             <div className="text-3xl sm:text-4xl mb-4" style={{
@@ -394,7 +415,7 @@ export default function UnifiedRegistration() {
                                                 color: '#ff00ff',
                                                 textShadow: '0 0 10px #ff00ff, 2px 2px 0 #880088'
                                             }}>
-                                                AUTHENTICATION REQUIRED
+                                                AARUNYA REGISTRATION
                                             </h2>
                                             <div className="h-0.5 w-full relative overflow-hidden rounded-full" style={{
                                                 background: 'linear-gradient(to right, #ff00ff, #00ffff)',
@@ -404,139 +425,199 @@ export default function UnifiedRegistration() {
                                                 color: '#00ffff',
                                                 textShadow: '1px 1px 0 #003333'
                                             }}>
-                                                MITS Students Only - @mitsgwl.ac.in Required
+                                                // SECURE EVENT & COMPETITION REGISTRATION
                                             </p>
                                         </div>
 
-
-                                        <div className="space-y-6">
-                                            {error && (
-                                                <div className="p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-xs font-vt323">
-                                                    {error}
-                                                </div>
-                                            )}
-
-                                            {/* Google Login removed */}
-
-                                            {/* OTP Login */}
-                                            <div className="space-y-6">
-                                                <div>
-                                                    <Label className="font-vt323 text-xs uppercase tracking-wider mb-2" style={{
-                                                        color: '#00ffff',
-                                                        textShadow: '1px 1px 0 #003333'
-                                                    }}>
-                                                        Email OTP Login
-                                                    </Label>
-                                                    <Input
-                                                        type="email"
-                                                        value={otpEmail}
-                                                        onChange={(e) => setOtpEmail(e.target.value)}
-                                                        placeholder="your-email@mitsgwl.ac.in"
-                                                        style={inputStyle}
-                                                        onFocus={(e) => {
-                                                            e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                            e.currentTarget.style.borderColor = '#ff00ff';
-                                                        }}
-                                                        onBlur={(e) => {
-                                                            e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff';
-                                                            e.currentTarget.style.borderColor = '#00ffff';
-                                                        }}
-                                                    />
-                                                    <p className="text-xs text-white/50 mt-1">Must be a valid @mitsgwl.ac.in email</p>
-                                                </div>
-                                                <div>
-                                                    <Label className="font-vt323 text-xs uppercase tracking-wider mb-2" style={{
-                                                        color: '#00ffff',
-                                                        textShadow: '1px 1px 0 #003333'
-                                                    }}>
-                                                        Phone Number
-                                                    </Label>
-                                                    <Input
-                                                        type="tel"
-                                                        value={signUpData.enrollment_no}
-                                                        onChange={(e) => setSignUpData({ ...signUpData, enrollment_no: e.target.value })}
-                                                        placeholder="e.g., 9876543210"
-                                                        style={inputStyle}
-                                                        onFocus={(e) => {
-                                                            e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
-                                                            e.currentTarget.style.borderColor = '#ff00ff';
-                                                        }}
-                                                        onBlur={(e) => {
-                                                            e.currentTarget.style.boxShadow = 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff';
-                                                            e.currentTarget.style.borderColor = '#00ffff';
-                                                        }}
-                                                    />
-                                                    <p className="text-xs text-white/50 mt-1">Enter your phone number</p>
-                                                </div>
-                                                <Button
-                                                    onClick={handleOTPLogin}
-                                                    disabled={loading || !otpEmail.endsWith('@mitsgwl.ac.in') || !signUpData.enrollment_no.trim()}
-                                                    className="w-full"
-                                                >
-                                                    {loading ? 'Sending OTP...' : 'Send OTP'}
-                                                </Button>
+                                        {error && (
+                                            <div className="mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-xs font-vt323">
+                                                {error}
                                             </div>
-
-                                        </div>
-
-                                    </div>
-                                </motion.div>
-                            )}
-
-                            {step === 'otp' && (
-                                <motion.div
-                                    variants={itemVariants}
-                                    className="relative p-6 sm:p-8"
-                                    style={{
-                                        background: 'linear-gradient(to bottom, #1a0a2e, #0d0520)',
-                                        border: '2px solid #ff00ff',
-                                        boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 20px #ff00ff, 0 0 40px #00ffff'
-                                    }}
-                                >
-                                    <div className="relative z-10">
-                                        <div className="text-center mb-6">
-                                            <div className="text-3xl sm:text-4xl mb-4" style={{
-                                                color: '#00ffff',
-                                                textShadow: '0 0 10px #00ffff'
-                                            }}>
-                                                📧
-                                            </div>
-                                            <h2 className="mb-2 tracking-tight uppercase" style={{
-                                                fontFamily: '"Press Start 2P", "Courier New", monospace',
-                                                fontSize: '11px',
-                                                color: '#ff00ff',
-                                                textShadow: '0 0 10px #ff00ff, 2px 2px 0 #880088'
-                                            }}>
-                                                VERIFY OTP
-                                            </h2>
-                                            <p className="font-vt323 text-xs mt-3 uppercase tracking-wider" style={{
-                                                color: '#00ffff',
-                                                textShadow: '1px 1px 0 #003333'
-                                            }}>
-                                                Check your email for the OTP
-                                            </p>
-                                        </div>
+                                        )}
 
                                         <div className="space-y-4">
-                                            {error && (
-                                                <div className="p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-xs font-vt323">
-                                                    {error}
-                                                </div>
-                                            )}
+                                            {/* Enrollment Number */}
+                                            <div className="space-y-1">
+                                                <Input
+                                                    value={signUpData.enrollment_no}
+                                                    onChange={(e) => setSignUpData({ ...signUpData, enrollment_no: e.target.value })}
+                                                    placeholder="Enrollment Number"
+                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5"
+                                                    style={inputStyle}
+                                                    onFocus={(e) => {
+                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
+                                                        e.currentTarget.style.borderColor = '#ff00ff';
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
+                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
+                                                    }}
+                                                    required
+                                                />
+                                                <p className="text-xs font-bold text-white/70 ml-2">Must be unique</p>
+                                            </div>
 
-                                            <Input
-                                                placeholder="Enter OTP"
-                                                value={otpToken}
-                                                onChange={(e) => setOtpToken(e.target.value)}
-                                                style={inputStyle}
-                                            />
-                                            <div className="flex gap-2">
-                                                <Button onClick={handleOTPVerification} disabled={loading} className="flex-1">
-                                                    {loading ? 'Verifying...' : 'Verify OTP'}
-                                                </Button>
-                                                <Button onClick={() => setStep('login')} variant="outline" className="flex-1">
-                                                    Back
-                                                </Button>
+                                            {/* Name */}
+                                            <div>
+                                                <Input
+                                                    value={signUpData.name}
+                                                    onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
+                                                    placeholder="Name"
+                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5"
+                                                    style={inputStyle}
+                                                    onFocus={(e) => {
+                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
+                                                        e.currentTarget.style.borderColor = '#ff00ff';
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
+                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
+                                                    }}
+                                                    required
+                                                />
+                                            </div>
+
+                                            {/* Email + Send OTP button */}
+                                            <div className="space-y-1">
+                                                <div className="flex gap-2 items-center">
+                                                    <Input
+                                                        type="email"
+                                                        value={signUpData.email}
+                                                        onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
+                                                        placeholder="Email (@mitsgwl.ac.in or @mitsgwalior.in)"
+                                                        className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                        style={inputStyle}
+                                                        onFocus={(e) => {
+                                                            e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
+                                                            e.currentTarget.style.borderColor = '#ff00ff';
+                                                        }}
+                                                        onBlur={(e) => {
+                                                            e.currentTarget.style.boxShadow = inputStyle.boxShadow;
+                                                            e.currentTarget.style.borderColor = inputStyle.borderColor;
+                                                        }}
+                                                        required
+                                                    />
+                                                    <Button
+                                                        type="button"
+                                                        onClick={handleSendOTP}
+                                                        disabled={loading || !isValidEmail(signUpData.email)}
+                                                        className="h-11 px-4 rounded-full text-xs font-bold whitespace-nowrap shrink-0"
+                                                        style={{
+                                                            background: isValidEmail(signUpData.email) ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : '#333',
+                                                            boxShadow: isValidEmail(signUpData.email) ? '0 0 12px rgba(59,130,246,0.5)' : 'none',
+                                                            border: 'none'
+                                                        }}
+                                                    >
+                                                        {loading && !otpSent ? 'Sending...' : otpSent ? 'Resend OTP' : 'Send OTP'}
+                                                    </Button>
+                                                </div>
+                                                <p className="text-xs font-bold text-white/70 ml-2">Must be @mitsgwl.ac.in or @mitsgwalior.in</p>
+                                            </div>
+
+                                            {/* Phone */}
+                                            <div>
+                                                <Input
+                                                    type="tel"
+                                                    value={signUpData.phone}
+                                                    onChange={(e) => setSignUpData({ ...signUpData, phone: e.target.value })}
+                                                    placeholder="Phone"
+                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5"
+                                                    style={inputStyle}
+                                                    onFocus={(e) => {
+                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
+                                                        e.currentTarget.style.borderColor = '#ff00ff';
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
+                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
+                                                    }}
+                                                    required
+                                                />
+                                            </div>
+
+                                            {/* Branch + Year side by side */}
+                                            <div className="flex gap-3">
+                                                <Input
+                                                    value={signUpData.branch}
+                                                    onChange={(e) => setSignUpData({ ...signUpData, branch: e.target.value })}
+                                                    placeholder="Branch"
+                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                    style={inputStyle}
+                                                    onFocus={(e) => {
+                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
+                                                        e.currentTarget.style.borderColor = '#ff00ff';
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
+                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
+                                                    }}
+                                                    required
+                                                />
+                                                <Input
+                                                    value={signUpData.year}
+                                                    onChange={(e) => setSignUpData({ ...signUpData, year: e.target.value })}
+                                                    placeholder="Year"
+                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                    style={inputStyle}
+                                                    onFocus={(e) => {
+                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
+                                                        e.currentTarget.style.borderColor = '#ff00ff';
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
+                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
+                                                    }}
+                                                    required
+                                                />
+                                            </div>
+
+                                            {/* OTP Field */}
+                                            <div className="space-y-1">
+                                                <Input
+                                                    value={otpToken}
+                                                    onChange={(e) => setOtpToken(e.target.value)}
+                                                    placeholder="OTP (check email or server logs)"
+                                                    className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5"
+                                                    style={inputStyle}
+                                                    onFocus={(e) => {
+                                                        e.currentTarget.style.boxShadow = 'inset -2px -2px 0 #003333, inset 2px 2px 0 #99ffff, 0 0 15px #00ffff, 0 0 25px #ff00ff';
+                                                        e.currentTarget.style.borderColor = '#ff00ff';
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        e.currentTarget.style.boxShadow = inputStyle.boxShadow;
+                                                        e.currentTarget.style.borderColor = inputStyle.borderColor;
+                                                    }}
+                                                    disabled={!otpSent}
+                                                />
+                                            </div>
+
+                                            {/* Register Button */}
+                                            <Button
+                                                onClick={handleVerifyAndRegister}
+                                                disabled={loading || !otpSent || !otpToken.trim() || !signUpData.enrollment_no.trim() || !signUpData.name.trim() || !signUpData.phone.trim() || !signUpData.branch.trim() || !signUpData.year.trim()}
+                                                className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-2 uppercase tracking-wider disabled:opacity-50 h-11 rounded-full"
+                                                style={{
+                                                    background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)',
+                                                    boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff',
+                                                    fontSize: '11px'
+                                                }}
+                                            >
+                                                {loading ? 'VERIFYING & REGISTERING...' : 'VERIFY & REGISTER'}
+                                            </Button>
+                                        </div>
+
+                                        {/* STATUS */}
+                                        <div className="mt-6 text-center pt-4" style={{ borderTop: '1px dashed #ff00ff' }}>
+                                            <div className="flex items-center justify-center gap-2">
+                                                <span className="font-vt323 text-xs sm:text-sm uppercase tracking-widest" style={{ color: '#00ffff', textShadow: '1px 1px 0 #003333' }}>
+                                                    System Status
+                                                </span>
+                                                <span className="flex items-center gap-1.5">
+                                                    <span className="w-1.5 h-1.5 bg-[#00ff00] rounded-full animate-pulse" style={{ boxShadow: '0 0 8px #00ff00' }} />
+                                                    <span className="font-vt323 text-xs sm:text-sm font-bold tracking-widest" style={{ color: '#00ff00', textShadow: '0 0 8px #00ff00' }}>
+                                                        Online
+                                                    </span>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

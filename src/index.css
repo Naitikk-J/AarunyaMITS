@@ -1,22 +1,21 @@
-/* Google Fonts import for Kidcore typography */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Mono&display=swap');
+/* Google Fonts loaded via <link> in index.html for non-blocking behavior */
 
 /* Orbitron - Used for your Arcade Buttons and Rainbow Text */
 @font-face {
-  font-family: 'Orbitron';
-  font-style: normal;
-  font-weight: 400 900;
-  font-display: swap;
-  src: url('/fonts/orbitron/Orbitron-VariableFont_wght.woff2') format('woff2');
+    font-family: 'Orbitron';
+    font-style: normal;
+    font-weight: 400 900;
+    font-display: swap;
+    src: url('/fonts/orbitron/Orbitron-VariableFont_wght.woff2') format('woff2');
 }
 
 /* Fredoka - Used for your Sticker Labels */
 @font-face {
-  font-family: 'Fredoka';
-  font-style: normal;
-  font-weight: 300 700;
-  font-display: swap;
-  src: url('/fonts/fredoka-one/Fredoka-VariableFont_wdth,wght.woff2') format('woff2');
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url('/fonts/fredoka-one/Fredoka-VariableFont_wdth,wght.woff2') format('woff2');
 }
 
 @tailwind base;
@@ -43,15 +42,18 @@
         --card-foreground: 270 100% 95%;
         --popover: 260 70% 8%;
         --popover-foreground: 270 100% 95%;
-        --primary: 282 98% 54%; /* #BC13FE equivalent approx */
+        --primary: 282 98% 54%;
+        /* #BC13FE equivalent approx */
         --primary-glow: 282 98% 64%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 324 100% 50%; /* #FF0099 equivalent */
+        --secondary: 324 100% 50%;
+        /* #FF0099 equivalent */
         --secondary-glow: 324 100% 60%;
         --secondary-foreground: 0 0% 100%;
         --muted: 260 30% 25%;
         --muted-foreground: 270 20% 70%;
-        --accent: 111 100% 54%; /* #39FF14 equivalent */
+        --accent: 111 100% 54%;
+        /* #39FF14 equivalent */
         --accent-glow: 111 100% 64%;
         --accent-foreground: 0 0% 0%;
         --destructive: 0 100% 50%;
@@ -59,11 +61,13 @@
         --border: 282 98% 54%;
         --input: 260 50% 15%;
         --ring: 282 98% 54%;
-        --radius: 0rem; /* Hard corners as requested */
+        --radius: 0rem;
+        /* Hard corners as requested */
 
         /* Neon Purple Theme Variables */
         --radical-red: 340 100% 55%;
-        --electric-yellow: 54 100% 61%; /* #FFE737 approx */
+        --electric-yellow: 54 100% 61%;
+        /* #FFE737 approx */
         --cyber-blue: 190 100% 50%;
         --neon-magenta: 300 100% 55%;
         --lime-green: 111 100% 54%;
@@ -84,55 +88,52 @@
     .dark {
         --background: 260 100% 5%;
     }
+
     /* ================= PIXEL LOCK ================= */
-.pixelated,
-.font-pixel,
-footer * {
-  image-rendering: pixelated;
-  -webkit-font-smoothing: none;
-  font-smooth: never;
-}
+    .pixelated,
+    .font-pixel,
+    footer * {
+        image-rendering: pixelated;
+        -webkit-font-smoothing: none;
+        font-smooth: never;
+    }
 
-/* ================= CRT EFFECT ================= */
-.crt-overlay::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255,255,255,0.03) 0%,
-    rgba(0,0,0,0.45) 70%
-  );
-  pointer-events: none;
-  z-index: 1;
-}
+    /* ================= CRT EFFECT ================= */
+    .crt-overlay::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at center,
+                rgba(255, 255, 255, 0.03) 0%,
+                rgba(0, 0, 0, 0.45) 70%);
+        pointer-events: none;
+        z-index: 1;
+    }
 
-.scanlines {
-  background: linear-gradient(
-    to bottom,
-    transparent 50%,
-    rgba(0, 255, 157, 0.12) 50%
-  );
-  background-size: 100% 4px;
-  opacity: 0.2;
-}
+    .scanlines {
+        background: linear-gradient(to bottom,
+                transparent 50%,
+                rgba(0, 255, 157, 0.12) 50%);
+        background-size: 100% 4px;
+        opacity: 0.2;
+    }
 
-/* ================= ARCADE BUTTON ================= */
-.arcade-btn {
-  cursor: pointer;
-  image-rendering: pixelated;
-  transition: transform 0.12s steps(2);
-}
+    /* ================= ARCADE BUTTON ================= */
+    .arcade-btn {
+        cursor: pointer;
+        image-rendering: pixelated;
+        transition: transform 0.12s steps(2);
+    }
 
-.arcade-btn:active {
-  transform: translateY(4px);
-  filter: brightness(0.85);
-}
+    .arcade-btn:active {
+        transform: translateY(4px);
+        filter: brightness(0.85);
+    }
 
-/* ================= COLOR GLOW ================= */
-.glow {
-  text-shadow: 0 0 8px currentColor;
-}
+    /* ================= COLOR GLOW ================= */
+    .glow {
+        text-shadow: 0 0 8px currentColor;
+    }
 
 
     * {
@@ -145,7 +146,12 @@ footer * {
         background-attachment: fixed;
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         font-family: 'Press Start 2P', cursive;
     }
 
@@ -200,9 +206,17 @@ footer * {
         will-change: auto;
         contain: layout style paint;
     }
+
     @keyframes scroll-mouse {
-        0% { transform: translateY(0); opacity: 1; }
-        100% { transform: translateY(12px); opacity: 0; }
+        0% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(12px);
+            opacity: 0;
+        }
     }
 
     .animate-scroll-mouse {
@@ -211,6 +225,7 @@ footer * {
 }
 
 @layer components {
+
     /* CRT TV Frame Styles */
     .crt-frame {
         position: relative;
@@ -278,9 +293,12 @@ footer * {
 
     /* Pac-Man Chomp Animation */
     @keyframes chomp {
-        0%, 100% {
+
+        0%,
+        100% {
             clip-path: polygon(30% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%, 0% 0%);
         }
+
         50% {
             clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 0% 100%);
         }
@@ -292,10 +310,13 @@ footer * {
 
     /* Pulse Glow Animation */
     @keyframes pulse-glow {
-        0%, 100% {
+
+        0%,
+        100% {
             opacity: 1;
             filter: drop-shadow(0 0 5px currentColor);
         }
+
         50% {
             opacity: 0.7;
             filter: drop-shadow(0 0 15px currentColor);
@@ -426,10 +447,10 @@ footer * {
         right: -1px;
         bottom: -1px;
         background: repeating-linear-gradient(90deg,
-            transparent,
-            transparent 10px,
-            hsl(280 100% 60% / 0.1) 10px,
-            hsl(280 100% 60% / 0.1) 20px);
+                transparent,
+                transparent 10px,
+                hsl(280 100% 60% / 0.1) 10px,
+                hsl(280 100% 60% / 0.1) 20px);
         border-radius: 25px;
         pointer-events: none;
         opacity: 0;
@@ -547,7 +568,8 @@ footer * {
 
     /* VHS Filter Effect - Disabled to prevent flickering */
     .vhs-filter {
-        display: none; /* Disabled to prevent flickering */
+        display: none;
+        /* Disabled to prevent flickering */
     }
 
     /* Neon glow effects */
@@ -589,7 +611,8 @@ footer * {
 
     /* Scanline effect - Disabled to prevent flickering */
     .scanlines {
-        display: none; /* Disabled to prevent flickering */
+        display: none;
+        /* Disabled to prevent flickering */
     }
 
     /* Grid pattern */
@@ -621,6 +644,7 @@ footer * {
     }
 
     @keyframes swing-hang {
+
         0%,
         100% {
             transform: rotateZ(0deg) translateY(0px);
@@ -668,6 +692,7 @@ footer * {
 
     /* Neon pulse animation */
     @keyframes kidcore-pulse {
+
         0%,
         100% {
             opacity: 1;
@@ -796,10 +821,10 @@ footer * {
     /* Playful highlight - Disabled to prevent flickering */
     .playful-highlight {
         background: linear-gradient(to right,
-            transparent 0%,
-            hsl(280 100% 60% / 0.4) 25%,
-            hsl(300 100% 55% / 0.4) 75%,
-            transparent 100%);
+                transparent 0%,
+                hsl(280 100% 60% / 0.4) 25%,
+                hsl(300 100% 55% / 0.4) 75%,
+                transparent 100%);
         padding: 4px 8px;
         border-radius: 8px;
         /* animation: highlight-flicker 0.3s ease; - Disabled to prevent flickering */
@@ -838,7 +863,9 @@ footer * {
 
     /* Playful bounce */
     @keyframes playful-bounce {
-        0%, 100% {
+
+        0%,
+        100% {
             transform: translateY(0) scaleY(1);
         }
 
@@ -853,7 +880,9 @@ footer * {
 
     /* 3D Floating Block Animation */
     @keyframes float-3d {
-        0%, 100% {
+
+        0%,
+        100% {
             transform: translateY(0px) rotateX(0deg) rotateY(0deg);
         }
 
@@ -877,6 +906,7 @@ footer * {
 
     /* Gentle swing variants */
     @keyframes swing-gentle {
+
         0%,
         100% {
             transform: rotateZ(0deg);
@@ -893,6 +923,7 @@ footer * {
 
     /* Smooth pendulum swing */
     @keyframes swing-pendulum {
+
         0%,
         100% {
             transform: rotateZ(-10deg);
@@ -909,7 +940,9 @@ footer * {
 
     /* 3D Tilt Animation */
     @keyframes tilt-3d {
-        0%, 100% {
+
+        0%,
+        100% {
             transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
         }
 
@@ -925,7 +958,9 @@ footer * {
 
     /* Glow pulse for nav items */
     @keyframes glow-pulse {
-        0%, 100% {
+
+        0%,
+        100% {
             box-shadow: 0 0 5px hsl(280 100% 60% / 0.3);
         }
 
@@ -945,7 +980,7 @@ footer * {
         border: 2px solid hsl(280 100% 60% / 0.3);
         border-radius: 16px;
         box-shadow: 0 8px 32px hsl(280 100% 60% / 0.1),
-                    inset 0 1px 0 hsl(255 255 255 / 0.1);
+            inset 0 1px 0 hsl(255 255 255 / 0.1);
         transform-style: preserve-3d;
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
@@ -953,13 +988,15 @@ footer * {
     .glass-nav-block:hover {
         background: rgba(27, 6, 94, 0.7);
         box-shadow: 0 8px 32px hsl(280 100% 60% / 0.3),
-                    inset 0 1px 0 hsl(255 255 255 / 0.2);
+            inset 0 1px 0 hsl(255 255 255 / 0.2);
         transform: translateY(-3px) perspective(1000px) rotateX(2deg);
     }
 
     /* Glow animations for interactive elements */
     @keyframes glow-throb {
-        0%, 100% {
+
+        0%,
+        100% {
             box-shadow: 0 0 5px hsl(280 100% 60% / 0.5), 0 0 10px hsl(280 100% 60% / 0.3);
         }
 
@@ -974,7 +1011,9 @@ footer * {
 
     /* Neon edge effect */
     @keyframes neon-flicker {
-        0%, 100% {
+
+        0%,
+        100% {
             text-shadow: 0 0 10px hsl(280 100% 60%), 0 0 20px hsl(280 100% 60% / 0.5);
         }
 
@@ -1017,7 +1056,9 @@ footer * {
 
     /* Animated text bounce */
     @keyframes text-bounce {
-        0%, 100% {
+
+        0%,
+        100% {
             transform: translateY(0);
         }
 
@@ -1036,21 +1077,50 @@ footer * {
         gap: 0.1em;
     }
 
-    .animate-text-bounce-stagger > span {
+    .animate-text-bounce-stagger>span {
         animation: text-bounce 0.6s ease-in-out infinite;
         display: inline-block;
     }
 
-    .animate-text-bounce-stagger > span:nth-child(1) { animation-delay: 0s; }
-    .animate-text-bounce-stagger > span:nth-child(2) { animation-delay: 0.1s; }
-    .animate-text-bounce-stagger > span:nth-child(3) { animation-delay: 0.2s; }
-    .animate-text-bounce-stagger > span:nth-child(4) { animation-delay: 0.3s; }
-    .animate-text-bounce-stagger > span:nth-child(5) { animation-delay: 0.4s; }
-    .animate-text-bounce-stagger > span:nth-child(6) { animation-delay: 0.5s; }
-    .animate-text-bounce-stagger > span:nth-child(7) { animation-delay: 0.6s; }
-    .animate-text-bounce-stagger > span:nth-child(8) { animation-delay: 0.7s; }
-    .animate-text-bounce-stagger > span:nth-child(9) { animation-delay: 0.8s; }
-    .animate-text-bounce-stagger > span:nth-child(10) { animation-delay: 0.9s; }
+    .animate-text-bounce-stagger>span:nth-child(1) {
+        animation-delay: 0s;
+    }
+
+    .animate-text-bounce-stagger>span:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .animate-text-bounce-stagger>span:nth-child(3) {
+        animation-delay: 0.2s;
+    }
+
+    .animate-text-bounce-stagger>span:nth-child(4) {
+        animation-delay: 0.3s;
+    }
+
+    .animate-text-bounce-stagger>span:nth-child(5) {
+        animation-delay: 0.4s;
+    }
+
+    .animate-text-bounce-stagger>span:nth-child(6) {
+        animation-delay: 0.5s;
+    }
+
+    .animate-text-bounce-stagger>span:nth-child(7) {
+        animation-delay: 0.6s;
+    }
+
+    .animate-text-bounce-stagger>span:nth-child(8) {
+        animation-delay: 0.7s;
+    }
+
+    .animate-text-bounce-stagger>span:nth-child(9) {
+        animation-delay: 0.8s;
+    }
+
+    .animate-text-bounce-stagger>span:nth-child(10) {
+        animation-delay: 0.9s;
+    }
 
     /* CRT Overlay Effects - Disabled to prevent flickering */
     .crt-overlay {
@@ -1061,7 +1131,8 @@ footer * {
         height: 100%;
         pointer-events: none;
         z-index: 9999;
-        display: none; /* Disabled to prevent flickering */
+        display: none;
+        /* Disabled to prevent flickering */
     }
 
     .noise-overlay {
@@ -1072,7 +1143,8 @@ footer * {
         height: 100%;
         pointer-events: none;
         z-index: 9998;
-        display: none; /* Disabled to prevent flickering */
+        display: none;
+        /* Disabled to prevent flickering */
     }
 }
 
@@ -1097,48 +1169,55 @@ footer * {
 }
 
 @keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
 .animate-marquee {
-  animation: marquee 20s linear infinite;
+    animation: marquee 20s linear infinite;
 }
 
 /* ================= FONT SIZE FIX (GLOBAL) ================= */
 
 /* Base font size for better readability */
 html {
-  font-size: 18px; /* default was 16px */
+    font-size: 18px;
+    /* default was 16px */
 }
 
 /* Desktop & Laptop */
 @media (min-width: 1024px) {
-  html {
-    font-size: 20px;
-  }
+    html {
+        font-size: 20px;
+    }
 }
 
 /* ================= PAGE CONTENT FONT SCALE ================= */
 /* Only affects selected pages via wrapper class */
 
 .content-scale {
-  font-size: 1.15rem; /* Mobile default */
-  line-height: 1.6;
+    font-size: 1.15rem;
+    /* Mobile default */
+    line-height: 1.6;
 }
 
 /* Tablet */
 @media (min-width: 768px) {
-  .content-scale {
-    font-size: 1.25rem;
-  }
+    .content-scale {
+        font-size: 1.25rem;
+    }
 }
 
 /* Laptop / Desktop */
 @media (min-width: 1024px) {
-  .content-scale {
-    font-size: 1.35rem;
-  }
+    .content-scale {
+        font-size: 1.35rem;
+    }
 }
 
 

@@ -23,16 +23,45 @@ export default defineConfig(({ mode }) => ({
     },
     assetsInclude: ["**/*.glb", "**/*.gltf"],
     build: {
-        chunkSizeWarningLimit: 1000,
+        // Target modern browsers to reduce polyfill overhead
+        target: 'es2020',
+        chunkSizeWarningLimit: 500,
+        // Enable CSS code splitting
+        cssCodeSplit: true,
         rollupOptions: {
             output: {
                 manualChunks: {
+                    // Core React runtime — loaded on every page
                     'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+                    // Three.js ecosystem — only loaded on CampusExplorer (huge: ~5MB)
                     'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
-                    'vendor-utils': ['framer-motion', 'lucide-react', 'date-fns', 'clsx', 'tailwind-merge'],
+                    // Animation libs — loaded on most pages but can be deferred
+                    'vendor-animation': ['framer-motion', 'gsap'],
+                    // Icon library — large but tree-shaken
+                    'vendor-icons': ['lucide-react'],
+                    // Utility libraries
+                    'vendor-utils': ['clsx', 'tailwind-merge', 'date-fns', 'class-variance-authority'],
+                    // Supabase SDK
                     'vendor-supabase': ['@supabase/supabase-js'],
+                    // Radix UI primitives
+                    'vendor-radix': [
+                        '@radix-ui/react-toast',
+                        '@radix-ui/react-tooltip',
+                        '@radix-ui/react-dialog',
+                        '@radix-ui/react-label',
+                        '@radix-ui/react-slot',
+                    ],
                 },
+            },
+        },
+        // Better minification
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: mode === 'production',
+                drop_debugger: true,
             },
         },
     },
 }));
+

@@ -79,6 +79,8 @@ const Footer = () => {
                             <img
                                 src="/aarunya-logo.svg"
                                 alt="Aarunya 2026"
+                                width="140"
+                                height="56"
                                 className="h-14 w-auto filter drop-shadow-[0_0_12px_rgba(255,0,255,0.6)] group-hover:drop-shadow-[0_0_20px_rgba(255,0,255,0.8)] transition-all"
                             />
                         </Link>

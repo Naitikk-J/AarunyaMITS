@@ -223,3 +223,5 @@ export const Guidelines = () => {
         </div>
     );
 };
+
+export default Guidelines;

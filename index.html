@@ -16,27 +16,27 @@
         content="Experience the KidCore-Retro theme at Aarunya 2.0 - Interactive 3D campus explorer" />
     <meta property="og:type" content="website" />
 
-
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@MITSGwalior" />
+
+    <!-- Preconnect to Google Fonts for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Load Google Fonts via link (non-blocking) instead of CSS @import (blocking) -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Mono&display=swap"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Mono&display=swap">
+    </noscript>
 
     <!-- Preload local fonts for faster loading -->
     <link rel="preload" href="/fonts/orbitron-v31-latin-700.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/fredoka-v14-latin-700.woff2" as="font" type="font/woff2" crossorigin>
 
-    <!-- Preload critical gallery images for faster initial render -->
-    <link rel="preload" href="/photos/optimized/1.avif" as="image" type="image/avif">
-    <link rel="preload" href="/photos/optimized/2.avif" as="image" type="image/avif">
-    <link rel="preload" href="/photos/optimized/3.avif" as="image" type="image/avif">
-    <link rel="preload" href="/photos/optimized/4.avif" as="image" type="image/avif">
-    <link rel="preload" href="/photos/optimized/5.avif" as="image" type="image/avif">
-    <link rel="preload" href="/photos/optimized/6.avif" as="image" type="image/avif">
-    <link rel="preload" href="/photos/optimized/7.avif" as="image" type="image/avif">
-    <link rel="preload" href="/photos/optimized/8.avif" as="image" type="image/avif">
-    <link rel="preload" href="/photos/optimized/9.avif" as="image" type="image/avif">
-    <link rel="preload" href="/photos/optimized/10.avif" as="image" type="image/avif">
-    <link rel="preload" href="/photos/optimized/11.avif" as="image" type="image/avif">
-    <link rel="preload" href="/photos/optimized/12.avif" as="image" type="image/avif">
+    <!-- Preload LCP image for faster initial render -->
+    <link rel="preload" href="/bg-phone.avif" as="image" type="image/avif" fetchpriority="high">
 
 </head>
 
