@@ -12,26 +12,20 @@ const ContactUs = () => {
 
     const contacts = [
         {
-            title: 'GENERAL_PASS',
-            description: 'QUESTIONS, CREDENTIALS, AND INFO.',
-            icon: '📧',
+            title: 'AMUL AGRAWAL',
+            description: 'SECRETARY',
+            icon: '',
             channel: 'CH_01',
-            items: ['HELP@AARUNYA.GAME', 'EXT_101'],
+            items: ['+91 9479310105', 'EXT_101'],
         },
         {
-            title: 'GUILD_PARTNER',
-            description: 'SPONSORSHIPS AND ALLIANCES.',
-            icon: '🤝',
+            title: 'LOKENDRA SHARMA',
+            description: 'TREASURER',
+            icon: '',
             channel: 'CH_02',
-            items: ['GUILD@AARUNYA.GAME', 'EXT_202'],
+            items: ['+91 8839797370', 'EXT_202'],
         },
-        {
-            title: 'ARENA_SUPPORT',
-            description: 'COMPETITION RULES AND DISPUTES.',
-            icon: '🎮',
-            channel: 'CH_03',
-            items: ['ARENA@AARUNYA.GAME', 'EXT_303'],
-        },
+
     ];
 
     const socials = [
@@ -103,38 +97,38 @@ const ContactUs = () => {
                     </motion.div>
                 </div>
 
-                <div className="container mx-auto px-4 sm:px-6 pb-20 max-w-5xl">
+                <div className="container mx-auto px-4 sm:px-6 pb-20 max-w-7xl">
                     {/* CONTACT CARDS */}
                     <motion.div
                         variants={containerVariants}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-50px" }}
-                        className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16"
+                        className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-24"
                     >
                         {contacts.map((c) => (
                             <motion.div
                                 key={c.title}
                                 variants={itemVariants}
                                 whileHover={{ scale: 1.02, backgroundColor: "rgba(188, 19, 254, 0.05)" }}
-                                className="relative bg-[#0D0221]/60 border border-white/10 rounded-xl p-6 transition-all duration-300 hover:border-primary/40 group"
+                                className="relative bg-[#0D0221]/60 border border-white/10 rounded-2xl p-10 md:p-14 transition-all duration-300 hover:border-primary/40 group w-full flex flex-col items-center text-center"
                             >
-                                <Badge className="absolute top-4 right-4 bg-primary/90 text-black text-[9px] tracking-widest px-2 py-0.5">
+                                <Badge className="absolute top-6 right-6 bg-primary/90 text-black text-[10px] md:text-[12px] tracking-widest px-3 py-1">
                                     {c.channel}
                                 </Badge>
 
-                                <div className="space-y-4">
-                                    <div className="text-3xl grayscale group-hover:grayscale-0 transition-all duration-300">{c.icon}</div>
-                                    <h2 className="text-sm font-black text-white/90">{c.title}</h2>
-                                    <p className="font-share-tech text-[10px] text-white/40 tracking-[0.1em] uppercase">
+                                <div className="space-y-6 w-full">
+                                    <div className="text-5xl grayscale group-hover:grayscale-0 transition-all duration-300">{c.icon}</div>
+                                    <h2 className="text-xl md:text-3xl font-black text-white/90 tracking-wider transition-colors group-hover:text-primary">{c.title}</h2>
+                                    <p className="font-share-tech text-xs md:text-sm text-white/40 tracking-[0.2em] uppercase">
                                         {c.description}
                                     </p>
 
-                                    <div className="space-y-2 pt-3 border-t border-white/5">
+                                    <div className="space-y-4 pt-6 border-t border-white/10">
                                         {c.items.map((item) => (
-                                            <div key={item} className="flex items-center gap-2">
-                                                <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_5px_#BC13FE]" />
-                                                <span className="text-[10px] tracking-widest text-white/70 group-hover:text-white transition-colors">
+                                            <div key={item} className="flex items-center justify-center gap-3">
+                                                <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_#BC13FE]" />
+                                                <span className="text-sm md:text-lg tracking-[0.15em] font-medium text-white/70 group-hover:text-white transition-colors">
                                                     {item}
                                                 </span>
                                             </div>

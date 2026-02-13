@@ -4,6 +4,8 @@ import { useKidcoreSounds } from './ui/SoundEffects';
 
 interface InteractiveTVControlsProps {
     screenRef?: React.RefObject<HTMLDivElement>;
+    isPowered: boolean;
+    volume: number;
     onPowerToggle?: (isPowered: boolean) => void;
     onChannelChange?: (channel: number) => void;
     onVolumeChange?: (volume: number) => void;
@@ -11,14 +13,14 @@ interface InteractiveTVControlsProps {
 
 export const InteractiveTVControls = ({
     screenRef,
+    isPowered,
+    volume,
     onPowerToggle,
     onChannelChange,
     onVolumeChange,
 }: InteractiveTVControlsProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [isPowered, setIsPowered] = useState(true);
     const [channel, setChannel] = useState(1);
-    const [volume, setVolume] = useState(5);
     const [easterEggCounter, setEasterEggCounter] = useState(0);
     const [showEasterEgg, setShowEasterEgg] = useState(false);
     const { playSound } = useKidcoreSounds();
@@ -28,7 +30,6 @@ export const InteractiveTVControls = ({
         if (!containerRef.current || !screenRef?.current) return;
 
         const newPowered = !isPowered;
-        setIsPowered(newPowered);
         onPowerToggle?.(newPowered);
 
         if (!newPowered) {
@@ -95,7 +96,6 @@ export const InteractiveTVControls = ({
 
     const handleVolumeUp = () => {
         const newVolume = Math.min(volume + 1, 10);
-        setVolume(newVolume);
         onVolumeChange?.(newVolume);
         if (!screenRef?.current) return;
         const intensity = (newVolume / 10) * 2;
@@ -112,7 +112,6 @@ export const InteractiveTVControls = ({
 
     const handleVolumeDown = () => {
         const newVolume = Math.max(volume - 1, 0);
-        setVolume(newVolume);
         onVolumeChange?.(newVolume);
         if (!screenRef?.current) return;
         const intensity = (newVolume / 10) * 2;
@@ -166,8 +165,8 @@ export const InteractiveTVControls = ({
                     id="power-btn"
                     onClick={handlePowerClick}
                     className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full border-2 transition-all cursor-pointer flex items-center justify-center shadow-lg ${isPowered
-                            ? 'border-lime-green bg-[#1A3A1A] text-lime-green shadow-[0_0_15px_rgba(57,255,20,0.6)]'
-                            : 'border-gray-700 bg-[#0A0A0A] text-gray-700'
+                        ? 'border-lime-green bg-[#1A3A1A] text-lime-green shadow-[0_0_15px_rgba(57,255,20,0.6)]'
+                        : 'border-gray-700 bg-[#0A0A0A] text-gray-700'
                         } hover:scale-110 active:scale-95`}
                 >
                     <div className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 rounded-full border-2 ${isPowered ? 'border-lime-green' : 'border-gray-700'} flex items-center justify-center`}>
