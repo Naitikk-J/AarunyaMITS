@@ -5,7 +5,7 @@ import { MainNavigation } from '@/components/ui/MainNavigation';
 import { Button } from '@/components/ui/button';
 import * as THREE from 'three';
 import statueModel from '@/components/models/statue.glb?url';
-import { getCachedModel, cacheModel, getCachedTexture, cacheTexture, getCachedGeometry, cacheGeometry } from '@/utils/cache';
+import { getCachedModel, cacheModel, getCachedTexture, cacheTexture, getCachedGeometry, cacheGeometry, assetCache } from '@/utils/cache';
 import { GlitchText } from '@/components/GlitchText';
 
 // Theme constants
@@ -1349,9 +1349,7 @@ const CampusExplorer = () => {
 
     // Clear geometry cache on mount to prevent Three.js errors
     useEffect(() => {
-        import('@/utils/cache').then(({ assetCache }) => {
-            assetCache.clear();
-        });
+        assetCache.clear();
     }, []);
 
     useEffect(() => {

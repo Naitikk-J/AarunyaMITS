@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { supabase } from '@/lib/supabase';
 
 export const useRazorpay = () => {
     const [loading, setLoading] = useState(false);
@@ -9,7 +10,7 @@ export const useRazorpay = () => {
         setError(null);
 
         try {
-            const { data: { session } } = await import('@/lib/supabase').then(m => m.supabase.auth.getSession());
+            const { data: { session } } = await supabase.auth.getSession();
             const token = session?.access_token;
 
             const response = await fetch('/api/payment/create-order', {
@@ -44,7 +45,7 @@ export const useRazorpay = () => {
         setError(null);
 
         try {
-            const { data: { session } } = await import('@/lib/supabase').then(m => m.supabase.auth.getSession());
+            const { data: { session } } = await supabase.auth.getSession();
             const token = session?.access_token;
 
             const response = await fetch('/api/payment/verify-payment', {
