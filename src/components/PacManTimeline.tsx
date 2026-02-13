@@ -213,7 +213,7 @@ export const PacmanTimeline: React.FC = () => {
                             className="pointer-events-none"
                         >
                             <foreignObject x="-40" y="-40" width="80" height="80">
-                                <div className="w-full h-full bg-kidcore-yellow rounded-full shadow-[0_0_30px_#FFE737] border-2 border-white/50 relative">
+                                <div className="w-full h-full bg-kidcore-yellow rounded shadow-[0_0_30px_#FFE737] border-2 border-white/50 relative">
                                     <div className="absolute top-1/4 right-1/4 w-2 h-2 bg-black rounded-full" />
                                     <motion.div
                                         className="absolute inset-0 bg-[#0D001A] origin-center"
