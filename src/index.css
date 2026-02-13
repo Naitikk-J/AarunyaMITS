@@ -1,6 +1,24 @@
 /* Google Fonts import for Kidcore typography */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Mono&display=swap');
 
+/* Orbitron - Used for your Arcade Buttons and Rainbow Text */
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/orbitron-v31-latin-700.woff2') format('woff2');
+}
+
+/* Fredoka - Used for your Sticker Labels */
+@font-face {
+  font-family: 'Fredoka';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/fredoka-v14-latin-700.woff2') format('woff2');
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -168,7 +186,8 @@ footer * {
     }
 
     .font-playful {
-        font-family: 'Comic Sans MS', 'Marker Felt', 'Fredoka One', cursive, sans-serif;
+        /* Fredoka comes first, then falls back to system fonts */
+        font-family: 'Fredoka', 'Comic Sans MS', 'Marker Felt', cursive, sans-serif;
         font-weight: 700;
     }
 
@@ -633,7 +652,7 @@ footer * {
         border: 3px solid hsl(260 80% 4%);
         padding: 8px 16px;
         border-radius: 50px;
-        font-family: 'Fredoka One', 'Comic Sans MS', cursive;
+        font-family: 'Fredoka', 'Comic Sans MS', cursive;
         font-weight: bold;
         color: #FFFFFF;
         box-shadow: 4px 4px 0 hsl(300 100% 55%);
@@ -1133,4 +1152,3 @@ html {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
-

@@ -12,11 +12,11 @@ const Gallery = () => {
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        // Force a delay to let the browser paint the LoadingScreen
-        // before the heavy DomeGallery component freezes the UI.
+        // Brief delay to let the browser paint the LoadingScreen
+        // before the heavy DomeGallery component renders.
         const timer = setTimeout(() => {
             setIsReady(true);
-        }, 2000);
+        }, 300);
         return () => clearTimeout(timer);
     }, []);
 
@@ -99,7 +99,7 @@ const Gallery = () => {
                             fit={1}
                             minRadius={isMobile ? 300 : isTablet ? 500 : 800}
                             maxVerticalRotationDeg={10}
-                            segments={isMobile ? 20 : 34}
+                            segments={isMobile ? 18 : isTablet ? 22 : 25}
                             dragDampening={2}
                             grayscale={false}
                             imageBorderRadius="20px"
