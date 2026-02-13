@@ -11,7 +11,7 @@ import { SoundEffectsProvider } from "@/components/ui/SoundEffects";
 import { KidcoreCursor } from "@/components/ui/KidcoreCursor";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import Index from "./pages/Index";
-// import Register from "./pages/Register";
+import Register from "./pages/Register";
 import UnifiedRegistration from "./pages/UnifiedRegistration";
 import NotFound from "./pages/NotFound";
 import ViewMap from "./pages/ViewMap";
@@ -50,7 +50,7 @@ const App = () => (
                             <Routes>
                                 <Route path="/" element={<Index />} />
                                 <Route path="/gallery" element={<Gallery />} />
-                                {/* <Route path="/register" element={<Register />} /> */}
+                                <Route path="/register" element={<Register />} />
                                 <Route path="/unified-registration" element={<UnifiedRegistration />} />
                                 <Route path="/view-map" element={<ViewMap />} />
                                 <Route path="/campus-explorer" element={<CampusExplorer />} />
