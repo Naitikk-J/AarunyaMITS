@@ -12,12 +12,31 @@ import { GlitchText } from '@/components/GlitchText';
 const THEME = {
     primary: '#BC13FE',
     secondary: '#00FFFF',
-    building: '#F0F0F0',
-    roof: '#333333',
+    building: '#E8E0D8',
+    buildingAccent: '#D4C8BC',
+    roof: '#4A4A4A',
     grass: '#2D5A27',
     road: '#1A1A1A',
     ground: '#050505',
-    windowColor: '#FFDD33'
+    windowGlass: '#3A5F7A',
+    windowFrame: '#555555',
+    windowLit: '#FFE4A8',
+    concrete: '#C8BEB4',
+    ledge: '#B8ADA3',
+};
+
+// Building color palettes for variation
+const BUILDING_PALETTES: Record<string, { wall: string; accent: string; trim: string }> = {
+    'old-building': { wall: '#E0D5C8', accent: '#C9B99A', trim: '#8B7355' },
+    'ai-department': { wall: '#D8DDE8', accent: '#B8C4D8', trim: '#6B7B8D' },
+    'biotech': { wall: '#E2DCCE', accent: '#CFC5B0', trim: '#7D7058' },
+    'dispensary': { wall: '#E8E0D8', accent: '#D4C8BC', trim: '#8B7D6B' },
+    'admission': { wall: '#DDE0D8', accent: '#C4C8BC', trim: '#707B6B' },
+    'canteen': { wall: '#E8D8D0', accent: '#D4BEB4', trim: '#8B6B5B' },
+    'library': { wall: '#D8D0C8', accent: '#C4B8AC', trim: '#6B5F53' },
+    'architecture': { wall: '#E2DED8', accent: '#CCC6BC', trim: '#7A746A' },
+    'mechanical-dept': { wall: '#DCD8D0', accent: '#C8C0B4', trim: '#6E6860' },
+    'mits-main': { wall: '#E0D8D0', accent: '#CCC0B4', trim: '#7B6F63' },
 };
 
 
@@ -452,6 +471,183 @@ const HostelComplex = ({ position, hostelType, size, height }: { position: [numb
     );
 };
 
+// =============================================
+// REALISTIC BUILDING COMPONENT
+// =============================================
+
+// Sub-component: Window with frame, glass, and optional lit state
+const RealisticWindow = ({ position, size, isLit, glassColor }: { position: [number, number, number], size: [number, number], isLit: boolean, glassColor: string }) => {
+    return (
+        <group position={position}>
+            {/* Window frame (recessed) */}
+            <mesh>
+                <boxGeometry args={[size[0] + 0.08, size[1] + 0.08, 0.06]} />
+                <meshStandardMaterial color={THEME.windowFrame} roughness={0.8} metalness={0.3} />
+            </mesh>
+            {/* Glass pane */}
+            <mesh position={[0, 0, 0.04]}>
+                <boxGeometry args={[size[0], size[1], 0.02]} />
+                <meshStandardMaterial
+                    color={isLit ? THEME.windowLit : glassColor}
+                    roughness={isLit ? 0.3 : 0.15}
+                    metalness={isLit ? 0.0 : 0.6}
+                    emissive={isLit ? '#FFE4A8' : '#000000'}
+                    emissiveIntensity={isLit ? 0.6 : 0}
+                    transparent={!isLit}
+                    opacity={isLit ? 1 : 0.85}
+                />
+            </mesh>
+            {/* Glass reflection highlight */}
+            {!isLit && (
+                <mesh position={[-size[0] * 0.15, size[1] * 0.15, 0.06]}>
+                    <planeGeometry args={[size[0] * 0.4, size[1] * 0.5]} />
+                    <meshBasicMaterial color="#ffffff" transparent opacity={0.08} />
+                </mesh>
+            )}
+        </group>
+    );
+};
+
+// Sub-component: Floor slab ledge between floors
+const FloorLedge = ({ width, depth, y, color }: { width: number, depth: number, y: number, color: string }) => (
+    <mesh position={[0, y, 0]} castShadow>
+        <boxGeometry args={[width + 0.15, 0.12, depth + 0.15]} />
+        <meshStandardMaterial color={color} roughness={0.85} metalness={0.05} />
+    </mesh>
+);
+
+// Sub-component: Roof details (parapet, water tank, AC units, stairhead)
+const RoofDetails = ({ width, depth, height, palette }: { width: number, depth: number, height: number, palette: { wall: string; accent: string; trim: string } }) => {
+    // Deterministic seed from dimensions
+    const seed = Math.abs(width * 7 + depth * 13 + height * 23);
+    const hasWaterTank = seed % 3 !== 0;
+    const hasAC = seed % 4 !== 0;
+    const hasStairhead = height > 3;
+
+    return (
+        <group position={[0, height, 0]}>
+            {/* Roof slab */}
+            <mesh receiveShadow>
+                <boxGeometry args={[width + 0.1, 0.15, depth + 0.1]} />
+                <meshStandardMaterial color={THEME.roof} roughness={0.95} metalness={0.05} />
+            </mesh>
+
+            {/* Parapet wall around edges */}
+            {/* Front */}
+            <mesh position={[0, 0.35, -depth / 2 + 0.06]}>
+                <boxGeometry args={[width, 0.55, 0.12]} />
+                <meshStandardMaterial color={palette.accent} roughness={0.9} />
+            </mesh>
+            {/* Back */}
+            <mesh position={[0, 0.35, depth / 2 - 0.06]}>
+                <boxGeometry args={[width, 0.55, 0.12]} />
+                <meshStandardMaterial color={palette.accent} roughness={0.9} />
+            </mesh>
+            {/* Left */}
+            <mesh position={[-width / 2 + 0.06, 0.35, 0]}>
+                <boxGeometry args={[0.12, 0.55, depth]} />
+                <meshStandardMaterial color={palette.accent} roughness={0.9} />
+            </mesh>
+            {/* Right */}
+            <mesh position={[width / 2 - 0.06, 0.35, 0]}>
+                <boxGeometry args={[0.12, 0.55, depth]} />
+                <meshStandardMaterial color={palette.accent} roughness={0.9} />
+            </mesh>
+
+            {/* Water tank */}
+            {hasWaterTank && (
+                <group position={[width * 0.25, 0.5, depth * 0.2]}>
+                    {/* Tank support legs */}
+                    {[[-0.3, 0, -0.3], [0.3, 0, -0.3], [-0.3, 0, 0.3], [0.3, 0, 0.3]].map((leg, li) => (
+                        <mesh key={li} position={[leg[0], 0.3, leg[2]]}>
+                            <boxGeometry args={[0.06, 0.6, 0.06]} />
+                            <meshStandardMaterial color="#666" roughness={0.7} metalness={0.4} />
+                        </mesh>
+                    ))}
+                    {/* Tank body */}
+                    <mesh position={[0, 0.9, 0]}>
+                        <cylinderGeometry args={[0.4, 0.4, 0.6, 12]} />
+                        <meshStandardMaterial color="#222222" roughness={0.3} metalness={0.7} />
+                    </mesh>
+                </group>
+            )}
+
+            {/* AC outdoor units */}
+            {hasAC && (
+                <group position={[-width * 0.3, 0.25, -depth * 0.3]}>
+                    <mesh>
+                        <boxGeometry args={[0.5, 0.35, 0.3]} />
+                        <meshStandardMaterial color="#CCCCCC" roughness={0.4} metalness={0.5} />
+                    </mesh>
+                    {/* Fan grille */}
+                    <mesh position={[0, 0, -0.16]}>
+                        <circleGeometry args={[0.12, 12]} />
+                        <meshStandardMaterial color="#333" roughness={0.5} metalness={0.6} />
+                    </mesh>
+                </group>
+            )}
+
+            {/* Stairhead room */}
+            {hasStairhead && (
+                <group position={[-width * 0.15, 0.7, depth * 0.15]}>
+                    <mesh castShadow>
+                        <boxGeometry args={[1.2, 1.2, 1.0]} />
+                        <meshStandardMaterial color={palette.wall} roughness={0.85} />
+                    </mesh>
+                    {/* Stairhead roof */}
+                    <mesh position={[0, 0.65, 0]}>
+                        <boxGeometry args={[1.4, 0.1, 1.2]} />
+                        <meshStandardMaterial color={THEME.roof} roughness={0.9} />
+                    </mesh>
+                </group>
+            )}
+        </group>
+    );
+};
+
+// Sub-component: Entrance portico with steps, columns, and canopy
+const EntrancePortico = ({ width, depth, palette }: { width: number, depth: number, palette: { wall: string; accent: string; trim: string } }) => {
+    const porticoWidth = Math.min(width * 0.4, 3);
+    const porticoDepth = 1.2;
+    return (
+        <group position={[0, 0, -depth / 2 - porticoDepth / 2 + 0.1]}>
+            {/* Steps */}
+            {[0, 1, 2].map((step) => (
+                <mesh key={step} position={[0, step * 0.12 + 0.06, -step * 0.2]} receiveShadow>
+                    <boxGeometry args={[porticoWidth + 0.3 - step * 0.15, 0.12, 0.4]} />
+                    <meshStandardMaterial color={THEME.concrete} roughness={0.9} />
+                </mesh>
+            ))}
+
+            {/* Columns */}
+            {[-porticoWidth / 2 + 0.15, porticoWidth / 2 - 0.15].map((x, ci) => (
+                <mesh key={ci} position={[x, 1.5, 0]} castShadow>
+                    <cylinderGeometry args={[0.1, 0.12, 2.8, 8]} />
+                    <meshStandardMaterial color="#D0D0D0" roughness={0.6} metalness={0.15} />
+                </mesh>
+            ))}
+
+            {/* Canopy/lintel */}
+            <mesh position={[0, 2.95, 0]} castShadow>
+                <boxGeometry args={[porticoWidth + 0.4, 0.15, porticoDepth + 0.3]} />
+                <meshStandardMaterial color={palette.trim} roughness={0.7} metalness={0.2} />
+            </mesh>
+
+            {/* Door frame */}
+            <mesh position={[0, 1.2, porticoDepth / 2 - 0.05]}>
+                <boxGeometry args={[1.2, 2.2, 0.08]} />
+                <meshStandardMaterial color={palette.trim} roughness={0.6} metalness={0.3} />
+            </mesh>
+            {/* Door */}
+            <mesh position={[0, 1.1, porticoDepth / 2 - 0.02]}>
+                <boxGeometry args={[1.0, 2.0, 0.04]} />
+                <meshStandardMaterial color="#5C3A1E" roughness={0.8} metalness={0.1} />
+            </mesh>
+        </group>
+    );
+};
+
+
 const Building = ({ data, textures, showLabels }: any) => {
     const mesh = useRef<THREE.Mesh>(null);
     const [hovered, setHover] = useState(false);
@@ -477,8 +673,25 @@ const Building = ({ data, textures, showLabels }: any) => {
         );
     }
 
+    // Get palette for this building
+    const palette = BUILDING_PALETTES[data.id] || { wall: THEME.building, accent: THEME.buildingAccent, trim: '#7A746A' };
+    const floorHeight = 3.2;
+    const numFloors = Math.max(1, Math.round(data.height / floorHeight));
+    const actualFloorH = data.height / numFloors;
+    const isLargeBuilding = data.size[0] >= 4 && data.size[1] >= 3 && data.height >= 3;
+    const windowW = 0.55;
+    const windowH = 0.75;
+    const windowSpacingX = 1.4;
+    const windowSpacingY = actualFloorH;
+
+    // Deterministic "random" for window lit state
+    const windowSeed = useMemo(() => {
+        const s = data.position[0] * 17 + data.position[1] * 31;
+        return (i: number) => ((s + i * 7919) % 100) / 100;
+    }, [data.position]);
+
+    // For complex/gate types, keep original geometry approach
     const geometry = useMemo(() => {
-        // COMPLEX LOGIC: Hollow center
         if (data.type === 'complex') {
             const shape = new THREE.Shape();
             const [w, h] = [data.size[0] / 2, data.size[1] / 2];
@@ -488,11 +701,7 @@ const Building = ({ data, textures, showLabels }: any) => {
             shape.holes.push(hole);
             return new THREE.ExtrudeGeometry(shape, { depth: data.height, bevelEnabled: true, bevelThickness: 0.05 });
         }
-
-        // POWER TOWERS LOGIC
         if (data.type === 'power-towers') return new THREE.BoxGeometry(data.size[0], 0.5, data.size[1]);
-
-        // GATE LOGIC
         if (data.type === 'gate') {
             const shape = new THREE.Shape();
             const width = data.size[0] / 2;
@@ -506,67 +715,253 @@ const Building = ({ data, textures, showLabels }: any) => {
             geo.center();
             return geo;
         }
-
-        return new THREE.BoxGeometry(data.size[0], data.height, data.size[1]);
+        return null; // Simple buildings use the new realistic approach
     }, [data]);
+
+    // For simple/landmark, use the realistic approach — but only if large enough
+    const isSmallSimple = data.type === 'simple' && (data.size[0] <= 2 || data.size[1] <= 2 || data.height <= 1);
+    const isRealisticType = (data.type === 'simple' || data.type === 'landmark') && !isSmallSimple;
 
     return (
         <group position={[data.position[0], 0, data.position[1]]}>
-            <mesh
-                ref={mesh}
-                geometry={geometry}
-                rotation={[
-                    (data.type === 'complex' || data.type === 'hostel') ? -Math.PI / 2 : 0,
-                    data.rotationY || 0,
-                    0
-                ]}
-                position={[
-                    0,
-                    // UPDATED: Removed 'gate' from this check so it defaults to data.height/2
-                    (data.type === 'complex' || data.type === 'hostel') ? 0 : data.height / 2,
-                    0
-                ]}
-                onPointerOver={(e) => { e.stopPropagation(); setHover(true); }}
-                onPointerOut={() => setHover(false)}
-                castShadow
-                receiveShadow
-            >
-                <meshStandardMaterial
-                    map={data.type === 'power-towers' || data.type === 'landmark' ? undefined : textures.window}
-                    color={data.color || THEME.building}
-                    roughness={data.type === 'power-towers' ? 0.9 : 0.4}
-                    metalness={data.type === 'power-towers' ? 0.2 : 0.1}
-                    emissive={hovered ? THEME.primary : '#000000'}
-                    emissiveIntensity={0.2}
-                />
-            </mesh>
 
-            {/* --- NEW: RENDER FENCE IF IT IS A GROUND (Landmark) --- */}
-            {data.type === 'landmark' && (
-                <Fence size={data.size} />
-            )}
-
-            {/* Roof for Hollow Buildings - raised slightly to prevent z-fighting */}
-            {(data.type === 'complex' || data.type === 'hostel') && (
-                <mesh position={[0, data.height + 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                    <planeGeometry args={[data.size[0], data.size[1]]} />
-                    <meshStandardMaterial color={THEME.roof} roughness={0.9} />
+            {/* ===== SMALL SIMPLE BUILDING (plain box, e.g. statue base) ===== */}
+            {isSmallSimple && (
+                <mesh
+                    position={[0, data.height / 2, 0]}
+                    castShadow
+                    receiveShadow
+                    onPointerOver={(e: any) => { e.stopPropagation(); setHover(true); }}
+                    onPointerOut={() => setHover(false)}
+                >
+                    <boxGeometry args={[data.size[0], data.height, data.size[1]]} />
+                    <meshStandardMaterial
+                        color={data.color || palette.wall}
+                        roughness={0.8}
+                        metalness={0.1}
+                        emissive={hovered ? THEME.primary : '#000000'}
+                        emissiveIntensity={hovered ? 0.15 : 0}
+                    />
                 </mesh>
             )}
 
-            {/* POWER STATION TOWERS */}
-            {data.type === 'power-towers' && (
-                <group>
-                    {[-2, 2].map((offset, i) => (
-                        <group key={i} position={[offset, 0, 0]}>
-                            <mesh position={[0, 4, 0]}><cylinderGeometry args={[0.1, 0.8, 8, 4]} /><meshStandardMaterial color="#333" roughness={0.5} /></mesh>
-                            <mesh position={[0, 6, 0]}><boxGeometry args={[3, 0.2, 0.2]} /><meshStandardMaterial color="#333" /></mesh>
-                            {i === 0 && <mesh position={[0, 7, 0]}><boxGeometry args={[2, 0.2, 0.2]} /><meshStandardMaterial color="#333" /></mesh>}
-                        </group>
+            {/* ===== REALISTIC BUILDING (simple type) ===== */}
+            {isRealisticType && data.height >= 1 && (
+                <group rotation={[0, data.rotationY || 0, 0]}>
+                    {/* Foundation / Plinth */}
+                    <mesh position={[0, 0.15, 0]} castShadow receiveShadow>
+                        <boxGeometry args={[data.size[0] + 0.2, 0.3, data.size[1] + 0.2]} />
+                        <meshStandardMaterial color={THEME.concrete} roughness={0.95} metalness={0.02} />
+                    </mesh>
+
+                    {/* Main wall body per floor */}
+                    {Array.from({ length: numFloors }).map((_, fi) => {
+                        const floorY = 0.3 + fi * actualFloorH;
+                        return (
+                            <group key={`floor-${fi}`}>
+                                {/* Wall */}
+                                <mesh
+                                    position={[0, floorY + actualFloorH / 2, 0]}
+                                    castShadow
+                                    receiveShadow
+                                    onPointerOver={(e: any) => { e.stopPropagation(); setHover(true); }}
+                                    onPointerOut={() => setHover(false)}
+                                >
+                                    <boxGeometry args={[data.size[0], actualFloorH - 0.12, data.size[1]]} />
+                                    <meshStandardMaterial
+                                        color={fi % 2 === 0 ? palette.wall : palette.accent}
+                                        roughness={0.82}
+                                        metalness={0.04}
+                                        emissive={hovered ? THEME.primary : '#000000'}
+                                        emissiveIntensity={hovered ? 0.15 : 0}
+                                    />
+                                </mesh>
+
+                                {/* Floor slab ledge */}
+                                <FloorLedge
+                                    width={data.size[0]}
+                                    depth={data.size[1]}
+                                    y={floorY + actualFloorH}
+                                    color={THEME.ledge}
+                                />
+
+                                {/* Windows on front face (-Z) */}
+                                {(() => {
+                                    const winCountX = Math.max(1, Math.floor((data.size[0] - 0.6) / windowSpacingX));
+                                    const startX = -(winCountX - 1) * windowSpacingX / 2;
+                                    const winY = floorY + actualFloorH * 0.55;
+                                    const frontZ = -data.size[1] / 2 - 0.01;
+                                    const backZ = data.size[1] / 2 + 0.01;
+                                    const elements: React.ReactElement[] = [];
+
+                                    for (let wi = 0; wi < winCountX; wi++) {
+                                        const wx = startX + wi * windowSpacingX;
+                                        const litIdx = fi * 100 + wi;
+                                        const isLit = windowSeed(litIdx) > 0.65;
+
+                                        // Front face
+                                        elements.push(
+                                            <RealisticWindow
+                                                key={`wf-${fi}-${wi}`}
+                                                position={[wx, winY, frontZ]}
+                                                size={[windowW, windowH]}
+                                                isLit={isLit}
+                                                glassColor={THEME.windowGlass}
+                                            />
+                                        );
+                                        // Back face
+                                        elements.push(
+                                            <group key={`wb-${fi}-${wi}`} rotation={[0, Math.PI, 0]}>
+                                                <RealisticWindow
+                                                    position={[-wx, winY, frontZ]}
+                                                    size={[windowW, windowH]}
+                                                    isLit={windowSeed(litIdx + 50) > 0.7}
+                                                    glassColor={THEME.windowGlass}
+                                                />
+                                            </group>
+                                        );
+                                    }
+
+                                    // Side windows
+                                    const winCountZ = Math.max(1, Math.floor((data.size[1] - 0.6) / windowSpacingX));
+                                    const startZ = -(winCountZ - 1) * windowSpacingX / 2;
+                                    for (let wzi = 0; wzi < winCountZ; wzi++) {
+                                        const wz = startZ + wzi * windowSpacingX;
+                                        const litIdx2 = fi * 200 + wzi + 1000;
+                                        // Left face
+                                        elements.push(
+                                            <group key={`wl-${fi}-${wzi}`} rotation={[0, -Math.PI / 2, 0]}>
+                                                <RealisticWindow
+                                                    position={[-wz, winY, -data.size[0] / 2 - 0.01]}
+                                                    size={[windowW, windowH]}
+                                                    isLit={windowSeed(litIdx2) > 0.7}
+                                                    glassColor={THEME.windowGlass}
+                                                />
+                                            </group>
+                                        );
+                                        // Right face
+                                        elements.push(
+                                            <group key={`wr-${fi}-${wzi}`} rotation={[0, Math.PI / 2, 0]}>
+                                                <RealisticWindow
+                                                    position={[-wz, winY, -data.size[0] / 2 - 0.01]}
+                                                    size={[windowW, windowH]}
+                                                    isLit={windowSeed(litIdx2 + 50) > 0.7}
+                                                    glassColor={THEME.windowGlass}
+                                                />
+                                            </group>
+                                        );
+                                    }
+
+                                    return elements;
+                                })()}
+                            </group>
+                        );
+                    })}
+
+                    {/* Corner pilasters */}
+                    {[[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([sx, sz], pi) => (
+                        <mesh key={`pilaster-${pi}`} position={[sx * data.size[0] / 2, data.height / 2 + 0.15, sz * data.size[1] / 2]} castShadow>
+                            <boxGeometry args={[0.18, data.height, 0.18]} />
+                            <meshStandardMaterial color={palette.trim} roughness={0.75} metalness={0.1} />
+                        </mesh>
                     ))}
-                    <mesh position={[0, 1, 2]} castShadow><boxGeometry args={[2, 2, 2]} /><meshStandardMaterial color="#444" roughness={0.3} metalness={0.6} /></mesh>
-                    {/* Warning light - emissive instead of point light for performance */}
-                    <mesh position={[0, 8, 0]}><sphereGeometry args={[0.2, 8, 8]} /><meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={1} /></mesh>
+
+                    {/* Weathering / grime band at base */}
+                    <mesh position={[0, 0.5, -data.size[1] / 2 - 0.01]}>
+                        <planeGeometry args={[data.size[0], 0.7]} />
+                        <meshBasicMaterial color="#3A3428" transparent opacity={0.12} />
+                    </mesh>
+                    <mesh position={[0, 0.5, data.size[1] / 2 + 0.01]} rotation={[0, Math.PI, 0]}>
+                        <planeGeometry args={[data.size[0], 0.7]} />
+                        <meshBasicMaterial color="#3A3428" transparent opacity={0.1} />
+                    </mesh>
+
+                    {/* Roof details */}
+                    <RoofDetails width={data.size[0]} depth={data.size[1]} height={data.height + 0.3} palette={palette} />
+
+                    {/* Entrance portico (only for larger buildings) */}
+                    {isLargeBuilding && <EntrancePortico width={data.size[0]} depth={data.size[1]} palette={palette} />}
+                </group>
+            )}
+
+            {/* ===== LANDMARK (flat/ground) ===== */}
+            {data.type === 'landmark' && data.height < 1 && (
+                <group>
+                    <mesh
+                        position={[0, data.height / 2, 0]}
+                        receiveShadow
+                    >
+                        <boxGeometry args={[data.size[0], data.height, data.size[1]]} />
+                        <meshStandardMaterial color={data.color || THEME.building} roughness={0.9} metalness={0.05} />
+                    </mesh>
+                    <Fence size={data.size} />
+                </group>
+            )}
+
+            {/* ===== COMPLEX / GATE / POWER-TOWERS (original geometry approach) ===== */}
+            {(data.type === 'complex' || data.type === 'gate' || data.type === 'power-towers') && geometry && (
+                <group>
+                    <mesh
+                        ref={mesh}
+                        geometry={geometry}
+                        rotation={[
+                            (data.type === 'complex') ? -Math.PI / 2 : 0,
+                            data.rotationY || 0,
+                            0
+                        ]}
+                        position={[
+                            0,
+                            data.type === 'complex' ? 0 : data.height / 2,
+                            0
+                        ]}
+                        onPointerOver={(e: any) => { e.stopPropagation(); setHover(true); }}
+                        onPointerOut={() => setHover(false)}
+                        castShadow
+                        receiveShadow
+                    >
+                        <meshStandardMaterial
+                            map={data.type === 'power-towers' ? undefined : textures.window}
+                            color={data.color || palette.wall}
+                            roughness={data.type === 'power-towers' ? 0.9 : 0.55}
+                            metalness={data.type === 'power-towers' ? 0.2 : 0.08}
+                            emissive={hovered ? THEME.primary : '#000000'}
+                            emissiveIntensity={0.15}
+                        />
+                    </mesh>
+
+                    {/* Roof for Hollow Buildings */}
+                    {data.type === 'complex' && (
+                        <group>
+                            <mesh position={[0, data.height + 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                                <planeGeometry args={[data.size[0], data.size[1]]} />
+                                <meshStandardMaterial color={THEME.roof} roughness={0.9} />
+                            </mesh>
+                            {/* Parapet for complex buildings */}
+                            <mesh position={[0, data.height + 0.3, -data.size[1] / 2]}>
+                                <boxGeometry args={[data.size[0], 0.5, 0.1]} />
+                                <meshStandardMaterial color={palette.accent} roughness={0.85} />
+                            </mesh>
+                            <mesh position={[0, data.height + 0.3, data.size[1] / 2]}>
+                                <boxGeometry args={[data.size[0], 0.5, 0.1]} />
+                                <meshStandardMaterial color={palette.accent} roughness={0.85} />
+                            </mesh>
+                        </group>
+                    )}
+
+                    {/* POWER STATION TOWERS */}
+                    {data.type === 'power-towers' && (
+                        <group>
+                            {[-2, 2].map((offset, i) => (
+                                <group key={i} position={[offset, 0, 0]}>
+                                    <mesh position={[0, 4, 0]}><cylinderGeometry args={[0.1, 0.8, 8, 4]} /><meshStandardMaterial color="#333" roughness={0.5} /></mesh>
+                                    <mesh position={[0, 6, 0]}><boxGeometry args={[3, 0.2, 0.2]} /><meshStandardMaterial color="#333" /></mesh>
+                                    {i === 0 && <mesh position={[0, 7, 0]}><boxGeometry args={[2, 0.2, 0.2]} /><meshStandardMaterial color="#333" /></mesh>}
+                                </group>
+                            ))}
+                            <mesh position={[0, 1, 2]} castShadow><boxGeometry args={[2, 2, 2]} /><meshStandardMaterial color="#444" roughness={0.3} metalness={0.6} /></mesh>
+                            <mesh position={[0, 8, 0]}><sphereGeometry args={[0.2, 8, 8]} /><meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={1} /></mesh>
+                        </group>
+                    )}
                 </group>
             )}
 
@@ -1276,10 +1671,19 @@ const Roads = ({ textures }: any) => {
                 const dz = r.end[1] - r.start[1];
                 const len = Math.sqrt(dx * dx + dz * dz);
                 const angle = Math.atan2(dz, dx);
+                // Each road gets a tiny unique Y offset to prevent z-fighting at intersections
+                const yOffset = 0.03 + i * 0.002;
                 return (
-                    <mesh key={i} position={[(r.start[0] + r.end[0]) / 2, 0.03, (r.start[1] + r.end[1]) / 2]} rotation={[-Math.PI / 2, 0, -angle]} receiveShadow>
+                    <mesh key={i} position={[(r.start[0] + r.end[0]) / 2, yOffset, (r.start[1] + r.end[1]) / 2]} rotation={[-Math.PI / 2, 0, -angle]} receiveShadow>
                         <planeGeometry args={[len, r.width]} />
-                        <meshStandardMaterial map={textures.road} transparent opacity={0.9} />
+                        <meshStandardMaterial
+                            map={textures.road}
+                            transparent
+                            opacity={0.9}
+                            polygonOffset
+                            polygonOffsetFactor={-1 - i}
+                            polygonOffsetUnits={-1}
+                        />
                     </mesh>
                 );
             })}
@@ -1359,8 +1763,18 @@ const CampusExplorer = () => {
         const timer = setTimeout(() => setIsLoading(false), 2000);
         return () => clearTimeout(timer);
     }, []);
+
+    // Disable body scroll when component mounts
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+        };
+    }, []);
     return (
-        <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#ff00ff #1a0030' }}>
+        <div className="min-h-screen bg-[#05010D] text-white font-orbitron selection:bg-primary selection:text-black overflow-hidden" style={{ scrollbarWidth: 'thin', scrollbarColor: '#ff00ff #1a0030' }}>
             <style>{`
                 @media (max-width: 768px) {
                     ::-webkit-scrollbar {
