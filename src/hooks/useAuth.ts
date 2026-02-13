@@ -1,83 +1,32 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { User } from '@/lib/supabase';
+
+export interface User {
+    id: string;
+    uid: string;
+    name: string;
+    email: string;
+    enrollment_no: string;
+    created_at: string;
+}
 
 export const useAuth = () => {
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Mock initial check (always logged out initially for now)
     useEffect(() => {
-        // Check initial session
-        const checkSession = async () => {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-
-                if (session) {
-                    await fetchUserProfile(session.user.id);
-                }
-            } catch (err) {
-                console.error('Error checking session:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        checkSession();
-
-        // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            async (event, session) => {
-                if (session?.user) {
-                    await fetchUserProfile(session.user.id);
-                } else {
-                    setUser(null);
-                }
-                setLoading(false);
-            }
-        );
-
-        return () => {
-            subscription.unsubscribe();
-        };
+        setLoading(false);
     }, []);
-
-    const fetchUserProfile = async (userId: string) => {
-        try {
-            const { data, error } = await supabase
-                .from('users')
-                .select('*')
-                .eq('id', userId)
-                .single();
-
-            if (error && error.code !== 'PGRST116') {
-                throw error;
-            }
-
-            if (data) {
-                setUser(data);
-            }
-        } catch (err) {
-            console.error('Error fetching user profile:', err);
-        }
-    };
 
     const signInWithGoogle = async () => {
         setLoading(true);
         setError(null);
-
         try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    queryParams: {
-                        hd: 'mitsgwl.ac.in' // Restrict to MITS domain
-                    },
-                    redirectTo: window.location.origin + '/unified-registration'
-                }
-            });
-
-            if (error) throw error;
+            // Mock sign in
+            console.log('Google Sign In (Mock)');
+            // Simulate success for demo purposes if needed, but for now we'll just log
+            alert('Google Auth removed. This feature is disabled.');
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -88,34 +37,13 @@ export const useAuth = () => {
     const signInWithOTP = async (email: string) => {
         setLoading(true);
         setError(null);
-
         try {
-            // Validate MITS email domain
-            if (!email.endsWith('@mitsgwl.ac.in')) {
-                throw new Error('Only MITS email addresses are allowed');
-            }
-
-            console.log('Calling Supabase signInWithOtp for:', email);
-
-            const { data, error } = await supabase.auth.signInWithOtp({
-                email,
-                options: {
-                    emailRedirectTo: window.location.origin + '/unified-registration'
-                }
-            });
-
-            console.log('Supabase OTP response:', { data, error });
-
-            if (error) {
-                console.error('Supabase OTP error:', error);
-                throw error;
-            }
-
-            console.log('OTP request successful');
+            // Mock OTP
+            console.log('OTP Sign In (Mock) for:', email);
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
         } catch (err: any) {
-            console.error('signInWithOTP error:', err);
             setError(err.message);
-            throw err; // Re-throw to let caller handle it
         } finally {
             setLoading(false);
         }
@@ -124,19 +52,22 @@ export const useAuth = () => {
     const verifyOTP = async (email: string, token: string) => {
         setLoading(true);
         setError(null);
-
         try {
-            const { data, error } = await supabase.auth.verifyOtp({
-                email,
-                token,
-                type: 'email'
+            // Mock Verify
+            console.log('Verify OTP (Mock) for:', email, token);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Log the user in with fake data (or just leave them logged out)
+            // Let's create a fake user session for exploring the functionality
+            setUser({
+                id: 'mock-user-id',
+                uid: 'mock-uid',
+                name: 'Test Student',
+                email: email,
+                enrollment_no: '0901CS221000',
+                created_at: new Date().toISOString()
             });
 
-            if (error) throw error;
-
-            if (data.user) {
-                await fetchUserProfile(data.user.id);
-            }
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -151,37 +82,10 @@ export const useAuth = () => {
     }) => {
         setLoading(true);
         setError(null);
-
         try {
-            // Validate MITS email domain
-            if (!userData.email.endsWith('@mitsgwl.ac.in')) {
-                throw new Error('Only MITS email addresses are allowed');
-            }
-
-            // Check if enrollment number already exists
-            const { data: existingUser, error: checkError } = await supabase
-                .from('users')
-                .select('id')
-                .eq('enrollment_no', userData.enrollment_no)
-                .single();
-
-            if (checkError && checkError.code !== 'PGRST116') {
-                throw checkError;
-            }
-
-            if (existingUser) {
-                throw new Error('Enrollment number already registered');
-            }
-
-            // Create user in auth using OTP flow
-            const { error: authError } = await supabase.auth.signInWithOtp({
-                email: userData.email,
-                options: {
-                    emailRedirectTo: window.location.origin + '/register'
-                }
-            });
-
-            if (authError) throw authError;
+            console.log('Sign Up (Mock)', userData);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            alert('Sign up successful (Mock). Check your email.');
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -192,7 +96,7 @@ export const useAuth = () => {
     const signOut = async () => {
         setLoading(true);
         try {
-            await supabase.auth.signOut();
+            console.log('Sign Out (Mock)');
             setUser(null);
         } catch (err: any) {
             setError(err.message);
