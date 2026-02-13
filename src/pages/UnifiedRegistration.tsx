@@ -10,10 +10,17 @@ import { motion, Variants } from 'framer-motion';
 import { GlitchText } from '@/components/GlitchText';
 import { RetroButton } from '@/components/ui/retro-button';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { supabase, Event } from '@/lib/supabase';
-import { db } from '@/lib/supabase-service';
 import QRCode from 'react-qr-code';
 import { toast } from 'sonner';
+
+interface Event {
+    id: string;
+    event_name: string;
+    club_name: string;
+    fee: number;
+    is_free: boolean;
+    created_at: string;
+}
 
 export default function UnifiedRegistration() {
     const { user, loading: authLoading, signInWithGoogle, signInWithOTP, verifyOTP, signUp, signOut, error: authError } = useAuth();
@@ -61,22 +68,17 @@ export default function UnifiedRegistration() {
         boxShadow: 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'
     };
 
-    // Load events on component mount using PUBLIC client (anon key)
+    // Load events on component mount (Mock)
     useEffect(() => {
         const loadEvents = async () => {
-            try {
-                const { data, error: fetchError } = await supabase
-                    .from('events')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (fetchError) throw fetchError;
-                setEvents(data || []);
-                console.log('Events loaded:', data?.length, 'events');
-            } catch (err) {
-                console.error('Error loading events:', err);
-                setError('Failed to load events');
-            }
+            // Mock Data
+            const MOCK_EVENTS: Event[] = [
+                { id: '1', event_name: 'Code Marathon', club_name: 'CSI', fee: 0, is_free: true, created_at: new Date().toISOString() },
+                { id: '2', event_name: 'Robo Race', club_name: 'Robotics Club', fee: 200, is_free: false, created_at: new Date().toISOString() },
+                { id: '3', event_name: 'Design Derby', club_name: 'Design Club', fee: 100, is_free: false, created_at: new Date().toISOString() },
+            ];
+            setEvents(MOCK_EVENTS);
+            console.log('Events loaded (Mock):', MOCK_EVENTS.length, 'events');
         };
         loadEvents();
     }, []);
@@ -88,36 +90,13 @@ export default function UnifiedRegistration() {
                 toast.success('Sign in successful!');
                 setStep('events');
             }
-            // Load user data (registrations and epass)
+            // Load user data (Mock)
             const loadUserData = async () => {
-                try {
-                    // Load registrations using public client (RLS ensures only own data)
-                    const { data: registrations, error: regError } = await supabase
-                        .from('registrations')
-                        .select('*, events(*)')
-                        .eq('user_id', user.id);
-
-                    if (regError) throw regError;
-                    if (registrations && registrations.length > 0) {
-                        const ids = registrations.map((r: any) => r.event_id);
-                        setRegisteredEventIds(ids);
-                    }
-
-                    // Load e-pass using public client
-                    const { data: epass, error: epassError } = await supabase
-                        .from('epasses')
-                        .select('*')
-                        .eq('user_id', user.id)
-                        .single();
-
-                    if (epassError && epassError.code !== 'PGRST116') throw epassError;
-                    if (epass) {
-                        setQrCodeData(epass.pass_url);
-                        setEpassUrl(epass.pass_url);
-                    }
-                } catch (err) {
-                    console.error("Error loading user data", err);
-                }
+                // Mock existing registrations/epass check
+                console.log("Loading mock user data");
+                setRegisteredEventIds([]); // Assume no prior registrations
+                setQrCodeData('');
+                setEpassUrl('');
             };
             loadUserData();
         }
@@ -242,17 +221,11 @@ export default function UnifiedRegistration() {
         if (!user) throw new Error('User not authenticated');
 
         try {
-            // Create registrations using public client
-            for (const eventId of eventIds) {
-                const { error: regError } = await supabase
-                    .from('registrations')
-                    .insert([{
-                        user_id: user.id,
-                        event_id: eventId,
-                        payment_status: 'confirmed'
-                    }]);
-                if (regError) throw regError;
-            }
+            // Mock Registration
+            console.log('Registering for events:', eventIds);
+
+            // Artificial delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             // Generate QR code data
             const qrData = {
@@ -267,22 +240,9 @@ export default function UnifiedRegistration() {
             // Generate QR code
             const qrCodeDataURL = await generateQRCode(qrData);
             setQrCodeData(qrCodeDataURL);
+            setEpassUrl(qrCodeDataURL); // Use same URL for mock
 
-            // Create e-pass using public client
-            const { data: epass, error: epassError } = await supabase
-                .from('epasses')
-                .upsert([{
-                    user_id: user.id,
-                    qr_data: qrData,
-                    pass_url: qrCodeDataURL
-                }])
-                .select()
-                .single();
-
-            if (epassError) throw epassError;
-            if (epass) setEpassUrl(epass.pass_url);
-
-            // Send email
+            // Send email (Mock)
             await sendEpassEmail(user, eventIds, qrCodeDataURL);
         } catch (err) {
             console.error('Error during registration:', err);
@@ -294,28 +254,12 @@ export default function UnifiedRegistration() {
         try {
             const selectedEventsData = events.filter(e => eventIds.includes(e.id));
 
-            const response = await fetch(import.meta.env.VITE_EMAIL_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${import.meta.env.VITE_EMAIL_API_KEY}`
-                },
-                body: JSON.stringify({
-                    to: user.email,
-                    subject: 'Your Aarunya E-Pass',
-                    template: 'epass',
-                    data: {
-                        name: user.name,
-                        enrollment_no: user.enrollment_no,
-                        events: selectedEventsData,
-                        qr_code: qrCodeDataURL
-                    }
-                })
-            });
+            console.log('Mock sending email to:', user.email);
+            console.log('Events:', selectedEventsData);
+            // console.log('QR Code:', qrCodeDataURL);
 
-            if (!response.ok) {
-                throw new Error('Failed to send email');
-            }
+            await new Promise(resolve => setTimeout(resolve, 500));
+
         } catch (err) {
             console.error('Error sending email:', err);
             // Don't throw error as registration was successful
@@ -472,36 +416,7 @@ export default function UnifiedRegistration() {
                                                 </div>
                                             )}
 
-                                            {/* Google Login */}
-                                            <div>
-                                                <Label className="font-vt323 text-xs uppercase tracking-wider mb-2 block" style={{
-                                                    color: '#00ffff',
-                                                    textShadow: '1px 1px 0 #003333'
-                                                }}>
-                                                    Continue with Google (MITS Domain Required)
-                                                </Label>
-                                                <Button
-                                                    onClick={handleGoogleLogin}
-                                                    disabled={loading}
-                                                    className="w-full bg-red-600 hover:bg-red-700 border-2 border-red-400"
-                                                >
-                                                    {loading ? 'Loading...' : 'Sign in with Google'}
-                                                </Button>
-                                            </div>
-
-                                            <div className="relative">
-                                                <div className="absolute inset-0 flex items-center">
-                                                    <span className="w-full border-t border-white/20" />
-                                                </div>
-                                                <div className="relative flex justify-center text-xs uppercase">
-                                                    <span className="bg-[#0d0520] px-2 text-white/50" style={{
-                                                        color: '#00ffff',
-                                                        textShadow: '1px 1px 0 #003333'
-                                                    }}>
-                                                        or
-                                                    </span>
-                                                </div>
-                                            </div>
+                                            {/* Google Login removed */}
 
                                             {/* OTP Login */}
                                             <div className="space-y-6">
