@@ -41,6 +41,8 @@ export const TVIntro: React.FC = () => {
                 <img
                     src="/aarunya-logo.svg"
                     alt="Aarunya Logo"
+                    width="600"
+                    height="240"
                     className="w-[80%] sm:w-[90%] md:w-[600px] h-auto mb-2 sm:mb-4 object-contain"
                 />
                 <motion.div

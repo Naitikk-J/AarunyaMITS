@@ -6,33 +6,33 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PageTransition } from "@/components/PageTransition";
 import { Suspense, lazy } from "react";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { SoundEffectsProvider } from "@/components/ui/SoundEffects";
 import { KidcoreCursor } from "@/components/ui/KidcoreCursor";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
-import Index from "./pages/Index";
-import Register from "./pages/Register";
-import UnifiedRegistration from "./pages/UnifiedRegistration";
-import NotFound from "./pages/NotFound";
-import ViewMap from "./pages/ViewMap";
-import CampusExplorer from "./pages/CampusExplorer";
-import AboutUs from "./pages/AboutUs";
-import History from "./pages/History";
-import Schedule from "./pages/Schedule";
-import Events from "./pages/Events";
-import Merch from "./pages/Merch";
-import Sponsors from "./pages/Sponsors";
-import Hierarchy from "./pages/Hierarchy";
-import ContactUs from "./pages/ContactUs";
-import { Guidelines } from "./pages/Guidelines";
-import ResponsiveTest from "./pages/ResponsiveTest";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsAndConditions from "./pages/TermsAndConditions";
-import ReturnAndRefund from "./pages/ReturnAndRefund";
-import Scan from "./pages/Scan";
 
-// Lazy load Gallery for better initial load performance and loading screen support
+// ─── Lazy-loaded pages for route-level code splitting ───
+// Only the code for the current route is downloaded, not ALL pages
+const Index = lazy(() => import("./pages/Index"));
 const Gallery = lazy(() => import("./pages/Gallery"));
+const Register = lazy(() => import("./pages/Register"));
+const UnifiedRegistration = lazy(() => import("./pages/UnifiedRegistration"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ViewMap = lazy(() => import("./pages/ViewMap"));
+const CampusExplorer = lazy(() => import("./pages/CampusExplorer"));
+const AboutUs = lazy(() => import("./pages/AboutUs"));
+const History = lazy(() => import("./pages/History"));
+const Schedule = lazy(() => import("./pages/Schedule"));
+const Events = lazy(() => import("./pages/Events"));
+const Merch = lazy(() => import("./pages/Merch"));
+const Sponsors = lazy(() => import("./pages/Sponsors"));
+const Hierarchy = lazy(() => import("./pages/Hierarchy"));
+const ContactUs = lazy(() => import("./pages/ContactUs"));
+const Guidelines = lazy(() => import("./pages/Guidelines"));
+const ResponsiveTest = lazy(() => import("./pages/ResponsiveTest"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
+const ReturnAndRefund = lazy(() => import("./pages/ReturnAndRefund"));
+const Scan = lazy(() => import("./pages/Scan"));
 
 const queryClient = new QueryClient();
 
