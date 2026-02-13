@@ -1231,3 +1231,26 @@ html {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+/* ================= ADDITIONAL ANIMATIONS ================= */
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes tv-off {
+    0% { transform: scale(0); opacity: 0; }
+    10% { transform: scaleX(1.5) scaleY(0.01); opacity: 1; }
+    30% { transform: scaleX(1.5) scaleY(0.01); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+.animate-tv-off {
+    animation: tv-off 0.8s ease-out forwards;
+}
