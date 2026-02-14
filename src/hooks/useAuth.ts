@@ -1,34 +1,54 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { authApi } from '@/lib/api';
 
 export interface User {
     id: string;
-    uid: string;
+    uid?: string;
     name: string;
     email: string;
-    enrollment_no: string;
-    created_at: string;
+    aarunyaId?: string;
+    category?: string;
+    enrollment_no?: string;
+    created_at?: string;
 }
 
 export const useAuth = () => {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>((() => {
+        try {
+            const savedUser = localStorage.getItem('user');
+            if (savedUser && savedUser !== 'undefined') {
+                return JSON.parse(savedUser);
+            }
+            return null;
+        } catch {
+            return null;
+        }
+    })());
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [tempUserId, setTempUserId] = useState<string | null>(null);
 
-    // Mock initial check (always logged out initially for now)
-    useEffect(() => {
-        setLoading(false);
-    }, []);
-
-    const signInWithGoogle = async () => {
+    const signInWithGoogle = async (googleData?: any) => {
         setLoading(true);
         setError(null);
         try {
-            // Mock sign in
-            console.log('Google Sign In (Mock)');
-            // Simulate success for demo purposes if needed, but for now we'll just log
-            alert('Google Auth removed. This feature is disabled.');
+            const response = await authApi.googleLogin(googleData);
+            console.log('[Auth] googleLogin raw response.data:', JSON.stringify(response.data).substring(0, 500));
+            const payload = response.data?.data || response.data;
+            const userData = payload?.user || payload;
+            const token = payload?.token || response.data?.token;
+            if (userData) {
+                const normalizedUser = { ...userData, id: userData.id || userData._id };
+                setUser(normalizedUser);
+                localStorage.setItem('user', JSON.stringify(normalizedUser));
+            }
+            if (token) {
+                localStorage.setItem('authToken', token);
+            }
+            return userData;
         } catch (err: any) {
-            setError(err.message);
+            setError(err.response?.data?.message || err.message);
+            throw err;
         } finally {
             setLoading(false);
         }
@@ -38,72 +58,87 @@ export const useAuth = () => {
         setLoading(true);
         setError(null);
         try {
-            // Mock OTP
-            console.log('OTP Sign In (Mock) for:', email);
-            // Simulate network delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await authApi.requestOTP(email);
+            return response.data;
         } catch (err: any) {
-            setError(err.message);
+            setError(err.response?.data?.message || err.message);
+            throw err;
         } finally {
             setLoading(false);
         }
     };
 
-    const verifyOTP = async (email: string, token: string) => {
+    const verifyOTP = async (email: string, otp: string, userData?: any) => {
         setLoading(true);
         setError(null);
         try {
-            // Mock Verify
-            console.log('Verify OTP (Mock) for:', email, token);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // Log the user in with fake data (or just leave them logged out)
-            // Let's create a fake user session for exploring the functionality
-            setUser({
-                id: 'mock-user-id',
-                uid: 'mock-uid',
-                name: 'Test Student',
-                email: email,
-                enrollment_no: '0901CS221000',
-                created_at: new Date().toISOString()
+            const response = await authApi.verifyOTPGeneric({
+                email,
+                otp,
+                ...userData
             });
+            console.log('[Auth] verifyOTP raw response.data:', JSON.stringify(response.data).substring(0, 500));
+            // Handle both response.data.data.user and response.data.user structures
+            const payload = response.data?.data || response.data;
+            const userDataRes = payload?.user || payload;
+            const token = payload?.token || response.data?.token;
 
+            if (userDataRes) {
+                // Ensure user has an id field
+                const normalizedUser = { ...userDataRes, id: userDataRes.id || userDataRes._id };
+                setUser(normalizedUser);
+                localStorage.setItem('user', JSON.stringify(normalizedUser));
+            }
+            if (token) {
+                localStorage.setItem('authToken', token);
+            }
+            return userDataRes;
         } catch (err: any) {
-            setError(err.message);
+            setError(err.response?.data?.message || err.message);
+            throw err;
         } finally {
             setLoading(false);
         }
     };
 
-    const signUp = async (userData: {
-        name: string;
-        email: string;
-        enrollment_no: string;
-    }) => {
+    const signUp = async (userData: any) => {
         setLoading(true);
         setError(null);
         try {
-            console.log('Sign Up (Mock)', userData);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            alert('Sign up successful (Mock). Check your email.');
+            const response = await authApi.register(userData);
+            console.log('[Auth] signUp raw response.data:', JSON.stringify(response.data).substring(0, 500));
+            const payload = response.data?.data || response.data;
+            const newUser = payload?.user || payload;
+            const token = payload?.token || response.data?.token;
+            if (newUser) {
+                const normalizedUser = { ...newUser, id: newUser.id || newUser._id };
+                setUser(normalizedUser);
+                localStorage.setItem('user', JSON.stringify(normalizedUser));
+            }
+            if (token) {
+                localStorage.setItem('authToken', token);
+            }
+            return newUser;
         } catch (err: any) {
-            setError(err.message);
+            setError(err.response?.data?.message || err.message);
+            throw err;
         } finally {
             setLoading(false);
         }
     };
 
-    const signOut = async () => {
+    const signOut = useCallback(async () => {
         setLoading(true);
         try {
-            console.log('Sign Out (Mock)');
             setUser(null);
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
         } catch (err: any) {
             setError(err.message);
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     return {
         user,

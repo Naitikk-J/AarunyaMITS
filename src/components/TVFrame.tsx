@@ -122,8 +122,8 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
                         )}
 
                         {/* Interactive TV Controls Text */}
-                        <div className="absolute top-1 left-1 sm:top-2 sm:left-2 text-[7px] sm:text-[10px] font-pixel text-white/40 bg-black/20 px-1 sm:px-2 py-0.5 sm:py-1 rounded z-20 uppercase tracking-tighter">
-                            Aarunya TV-2026
+                        <div className="absolute top-1 left-1 sm:top-2 sm:left-2 text-[10px] sm:text-[14px] font-pixel text-white/40 bg-black/20 px-2 sm:px-3 py-1 rounded z-20 uppercase tracking-tighter">
+                            Aarunya Interactive TV-2026
                         </div>
 
                         {/* Corner vignette */}

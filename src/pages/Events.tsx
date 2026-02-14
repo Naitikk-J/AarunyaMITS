@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MainNavigation } from '@/components/ui/MainNavigation';
 import { Button } from '@/components/ui/button';
-import { events } from '../data/events';
-import { Calendar, Clock, MapPin, Trophy, Users, Timer, Info, Lightbulb, Code, Music, Palette, Gamepad2, Mic, PenTool, Brain, Zap, Rocket, Smile, Theater } from 'lucide-react';
+import { events as staticEvents } from '../data/events';
+import { Calendar, Clock, MapPin, Trophy, Users, Timer, Info, Lightbulb, Code, Music, Palette, Gamepad2, Mic, PenTool, Brain, Zap, Rocket, Smile, Theater, Loader2 } from 'lucide-react';
 import { GlitchText } from '@/components/GlitchText';
+import { eventApi } from '@/lib/api';
+import { toast } from 'sonner';
+import { useEffect } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -20,6 +23,42 @@ import { Badge } from "@/components/ui/badge";
 const Events = () => {
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [dbEvents, setDbEvents] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                setLoading(true);
+                const response = await eventApi.getEvents();
+                // API returns { success, message, data: { events: [...] } }
+                // axios wraps body in response.data, so events are at response.data.data.events
+                const eventsData = response.data?.data?.events || response.data?.events || response.data || [];
+                // Ensure eventsData is highly compatible with the UI
+                const finalEvents = Array.isArray(eventsData) && eventsData.length > 0
+                    ? eventsData.map((e: any) => ({
+                        ...e,
+                        id: e.id || e._id || 'unknown',
+                        title: e.title || e.name || 'Untitled Event',
+                        type: e.type || e.category || 'Event',
+                        club: e.club || 'Aarunya',
+                        tags: e.tags || [],
+                        time: e.time || 'TBA',
+                        date: e.date || 'TBA',
+                        venue: e.venue || 'TBA',
+                        description: e.description || '',
+                    }))
+                    : staticEvents; // Fallback to static if empty or error
+                setDbEvents(finalEvents);
+            } catch (error) {
+                console.error('Fetch events error:', error);
+                setDbEvents(staticEvents); // Fallback
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchEvents();
+    }, []);
 
     const categories = ['All', 'Technical', 'Cultural', 'Competitions'];
 
@@ -55,8 +94,8 @@ const Events = () => {
 
     const filteredEvents =
         selectedCategory === 'All'
-            ? events
-            : events.filter((e) => getCategory(e.type) === selectedCategory);
+            ? dbEvents
+            : dbEvents.filter((e) => getCategory(e.type || '') === selectedCategory);
 
     return (
         <div className="min-h-screen bg-[#05010D] text-white">
@@ -121,7 +160,12 @@ const Events = () => {
             <div className="container mx-auto px-4 pb-24">
                 {/* EVENTS GRID */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredEvents.map((e, index) => (
+                    {loading ? (
+                        <div className="col-span-full flex flex-col items-center justify-center py-20 gap-4">
+                            <Loader2 className="w-12 h-12 text-[#BC13FE] animate-spin" />
+                            <p className="font-mono text-[#BC13FE] animate-pulse">SYNCING WITH DATABASE...</p>
+                        </div>
+                    ) : filteredEvents.map((e, index) => (
                         <motion.div
                             key={e.id}
                             initial={{ opacity: 0, y: 20 }}

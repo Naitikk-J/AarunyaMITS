@@ -48,7 +48,7 @@ const BUILDINGS = [
     { id: 'canteen', name: 'Canteen', hindiName: 'कैंटीन', position: [-18, -17], size: [2, 2], height: 2, type: 'simple', icon: '🍽️' },
 
     // Unique AI Department
-    { id: 'ai-department', name: 'AI department', hindiName: 'एआई विभाग', position: [-1, 2], size: [9, 5], height: 8, type: 'simple', icon: '🤖' },
+    { id: 'ai-department', name: 'AI department', hindiName: 'एआई विभाग', position: [-1, 2], size: [9, 5], height: 8, type: 'simple', icon: '🤖', rotationY: Math.PI },
 
     // --- UPDATED: GOLE KA MANDIR SQUARE (Replaced 'circle') ---
     {

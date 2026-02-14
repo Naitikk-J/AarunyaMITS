@@ -8,7 +8,7 @@ const Sponsors = () => {
         {
             title: 'TITLE SPONSORS',
             description: 'PRIMARY POWER SOURCES FOR THE FESTIVAL GRID.',
-            icon: '👑',
+            icon: '',
             level: 'PLATINUM',
             sponsors: [
                 { name: 'TECH CORP', contribution: '500,000 XP' },
@@ -159,7 +159,7 @@ const Sponsors = () => {
                             <div className="absolute inset-0 opacity-10" />
 
                             <div className="relative z-10">
-                                <div className="text-4xl sm:text-5xl mb-6">🚀</div>
+                                <div className="text-4xl sm:text-5xl mb-6"></div>
 
                                 <h3 className="text-xl sm:text-2xl md:text-3xl font-black mb-4">
                                     BECOME A SPONSOR
