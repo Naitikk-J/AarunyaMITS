@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { paymentApi } from '@/lib/api';
 
 export const useRazorpay = () => {
     const [loading, setLoading] = useState(false);
@@ -9,16 +10,10 @@ export const useRazorpay = () => {
         setError(null);
 
         try {
-            // Mock order creation since we removed the backend integration
-            console.log('Mock creating order for', { amount, userId, eventIds });
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            return {
-                id: 'order_' + Math.random().toString(36).substr(2, 9),
-            };
-
+            const response = await paymentApi.createOrder(amount);
+            return response.data;
         } catch (err: any) {
-            setError(err.message);
+            setError(err.response?.data?.message || err.message);
             throw err;
         } finally {
             setLoading(false);
@@ -30,11 +25,14 @@ export const useRazorpay = () => {
         setError(null);
 
         try {
-            console.log('Mock verifying payment', { paymentId, orderId, signature });
-            await new Promise(resolve => setTimeout(resolve, 500));
-            return { status: 'success' };
+            const response = await paymentApi.verifyPayment({
+                razorpay_payment_id: paymentId,
+                razorpay_order_id: orderId,
+                razorpay_signature: signature
+            });
+            return response.data;
         } catch (err: any) {
-            setError(err.message);
+            setError(err.response?.data?.message || err.message);
             throw err;
         } finally {
             setLoading(false);
@@ -68,7 +66,7 @@ export const useRazorpay = () => {
             await loadRazorpay();
 
             const options = {
-                key: 'replace-with-your-razorpay-key-id', // Hardcoded placeholder or keep from env if user wants to keep razorpay specifically
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_SFAPOIACD3kS3b', // Use env variable with fallback
                 amount: amount * 100, // Razorpay expects amount in paise
                 currency,
                 name,

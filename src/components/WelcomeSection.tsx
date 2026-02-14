@@ -113,11 +113,11 @@ export const WelcomeSection: React.FC = () => {
                     transition={{ delay: 0.3 }}
                     className="max-w-4xl w-full bg-black/10 border-2 md:border-4 border-kidcore-blue p-6 md:p-12 relative shadow-[5px_5px_0px_theme(colors.kidcore.blue)] md:shadow-[10px_10px_0px_theme(colors.kidcore.blue)] mb-8 md:mb-12 rounded-xl md:rounded-none"
                 >
-                    <div className="absolute -top-1 -left-1 w-4 h-4 md:w-6 md:h-6 border-t-2 md:border-t-4 border-l-2 md:border-l-4 border-kidcore-yellow"/>
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 md:w-6 md:h-6 border-b-2 md:border-b-4 border-r-2 md:border-r-4 border-kidcore-yellow"/>
+                    <div className="absolute -top-1 -left-1 w-4 h-4 md:w-6 md:h-6 border-t-2 md:border-t-4 border-l-2 md:border-l-4 border-kidcore-yellow" />
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 md:w-6 md:h-6 border-b-2 md:border-b-4 border-r-2 md:border-r-4 border-kidcore-yellow" />
 
                     <p className={`${isMobile ? 'text-base' : isTablet ? 'text-xl' : 'text-2xl'} md:text-xl font-vt323 text-white text-center leading-relaxed `}>
-                        Aarunya is the annual fest of MITS Gwalior, where innovation meets expression and competition meets celebration. Step into a world of high-energy events, creative showcases, and unforgettable performances. From tech battles to cultural brilliance, Aarunya is where passion powers play.
+                        Aarunya 2026 is the annual cultural and technical fest of Madhav Institute of Technology & Science (Deemed University), Gwalior:  a celebration where creativity, culture, and technology collide. Blending high-energy performances, competitive events, innovation showcases, and immersive experiences, Aarunya brings together students from diverse backgrounds to celebrate talent, teamwork, and youth spirit. From thought-provoking discussions to electrifying stages and cutting-edge tech events, Aarunya isn't just a fest : it's a shared experience built by the students, for the students.
                     </p>
                 </motion.div>
 

@@ -54,7 +54,7 @@ const ViewMap = () => {
                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 animate-fade-in">
                     <Button
                         onClick={handleExploreCampus}
-                        className="px-8 py-6 text-3xl font-orbitron font-bold tracking-wider bg-gradient-to-r from-kidcore-pink via-kidcore-blue to-kidcore-cyan text-white rounded-lg shadow-2xl hover:shadow-3xl transition-all duration-100 hover:scale-105 active:scale-95"
+                        className="px-4 py-3 md:px-8 md:py-6 text-base md:text-3xl font-orbitron font-bold tracking-wider bg-gradient-to-r from-kidcore-pink via-kidcore-blue to-kidcore-cyan text-white rounded-lg shadow-2xl hover:shadow-3xl transition-all duration-100 hover:scale-105 active:scale-95 w-[90vw] md:w-auto"
                     >
                         CLICK ME TO EXPLORE CAMPUS
                     </Button>

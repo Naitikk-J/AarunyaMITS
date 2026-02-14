@@ -50,12 +50,6 @@ const technologies = [
     'THREE.JS',
 ];
 
-const stats = [
-    { label: 'YEARS ACTIVE', value: '1+' },
-    { label: 'EVENTS HOSTED', value: '50+' },
-    { label: 'PARTICIPANTS', value: '1000+' },
-    { label: 'SPONSORS', value: '10+' },
-];
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -92,7 +86,7 @@ const AboutUs = () => {
 
             <div className="content-scale">
                 {/* HEADER */}
-                <div className="relative pt-24 md:pt-36 pb-12 text-center px-4">
+                <div className="relative pt-24 md:pt-36 pb-0 text-center px-4">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(188,19,254,0.08)_0%,transparent_70%)] pointer-events-none" />
 
                     <motion.div
@@ -101,59 +95,26 @@ const AboutUs = () => {
                         transition={{ duration: 0.6 }}
                     >
                         <h1 className="text-2xl md:text-3xl lg:text-5xl font-black tracking-tight mb-4 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-                            <GlitchText text="ABOUT US" />
+                            <GlitchText text="MEET THE TEAM" />
                         </h1>
 
                         <div className="h-0.5 w-16 md:w-24 bg-primary mx-auto shadow-[0_0_10px_#BC13FE]" />
 
-                        <p className="mt-4 text-[9px] sm:text-[10px] md:text-xs font-share-tech text-white/50 uppercase max-w-xl mx-auto tracking-[0.2em]">
+                        <p className="mt-1 text-[9px] sm:text-[10px] md:text-xs font-share-tech text-white/50 uppercase max-w-xl mx-auto tracking-[0.2em]">
                 // DOCUMENTATION ON THE CREATORS AND THE FEST
                         </p>
                     </motion.div>
                 </div>
 
                 <div className="container mx-auto px-4 sm:px-6 pb-10 max-w-5xl">
-                    {/* MISSION */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-50px" }}
-                        className="relative bg-[#0D0221]/40 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden p-6 md:p-8 mb-10 hover:border-primary/30 transition-colors duration-500 group"
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-                        <div className="relative z-10 max-w-2xl mx-auto text-center">
-                            <Badge className="bg-primary/90 hover:bg-primary text-black font-bold tracking-widest text-[9px] sm:text-[10px] rounded px-2 py-0.5 mb-4">
-                                MISSION_STATEMENT
-                            </Badge>
-
-                            <div className="text-2xl sm:text-4xl mb-4 grayscale group-hover:grayscale-0 transition-all duration-500">🎮</div>
-
-                            <h2 className="text-lg sm:text-xl md:text-2xl font-black mb-3 text-white/90">
-                                AARUNYA 2026
-                            </h2>
-
-                            <p className="text-xs md:text-lg text-white/70 mb-3 leading-relaxed">
-                                Aarunya 2026 is the annual cultural and technical fest of Madhav Institute of Technology & Science (Deemed University), Gwalior:  a celebration where creativity, culture, and technology collide.
-                                Blending high-energy performances, competitive events, innovation showcases, and immersive experiences, Aarunya brings together students from diverse backgrounds to celebrate talent, teamwork, and youth spirit.
-
-                            </p>
-
-                            <p className="text-xs md:text-lg text-white/60 leading-relaxed">
-                                From thought-provoking discussions to electrifying stages and cutting-edge tech events, Aarunya isn’t just a fest : it’s a shared experience built by the students, for the students.
-                            </p>
-                        </div>
-                    </motion.div>
-
-                    {/* STATS */}
                     <motion.div
                         variants={containerVariants}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-50px" }}
-                        className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10"
+                        className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-2"
                     >
-                        {stats.map((stat) => (
+                        {/* {stats.map((stat) => (
                             <motion.div
                                 key={stat.label}
                                 variants={itemVariants}
@@ -167,7 +128,7 @@ const AboutUs = () => {
                                     {stat.label}
                                 </div>
                             </motion.div>
-                        ))}
+                        ))} */}
                     </motion.div>
 
                     {/* TEAM */}
@@ -176,12 +137,12 @@ const AboutUs = () => {
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: true }}
-                            className="text-center mb-6"
+                            className="text-center mb-0"
                         >
                             <Badge className="bg-primary/90 text-black text-[9px] tracking-widest px-2 py-0.5 mb-2">
                                 THE_ARCHITECTS
                             </Badge>
-                            <h2 className="text-lg sm:text-2xl font-black text-white/90">MEET THE TEAM</h2>
+
                         </motion.div>
 
                         <motion.div

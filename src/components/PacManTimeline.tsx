@@ -4,10 +4,10 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useKidcoreSounds } from './ui/SoundEffects';
 
 const events = [
-    { id: 1, title: "INAUGURATION", date: "FEB 10", description: "The grand opening ceremony with 8-bit fireworks.", pos: 0.12, color: "var(--kidcore-blue)", side: 'right' },
-    { id: 2, title: "PIXEL HACK", date: "FEB 11", description: "48-hour coding marathon in the neon grid.", pos: 0.32, color: "var(--kidcore-green)", side: 'left' },
-    { id: 3, title: "ARCADE BATTLE", date: "FEB 12", description: "Retro gaming tournament for the ultimate champion.", pos: 0.65, color: "var(--kidcore-orange)", side: 'left' },
-    { id: 4, title: "TECH SYMPOSIUM", date: "FEB 13", description: "Deep dives into the future of digital art.", pos: 0.85, color: "var(--kidcore-pink)", side: 'right' },
+    { id: 1, title: "INAUGURATION", date: "FEB 21", description: "The grand opening ceremony with 8-bit fireworks.", pos: 0.12, color: "var(--kidcore-blue)", side: 'right' },
+    { id: 2, title: "NAVJOT AHUJA PERFORMANCE", date: "FEB 21", description: "A power-packed live performance to end Day 1 on a high note.", pos: 0.32, color: "var(--kidcore-green)", side: 'left' },
+    { id: 3, title: "BANDISH PERFORMANCE", date: "FEB 22", description: "Live band performance lighting up the evening with music and energy.", pos: 0.65, color: "var(--kidcore-orange)", side: 'left' },
+    { id: 4, title: "DJ NIGHT", date: "FEB 23", description: "A neon-lit DJ night to celebrate Aarunya 2026 with music, dance, and memories.", pos: 0.85, color: "var(--kidcore-pink)", side: 'right' },
 ];
 
 export const PacmanTimeline: React.FC = () => {

@@ -12,9 +12,11 @@ import { RetroButton } from '@/components/ui/retro-button';
 import { useNavigate, useLocation } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import { toast } from 'sonner';
+import { eventApi, eventRegistrationApi, authApi } from '@/lib/api';
 
 interface Event {
     id: string;
+    _id?: string;
     name: string;
     club: string;
     description?: string;
@@ -30,7 +32,7 @@ interface Event {
         min: number;
         max: number;
     };
-    registrationCloseTime: string;
+    registrationCloseTime?: string;
     isActive: boolean;
     prizePool?: string;
     contactEmail?: string;
@@ -65,6 +67,7 @@ export default function UnifiedRegistration() {
     const [qrCodeData, setQrCodeData] = useState<string>('');
     const [epassUrl, setEpassUrl] = useState<string>('');
     const [registeredEventIds, setRegisteredEventIds] = useState<string[]>([]);
+    const [result, setResult] = useState<any>(null);
 
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
@@ -84,82 +87,66 @@ export default function UnifiedRegistration() {
     };
 
     const inputStyle = {
-        backgroundColor: '#0d0520',
-        borderColor: '#00ffff',
-        boxShadow: 'inset -1px -1px 0 #006666, inset 1px 1px 0 #66ffff, 0 0 8px #00ffff'
+        backgroundColor: '#120830',
+        borderColor: '#44ddff',
+        boxShadow: '0 0 6px rgba(0,255,255,0.15)',
+        color: '#ffffff'
     };
 
-    // Load events on component mount (Mock)
+    // Load events on component mount with retry logic
     useEffect(() => {
-        const loadEvents = async () => {
-            // Mock Data
-            const MOCK_EVENTS: Event[] = [
-                {
-                    id: '1',
-                    name: 'Code Marathon',
-                    club: 'CSI',
-                    description: 'A 24-hour coding challenge to solve real-world problems.',
-                    category: 'Technical',
-                    date: '2026-02-21',
-                    venue: 'SAC Hall',
-                    fee: 0,
-                    requiresPayment: false,
-                    maxParticipants: 100,
-                    currentRegistrations: 45,
-                    isTeamEvent: true,
-                    teamSize: { min: 2, max: 4 },
-                    registrationCloseTime: new Date(Date.now() + 86400000 * 5).toISOString(),
-                    isActive: true,
-                    prizePool: '₹50,000',
-                    contactEmail: 'csi@mitsgwl.ac.in',
-                    contactPhone: '9876543210',
-                    createdBy: 'admin-1'
-                },
-                {
-                    id: '2',
-                    name: 'Robo Race',
-                    club: 'Robotics Club',
-                    description: 'Fast-paced robot racing event on a challenging track.',
-                    category: 'Technical',
-                    date: '2026-02-22',
-                    venue: 'Open Auditorium',
-                    fee: 200,
-                    requiresPayment: true,
-                    maxParticipants: 50,
-                    currentRegistrations: 20,
-                    isTeamEvent: false,
-                    registrationCloseTime: new Date(Date.now() + 86400000 * 3).toISOString(),
-                    isActive: true,
-                    prizePool: '₹20,000',
-                    contactEmail: 'robotics@mitsgwl.ac.in',
-                    contactPhone: '9876543211',
-                    createdBy: 'admin-2'
-                },
-                {
-                    id: '3',
-                    name: 'Design Derby',
-                    club: 'Design Club',
-                    description: 'UI/UX design competition focused on creativity and accessibility.',
-                    category: 'Creative',
-                    date: '2026-02-23',
-                    venue: 'SH-4',
-                    fee: 100,
-                    requiresPayment: true,
-                    maxParticipants: 80,
-                    currentRegistrations: 35,
-                    isTeamEvent: false,
-                    registrationCloseTime: new Date(Date.now() + 86400000 * 4).toISOString(),
-                    isActive: true,
-                    prizePool: '₹15,000',
-                    contactEmail: 'design@mitsgwl.ac.in',
-                    contactPhone: '9876543212',
-                    createdBy: 'admin-3'
-                },
-            ];
-            setEvents(MOCK_EVENTS);
-            console.log('Events loaded (Mock):', MOCK_EVENTS.length, 'events');
+        const fetchEvents = async (retries = 3) => {
+            try {
+                setLoading(true);
+                console.log('[Events] Fetching events from API...');
+                const response = await eventApi.getEvents();
+                console.log('[Events] Raw API response:', JSON.stringify(response.data).substring(0, 500));
+                // API returns { success, message, data: { events: [...] } }
+                // axios wraps body in response.data, so events are at response.data.data.events
+                const eventsData = response.data?.data?.events || response.data?.events || response.data || [];
+                console.log('[Events] Extracted eventsData:', Array.isArray(eventsData), eventsData?.length);
+                const mappedEvents = Array.isArray(eventsData) ? eventsData.map((e: any) => ({
+                    ...e,
+                    id: e.id || e._id || 'unknown',
+                    name: e.name || 'Untitled Event',
+                    club: e.club || 'Aarunya',
+                    description: e.description || '',
+                    category: e.category || 'Event',
+                    date: e.date || 'TBA',
+                    venue: e.venue || 'TBA',
+                    fee: typeof e.fee === 'number' ? e.fee : 0,
+                    requiresPayment: e.requiresPayment || false,
+                    currentRegistrations: e.currentRegistrations || 0,
+                    isTeamEvent: e.isTeamEvent || false,
+                    teamSize: e.teamSize || { min: 1, max: 1 },
+                    isActive: e.isActive !== undefined ? e.isActive : true,
+                    maxParticipants: e.maxParticipants || 100,
+                    prizePool: e.prizePool || '',
+                    contactEmail: e.contactEmail || '',
+                    contactPhone: e.contactPhone || '',
+                    createdBy: e.createdBy || '',
+                    registrationCloseTime: e.registrationCloseTime || '',
+                })) : [];
+                console.log('[Events] Mapped events:', mappedEvents.length, mappedEvents.map(e => ({ id: e.id, name: e.name })));
+                setEvents(mappedEvents);
+                if (mappedEvents.length === 0 && retries > 0) {
+                    console.log(`[Events] No events found, retrying in 1.5s... (${retries} retries left)`);
+                    setTimeout(() => fetchEvents(retries - 1), 1500);
+                }
+            } catch (error: any) {
+                console.error('[Events] Fetch error:', error?.message || error);
+                if (retries > 0) {
+                    console.log(`[Events] Retrying in 1.5s... (${retries} retries left)`);
+                    setTimeout(() => fetchEvents(retries - 1), 1500);
+                } else {
+                    toast.error('Failed to fetch events. Please refresh the page.');
+                    setEvents([]);
+                }
+            } finally {
+                setLoading(false);
+            }
         };
-        loadEvents();
+        fetchEvents();
     }, []);
 
     // Handle post-authentication redirect
@@ -169,13 +156,18 @@ export default function UnifiedRegistration() {
                 toast.success('Sign in successful!');
                 setStep('dashboard');
             }
-            // Load user data (Mock)
+            // Load user data from DB
             const loadUserData = async () => {
-                // Mock existing registrations/epass check
-                console.log("Loading mock user data");
-                setRegisteredEventIds([]); // Assume no prior registrations
-                setQrCodeData('');
-                setEpassUrl('');
+                if (!user?.email) return;
+                try {
+                    const response = await eventRegistrationApi.getMyEventRegistrations({
+                        email: user.email
+                    });
+                    const registrations = response.data?.registrations || response.data || [];
+                    setRegisteredEventIds(Array.isArray(registrations) ? registrations.map((r: any) => r.eventId) : []);
+                } catch (err) {
+                    console.error("Error loading user data:", err);
+                }
             };
             loadUserData();
         }
@@ -195,7 +187,7 @@ export default function UnifiedRegistration() {
     };
 
     const isValidEmail = (email: string) => {
-        return email.endsWith('@mitsgwl.ac.in') || email.endsWith('@mitsgwalior.in');
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
     const handleSendOTP = async () => {
@@ -203,36 +195,51 @@ export default function UnifiedRegistration() {
         setError(null);
         const emailToUse = authMode === 'register' ? signUpData.email : otpEmail;
         if (!emailToUse || !isValidEmail(emailToUse)) {
-            toast.error('Please enter a valid MITS email');
+            toast.error('Please enter a valid email address');
+            setLoading(false);
             return;
         }
+
         try {
-            console.log('Sending OTP to:', emailToUse);
-            await signInWithOTP(emailToUse);
-            console.log('OTP sent successfully');
+            console.log('Requesting OTP for:', emailToUse);
+            const data = await signInWithOTP(emailToUse);
+            toast.success('OTP Sent Successfully');
             setOtpSent(true);
             setOtpEmail(emailToUse);
-            // Show success message
-            toast.success('OTP sent! Please check your email (including spam folder)');
+            setResult(data);
         } catch (err: any) {
-            console.error('OTP Error:', err);
-            setError(err.message);
-            toast.error('Failed to send OTP: ' + err.message);
+            console.error('OTP Request Error:', err);
+            const msg = err.response?.data?.message || err.message || 'Failed to send OTP';
+            setError(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }
     };
 
     const handleVerifyAndRegister = async () => {
+        if (!otpToken || otpToken.length < 4) {
+            toast.error('Please enter a valid OTP');
+            return;
+        }
+
         setLoading(true);
         setError(null);
         try {
-            await verifyOTP(otpEmail, otpToken);
-            toast.success('Auth successful!');
+            const userData = await verifyOTP(
+                otpEmail,
+                otpToken,
+                authMode === 'register' ? signUpData : {}
+            );
+
+            toast.success('Access Granted');
+            setResult(userData);
             setStep('dashboard');
         } catch (err: any) {
-            setError(err.message);
-            toast.error('Verification failed: ' + err.message);
+            console.error('Verification Error:', err);
+            const msg = err.response?.data?.message || err.message || 'Verification failed';
+            setError(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }
@@ -309,17 +316,18 @@ export default function UnifiedRegistration() {
         if (!user) throw new Error('User not authenticated');
 
         try {
-            // Mock Registration
-            console.log('Registering for events:', eventIds);
+            // Register for events in DB
+            await eventRegistrationApi.registerForEvent({
+                eventIds,
+                userId: user.id,
+                email: user.email
+            });
 
-            // Artificial delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // Generate QR code data
+            // Generate QR code data for the session
             const qrData = {
-                enrollment_no: user.enrollment_no,
+                enrollment_no: user.enrollment_no || 'NA',
                 email: user.email,
-                uid: user.uid,
+                uid: user.id,
                 registered_events: eventIds,
                 payment_status: 'confirmed',
                 timestamp: new Date().toISOString()
@@ -328,12 +336,16 @@ export default function UnifiedRegistration() {
             // Generate QR code
             const qrCodeDataURL = await generateQRCode(qrData);
             setQrCodeData(qrCodeDataURL);
-            setEpassUrl(qrCodeDataURL); // Use same URL for mock
+            setEpassUrl(qrCodeDataURL);
 
-            // Send email (Mock)
-            await sendEpassEmail(user, eventIds, qrCodeDataURL);
-        } catch (err) {
+            // Refresh registered events list locally for UI
+            setRegisteredEventIds(prev => [...new Set([...prev, ...eventIds])]);
+
+            toast.success('Registration completed!');
+        } catch (err: any) {
             console.error('Error during registration:', err);
+            const msg = err.response?.data?.message || 'Registration failed';
+            toast.error(msg);
             throw err;
         }
     };
@@ -371,6 +383,8 @@ export default function UnifiedRegistration() {
         }
     };
 
+    console.log('[UnifiedRegistration] Render state:', { step, authLoading, userExists: !!user, eventsCount: events.length, loading });
+
     if (authLoading) {
         return <div className="min-h-screen bg-[#05010D] flex items-center justify-center">
             <div className="text-white">Loading...</div>
@@ -390,7 +404,7 @@ export default function UnifiedRegistration() {
                             className="w-full flex flex-col gap-6"
                         >
                             <div className="text-center lg:text-left">
-                                <h1 className="text-2xl md:text-3xl font-black tracking-tighter mb-4" style={{
+                                <h1 className="text-3xl md:text-4xl font-black tracking-tighter mb-4" style={{
                                     fontFamily: '"Press Start 2P", "Courier New", monospace',
                                     color: '#fff5ff',
                                     textShadow: '0 0 15px #8a6c8a, 2px 2px 0 #880088'
@@ -407,8 +421,8 @@ export default function UnifiedRegistration() {
                                         <div className="p-4 bg-white/5 border border-[#ff00ff]/30 rounded-2xl flex items-center gap-3">
                                             <div className="w-10 h-10 rounded-full bg-[#ff00ff] flex items-center justify-center text-xl shadow-[0_0_10px_#ff00ff]">👤</div>
                                             <div>
-                                                <div className="text-[10px] text-white/50 uppercase tracking-widest">Explorer</div>
-                                                <div className="text-sm font-bold text-[#00ffff]">{user.name}</div>
+                                                <div className="text-xs text-white/50 uppercase tracking-widest">Explorer</div>
+                                                <div className="text-base font-bold text-[#00ffff]">{user.name}</div>
                                             </div>
                                         </div>
 
@@ -416,7 +430,7 @@ export default function UnifiedRegistration() {
                                             <RetroButton
                                                 variant={step === 'dashboard' ? 'default' : 'white'}
                                                 onClick={() => setStep('dashboard')}
-                                                className="w-full justify-start text-xs"
+                                                className="w-full justify-start text-sm"
                                             >
                                                 Event Catalog
                                             </RetroButton>
@@ -424,7 +438,7 @@ export default function UnifiedRegistration() {
                                                 <RetroButton
                                                     variant={step === 'success' ? 'default' : 'white'}
                                                     onClick={() => setStep('success')}
-                                                    className="w-full justify-start text-xs"
+                                                    className="w-full justify-start text-sm"
                                                 >
                                                     Your E-Pass
                                                 </RetroButton>
@@ -432,14 +446,14 @@ export default function UnifiedRegistration() {
                                             <RetroButton
                                                 variant="white"
                                                 onClick={handleLogout}
-                                                className="w-full justify-start text-xs opacity-70 hover:opacity-100"
+                                                className="w-full justify-start text-sm opacity-70 hover:opacity-100"
                                             >
                                                 Sign Out
                                             </RetroButton>
                                         </div>
                                     </div>
                                 ) : (
-                                    <p className="text-[10px] sm:text-xs font-vt323 leading-relaxed tracking-wider text-[#00ffff]">
+                                    <p className="text-sm sm:text-base font-vt323 leading-relaxed tracking-wider text-[#00ffff]">
                                         // LOGIN TO REGISTER FOR COMPETITIONS
                                     </p>
                                 )}
@@ -448,10 +462,10 @@ export default function UnifiedRegistration() {
                             {/* System Status */}
                             <div className="hidden lg:block mt-auto pt-8 border-t border-white/5">
                                 <div className="flex items-center gap-2">
-                                    <span className="font-vt323 text-[10px] uppercase tracking-widest text-white/40">Status:</span>
+                                    <span className="font-vt323 text-xs uppercase tracking-widest text-white/40">Status:</span>
                                     <span className="flex items-center gap-1.5">
                                         <span className="w-1.5 h-1.5 bg-[#00ff00] rounded-full animate-pulse" />
-                                        <span className="font-vt323 text-[10px] font-bold tracking-widest text-[#00ff00]">SECURE_LINK_ACTIVE</span>
+                                        <span className="font-vt323 text-xs font-bold tracking-widest text-[#00ff00]">SECURE_LINK_ACTIVE</span>
                                     </span>
                                 </div>
                             </div>
@@ -469,18 +483,22 @@ export default function UnifiedRegistration() {
                             {step === 'auth' && (
                                 <motion.div
                                     variants={itemVariants}
-                                    className="relative p-6 sm:p-8 w-full"
+                                    className="relative p-6 sm:p-8 w-full rounded-2xl"
                                     style={{
-                                        background: 'linear-gradient(to bottom, #1a0a2e, #0d0520)',
-                                        border: '2px solid #ff00ff',
-                                        boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 20px #ff00ff, 0 0 40px #00ffff'
+                                        background: 'linear-gradient(145deg, #1a0a2e 0%, #120830 50%, #0d0520 100%)',
+                                        border: '1.5px solid rgba(255,0,255,0.5)',
+                                        boxShadow: '0 0 30px rgba(255,0,255,0.15), 0 0 60px rgba(0,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)'
                                     }}
                                 >
                                     {/* Corner indicators */}
-                                    <span className="absolute -top-1 -left-1 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 10px #00ffff' }} />
-                                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff' }} />
-                                    <span className="absolute -bottom-1 -left-1 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff' }} />
-                                    <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 10px #00ffff' }} />
+                                    <span className="absolute top-0 left-0 w-4 h-[1.5px] bg-[#00ffff] rounded-full" style={{ boxShadow: '0 0 8px #00ffff' }} />
+                                    <span className="absolute top-0 left-0 w-[1.5px] h-4 bg-[#00ffff] rounded-full" style={{ boxShadow: '0 0 8px #00ffff' }} />
+                                    <span className="absolute top-0 right-0 w-4 h-[1.5px] bg-[#ff00ff] rounded-full" style={{ boxShadow: '0 0 8px #ff00ff' }} />
+                                    <span className="absolute top-0 right-0 w-[1.5px] h-4 bg-[#ff00ff] rounded-full" style={{ boxShadow: '0 0 8px #ff00ff' }} />
+                                    <span className="absolute bottom-0 left-0 w-4 h-[1.5px] bg-[#ff00ff] rounded-full" style={{ boxShadow: '0 0 8px #ff00ff' }} />
+                                    <span className="absolute bottom-0 left-0 w-[1.5px] h-4 bg-[#ff00ff] rounded-full" style={{ boxShadow: '0 0 8px #ff00ff' }} />
+                                    <span className="absolute bottom-0 right-0 w-4 h-[1.5px] bg-[#00ffff] rounded-full" style={{ boxShadow: '0 0 8px #00ffff' }} />
+                                    <span className="absolute bottom-0 right-0 w-[1.5px] h-4 bg-[#00ffff] rounded-full" style={{ boxShadow: '0 0 8px #00ffff' }} />
 
                                     <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
                                         background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.1) 2px, rgba(0,255,255,0.1) 4px)',
@@ -489,24 +507,24 @@ export default function UnifiedRegistration() {
 
                                     <div className="relative z-10">
                                         <div className="text-center mb-6">
-                                            <h1 className="text-xl md:text-2xl font-black tracking-tighter mb-4" style={{
+                                            <h1 className="text-2xl md:text-3xl font-black tracking-tighter mb-4" style={{
                                                 fontFamily: '"Press Start 2P", "Courier New", monospace',
                                                 color: '#fff5ff',
                                                 textShadow: '0 0 15px #8a6c8a, 2px 2px 0 #880088'
                                             }}>
-                                                <GlitchText text="AARUNYA 6.0" />
+                                                <GlitchText text="AARUNYA 2.0" />
                                             </h1>
                                             <div className="flex justify-center mb-6">
                                                 <div className="inline-flex border-2 border-[#ff00ff] rounded-full p-1 bg-black/40">
                                                     <button
                                                         onClick={() => { setAuthMode('login'); setOtpSent(false); }}
-                                                        className={`px-6 py-1.5 rounded-full text-xs font-bold transition-all ${authMode === 'login' ? 'bg-[#ff00ff] text-white shadow-[0_0_10px_#ff00ff]' : 'text-white/50 hover:text-white'}`}
+                                                        className={`px-6 py-1.5 rounded-full text-sm font-bold transition-all ${authMode === 'login' ? 'bg-[#ff00ff] text-white shadow-[0_0_10px_#ff00ff]' : 'text-white/50 hover:text-white'}`}
                                                     >
                                                         LOGIN
                                                     </button>
                                                     <button
                                                         onClick={() => { setAuthMode('register'); setOtpSent(false); }}
-                                                        className={`px-6 py-1.5 rounded-full text-xs font-bold transition-all ${authMode === 'register' ? 'bg-[#ff00ff] text-white shadow-[0_0_10px_#ff00ff]' : 'text-white/50 hover:text-white'}`}
+                                                        className={`px-6 py-1.5 rounded-full text-sm font-bold transition-all ${authMode === 'register' ? 'bg-[#ff00ff] text-white shadow-[0_0_10px_#ff00ff]' : 'text-white/50 hover:text-white'}`}
                                                     >
                                                         REGISTER
                                                     </button>
@@ -514,7 +532,7 @@ export default function UnifiedRegistration() {
                                             </div>
                                             <h2 className="mb-2 tracking-tight uppercase" style={{
                                                 fontFamily: '"Press Start 2P", "Courier New", monospace',
-                                                fontSize: '11px',
+                                                fontSize: '14px',
                                                 color: '#ff00ff',
                                                 textShadow: '0 0 10px #ff00ff, 2px 2px 0 #880088'
                                             }}>
@@ -527,39 +545,39 @@ export default function UnifiedRegistration() {
                                         </div>
 
                                         {error && (
-                                            <div className="mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-xs font-vt323">
+                                            <div className="mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm font-vt323">
                                                 {error}
                                             </div>
                                         )}
 
                                         <div className="space-y-4">
                                             {authMode === 'login' ? (
-                                                <div className="space-y-4">
-                                                    <div className="space-y-1">
-                                                        <div className="flex gap-2 items-center">
-                                                            <Input
-                                                                type="email"
-                                                                value={otpEmail}
-                                                                onChange={(e) => setOtpEmail(e.target.value)}
-                                                                placeholder="Email (@mitsgwl.ac.in)"
-                                                                className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
-                                                                style={inputStyle}
-                                                                required
-                                                            />
-                                                            <Button
-                                                                type="button"
-                                                                onClick={handleSendOTP}
-                                                                disabled={loading || !isValidEmail(otpEmail)}
-                                                                className="h-11 px-6 rounded-full text-xs font-bold whitespace-nowrap shrink-0"
-                                                                style={{
-                                                                    background: isValidEmail(otpEmail) ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : '#333',
-                                                                    boxShadow: isValidEmail(otpEmail) ? '0 0 12px rgba(59,130,246,0.5)' : 'none',
-                                                                    border: 'none'
-                                                                }}
-                                                            >
-                                                                {loading ? '...' : otpSent ? 'RESEND' : 'SEND OTP'}
-                                                            </Button>
-                                                        </div>
+                                                <div className="space-y-1">
+                                                    <div className="flex gap-2 items-center">
+                                                        <Input
+                                                            type="email"
+                                                            value={otpEmail}
+                                                            onChange={(e) => setOtpEmail(e.target.value)}
+                                                            placeholder="Enter your email"
+                                                            className="border-2 font-vt323 text-base h-12 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                            style={inputStyle}
+                                                            required
+                                                        />
+                                                        <Button
+                                                            type="button"
+                                                            onClick={handleSendOTP}
+                                                            disabled={loading || !isValidEmail(otpEmail)}
+                                                            className="h-12 px-6 rounded-full text-xs font-bold whitespace-nowrap shrink-0 uppercase tracking-widest"
+                                                            style={{
+                                                                background: isValidEmail(otpEmail) ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : '#333',
+                                                                boxShadow: isValidEmail(otpEmail) ? '0 0 12px rgba(59,130,246,0.5)' : 'none',
+                                                                border: 'none',
+                                                                fontFamily: '"Press Start 2P", cursive',
+                                                                fontSize: '10px'
+                                                            }}
+                                                        >
+                                                            {loading ? '...' : otpSent ? 'RESEND' : 'GET OTP'}
+                                                        </Button>
                                                     </div>
                                                 </div>
                                             ) : (
@@ -569,7 +587,7 @@ export default function UnifiedRegistration() {
                                                             value={signUpData.enrollment_no}
                                                             onChange={(e) => setSignUpData({ ...signUpData, enrollment_no: e.target.value })}
                                                             placeholder="Enrollment No."
-                                                            className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                            className="border-2 font-vt323 text-base h-12 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
                                                             style={inputStyle}
                                                             required
                                                         />
@@ -577,7 +595,7 @@ export default function UnifiedRegistration() {
                                                             value={signUpData.name}
                                                             onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
                                                             placeholder="Full Name"
-                                                            className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                            className="border-2 font-vt323 text-base h-12 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
                                                             style={inputStyle}
                                                             required
                                                         />
@@ -589,7 +607,7 @@ export default function UnifiedRegistration() {
                                                                 value={signUpData.email}
                                                                 onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
                                                                 placeholder="MITS Email"
-                                                                className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                                className="border-2 font-vt323 text-base h-12 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
                                                                 style={inputStyle}
                                                                 required
                                                             />
@@ -597,7 +615,7 @@ export default function UnifiedRegistration() {
                                                                 type="button"
                                                                 onClick={handleSendOTP}
                                                                 disabled={loading || !isValidEmail(signUpData.email)}
-                                                                className="h-11 px-6 rounded-full text-xs font-bold whitespace-nowrap shrink-0"
+                                                                className="h-12 px-6 rounded-full text-xs font-bold whitespace-nowrap shrink-0"
                                                                 style={{
                                                                     background: isValidEmail(signUpData.email) ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : '#333',
                                                                     boxShadow: isValidEmail(signUpData.email) ? '0 0 12px rgba(59,130,246,0.5)' : 'none',
@@ -614,7 +632,7 @@ export default function UnifiedRegistration() {
                                                             value={signUpData.phone}
                                                             onChange={(e) => setSignUpData({ ...signUpData, phone: e.target.value })}
                                                             placeholder="Phone"
-                                                            className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                            className="border-2 font-vt323 text-base h-12 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
                                                             style={inputStyle}
                                                             required
                                                         />
@@ -622,7 +640,7 @@ export default function UnifiedRegistration() {
                                                             value={signUpData.branch}
                                                             onChange={(e) => setSignUpData({ ...signUpData, branch: e.target.value })}
                                                             placeholder="Branch"
-                                                            className="border-2 font-vt323 text-sm h-11 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
+                                                            className="border-2 font-vt323 text-base h-12 transition-all placeholder:text-white/30 rounded-full px-5 flex-1"
                                                             style={inputStyle}
                                                             required
                                                         />
@@ -635,7 +653,7 @@ export default function UnifiedRegistration() {
                                                     value={otpToken}
                                                     onChange={(e) => setOtpToken(e.target.value)}
                                                     placeholder="Enter 6-digit OTP"
-                                                    className="border-2 font-vt323 text-sm h-11 transition-all text-center tracking-[1em] placeholder:tracking-normal placeholder:text-white/30 rounded-full px-5"
+                                                    className="border-2 font-vt323 text-base h-12 transition-all text-center tracking-[1em] placeholder:tracking-normal placeholder:text-white/30 rounded-full px-5"
                                                     style={inputStyle}
                                                     disabled={!otpSent}
                                                     maxLength={6}
@@ -644,37 +662,41 @@ export default function UnifiedRegistration() {
 
                                             <Button
                                                 onClick={handleVerifyAndRegister}
-                                                disabled={loading || !otpSent || otpToken.length < 6}
-                                                className="relative w-full border-2 border-[#ff00ff] text-white font-bold mt-2 uppercase tracking-wider disabled:opacity-50 h-11 rounded-full"
+                                                disabled={loading || !otpSent || otpToken.length < 4}
+                                                className="relative w-full border border-[#ff00ff]/60 text-white font-bold mt-2 uppercase tracking-wider disabled:opacity-50 h-12 rounded-full hover:scale-[1.02] active:scale-95 transition-all"
                                                 style={{
-                                                    background: 'linear-gradient(to bottom, #ff00ff, #cc00cc)',
-                                                    boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff',
-                                                    fontSize: '11px'
+                                                    background: 'linear-gradient(135deg, #e600e6, #b300b3)',
+                                                    boxShadow: '0 0 20px rgba(255,0,255,0.3)',
+                                                    fontSize: '14px'
                                                 }}
                                             >
-                                                {loading ? 'VERIFYING...' : authMode === 'login' ? 'LOGIN TO DASHBOARD' : 'COMPLETE REGISTRATION'}
+                                                {loading ? 'VERIFYING...' : authMode === 'login' ? 'VERIFY & LOGIN' : 'VERIFY & SIGN UP'}
                                             </Button>
                                         </div>
                                     </div>
                                 </motion.div>
                             )}
 
-                            {step === 'dashboard' && user && (
+                            {step === 'dashboard' && (
                                 <motion.div
                                     variants={itemVariants}
-                                    className="relative p-6 sm:p-8"
+                                    className="relative p-6 sm:p-8 rounded-2xl"
                                     style={{
-                                        background: 'linear-gradient(to bottom, #1a0a2e, #0d0520)',
-                                        border: '2px solid #ff00ff',
-                                        boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 20px #ff00ff, 0 0 40px #00ffff'
+                                        background: 'linear-gradient(145deg, #1a0a2e 0%, #120830 50%, #0d0520 100%)',
+                                        border: '1.5px solid rgba(255,0,255,0.5)',
+                                        boxShadow: '0 0 30px rgba(255,0,255,0.15), 0 0 60px rgba(0,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)'
                                     }}
                                 >
                                     <div className="relative z-10">
                                         {/* Corner indicators */}
-                                        <span className="absolute -top-1 -left-1 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 10px #00ffff' }} />
-                                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff' }} />
-                                        <span className="absolute -bottom-1 -left-1 w-3 h-3 bg-[#ff00ff]" style={{ boxShadow: '0 0 10px #ff00ff' }} />
-                                        <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#00ffff]" style={{ boxShadow: '0 0 10px #00ffff' }} />
+                                        <span className="absolute top-0 left-0 w-4 h-[1.5px] bg-[#00ffff] rounded-full" style={{ boxShadow: '0 0 8px #00ffff' }} />
+                                        <span className="absolute top-0 left-0 w-[1.5px] h-4 bg-[#00ffff] rounded-full" style={{ boxShadow: '0 0 8px #00ffff' }} />
+                                        <span className="absolute top-0 right-0 w-4 h-[1.5px] bg-[#ff00ff] rounded-full" style={{ boxShadow: '0 0 8px #ff00ff' }} />
+                                        <span className="absolute top-0 right-0 w-[1.5px] h-4 bg-[#ff00ff] rounded-full" style={{ boxShadow: '0 0 8px #ff00ff' }} />
+                                        <span className="absolute bottom-0 left-0 w-4 h-[1.5px] bg-[#ff00ff] rounded-full" style={{ boxShadow: '0 0 8px #ff00ff' }} />
+                                        <span className="absolute bottom-0 left-0 w-[1.5px] h-4 bg-[#ff00ff] rounded-full" style={{ boxShadow: '0 0 8px #ff00ff' }} />
+                                        <span className="absolute bottom-0 right-0 w-4 h-[1.5px] bg-[#00ffff] rounded-full" style={{ boxShadow: '0 0 8px #00ffff' }} />
+                                        <span className="absolute bottom-0 right-0 w-[1.5px] h-4 bg-[#00ffff] rounded-full" style={{ boxShadow: '0 0 8px #00ffff' }} />
 
                                         <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
                                             background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.1) 2px, rgba(0,255,255,0.1) 4px)',
@@ -688,8 +710,8 @@ export default function UnifiedRegistration() {
                                                     👤
                                                 </div>
                                                 <div>
-                                                    <div className="text-[10px] text-white/50 uppercase tracking-widest">Aarunya Explorer</div>
-                                                    <div className="text-sm font-bold text-[#00ffff]">{user.name}</div>
+                                                    <div className="text-xs text-white/50 uppercase tracking-widest">Aarunya Explorer</div>
+                                                    <div className="text-base font-bold text-[#00ffff]">{user?.name || 'Explorer'}</div>
                                                 </div>
                                             </div>
 
@@ -699,7 +721,7 @@ export default function UnifiedRegistration() {
                                                         VIEW E-PASS
                                                     </Button>
                                                 )}
-                                                <Button onClick={handleLogout} size="sm" variant="outline" className="h-9 rounded-full text-[10px] border-[#ff00ff] bg-black/60 hover:bg-[#ff00ff] hover:text-white transition-all shadow-[0_0_15px_rgba(255,0,255,0.3)] font-black tracking-widest px-6">
+                                                <Button onClick={handleLogout} size="sm" variant="outline" className="h-9 rounded-full text-xs border-[#ff00ff] bg-black/60 hover:bg-[#ff00ff] hover:text-white transition-all shadow-[0_0_15px_rgba(255,0,255,0.3)] font-black tracking-widest px-6">
                                                     SIGN OUT
                                                 </Button>
                                             </div>
@@ -708,17 +730,32 @@ export default function UnifiedRegistration() {
                                         <div className="text-center mb-8">
                                             <h2 className="mb-2 tracking-tight uppercase" style={{
                                                 fontFamily: '"Press Start 2P", "Courier New", monospace',
-                                                fontSize: '14px',
+                                                fontSize: '16px',
                                                 color: '#ff00ff',
                                                 textShadow: '0 0 10px #ff00ff'
                                             }}>
                                                 SELECT YOUR EVENTS
                                             </h2>
-                                            <p className="text-[10px] text-[#00ffff] uppercase tracking-[0.2em] mb-4">Pick one event to continue</p>
+                                            <p className="text-xs text-[#00ffff] uppercase tracking-[0.2em] mb-4">Pick one event to continue</p>
+
+                                            {!user && (
+                                                <div className="mb-4 p-4 bg-yellow-500/10 border border-yellow-500/50 rounded-xl">
+                                                    <p className="text-yellow-500 text-sm mb-2 font-vt323">Session incomplete. Please re-authenticate for full access.</p>
+                                                    <Button onClick={handleLogout} size="sm" variant="outline" className="h-8 text-[10px] border-yellow-500/50 text-yellow-500 hover:bg-yellow-500 hover:text-black">
+                                                        RE-LOGIN
+                                                    </Button>
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar p-2">
+                                            {events.length === 0 && (
+                                                <div className="col-span-full text-center py-12">
+                                                    <p className="text-white/50 text-sm font-vt323">{loading ? 'Loading events...' : 'No events available.'}</p>
+                                                </div>
+                                            )}
                                             {events.map((event) => {
+                                                console.log('[UnifiedRegistration] Rendering event card:', event.id, event.name);
                                                 const isRegistered = registeredEventIds.includes(event.id);
                                                 const isSelected = selectedEventId === event.id;
                                                 return (
@@ -733,23 +770,23 @@ export default function UnifiedRegistration() {
                                                         onClick={() => !isRegistered && handleEventSelection(event.id)}
                                                     >
                                                         {/* Category Badge */}
-                                                        <div className="absolute top-0 right-0 px-4 py-1 rounded-bl-xl text-[8px] font-bold uppercase tracking-widest bg-white/10 text-white/70">
+                                                        <div className="absolute top-0 right-0 px-4 py-1 rounded-bl-xl text-[10px] font-bold uppercase tracking-widest bg-white/10 text-white/70">
                                                             {event.category}
                                                         </div>
 
                                                         <div className="flex flex-col gap-3">
                                                             <div className="flex justify-between items-start">
                                                                 <div className="flex-1">
-                                                                    <h3 className="text-lg font-black tracking-tight text-white mb-0.5">
+                                                                    <h3 className="text-xl font-black tracking-tight text-white mb-0.5">
                                                                         {event.name}
                                                                     </h3>
-                                                                    <p className="text-[10px] text-[#ff00ff] font-bold uppercase mb-2">Hosted by {event.club}</p>
-                                                                    <p className="text-xs text-white/60 line-clamp-2 mb-3 leading-relaxed">
+                                                                    <p className="text-xs text-[#ff00ff] font-bold uppercase mb-2">Hosted by {event.club}</p>
+                                                                    <p className="text-sm text-white/60 line-clamp-2 mb-3 leading-relaxed">
                                                                         {event.description}
                                                                     </p>
                                                                 </div>
                                                                 <div className="text-right flex flex-col items-end">
-                                                                    <div className={`text-xl font-black mb-1 ${event.fee === 0 ? 'text-green-400' : 'text-white'}`}>
+                                                                    <div className={`text-2xl font-black mb-1 ${event.fee === 0 ? 'text-green-400' : 'text-white'}`}>
                                                                         {event.fee === 0 ? 'FREE' : `₹${event.fee}`}
                                                                     </div>
                                                                     {event.prizePool && (
@@ -761,40 +798,40 @@ export default function UnifiedRegistration() {
                                                             </div>
 
                                                             <div className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-white/5 pt-3">
-                                                                <div className="flex items-center gap-2 text-[10px] text-white/50">
+                                                                <div className="flex items-center gap-2 text-xs text-white/50">
                                                                     <span className="text-sm">📅</span> {event.date}
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[10px] text-white/50">
+                                                                <div className="flex items-center gap-2 text-xs text-white/50">
                                                                     <span className="text-sm">📍</span> {event.venue}
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[10px] text-white/50">
+                                                                <div className="flex items-center gap-2 text-xs text-white/50">
                                                                     <span className="text-sm">👥</span> {event.isTeamEvent ? `Team (${event.teamSize?.min}-${event.teamSize?.max})` : 'Individual'}
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[10px] text-white/50">
+                                                                <div className="flex items-center gap-2 text-xs text-white/50">
                                                                     <span className="text-sm">📞</span> {event.contactPhone}
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[10px] text-white/50">
+                                                                <div className="flex items-center gap-2 text-xs text-white/50">
                                                                     <span className="text-sm">📧</span> {event.contactEmail}
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[10px] text-white/30 truncate">
-                                                                    <span className="text-sm">⏰</span> Closes: {new Date(event.registrationCloseTime).toLocaleDateString()}
+                                                                <div className="flex items-center gap-2 text-xs text-white/30 truncate">
+                                                                    <span className="text-sm">⏰</span> Closes: {event.registrationCloseTime ? new Date(event.registrationCloseTime).toLocaleDateString() : 'TBD'}
                                                                 </div>
                                                             </div>
 
                                                             <div className="flex items-center justify-between mt-2 pt-3 border-t border-white/5">
                                                                 <div className="flex items-center gap-2">
                                                                     <div className={`w-2 h-2 rounded-full ${event.isActive ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-                                                                    <span className="text-[9px] text-white/40 uppercase tracking-widest">
+                                                                    <span className="text-[10px] text-white/40 uppercase tracking-widest">
                                                                         {event.currentRegistrations}/{event.maxParticipants} Registered
                                                                     </span>
                                                                 </div>
 
                                                                 {isRegistered ? (
-                                                                    <span className="text-[10px] font-bold text-green-400 uppercase tracking-widest flex items-center gap-1">
+                                                                    <span className="text-xs font-bold text-green-400 uppercase tracking-widest flex items-center gap-1">
                                                                         ✓ ENROLLED
                                                                     </span>
                                                                 ) : (
-                                                                    <div className={`px-4 py-1.5 rounded-full text-[10px] font-bold transition-all ${isSelected ? 'bg-[#00ffff] text-black shadow-[0_0_10px_#00ffff]' : 'bg-white/10 text-white'}`}>
+                                                                    <div className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${isSelected ? 'bg-[#00ffff] text-black shadow-[0_0_10px_#00ffff]' : 'bg-white/10 text-white'}`}>
                                                                         {isSelected ? 'SELECTED' : 'SELECT EVENT'}
                                                                     </div>
                                                                 )}
@@ -813,18 +850,18 @@ export default function UnifiedRegistration() {
                                             >
                                                 <div className="flex justify-between items-center mb-6">
                                                     <div>
-                                                        <h3 className="text-sm font-black text-[#00ffff] uppercase tracking-widest mb-1">Payment Strategy</h3>
-                                                        <p className="text-[10px] text-white/50">{events.find(e => e.id === selectedEventId)?.name}</p>
+                                                        <h3 className="text-base font-black text-[#00ffff] uppercase tracking-widest mb-1">Payment Strategy</h3>
+                                                        <p className="text-xs text-white/50">{events.find(e => e.id === selectedEventId)?.name}</p>
                                                     </div>
                                                     <div className="text-right">
-                                                        <div className="text-2xl font-black text-white">₹{events.find(e => e.id === selectedEventId)?.fee}</div>
-                                                        <div className="text-[10px] text-[#ff00ff] font-bold uppercase">Total Payable</div>
+                                                        <div className="text-3xl font-black text-white">₹{events.find(e => e.id === selectedEventId)?.fee}</div>
+                                                        <div className="text-xs text-[#ff00ff] font-bold uppercase">Total Payable</div>
                                                     </div>
                                                 </div>
                                                 <Button
                                                     onClick={handleProceedToPayment}
                                                     disabled={loading}
-                                                    className="w-full h-12 rounded-full font-black text-xs uppercase tracking-widest border-2 border-[#ff00ff] shadow-[0_0_15px_rgba(255,0,255,0.3)] transition-all hover:scale-[1.02] active:scale-95"
+                                                    className="w-full h-12 rounded-full font-black text-sm uppercase tracking-widest border-2 border-[#ff00ff] shadow-[0_0_15px_rgba(255,0,255,0.3)] transition-all hover:scale-[1.02] active:scale-95"
                                                     style={{
                                                         background: 'linear-gradient(to right, #ff00ff, #8a2be2)',
                                                     }}
@@ -840,11 +877,11 @@ export default function UnifiedRegistration() {
                             {step === 'success' && user && (
                                 <motion.div
                                     variants={itemVariants}
-                                    className="relative p-6 sm:p-8"
+                                    className="relative p-6 sm:p-8 rounded-2xl"
                                     style={{
-                                        background: 'linear-gradient(to bottom, #1a0a2e, #0d0520)',
-                                        border: '2px solid #ff00ff',
-                                        boxShadow: 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 20px #ff00ff, 0 0 40px #00ffff'
+                                        background: 'linear-gradient(145deg, #1a0a2e 0%, #120830 50%, #0d0520 100%)',
+                                        border: '1.5px solid rgba(255,0,255,0.5)',
+                                        boxShadow: '0 0 30px rgba(255,0,255,0.15), 0 0 60px rgba(0,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)'
                                     }}
                                 >
                                     <div className="relative z-10">
@@ -857,7 +894,7 @@ export default function UnifiedRegistration() {
                                             </div>
                                             <h2 className="mb-2 tracking-tight uppercase" style={{
                                                 fontFamily: '"Press Start 2P", "Courier New", monospace',
-                                                fontSize: '11px',
+                                                fontSize: '14px',
                                                 color: '#ff00ff',
                                                 textShadow: '0 0 10px #ff00ff, 2px 2px 0 #880088'
                                             }}>
@@ -871,13 +908,13 @@ export default function UnifiedRegistration() {
 
                                         <div className="space-y-6">
                                             <div className="p-4 bg-green-900/20 border border-green-500 rounded-lg">
-                                                <h3 className="font-vt323 text-xs uppercase tracking-wider mb-2" style={{
+                                                <h3 className="font-vt323 text-sm uppercase tracking-wider mb-2" style={{
                                                     color: '#00ffff',
                                                     textShadow: '1px 1px 0 #003333'
                                                 }}>
                                                     E-Pass Generated Successfully
                                                 </h3>
-                                                <p className="text-green-400 text-xs">Your e-pass has been sent to your MITS email</p>
+                                                <p className="text-green-400 text-sm">Your e-pass has been sent to your MITS email</p>
                                             </div>
 
                                             {qrCodeData && (
@@ -889,7 +926,7 @@ export default function UnifiedRegistration() {
                                                             level="H"
                                                         />
                                                     </div>
-                                                    <div className="text-xs text-white/70 mb-4">
+                                                    <div className="text-sm text-white/70 mb-4">
                                                         Scan this QR code at the event venue
                                                     </div>
                                                     <Button
