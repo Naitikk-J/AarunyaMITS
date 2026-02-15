@@ -49,7 +49,6 @@ export const useAuth = () => {
         setError(null);
         try {
             const response = await authApi.googleLogin(googleData);
-            console.log('[Auth] googleLogin raw response.data:', JSON.stringify(response.data).substring(0, 500));
             const payload = response.data?.data || response.data;
             const userData = payload?.user || payload;
             const token = payload?.token || response.data?.token;
@@ -93,7 +92,6 @@ export const useAuth = () => {
                 otp,
                 ...userData
             });
-            console.log('[Auth] verifyOTP raw response.data:', JSON.stringify(response.data).substring(0, 500));
             // Handle both response.data.data.user and response.data.user structures
             const payload = response.data?.data || response.data;
             const userDataRes = payload?.user || payload;
@@ -102,7 +100,6 @@ export const useAuth = () => {
             // If requiresOnboarding, do NOT save to state/localStorage yet
             // The user needs to complete registration first to get a participant ID
             if (userDataRes?.requiresOnboarding) {
-                console.log('[Auth] User requires onboarding, not saving incomplete data');
                 if (token) {
                     localStorage.setItem('authToken', token);
                 }
@@ -111,7 +108,6 @@ export const useAuth = () => {
 
             if (userDataRes) {
                 const normalized = normalizeUser(userDataRes);
-                console.log('[Auth] Normalized user:', JSON.stringify(normalized));
                 setUser(normalized);
                 localStorage.setItem('user', JSON.stringify(normalized));
             }
@@ -132,7 +128,6 @@ export const useAuth = () => {
         setError(null);
         try {
             const response = await authApi.register(userData);
-            console.log('[Auth] signUp raw response.data:', JSON.stringify(response.data).substring(0, 500));
             const payload = response.data?.data || response.data;
             const newUser = payload?.user || payload;
             const token = payload?.token || response.data?.token;

@@ -34,3 +34,7 @@ coverage
 # Misc
 .cache
 .eslintcache
+
+# Lock files (using npm exclusively)
+bun.lockb
+yarn.lock
