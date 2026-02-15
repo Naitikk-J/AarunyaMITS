@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useRazorpay } from '@/hooks/useRazorpay';
@@ -106,8 +105,9 @@ export default function UnifiedRegistration() {
     const [qrCodeData, setQrCodeData] = useState<string>('');
     const [epassUrl, setEpassUrl] = useState<string>('');
     const [registeredEventIds, setRegisteredEventIds] = useState<string[]>([]);
-const [result, setResult] = useState<unknown>(null);
+    const [result, setResult] = useState<unknown>(null);
     const [registration, setRegistration] = useState<unknown>(null);
+    const [otpCooldown, setOtpCooldown] = useState(0);
 
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
@@ -183,6 +183,15 @@ const [result, setResult] = useState<unknown>(null);
         fetchEvents();
     }, []);
 
+    // Handle OTP cooldown timer
+    useEffect(() => {
+        if (otpCooldown <= 0) return;
+        const timer = setInterval(() => {
+            setOtpCooldown(prev => prev - 1);
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [otpCooldown]);
+
     // Handle post-authentication redirect
     useEffect(() => {
         if (user) {
@@ -190,9 +199,15 @@ const [result, setResult] = useState<unknown>(null);
                 toast.success('Sign in successful!');
                 setStep('dashboard');
             }
-            // Load user data from DB
+            // Load user data from DB (only if user has a real ID, not temporary)
             const loadUserData = async () => {
                 if (!user?.id) return;
+
+                // Skip loading registrations for users with temporary IDs
+                if (user.id.startsWith('temp-')) {
+                    return;
+                }
+
                 try {
                     const response = await eventRegistrationApi.getMyEventRegistrations({
                         participantId: user.id,
@@ -202,6 +217,7 @@ const [result, setResult] = useState<unknown>(null);
                     setRegisteredEventIds(Array.isArray(registrations) ? registrations.map((r: Registration) => r.eventId) : []);
                 } catch (err) {
                     // Error loading user data - silently continue
+                    console.debug('Could not load user registrations:', err);
                 }
             };
             loadUserData();
@@ -231,9 +247,18 @@ const [result, setResult] = useState<unknown>(null);
         } catch (err: unknown) {
             console.error('Error sending OTP:', err);
             const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP';
+            const status = (err instanceof Error && 'response' in err) ? (err as any).response?.status : null;
             const msg = (err instanceof Error && 'response' in err) ? (err as any).response?.data?.message || errorMessage : errorMessage;
-            setError(msg);
-            toast.error(msg);
+
+            // Handle rate limiting (429)
+            if (status === 429) {
+                setOtpCooldown(60); // 60 second cooldown
+                setError('Too many attempts. Please wait before trying again.');
+                toast.error('Too many attempts. Please wait 60 seconds before trying again.');
+            } else {
+                setError(msg);
+                toast.error(msg);
+            }
         } finally {
             setLoading(false);
         }
@@ -254,18 +279,30 @@ const [result, setResult] = useState<unknown>(null);
                 authMode === 'register' ? signUpData : {}
             );
 
-            // If requiresOnboarding, user has no participant record yet — create one
+            // Construct a complete user object for use in the component
+            const normalizeUserData = (data: any): User => {
+                const id = data?.id || data?._id || data?.uid || data?.participantId || `temp-${Date.now()}`;
+                const category = data?.category || data?.participantType || authMode === 'register' ? 'CollegeStudent' : data?.type || 'User';
+                return {
+                    id,
+                    _id: data?._id || id,
+                    uid: data?.uid || id,
+                    name: data?.name || signUpData?.name || '',
+                    email: otpEmail,
+                    aarunyaId: data?.aarunyaId,
+                    category: category as any,
+                    participantType: category,
+                    enrollment_no: signUpData?.enrollment_no,
+                    created_at: data?.created_at
+                };
+            };
+
+            // If requiresOnboarding, user has no participant record yet
             if (userData?.requiresOnboarding) {
                 if (authMode === 'register') {
-                    toast.info('Creating your account...');
-                    // Call register endpoint to create the CollegeStudent record
-                    const regData = {
-                        ...signUpData,
-                        email: otpEmail,
-                    };
-                    const registeredUser = await signUp(regData);
-                    toast.success('Account created! Welcome to Aarunya!');
-                    setResult(registeredUser);
+                    toast.success('Account verified! You can now register for events.');
+                    const normalizedUser = normalizeUserData(userData);
+                    setResult(normalizedUser);
                     setStep('dashboard');
                 } else {
                     // Login mode but user doesn't have a participant record
@@ -275,7 +312,8 @@ const [result, setResult] = useState<unknown>(null);
                 }
             } else {
                 toast.success('Access Granted');
-                setResult(userData);
+                const normalizedUser = normalizeUserData(userData);
+                setResult(normalizedUser);
                 setStep('dashboard');
             }
         } catch (err: unknown) {
@@ -321,6 +359,15 @@ const [result, setResult] = useState<unknown>(null);
                 throw new Error('No participant ID found. Please log out and re-register with all your details.');
             }
 
+            // Check if user has a temporary ID (meaning they haven't completed registration yet)
+            if (user.id.startsWith('temp-')) {
+                const msg = 'Your registration is not complete. Please complete your profile setup first.';
+                setError(msg);
+                toast.error(msg);
+                setLoading(false);
+                return;
+            }
+
             if (!selectedEventId) throw new Error('No event selected');
             const selectedEventData = events.find(e => e.id === selectedEventId);
             if (!selectedEventData) throw new Error('Event not found');
@@ -335,6 +382,14 @@ const [result, setResult] = useState<unknown>(null);
             } else {
                 // Paid events - Register and get payment details from backend
                 const participantType = user.category || 'CollegeStudent';
+
+                // Log the payload for debugging
+                console.log('Sending registration payload:', {
+                    eventId: selectedEventId,
+                    participantId: user.id,
+                    participantType
+                });
+
                 const regResponse = await eventRegistrationApi.registerForEvent({
                     eventId: selectedEventId,
                     participantId: user.id,
@@ -399,7 +454,33 @@ const [result, setResult] = useState<unknown>(null);
             }
         } catch (err: unknown) {
             console.error('Error processing payment/registration:', err);
-            const backendMsg = (err instanceof Error && 'response' in err) ? (err as any).response?.data?.message || (err as any).response?.data?.error || err.message : (err instanceof Error ? err.message : 'Process failed');
+            let backendMsg = 'Process failed';
+
+            if (err instanceof Error) {
+                // Check if it's our validation error about invalid ObjectId
+                if (err.message.includes('Invalid participant ID')) {
+                    backendMsg = 'Your registration is incomplete. Please log out and complete your registration with all required information.';
+                    console.warn('Validation error - invalid participant ID:', err.message);
+                } else if ('response' in err) {
+                    const axiosErr = err as any;
+                    // Try multiple paths to get the error message
+                    backendMsg = axiosErr.response?.data?.message ||
+                                 axiosErr.response?.data?.error ||
+                                 axiosErr.response?.data?.details ||
+                                 (typeof axiosErr.response?.data === 'string' ? axiosErr.response.data : null) ||
+                                 axiosErr.message;
+
+                    // Log full error for debugging
+                    console.error('Backend error details:', {
+                        status: axiosErr.response?.status,
+                        data: axiosErr.response?.data,
+                        message: backendMsg
+                    });
+                } else {
+                    backendMsg = err.message;
+                }
+            }
+
             setError(backendMsg);
             toast.error('Process failed: ' + backendMsg);
         } finally {
@@ -410,8 +491,21 @@ const [result, setResult] = useState<unknown>(null);
     const handleRegistration = async (eventId: string) => {
         if (!user) throw new Error('User not authenticated');
 
+        // Check if user has a temporary ID (meaning they haven't completed registration yet)
+        if (user.id.startsWith('temp-')) {
+            throw new Error('Your registration is not complete. Please complete your profile setup first.');
+        }
+
         try {
             const participantType = user.category || 'CollegeStudent';
+
+            console.log('Sending free event registration:', {
+                eventId,
+                participantId: user.id,
+                participantType,
+                userId: user
+            });
+
             // Register for event in DB
             await eventRegistrationApi.registerForEvent({
                 eventId,
@@ -439,9 +533,20 @@ const [result, setResult] = useState<unknown>(null);
 
             toast.success('Registration completed!');
         }
-            catch (err: unknown) {
+        catch (err: unknown) {
             console.error('Error registering for event:', err);
-            const msg = (err instanceof Error && 'response' in err) ? (err as any).response?.data?.message : (err instanceof Error ? err.message : 'Registration failed');
+            let msg = 'Registration failed';
+
+            if (err instanceof Error) {
+                if (err.message.includes('Invalid participant ID')) {
+                    msg = 'Your registration is incomplete. Please log out and complete your registration.';
+                } else if ('response' in err) {
+                    msg = (err as any).response?.data?.message || err.message;
+                } else {
+                    msg = err.message;
+                }
+            }
+
             toast.error(msg);
             throw err;
         }
@@ -659,17 +764,17 @@ const [result, setResult] = useState<unknown>(null);
                                                         <Button
                                                             type="button"
                                                             onClick={handleSendOTP}
-                                                            disabled={loading || !isValidEmail(otpEmail)}
+                                                            disabled={loading || !isValidEmail(otpEmail) || otpCooldown > 0}
                                                             className="h-12 px-6 rounded-full text-xs font-bold whitespace-nowrap shrink-0 uppercase tracking-widest"
                                                             style={{
-                                                                background: isValidEmail(otpEmail) ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : '#333',
-                                                                boxShadow: isValidEmail(otpEmail) ? '0 0 12px rgba(59,130,246,0.5)' : 'none',
+                                                                background: (otpCooldown > 0) ? '#666' : isValidEmail(otpEmail) ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : '#333',
+                                                                boxShadow: isValidEmail(otpEmail) && otpCooldown <= 0 ? '0 0 12px rgba(59,130,246,0.5)' : 'none',
                                                                 border: 'none',
                                                                 fontFamily: '"Press Start 2P", cursive',
                                                                 fontSize: '10px'
                                                             }}
                                                         >
-                                                            {loading ? '...' : otpSent ? 'RESEND' : 'GET OTP'}
+                                                            {loading ? '...' : otpCooldown > 0 ? `${otpCooldown}s` : otpSent ? 'RESEND' : 'GET OTP'}
                                                         </Button>
                                                     </div>
                                                 </div>
@@ -707,15 +812,15 @@ const [result, setResult] = useState<unknown>(null);
                                                             <Button
                                                                 type="button"
                                                                 onClick={handleSendOTP}
-                                                                disabled={loading || !isValidEmail(signUpData.email)}
+                                                                disabled={loading || !isValidEmail(signUpData.email) || otpCooldown > 0}
                                                                 className="h-12 px-6 rounded-full text-xs font-bold whitespace-nowrap shrink-0"
                                                                 style={{
-                                                                    background: isValidEmail(signUpData.email) ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : '#333',
-                                                                    boxShadow: isValidEmail(signUpData.email) ? '0 0 12px rgba(59,130,246,0.5)' : 'none',
+                                                                    background: (otpCooldown > 0) ? '#666' : isValidEmail(signUpData.email) ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : '#333',
+                                                                    boxShadow: isValidEmail(signUpData.email) && otpCooldown <= 0 ? '0 0 12px rgba(59,130,246,0.5)' : 'none',
                                                                     border: 'none'
                                                                 }}
                                                             >
-                                                                {loading ? '...' : otpSent ? 'RESEND' : 'SEND OTP'}
+                                                                {loading ? '...' : otpCooldown > 0 ? `${otpCooldown}s` : otpSent ? 'RESEND' : 'SEND OTP'}
                                                             </Button>
                                                         </div>
                                                     </div>
@@ -851,6 +956,17 @@ const [result, setResult] = useState<unknown>(null);
                                                 <p className="text-yellow-500 text-sm mb-2 font-vt323">Session incomplete. Please re-authenticate for full access.</p>
                                                 <Button onClick={handleLogout} size="sm" variant="outline" className="h-8 text-[10px] border-yellow-500/50 text-yellow-500 hover:bg-yellow-500 hover:text-black">
                                                     RE-LOGIN
+                                                </Button>
+                                            </div>
+                                        )}
+
+                                        {user && user.id?.startsWith('temp-') && (
+                                            <div className="mb-4 p-4 bg-orange-500/10 border border-orange-500/50 rounded-xl">
+                                                <p className="text-orange-400 text-sm font-vt323 mb-2">
+                                                    <span className="font-black">⚠ Registration Incomplete:</span> Your profile needs to be completed before you can register for events. Please log out and ensure you enter all required information during registration.
+                                                </p>
+                                                <Button onClick={handleLogout} size="sm" variant="outline" className="h-8 text-[10px] border-orange-500/50 text-orange-400 hover:bg-orange-500 hover:text-black">
+                                                    LOGOUT & RE-REGISTER
                                                 </Button>
                                             </div>
                                         )}
