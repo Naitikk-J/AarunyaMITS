@@ -68,6 +68,7 @@ export default function UnifiedRegistration() {
     const [epassUrl, setEpassUrl] = useState<string>('');
     const [registeredEventIds, setRegisteredEventIds] = useState<string[]>([]);
     const [result, setResult] = useState<any>(null);
+    const [registration, setRegistration] = useState<any>(null);
 
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
@@ -158,12 +159,13 @@ export default function UnifiedRegistration() {
             }
             // Load user data from DB
             const loadUserData = async () => {
-                if (!user?.email) return;
+                if (!user?.id) return;
                 try {
                     const response = await eventRegistrationApi.getMyEventRegistrations({
-                        email: user.email
+                        participantId: user.id,
+                        participantType: user.category || 'CollegeStudent'
                     });
-                    const registrations = response.data?.registrations || response.data || [];
+                    const registrations = response.data?.data?.registrations || response.data?.registrations || response.data || [];
                     setRegisteredEventIds(Array.isArray(registrations) ? registrations.map((r: any) => r.eventId) : []);
                 } catch (err) {
                     console.error("Error loading user data:", err);
@@ -232,9 +234,34 @@ export default function UnifiedRegistration() {
                 authMode === 'register' ? signUpData : {}
             );
 
-            toast.success('Access Granted');
-            setResult(userData);
-            setStep('dashboard');
+            console.log('[Auth] verifyOTP returned:', JSON.stringify(userData));
+
+            // If requiresOnboarding, user has no participant record yet — create one
+            if (userData?.requiresOnboarding) {
+                if (authMode === 'register') {
+                    toast.info('Creating your account...');
+                    // Call register endpoint to create the CollegeStudent record
+                    const regData = {
+                        ...signUpData,
+                        email: otpEmail,
+                    };
+                    console.log('[Auth] Completing registration with:', JSON.stringify(regData));
+                    const registeredUser = await signUp(regData);
+                    console.log('[Auth] Registration complete, user:', JSON.stringify(registeredUser));
+                    toast.success('Account created! Welcome to Aarunya!');
+                    setResult(registeredUser);
+                    setStep('dashboard');
+                } else {
+                    // Login mode but user doesn't have a participant record
+                    toast.error('No account found. Please switch to REGISTER to create your account.');
+                    setError('No account found for this email. Please register first.');
+                    return;
+                }
+            } else {
+                toast.success('Access Granted');
+                setResult(userData);
+                setStep('dashboard');
+            }
         } catch (err: any) {
             console.error('Verification Error:', err);
             const msg = err.response?.data?.message || err.message || 'Verification failed';
@@ -270,6 +297,10 @@ export default function UnifiedRegistration() {
 
         try {
             if (!user) throw new Error('User not authenticated');
+            if (!user.id) {
+                toast.error('Your account is incomplete. Please log out and register again.');
+                throw new Error('No participant ID found. Please log out and re-register with all your details.');
+            }
 
             if (!selectedEventId) throw new Error('No event selected');
             const selectedEventData = events.find(e => e.id === selectedEventId);
@@ -279,48 +310,108 @@ export default function UnifiedRegistration() {
 
             if (totalAmount === 0) {
                 // Free events - register directly
-                await handleRegistration([selectedEventId]);
+                await handleRegistration(selectedEventId);
                 toast.success('Registration successful!');
                 setStep('success');
             } else {
-                // Paid events - create order and proceed to payment
-                const orderData = await createOrder(totalAmount, user.id, [selectedEventId]);
-                await openPaymentModal(
-                    orderData.id,
-                    totalAmount,
-                    'INR',
-                    'Aarunya MITS',
-                    `Payment for ${selectedEventData.name}`,
-                    async (response: any) => {
-                        try {
-                            await verifyPayment(response.razorpay_payment_id, response.razorpay_order_id, response.razorpay_signature);
-                            await handleRegistration([selectedEventId]);
-                            toast.success('Registration and payment successful!');
-                            setStep('success');
-                        } catch (err: any) {
-                            setError('Payment verification failed');
-                            toast.error('Payment verification failed');
+                // Paid events - Register and get payment details from backend
+                const participantType = user.category || 'CollegeStudent';
+                console.log('[Registration] Requesting paid registration:', {
+                    eventId: selectedEventId,
+                    participantId: user.id,
+                    participantType
+                });
+                const regResponse = await eventRegistrationApi.registerForEvent({
+                    eventId: selectedEventId,
+                    participantId: user.id,
+                    participantType
+                });
+
+                const responseData = regResponse.data?.data || regResponse.data;
+                const regData = responseData?.registration;
+                const paymentDetails = responseData?.payment;
+                setRegistration(regData);
+
+                if (paymentDetails?.orderId) {
+                    // Backend created the order, open payment modal
+                    await openPaymentModal(
+                        paymentDetails.orderId,
+                        totalAmount,
+                        paymentDetails.currency || 'INR',
+                        'Aarunya MITS',
+                        `Payment for ${selectedEventData.name}`,
+                        async (response: any) => {
+                            try {
+                                const verifyResponse = await eventRegistrationApi.verifyPayment({
+                                    registrationId: regData?._id || regData?.id,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                });
+
+                                const finalReg = verifyResponse.data?.data?.registration || verifyResponse.data?.registration || verifyResponse.data;
+                                setRegistration(finalReg);
+
+                                // Generate QR code data for the session
+                                const qrData = {
+                                    enrollment_no: user.enrollment_no || 'NA',
+                                    email: user.email,
+                                    uid: user.id,
+                                    registered_events: [selectedEventId],
+                                    payment_status: 'confirmed',
+                                    timestamp: new Date().toISOString()
+                                };
+
+                                const qrCodeDataURL = await generateQRCode(qrData);
+                                setQrCodeData(qrCodeDataURL);
+                                setEpassUrl(qrCodeDataURL);
+                                setRegisteredEventIds(prev => [...new Set([...prev, selectedEventId])]);
+
+                                toast.success('Payment verified! Registration confirmed.');
+                                setStep('success');
+                            } catch (err: any) {
+                                const errMsg = err.response?.data?.message || 'Payment verification failed';
+                                setError(errMsg);
+                                toast.error(errMsg);
+                            }
                         }
-                    }
-                );
+                    );
+                } else {
+                    // No payment details returned, registration is already confirmed
+                    toast.success('Registration successful!');
+                    setStep('success');
+                }
             }
         } catch (err: any) {
-            setError(err.message);
-            toast.error('Payment process failed: ' + err.message);
+            const backendMsg = err.response?.data?.message || err.response?.data?.error || err.message;
+            console.error('[Registration] Error details:', {
+                status: err.response?.status,
+                data: err.response?.data,
+                message: backendMsg,
+                userObj: user ? { id: user.id, category: user.category, email: user.email } : null
+            });
+            setError(backendMsg);
+            toast.error('Process failed: ' + backendMsg);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleRegistration = async (eventIds: string[]) => {
+    const handleRegistration = async (eventId: string) => {
         if (!user) throw new Error('User not authenticated');
 
         try {
-            // Register for events in DB
+            const participantType = user.category || 'CollegeStudent';
+            // Register for event in DB
+            console.log('[Registration] Requesting free registration:', {
+                eventId,
+                participantId: user.id,
+                participantType
+            });
             await eventRegistrationApi.registerForEvent({
-                eventIds,
-                userId: user.id,
-                email: user.email
+                eventId,
+                participantId: user.id,
+                participantType
             });
 
             // Generate QR code data for the session
@@ -328,7 +419,7 @@ export default function UnifiedRegistration() {
                 enrollment_no: user.enrollment_no || 'NA',
                 email: user.email,
                 uid: user.id,
-                registered_events: eventIds,
+                registered_events: [eventId],
                 payment_status: 'confirmed',
                 timestamp: new Date().toISOString()
             };
@@ -339,7 +430,7 @@ export default function UnifiedRegistration() {
             setEpassUrl(qrCodeDataURL);
 
             // Refresh registered events list locally for UI
-            setRegisteredEventIds(prev => [...new Set([...prev, ...eventIds])]);
+            setRegisteredEventIds(prev => [...new Set([...prev, eventId])]);
 
             toast.success('Registration completed!');
         } catch (err: any) {
@@ -384,6 +475,8 @@ export default function UnifiedRegistration() {
     };
 
     console.log('[UnifiedRegistration] Render state:', { step, authLoading, userExists: !!user, eventsCount: events.length, loading });
+    console.log('[UnifiedRegistration] FULL USER OBJECT:', JSON.stringify(user));
+    console.log('[UnifiedRegistration] RAW localStorage user:', localStorage.getItem('user'));
 
     if (authLoading) {
         return <div className="min-h-screen bg-[#05010D] flex items-center justify-center">
@@ -704,140 +797,156 @@ export default function UnifiedRegistration() {
                                         }} />
 
                                         {/* User Info Header */}
-                                        <div className="mb-8 px-5 py-4 bg-white/5 border border-[#ff00ff]/30 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4 shadow-[0_0_15px_rgba(255,0,255,0.1)] relative">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-[#ff00ff] flex items-center justify-center text-xl shadow-[0_0_10px_#ff00ff]">
+                                        <div className="mb-8 px-6 py-5 bg-gradient-to-r from-indigo-950/40 via-purple-900/20 to-indigo-950/40 border border-[#ff00ff]/30 rounded-3xl flex flex-col sm:flex-row justify-between items-center gap-6 shadow-[0_0_20px_rgba(255,0,255,0.1)] relative backdrop-blur-md">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ff00ff] to-[#8a2be2] flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(255,0,255,0.4)] transform hover:rotate-6 transition-transform">
                                                     👤
                                                 </div>
                                                 <div>
-                                                    <div className="text-xs text-white/50 uppercase tracking-widest">Aarunya Explorer</div>
-                                                    <div className="text-base font-bold text-[#00ffff]">{user?.name || 'Explorer'}</div>
+                                                    <div className="text-[10px] text-indigo-300 uppercase tracking-[0.3em] font-black mb-0.5">Player Statistics</div>
+                                                    <div className="text-xl font-black text-white flex items-center gap-2">
+                                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00ffff] to-white">{user?.name || 'Explorer'}</span>
+                                                        <span className="text-[10px] py-0.5 px-2 bg-[#00ffff]/20 text-[#00ffff] rounded-full border border-[#00ffff]/30">LVL 42</span>
+                                                    </div>
+                                                    <div className="text-xs text-white/40 font-vt323 tracking-widest uppercase mt-0.5">MITS-SYSTEMS IDENTIFIED</div>
                                                 </div>
                                             </div>
 
-                                            <div className="absolute -top-12 right-0 flex gap-2">
+                                            <div className="flex gap-3">
                                                 {epassUrl && (
-                                                    <Button onClick={() => setStep('success')} size="sm" variant="secondary" className="h-8 rounded-full text-[10px] bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/50 px-4">
-                                                        VIEW E-PASS
+                                                    <Button
+                                                        onClick={() => setStep('success')}
+                                                        className="h-10 rounded-xl text-xs bg-green-500/10 hover:bg-green-500/20 text-green-400 border border-green-500/40 px-5 font-black uppercase tracking-wider backdrop-blur-sm shadow-[0_4px_15px_-3px_rgba(34,197,94,0.2)]"
+                                                    >
+                                                        OPEN E-PASS
                                                     </Button>
                                                 )}
-                                                <Button onClick={handleLogout} size="sm" variant="outline" className="h-9 rounded-full text-xs border-[#ff00ff] bg-black/60 hover:bg-[#ff00ff] hover:text-white transition-all shadow-[0_0_15px_rgba(255,0,255,0.3)] font-black tracking-widest px-6">
-                                                    SIGN OUT
+                                                <Button
+                                                    onClick={handleLogout}
+                                                    variant="outline"
+                                                    className="h-10 rounded-xl text-xs border-[#ff00ff]/50 bg-black/40 hover:bg-[#ff00ff]/20 hover:border-[#ff00ff] text-white transition-all shadow-[0_4px_15px_-3px_rgba(255,0,255,0.2)] font-black tracking-widest px-5 uppercase"
+                                                >
+                                                    LOGOUT
                                                 </Button>
                                             </div>
                                         </div>
 
-                                        <div className="text-center mb-8">
-                                            <h2 className="mb-2 tracking-tight uppercase" style={{
-                                                fontFamily: '"Press Start 2P", "Courier New", monospace',
-                                                fontSize: '16px',
-                                                color: '#ff00ff',
-                                                textShadow: '0 0 10px #ff00ff'
-                                            }}>
-                                                SELECT YOUR EVENTS
-                                            </h2>
-                                            <p className="text-xs text-[#00ffff] uppercase tracking-[0.2em] mb-4">Pick one event to continue</p>
-
-                                            {!user && (
-                                                <div className="mb-4 p-4 bg-yellow-500/10 border border-yellow-500/50 rounded-xl">
-                                                    <p className="text-yellow-500 text-sm mb-2 font-vt323">Session incomplete. Please re-authenticate for full access.</p>
-                                                    <Button onClick={handleLogout} size="sm" variant="outline" className="h-8 text-[10px] border-yellow-500/50 text-yellow-500 hover:bg-yellow-500 hover:text-black">
-                                                        RE-LOGIN
-                                                    </Button>
-                                                </div>
-                                            )}
+                                        <div className="text-center mb-10">
+                                            <div className="inline-block relative">
+                                                <h2 className="mb-4 tracking-tighter uppercase px-8" style={{
+                                                    fontFamily: '"Press Start 2P", "Courier New", monospace',
+                                                    fontSize: 'clamp(14px, 4vw, 20px)',
+                                                    color: '#fff',
+                                                    textShadow: '0 0 10px #ff00ff, 0 0 20px #8a2be2'
+                                                }}>
+                                                    COMMAND CENTER
+                                                </h2>
+                                                <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00ffff] to-transparent shadow-[0_0_10px_#00ffff]" />
+                                            </div>
+                                            <p className="text-xs text-[#00ffff] uppercase tracking-[0.4em] mt-6 font-black opacity-80">Initialize protocol: Select one event to proceed</p>
                                         </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar p-2">
+                                        {!user && (
+                                            <div className="mb-4 p-4 bg-yellow-500/10 border border-yellow-500/50 rounded-xl">
+                                                <p className="text-yellow-500 text-sm mb-2 font-vt323">Session incomplete. Please re-authenticate for full access.</p>
+                                                <Button onClick={handleLogout} size="sm" variant="outline" className="h-8 text-[10px] border-yellow-500/50 text-yellow-500 hover:bg-yellow-500 hover:text-black">
+                                                    RE-LOGIN
+                                                </Button>
+                                            </div>
+                                        )}
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 max-h-[70vh] overflow-y-auto pr-4 custom-scrollbar p-2">
                                             {events.length === 0 && (
-                                                <div className="col-span-full text-center py-12">
-                                                    <p className="text-white/50 text-sm font-vt323">{loading ? 'Loading events...' : 'No events available.'}</p>
+                                                <div className="col-span-full text-center py-16 flex flex-col items-center gap-4">
+                                                    <div className="w-16 h-16 border-4 border-[#ff00ff]/20 border-t-[#ff00ff] rounded-full animate-spin" />
+                                                    <p className="text-white/40 text-sm font-vt323 tracking-widest uppercase">{loading ? 'Accessing Secure Database...' : 'No active events found.'}</p>
                                                 </div>
                                             )}
                                             {events.map((event) => {
-                                                console.log('[UnifiedRegistration] Rendering event card:', event.id, event.name);
                                                 const isRegistered = registeredEventIds.includes(event.id);
                                                 const isSelected = selectedEventId === event.id;
                                                 return (
-                                                    <div
+                                                    <motion.div
                                                         key={event.id}
-                                                        className={`relative overflow-hidden border-2 rounded-2xl p-5 cursor-pointer transition-all duration-300 ${isRegistered
-                                                            ? 'border-green-500/50 bg-green-500/5 cursor-default'
+                                                        layout
+                                                        initial={{ opacity: 0, scale: 0.95 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        className={`group relative overflow-hidden border-2 rounded-[2rem] p-6 cursor-pointer transition-all duration-300 h-full flex flex-col ${isRegistered
+                                                            ? 'border-green-500/30 bg-green-500/5 cursor-not-allowed grayscale-[0.6] opacity-80'
                                                             : isSelected
-                                                                ? 'border-[#00ffff] bg-[#00ffff]/5 shadow-[0_0_20px_rgba(0,255,255,0.2)]'
-                                                                : 'border-white/10 bg-black/40 hover:border-[#ff00ff]/50'
+                                                                ? 'border-[#00ffff] bg-gradient-to-br from-[#00ffff]/10 to-indigo-900/40 shadow-[0_0_40px_rgba(0,255,255,0.2)]'
+                                                                : 'border-white/10 bg-black/40 hover:border-[#ff00ff]/50 hover:bg-white/5 hover:shadow-[0_0_20px_rgba(255,0,255,0.1)]'
                                                             }`}
                                                         onClick={() => !isRegistered && handleEventSelection(event.id)}
                                                     >
-                                                        {/* Category Badge */}
-                                                        <div className="absolute top-0 right-0 px-4 py-1 rounded-bl-xl text-[10px] font-bold uppercase tracking-widest bg-white/10 text-white/70">
+                                                        {isRegistered && (
+                                                            <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 backdrop-blur-[1px] pointer-events-none">
+                                                                <div className="bg-green-500 text-black font-black text-[10px] py-1 px-4 rounded-full uppercase tracking-widest shadow-[0_0_15px_#22c55e]">
+                                                                    Already Registered
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        <div className="absolute top-0 right-0 px-5 py-2 rounded-bl-3xl text-[9px] font-black uppercase tracking-[0.2em] bg-white/5 text-white/40 border-l border-b border-white/10">
                                                             {event.category}
                                                         </div>
 
-                                                        <div className="flex flex-col gap-3">
-                                                            <div className="flex justify-between items-start">
-                                                                <div className="flex-1">
-                                                                    <h3 className="text-xl font-black tracking-tight text-white mb-0.5">
-                                                                        {event.name}
-                                                                    </h3>
-                                                                    <p className="text-xs text-[#ff00ff] font-bold uppercase mb-2">Hosted by {event.club}</p>
-                                                                    <p className="text-sm text-white/60 line-clamp-2 mb-3 leading-relaxed">
-                                                                        {event.description}
-                                                                    </p>
-                                                                </div>
-                                                                <div className="text-right flex flex-col items-end">
-                                                                    <div className={`text-2xl font-black mb-1 ${event.fee === 0 ? 'text-green-400' : 'text-white'}`}>
-                                                                        {event.fee === 0 ? 'FREE' : `₹${event.fee}`}
-                                                                    </div>
-                                                                    {event.prizePool && (
-                                                                        <div className="text-[9px] bg-[#ffea00]/20 text-[#ffea00] px-2 py-0.5 rounded-full font-bold">
-                                                                            🏆 {event.prizePool} PRIZE
+                                                        <div className="flex flex-col gap-4 h-full relative z-0">
+                                                            <div className="space-y-2">
+                                                                <div className="flex justify-between items-start gap-4">
+                                                                    <div className="flex-1">
+                                                                        <h3 className="text-lg sm:text-xl font-black tracking-tighter text-white leading-tight mb-1 group-hover:text-[#00ffff] transition-colors">
+                                                                            {event.name}
+                                                                        </h3>
+                                                                        <div className="flex items-center gap-2">
+                                                                            <span className="w-1.5 h-1.5 rounded-full bg-[#ff00ff] shadow-[0_0_5px_#ff00ff]" />
+                                                                            <p className="text-[10px] text-[#ff00ff]/80 font-black uppercase tracking-widest">{event.club}</p>
                                                                         </div>
-                                                                    )}
+                                                                    </div>
+                                                                    <div className="text-right">
+                                                                        <div className={`text-2xl font-black ${event.fee === 0 ? 'text-green-400' : 'text-white'}`}>
+                                                                            {event.fee === 0 ? 'FREE' : `₹${event.fee}`}
+                                                                        </div>
+                                                                        {event.prizePool && (
+                                                                            <div className="text-[9px] bg-yellow-400/20 text-yellow-400 px-2.5 py-1 rounded-lg font-black border border-yellow-400/30 whitespace-nowrap mt-1">
+                                                                                🏆 {event.prizePool}
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                                <p className="text-xs text-white/50 line-clamp-2 leading-relaxed font-medium">
+                                                                    {event.description}
+                                                                </p>
+                                                            </div>
+
+                                                            <div className="grid grid-cols-2 gap-3 mt-auto pt-4 border-t border-white/5">
+                                                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-wider">
+                                                                    <span className="text-sm opacity-60">📅</span> {event.date}
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-wider">
+                                                                    <span className="text-sm opacity-60">📍</span> {event.venue}
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-wider truncate">
+                                                                    <span className="text-sm opacity-60">👥</span> {event.isTeamEvent ? `TEAM (${event.teamSize?.min}-${event.teamSize?.max})` : 'SOLO'}
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-wider">
+                                                                    <span className="text-sm opacity-60">🎫</span> {event.currentRegistrations}/{event.maxParticipants}
                                                                 </div>
                                                             </div>
 
-                                                            <div className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-white/5 pt-3">
-                                                                <div className="flex items-center gap-2 text-xs text-white/50">
-                                                                    <span className="text-sm">📅</span> {event.date}
-                                                                </div>
-                                                                <div className="flex items-center gap-2 text-xs text-white/50">
-                                                                    <span className="text-sm">📍</span> {event.venue}
-                                                                </div>
-                                                                <div className="flex items-center gap-2 text-xs text-white/50">
-                                                                    <span className="text-sm">👥</span> {event.isTeamEvent ? `Team (${event.teamSize?.min}-${event.teamSize?.max})` : 'Individual'}
-                                                                </div>
-                                                                <div className="flex items-center gap-2 text-xs text-white/50">
-                                                                    <span className="text-sm">📞</span> {event.contactPhone}
-                                                                </div>
-                                                                <div className="flex items-center gap-2 text-xs text-white/50">
-                                                                    <span className="text-sm">📧</span> {event.contactEmail}
-                                                                </div>
-                                                                <div className="flex items-center gap-2 text-xs text-white/30 truncate">
-                                                                    <span className="text-sm">⏰</span> Closes: {event.registrationCloseTime ? new Date(event.registrationCloseTime).toLocaleDateString() : 'TBD'}
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="flex items-center justify-between mt-2 pt-3 border-t border-white/5">
-                                                                <div className="flex items-center gap-2">
-                                                                    <div className={`w-2 h-2 rounded-full ${event.isActive ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-                                                                    <span className="text-[10px] text-white/40 uppercase tracking-widest">
-                                                                        {event.currentRegistrations}/{event.maxParticipants} Registered
-                                                                    </span>
-                                                                </div>
-
+                                                            <div className="mt-2">
                                                                 {isRegistered ? (
-                                                                    <span className="text-xs font-bold text-green-400 uppercase tracking-widest flex items-center gap-1">
-                                                                        ✓ ENROLLED
-                                                                    </span>
+                                                                    <div className="w-full py-2.5 rounded-2xl bg-green-500/20 border border-green-500/30 text-green-400 text-[10px] font-black uppercase tracking-[0.2em] text-center flex items-center justify-center gap-2">
+                                                                        <span className="text-xs">✓</span> ENROLLED SUCCESS
+                                                                    </div>
                                                                 ) : (
-                                                                    <div className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${isSelected ? 'bg-[#00ffff] text-black shadow-[0_0_10px_#00ffff]' : 'bg-white/10 text-white'}`}>
-                                                                        {isSelected ? 'SELECTED' : 'SELECT EVENT'}
+                                                                    <div className={`w-full py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-center transition-all ${isSelected ? 'bg-gradient-to-r from-[#00ffff] to-[#0088ff] text-black shadow-[0_0_20px_rgba(0,255,255,0.4)]' : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white border border-white/10'}`}>
+                                                                        {isSelected ? 'ACCESS GRANTED' : 'SELECT PROTOCOL'}
                                                                     </div>
                                                                 )}
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </motion.div>
                                                 );
                                             })}
                                         </div>
@@ -877,73 +986,83 @@ export default function UnifiedRegistration() {
                             {step === 'success' && user && (
                                 <motion.div
                                     variants={itemVariants}
-                                    className="relative p-6 sm:p-8 rounded-2xl"
+                                    className="relative p-6 sm:p-8 rounded-2xl w-full max-w-2xl mx-auto"
                                     style={{
                                         background: 'linear-gradient(145deg, #1a0a2e 0%, #120830 50%, #0d0520 100%)',
-                                        border: '1.5px solid rgba(255,0,255,0.5)',
-                                        boxShadow: '0 0 30px rgba(255,0,255,0.15), 0 0 60px rgba(0,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)'
+                                        border: '2px solid rgba(0,255,0,0.5)',
+                                        boxShadow: '0 0 50px rgba(0,255,0,0.15), inset 0 1px 0 rgba(255,255,255,0.05)'
                                     }}
                                 >
                                     <div className="relative z-10">
-                                        <div className="text-center mb-6">
-                                            <div className="text-3xl sm:text-4xl mb-4" style={{
-                                                color: '#00ffff',
-                                                textShadow: '0 0 10px #00ffff'
-                                            }}>
-                                                ✅
+                                        <div className="text-center mb-8">
+                                            <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-green-500 shadow-[0_0_30px_#22c55e]">
+                                                <span className="text-4xl text-green-500">✓</span>
                                             </div>
-                                            <h2 className="mb-2 tracking-tight uppercase" style={{
+                                            <h2 className="mb-4 tracking-tighter uppercase" style={{
                                                 fontFamily: '"Press Start 2P", "Courier New", monospace',
-                                                fontSize: '14px',
-                                                color: '#ff00ff',
-                                                textShadow: '0 0 10px #ff00ff, 2px 2px 0 #880088'
+                                                fontSize: 'clamp(12px, 3vw, 18px)',
+                                                color: '#22c55e',
+                                                textShadow: '0 0 10px rgba(34,197,94,0.5)'
                                             }}>
-                                                REGISTRATION COMPLETE
+                                                REGISTRATION CONFIRMED
                                             </h2>
-                                            <div className="h-0.5 w-full relative overflow-hidden rounded-full" style={{
-                                                background: 'linear-gradient(to right, #ff00ff, #00ffff)',
-                                                boxShadow: 'inset 0 0 4px #ff00ff, 0 0 8px #00ffff'
-                                            }} />
+                                            <div className="h-1 w-full relative overflow-hidden rounded-full bg-green-950/30">
+                                                <motion.div
+                                                    initial={{ x: '-100%' }}
+                                                    animate={{ x: '100%' }}
+                                                    transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                                                    className="absolute inset-0 w-1/3 bg-green-500 shadow-[0_0_15px_#22c55e]"
+                                                />
+                                            </div>
                                         </div>
 
-                                        <div className="space-y-6">
-                                            <div className="p-4 bg-green-900/20 border border-green-500 rounded-lg">
-                                                <h3 className="font-vt323 text-sm uppercase tracking-wider mb-2" style={{
-                                                    color: '#00ffff',
-                                                    textShadow: '1px 1px 0 #003333'
-                                                }}>
-                                                    E-Pass Generated Successfully
-                                                </h3>
-                                                <p className="text-green-400 text-sm">Your e-pass has been sent to your MITS email</p>
+                                        <div className="space-y-8">
+                                            <div className="p-6 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-md">
+                                                <div className="flex justify-between items-center mb-4">
+                                                    <span className="text-[10px] text-white/40 uppercase tracking-widest font-black">E-Pass Token</span>
+                                                    <span className="text-[10px] py-1 px-3 bg-green-500/20 text-green-400 rounded-full border border-green-500/30 font-black">VALIDATED</span>
+                                                </div>
+
+                                                {qrCodeData && (
+                                                    <div className="flex flex-col items-center gap-6">
+                                                        <div className="p-6 bg-white rounded-3xl shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                                                            <QRCode
+                                                                value={qrCodeData}
+                                                                size={180}
+                                                                level="H"
+                                                            />
+                                                        </div>
+                                                        <div className="text-center">
+                                                            <p className="text-xs text-white/70 mb-6 max-w-xs uppercase tracking-wider leading-relaxed">
+                                                                Present this QR code at the venue entry for immediate access to Aarunya 2026.
+                                                            </p>
+                                                            <Button
+                                                                onClick={() => downloadQRCode(qrCodeData, `aarunya-epass-${user.enrollment_no}.png`)}
+                                                                className="w-full h-12 rounded-2xl bg-white text-black font-black uppercase tracking-widest hover:bg-[#00ffff] hover:text-black transition-all shadow-[0_10px_20px_-10px_rgba(255,255,255,0.3)]"
+                                                            >
+                                                                DOWNLOAD DIGITAL PASS
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
 
-                                            {qrCodeData && (
-                                                <div className="text-center">
-                                                    <div className="mb-4 p-4 bg-white/5 border border-white/20 rounded-lg inline-block">
-                                                        <QRCode
-                                                            value={qrCodeData}
-                                                            size={200}
-                                                            level="H"
-                                                        />
-                                                    </div>
-                                                    <div className="text-sm text-white/70 mb-4">
-                                                        Scan this QR code at the event venue
-                                                    </div>
-                                                    <Button
-                                                        onClick={() => downloadQRCode(qrCodeData, `aarunya-epass-${user.enrollment_no}.png`)}
-                                                        className="w-full"
-                                                    >
-                                                        Download E-Pass
-                                                    </Button>
-                                                </div>
-                                            )}
+                                            <div className="text-center mt-6">
+                                                <p className="text-sm font-black uppercase tracking-[0.2em]" style={{
+                                                    color: '#00ffff',
+                                                    textShadow: '0 0 10px rgba(0,255,255,0.5)'
+                                                }}>
+                                                    YOU WILL GET YOUR PASS AT THE VENUE
+                                                </p>
+                                            </div>
 
-                                            <div className="flex gap-2">
-                                                <Button onClick={() => setStep('dashboard')} className="flex-1">
-                                                    Back to Selection
-                                                </Button>
-                                                <Button onClick={handleLogout} variant="outline" className="flex-1">
-                                                    Logout
+                                            <div className="flex justify-center mt-8">
+                                                <Button
+                                                    onClick={handleLogout}
+                                                    variant="ghost"
+                                                    className="h-12 px-8 rounded-2xl text-white/40 font-black uppercase tracking-widest hover:text-white hover:bg-white/5 transition-all"
+                                                >
+                                                    TERMINATE SESSION
                                                 </Button>
                                             </div>
                                         </div>
