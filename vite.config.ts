@@ -14,6 +14,13 @@ export default defineConfig(({ mode }) => ({
         hmr: {
             overlay: false,
         },
+        proxy: {
+            '/api': {
+                target: 'https://aarunya.snxit.me',
+                changeOrigin: true,
+                secure: true,
+            },
+        },
     },
     plugins: [react()],
     resolve: {

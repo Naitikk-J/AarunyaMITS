@@ -3,21 +3,37 @@ import { authApi } from '@/lib/api';
 
 export interface User {
     id: string;
+    _id?: string;
     uid?: string;
     name: string;
     email: string;
     aarunyaId?: string;
     category?: string;
+    participantType?: string;
     enrollment_no?: string;
     created_at?: string;
 }
+
+/** Ensure user always has a top-level `id` field */
+const normalizeUser = (u: any): User | null => {
+    if (!u) return null;
+    const id = u.id || u._id || u.uid || u.participantId || '';
+    const category = u.category || u.participantType || u.type || '';
+    return { ...u, id, category: category || undefined };
+};
 
 export const useAuth = () => {
     const [user, setUser] = useState<User | null>((() => {
         try {
             const savedUser = localStorage.getItem('user');
             if (savedUser && savedUser !== 'undefined') {
-                return JSON.parse(savedUser);
+                const parsed = JSON.parse(savedUser);
+                const normalized = normalizeUser(parsed);
+                // Re-save if we needed to fix the id
+                if (normalized && !parsed.id && normalized.id) {
+                    localStorage.setItem('user', JSON.stringify(normalized));
+                }
+                return normalized;
             }
             return null;
         } catch {
@@ -38,9 +54,9 @@ export const useAuth = () => {
             const userData = payload?.user || payload;
             const token = payload?.token || response.data?.token;
             if (userData) {
-                const normalizedUser = { ...userData, id: userData.id || userData._id };
-                setUser(normalizedUser);
-                localStorage.setItem('user', JSON.stringify(normalizedUser));
+                const normalized = normalizeUser(userData);
+                setUser(normalized);
+                localStorage.setItem('user', JSON.stringify(normalized));
             }
             if (token) {
                 localStorage.setItem('authToken', token);
@@ -83,11 +99,21 @@ export const useAuth = () => {
             const userDataRes = payload?.user || payload;
             const token = payload?.token || response.data?.token;
 
+            // If requiresOnboarding, do NOT save to state/localStorage yet
+            // The user needs to complete registration first to get a participant ID
+            if (userDataRes?.requiresOnboarding) {
+                console.log('[Auth] User requires onboarding, not saving incomplete data');
+                if (token) {
+                    localStorage.setItem('authToken', token);
+                }
+                return userDataRes; // Return so component can handle onboarding
+            }
+
             if (userDataRes) {
-                // Ensure user has an id field
-                const normalizedUser = { ...userDataRes, id: userDataRes.id || userDataRes._id };
-                setUser(normalizedUser);
-                localStorage.setItem('user', JSON.stringify(normalizedUser));
+                const normalized = normalizeUser(userDataRes);
+                console.log('[Auth] Normalized user:', JSON.stringify(normalized));
+                setUser(normalized);
+                localStorage.setItem('user', JSON.stringify(normalized));
             }
             if (token) {
                 localStorage.setItem('authToken', token);
@@ -111,9 +137,9 @@ export const useAuth = () => {
             const newUser = payload?.user || payload;
             const token = payload?.token || response.data?.token;
             if (newUser) {
-                const normalizedUser = { ...newUser, id: newUser.id || newUser._id };
-                setUser(normalizedUser);
-                localStorage.setItem('user', JSON.stringify(normalizedUser));
+                const normalized = normalizeUser(newUser);
+                setUser(normalized);
+                localStorage.setItem('user', JSON.stringify(normalized));
             }
             if (token) {
                 localStorage.setItem('authToken', token);

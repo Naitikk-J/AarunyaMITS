@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -51,10 +51,10 @@ export const authApi = {
 
 export const paymentApi = {
     createOrder: (amount: number, currency: string = 'INR') =>
-        api.post('/api/payment/create-order', { amount, currency }),
+        api.post('/api/payments/create-order', { amount, currency }),
 
     verifyPayment: (paymentData: any) =>
-        api.post('/api/payment/verify-payment', paymentData),
+        api.post('/api/payments/verify', paymentData),
 
     createPaymentLink: (data: { participantId: string, participantType: string, paymentType: string, quantity: number }) =>
         api.post('/api/payments/create-link', data),
@@ -72,7 +72,7 @@ export const eventRegistrationApi = {
     registerForEvent: (data: any) =>
         api.post('/api/event-registrations/register', data),
 
-    getMyEventRegistrations: (data: { email: string; festId?: string }) =>
+    getMyEventRegistrations: (data: any) =>
         api.post('/api/event-registrations/my-registrations', data),
 
     getEventRegistrationById: (id: string) =>
@@ -86,6 +86,9 @@ export const eventRegistrationApi = {
 
     confirmEventAttendance: (id: string) =>
         api.post(`/api/event-registrations/${id}/confirm-attendance`),
+
+    verifyPayment: (data: any) =>
+        api.post('/api/event-registrations/verify-payment', data),
 };
 
 export default api;
