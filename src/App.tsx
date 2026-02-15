@@ -1,5 +1,4 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -28,7 +27,6 @@ const Sponsors = lazy(() => import("./pages/Sponsors"));
 const Hierarchy = lazy(() => import("./pages/Hierarchy"));
 const ContactUs = lazy(() => import("./pages/ContactUs"));
 const Guidelines = lazy(() => import("./pages/Guidelines"));
-const ResponsiveTest = lazy(() => import("./pages/ResponsiveTest"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
 const ReturnAndRefund = lazy(() => import("./pages/ReturnAndRefund"));
@@ -41,7 +39,6 @@ const App = () => (
         <SoundEffectsProvider>
             <TooltipProvider>
                 <Toaster />
-                <Sonner />
                 <KidcoreCursor />
                 <SmoothScroll />
                 <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -64,7 +61,6 @@ const App = () => (
                                 <Route path="/about" element={<AboutUs />} />
                                 <Route path="/history" element={<History />} />
                                 <Route path="/guidelines" element={<Guidelines />} />
-                                <Route path="/responsive-test" element={<ResponsiveTest />} />
                                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                                 <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
                                 <Route path="/return-and-refund" element={<ReturnAndRefund />} />

@@ -13,6 +13,45 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import { toast } from 'sonner';
 import { eventApi, eventRegistrationApi, authApi } from '@/lib/api';
+import { User } from '@/hooks/useAuth';
+
+interface RazorpayResponse {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+}
+
+interface Registration {
+    eventId: string;
+    _id?: string;
+    id?: string;
+}
+
+interface EventAPIResponse {
+    id?: string;
+    _id?: string;
+    name?: string;
+    club?: string;
+    description?: string;
+    category?: string;
+    date?: string;
+    venue?: string;
+    fee?: number;
+    requiresPayment?: boolean;
+    maxParticipants?: number;
+    currentRegistrations?: number;
+    isTeamEvent?: boolean;
+    teamSize?: {
+        min: number;
+        max: number;
+    };
+    registrationCloseTime?: string;
+    isActive?: boolean;
+    prizePool?: string;
+    contactEmail?: string;
+    contactPhone?: string;
+    createdBy?: string;
+}
 
 interface Event {
     id: string;
@@ -67,8 +106,8 @@ export default function UnifiedRegistration() {
     const [qrCodeData, setQrCodeData] = useState<string>('');
     const [epassUrl, setEpassUrl] = useState<string>('');
     const [registeredEventIds, setRegisteredEventIds] = useState<string[]>([]);
-    const [result, setResult] = useState<any>(null);
-    const [registration, setRegistration] = useState<any>(null);
+const [result, setResult] = useState<unknown>(null);
+    const [registration, setRegistration] = useState<unknown>(null);
 
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
@@ -99,14 +138,11 @@ export default function UnifiedRegistration() {
         const fetchEvents = async (retries = 3) => {
             try {
                 setLoading(true);
-                console.log('[Events] Fetching events from API...');
                 const response = await eventApi.getEvents();
-                console.log('[Events] Raw API response:', JSON.stringify(response.data).substring(0, 500));
                 // API returns { success, message, data: { events: [...] } }
                 // axios wraps body in response.data, so events are at response.data.data.events
                 const eventsData = response.data?.data?.events || response.data?.events || response.data || [];
-                console.log('[Events] Extracted eventsData:', Array.isArray(eventsData), eventsData?.length);
-                const mappedEvents = Array.isArray(eventsData) ? eventsData.map((e: any) => ({
+                const mappedEvents = Array.isArray(eventsData) ? eventsData.map((e: EventAPIResponse) => ({
                     ...e,
                     id: e.id || e._id || 'unknown',
                     name: e.name || 'Untitled Event',
@@ -128,16 +164,13 @@ export default function UnifiedRegistration() {
                     createdBy: e.createdBy || '',
                     registrationCloseTime: e.registrationCloseTime || '',
                 })) : [];
-                console.log('[Events] Mapped events:', mappedEvents.length, mappedEvents.map(e => ({ id: e.id, name: e.name })));
                 setEvents(mappedEvents);
                 if (mappedEvents.length === 0 && retries > 0) {
-                    console.log(`[Events] No events found, retrying in 1.5s... (${retries} retries left)`);
                     setTimeout(() => fetchEvents(retries - 1), 1500);
                 }
-            } catch (error: any) {
-                console.error('[Events] Fetch error:', error?.message || error);
+            } catch (error: unknown) {
+                console.error('Error fetching events:', error);
                 if (retries > 0) {
-                    console.log(`[Events] Retrying in 1.5s... (${retries} retries left)`);
                     setTimeout(() => fetchEvents(retries - 1), 1500);
                 } else {
                     toast.error('Failed to fetch events. Please refresh the page.');
@@ -166,27 +199,14 @@ export default function UnifiedRegistration() {
                         participantType: user.category || 'CollegeStudent'
                     });
                     const registrations = response.data?.data?.registrations || response.data?.registrations || response.data || [];
-                    setRegisteredEventIds(Array.isArray(registrations) ? registrations.map((r: any) => r.eventId) : []);
+                    setRegisteredEventIds(Array.isArray(registrations) ? registrations.map((r: Registration) => r.eventId) : []);
                 } catch (err) {
-                    console.error("Error loading user data:", err);
+                    // Error loading user data - silently continue
                 }
             };
             loadUserData();
         }
     }, [user, step]);
-
-    const handleGoogleLogin = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            await signInWithGoogle();
-        } catch (err: any) {
-            setError(err.message);
-            toast.error('Sign in not successful: ' + err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const isValidEmail = (email: string) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -203,15 +223,15 @@ export default function UnifiedRegistration() {
         }
 
         try {
-            console.log('Requesting OTP for:', emailToUse);
             const data = await signInWithOTP(emailToUse);
             toast.success('OTP Sent Successfully');
             setOtpSent(true);
             setOtpEmail(emailToUse);
             setResult(data);
-        } catch (err: any) {
-            console.error('OTP Request Error:', err);
-            const msg = err.response?.data?.message || err.message || 'Failed to send OTP';
+        } catch (err: unknown) {
+            console.error('Error sending OTP:', err);
+            const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP';
+            const msg = (err instanceof Error && 'response' in err) ? (err as any).response?.data?.message || errorMessage : errorMessage;
             setError(msg);
             toast.error(msg);
         } finally {
@@ -234,8 +254,6 @@ export default function UnifiedRegistration() {
                 authMode === 'register' ? signUpData : {}
             );
 
-            console.log('[Auth] verifyOTP returned:', JSON.stringify(userData));
-
             // If requiresOnboarding, user has no participant record yet — create one
             if (userData?.requiresOnboarding) {
                 if (authMode === 'register') {
@@ -245,9 +263,7 @@ export default function UnifiedRegistration() {
                         ...signUpData,
                         email: otpEmail,
                     };
-                    console.log('[Auth] Completing registration with:', JSON.stringify(regData));
                     const registeredUser = await signUp(regData);
-                    console.log('[Auth] Registration complete, user:', JSON.stringify(registeredUser));
                     toast.success('Account created! Welcome to Aarunya!');
                     setResult(registeredUser);
                     setStep('dashboard');
@@ -262,9 +278,10 @@ export default function UnifiedRegistration() {
                 setResult(userData);
                 setStep('dashboard');
             }
-        } catch (err: any) {
-            console.error('Verification Error:', err);
-            const msg = err.response?.data?.message || err.message || 'Verification failed';
+        } catch (err: unknown) {
+            console.error('Error verifying OTP:', err);
+            const errorMessage = err instanceof Error ? err.message : 'Verification failed';
+            const msg = (err instanceof Error && 'response' in err) ? (err as any).response?.data?.message || errorMessage : errorMessage;
             setError(msg);
             toast.error(msg);
         } finally {
@@ -279,9 +296,11 @@ export default function UnifiedRegistration() {
             await signUp(signUpData);
             toast.success('Sign up successful!');
             setStep('dashboard');
-        } catch (err: any) {
-            setError(err.message);
-            toast.error('Sign up failed: ' + err.message);
+        } catch (err: unknown) {
+            console.error('Error signing up:', err);
+            const errorMessage = err instanceof Error ? err.message : 'Sign up failed';
+            setError(errorMessage);
+            toast.error('Sign up failed: ' + errorMessage);
         } finally {
             setLoading(false);
         }
@@ -316,11 +335,6 @@ export default function UnifiedRegistration() {
             } else {
                 // Paid events - Register and get payment details from backend
                 const participantType = user.category || 'CollegeStudent';
-                console.log('[Registration] Requesting paid registration:', {
-                    eventId: selectedEventId,
-                    participantId: user.id,
-                    participantType
-                });
                 const regResponse = await eventRegistrationApi.registerForEvent({
                     eventId: selectedEventId,
                     participantId: user.id,
@@ -340,7 +354,7 @@ export default function UnifiedRegistration() {
                         paymentDetails.currency || 'INR',
                         'Aarunya MITS',
                         `Payment for ${selectedEventData.name}`,
-                        async (response: any) => {
+                        async (response: RazorpayResponse) => {
                             try {
                                 const verifyResponse = await eventRegistrationApi.verifyPayment({
                                     registrationId: regData?._id || regData?.id,
@@ -369,8 +383,9 @@ export default function UnifiedRegistration() {
 
                                 toast.success('Payment verified! Registration confirmed.');
                                 setStep('success');
-                            } catch (err: any) {
-                                const errMsg = err.response?.data?.message || 'Payment verification failed';
+                            } catch (err: unknown) {
+                                console.error('Error verifying payment:', err);
+                                const errMsg = (err instanceof Error && 'response' in err) ? (err as any).response?.data?.message : (err instanceof Error ? err.message : 'Payment verification failed');
                                 setError(errMsg);
                                 toast.error(errMsg);
                             }
@@ -382,14 +397,9 @@ export default function UnifiedRegistration() {
                     setStep('success');
                 }
             }
-        } catch (err: any) {
-            const backendMsg = err.response?.data?.message || err.response?.data?.error || err.message;
-            console.error('[Registration] Error details:', {
-                status: err.response?.status,
-                data: err.response?.data,
-                message: backendMsg,
-                userObj: user ? { id: user.id, category: user.category, email: user.email } : null
-            });
+        } catch (err: unknown) {
+            console.error('Error processing payment/registration:', err);
+            const backendMsg = (err instanceof Error && 'response' in err) ? (err as any).response?.data?.message || (err as any).response?.data?.error || err.message : (err instanceof Error ? err.message : 'Process failed');
             setError(backendMsg);
             toast.error('Process failed: ' + backendMsg);
         } finally {
@@ -403,11 +413,6 @@ export default function UnifiedRegistration() {
         try {
             const participantType = user.category || 'CollegeStudent';
             // Register for event in DB
-            console.log('[Registration] Requesting free registration:', {
-                eventId,
-                participantId: user.id,
-                participantType
-            });
             await eventRegistrationApi.registerForEvent({
                 eventId,
                 participantId: user.id,
@@ -433,26 +438,23 @@ export default function UnifiedRegistration() {
             setRegisteredEventIds(prev => [...new Set([...prev, eventId])]);
 
             toast.success('Registration completed!');
-        } catch (err: any) {
-            console.error('Error during registration:', err);
-            const msg = err.response?.data?.message || 'Registration failed';
+        }
+            catch (err: unknown) {
+            console.error('Error registering for event:', err);
+            const msg = (err instanceof Error && 'response' in err) ? (err as any).response?.data?.message : (err instanceof Error ? err.message : 'Registration failed');
             toast.error(msg);
             throw err;
         }
     };
 
-    const sendEpassEmail = async (user: any, eventIds: string[], qrCodeDataURL: string) => {
+    const sendEpassEmail = async (userData: User, eventIds: string[], qrCodeDataURL: string) => {
         try {
             const selectedEventsData = events.filter(e => eventIds.includes(e.id));
 
-            console.log('Mock sending email to:', user.email);
-            console.log('Events:', selectedEventsData);
-            // console.log('QR Code:', qrCodeDataURL);
-
             await new Promise(resolve => setTimeout(resolve, 500));
 
-        } catch (err) {
-            console.error('Error sending email:', err);
+        } catch (err: unknown) {
+            console.error('Error sending epass email:', err);
             // Don't throw error as registration was successful
         }
     };
@@ -466,17 +468,15 @@ export default function UnifiedRegistration() {
             setQrCodeData('');
             setEpassUrl('');
             toast.success('Logged out successfully');
-        } catch (err: any) {
-            setError(err.message);
-            toast.error('Logout failed: ' + err.message);
+        } catch (err: unknown) {
+            console.error('Error logging out:', err);
+            const errorMessage = err instanceof Error ? err.message : 'Logout failed';
+            setError(errorMessage);
+            toast.error('Logout failed: ' + (err instanceof Error ? err.message : 'Unknown error'));
         } finally {
             setLoading(false);
         }
     };
-
-    console.log('[UnifiedRegistration] Render state:', { step, authLoading, userExists: !!user, eventsCount: events.length, loading });
-    console.log('[UnifiedRegistration] FULL USER OBJECT:', JSON.stringify(user));
-    console.log('[UnifiedRegistration] RAW localStorage user:', localStorage.getItem('user'));
 
     if (authLoading) {
         return <div className="min-h-screen bg-[#05010D] flex items-center justify-center">

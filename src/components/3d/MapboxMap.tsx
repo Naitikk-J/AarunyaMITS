@@ -37,10 +37,8 @@ function MapboxMap({
     const mapContainer = useRef<HTMLDivElement>(null);
     const map = useRef<mapboxgl.Map | null>(null);
 
-    // Set Mapbox token directly (split to avoid aggressive secret scanners)
-    const mbTokenPart1 = "REDACTED";
-    const mbTokenPart2 = "REDACTED";
-    const mapboxToken = `${mbTokenPart1}${mbTokenPart2}`;
+    // Get Mapbox token from environment (must be set in .env.local)
+    const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN || '';
 
     useEffect(() => {
         // Token is guaranteed to exist now

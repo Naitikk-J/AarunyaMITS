@@ -127,11 +127,10 @@ const generateTextures = () => {
     const cachedRoadTexture = getCachedTexture('road_texture');
 
     if (cachedWindowTexture && cachedRoadTexture) {
-        console.log('✅ Using cached textures');
         return { window: cachedWindowTexture, road: cachedRoadTexture };
     }
 
-    console.log('🔄 Generating textures...');
+    // Generating textures...
 
     // IMPROVED: Realistic Facade Texture
     const windowCanvas = document.createElement('canvas');
@@ -227,7 +226,6 @@ const generateTextures = () => {
     cacheTexture('window_texture', windowTexture);
     cacheTexture('road_texture', roadTexture);
 
-    console.log('💾 Textures cached successfully');
     return { window: windowTexture, road: roadTexture };
 };
 
@@ -291,14 +289,12 @@ const Fence = ({ size }: { size: [number, number] }) => {
     let railGeometry = cachedRailGeo;
 
     if (!postGeometry || !railGeometry) {
-        console.log('🔄 Generating fence geometries...');
         postGeometry = new THREE.BoxGeometry(0.15, postHeight, 0.15);
         railGeometry = new THREE.BoxGeometry(1, 0.05, 0.05);
 
         // Cache the geometries
         cacheGeometry('fence_post_geometry', postGeometry);
         cacheGeometry('fence_rail_geometry', railGeometry);
-        console.log('💾 Fence geometries cached successfully');
     }
 
     // Calculate number of posts per side
@@ -1641,7 +1637,6 @@ const StatueModel = ({ position, scale = [1, 1, 1], rotation = [0, 0, 0] }: { po
     const cachedModel = getCachedModel('statue_model');
 
     if (cachedModel) {
-        console.log('✅ Using cached statue model');
         return <primitive object={cachedModel.scene} position={position} scale={scale} rotation={rotation} />;
     }
 
@@ -1658,7 +1653,6 @@ const StatueModel = ({ position, scale = [1, 1, 1], rotation = [0, 0, 0] }: { po
 
     // Cache the loaded model
     cacheModel('statue_model', { scene, animations: [], cameras: [], asset: {}, parser: null, scenes: [scene], userData: {} });
-    console.log('💾 Statue model cached successfully');
 
     return <primitive object={scene} position={position} scale={scale} rotation={rotation} />;
 };
