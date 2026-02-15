@@ -68,12 +68,33 @@ export const eventApi = {
     getEventById: (id: string) => api.get(`/api/events/${id}`),
 };
 
-export const eventRegistrationApi = {
-    registerForEvent: (data: any) =>
-        api.post('/api/event-registrations/register', data),
+// Validate that participantId is a valid MongoDB ObjectId (24 char hex string)
+const isValidObjectId = (id: string): boolean => {
+    return /^[0-9a-f]{24}$/i.test(id);
+};
 
-    getMyEventRegistrations: (data: any) =>
-        api.post('/api/event-registrations/my-registrations', data),
+export const eventRegistrationApi = {
+    registerForEvent: (data: any) => {
+        // Validate participantId before making request
+        if (data.participantId && !isValidObjectId(data.participantId)) {
+            return Promise.reject(new Error(
+                `Invalid participant ID. User registration is incomplete. ` +
+                `Received: "${data.participantId}"`
+            ));
+        }
+        return api.post('/api/event-registrations/register', data);
+    },
+
+    getMyEventRegistrations: (data: any) => {
+        // Validate participantId before making request
+        if (data.participantId && !isValidObjectId(data.participantId)) {
+            return Promise.reject(new Error(
+                `Invalid participant ID. User registration is incomplete. ` +
+                `Please complete your registration first.`
+            ));
+        }
+        return api.post('/api/event-registrations/my-registrations', data);
+    },
 
     getEventRegistrationById: (id: string) =>
         api.get(`/api/event-registrations/${id}`),

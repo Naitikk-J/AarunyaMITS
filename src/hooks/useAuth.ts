@@ -17,8 +17,9 @@ export interface User {
 /** Ensure user always has a top-level `id` field */
 const normalizeUser = (u: any): User | null => {
     if (!u) return null;
-    const id = u.id || u._id || u.uid || u.participantId || '';
-    const category = u.category || u.participantType || u.type || '';
+    // Generate a temporary ID if none exists (for new users during registration)
+    const id = u.id || u._id || u.uid || u.participantId || `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const category = u.category || u.participantType || u.type || 'CollegeStudent';
     return { ...u, id, category: category || undefined };
 };
 
@@ -96,15 +97,6 @@ export const useAuth = () => {
             const payload = response.data?.data || response.data;
             const userDataRes = payload?.user || payload;
             const token = payload?.token || response.data?.token;
-
-            // If requiresOnboarding, do NOT save to state/localStorage yet
-            // The user needs to complete registration first to get a participant ID
-            if (userDataRes?.requiresOnboarding) {
-                if (token) {
-                    localStorage.setItem('authToken', token);
-                }
-                return userDataRes; // Return so component can handle onboarding
-            }
 
             if (userDataRes) {
                 const normalized = normalizeUser(userDataRes);
