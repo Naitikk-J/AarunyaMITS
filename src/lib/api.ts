@@ -74,10 +74,18 @@ export const paymentApi = {
     verifyPayment: (paymentData: any) =>
         api.post('/payments/verify', paymentData),
 
-    createPaymentLink: (data: { participantId: string, participantType: string, paymentType: string, quantity: number }) =>
+    // External participant pass purchase — no participantId needed, backend uses registrationData
+    createPaymentLink: (data: { paymentType: string, quantity: number }) =>
         api.post('/payments/create-link', data),
 
-    verifyPaymentExternal: (data: { razorpay_order_id: string, razorpay_payment_id: string, razorpay_signature: string, participantId: string }) =>
+    // Verify + create participant in one shot — registrationData is the key payload
+    verifyPaymentExternal: (data: {
+        razorpay_order_id: string,
+        razorpay_payment_id: string,
+        razorpay_signature: string,
+        quantity: number,
+        registrationData: Record<string, any>,
+    }) =>
         api.post('/payments/verify', data),
 };
 
