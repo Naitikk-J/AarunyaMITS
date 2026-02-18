@@ -38,7 +38,7 @@ const Events = () => {
                 const finalEvents = Array.isArray(eventsData) && eventsData.length > 0
                     ? eventsData.map((e: any) => ({
                         ...e,
-                        id: e.id || e._id || 'unknown',
+                        
                         title: e.title || e.name || 'Untitled Event',
                         type: e.type || e.category || 'Event',
                         club: e.club || 'Aarunya',
