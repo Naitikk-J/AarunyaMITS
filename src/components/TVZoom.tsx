@@ -83,7 +83,7 @@ export const TVZoom: React.FC<TVZoomProps> = ({ children }) => {
             </div>
 
             {/* Scroll spacer */}
-            <div className="h-[120vh]" />
+            <div className="h-[60vh]" />
         </div>
     );
 };

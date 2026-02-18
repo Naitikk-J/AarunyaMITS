@@ -32,7 +32,7 @@ export const WelcomeSection: React.FC = () => {
     const opacity = useTransform(scrollYProgress, [0, 0.1, 0.2, 0.8, 0.9, 1], [0, 0.2, 1, 1, 0.2, 0]);
 
     return (
-        <section ref={containerRef} className={`relative min-h-screen w-full flex flex-col items-center justify-start ${isMobile ? 'pt-24' : 'pt-32 md:pt-40'} ${isMobile ? 'pb-16' : 'pb-24'} overflow-hidden ${isMobile ? '-mt-[20vh]' : isTablet ? '-mt-[40vh]' : '-mt-[50vh] md:-mt-[100vh]'} bg-transparent z-0`}>
+        <section ref={containerRef} className={`relative min-h-screen w-full flex flex-col items-center justify-start ${isMobile ? 'pt-24' : 'pt-32 md:pt-40'} ${isMobile ? 'pb-16' : 'pb-24'} overflow-hidden ${isMobile ? '-mt-[25vh]' : isTablet ? '-mt-[40vh]' : '-mt-[50vh] md:-mt-[60vh]'} bg-transparent z-0`}>
 
             {/* Gritty Texture Overlay */}
 
@@ -129,13 +129,13 @@ export const WelcomeSection: React.FC = () => {
                     transition={{ delay: 0.5 }}
                     className={`flex flex-wrap justify-center gap-4 sm:gap-8 pointer-events-auto ${isMobile ? 'mt-4' : 'mt-8 md:mt-12'}`}
                 >
-                    {/* <RetroButton
+                    {<RetroButton
                         variant="white"
                         className={`${isMobile ? 'scale-90 px-0 py-0' : isTablet ? 'scale-110' : 'scale-110'} sm:scale-125 md:scale-150 ${isMobile ? 'mx-2' : 'mx-0 sm:mx-16'} hover:scale-105 active:scale-95 transition-transform duration-200`}
                         onClick={() => navigate("/register")}
                     >
                         REGISTER
-                    </RetroButton> */}
+                    </RetroButton>}
 
                     <RetroButton
                         variant="white"
