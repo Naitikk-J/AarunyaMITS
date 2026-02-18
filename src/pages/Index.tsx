@@ -193,7 +193,7 @@ const Index = () => {
                     <div
                         className="absolute inset-0 z-0"
                         style={{
-                            backgroundImage: isMobile ? 'url(/bg-phone.avif)' : 'url(/tv-book.avif)',
+                            backgroundImage: isMobile ? 'url(/bg-phone.avif)' : 'url(/tv-main.avif)',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             backgroundRepeat: 'no-repeat'
