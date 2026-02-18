@@ -16,7 +16,7 @@ const navLinks = [
     { name: 'GUIDELINES', path: '/Guidelines' },
     { name: 'MEET THE TEAM', path: '/about' },
     { name: 'CONTACT', path: '/contact' },
-    // { name: 'REGISTER', path: '/register' },
+    { name: 'REGISTER', path: 'https://aarunya.harshitvarshney.in/register' },
 ];
 
 export const MainNavigation = ({ className }: { className?: string }) => {
@@ -164,45 +164,68 @@ export const MainNavigation = ({ className }: { className?: string }) => {
                             })}
                         </div>
 
-                        {/* Mobile Toggle Button on the right */}
-                        <button
-                            className="lg:hidden relative p-2 transition-all duration-200"
-                            onClick={() => {
-                                setIsOpen(!isOpen);
-                                playSound('buttonPress');
-                            }}
-                            aria-label="Toggle menu"
-                            style={{
-                                background: isOpen
-                                    ? 'linear-gradient(to bottom, #ff00ff, #cc00cc)'
-                                    : 'linear-gradient(to bottom, #2a1a4a, #1a0a2e)',
-                                border: '3px solid',
-                                borderColor: isOpen ? '#ff66ff' : '#ff00ff',
-                                boxShadow: isOpen
-                                    ? 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff'
-                                    : 'inset -2px -2px 0 #0a0510, inset 2px 2px 0 #3a2a5a'
-                            }}
-                        >
-                            <span className="absolute -top-1 -left-1 w-2 h-2 bg-[#00ffff]" />
-                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#ff00ff]" />
-                            <span className="absolute -bottom-1 -left-1 w-2 h-2 bg-[#ff00ff]" />
-                            <span className="absolute -bottom-1 -right-1 w-2 h-2 bg-[#00ffff]" />
+                        {/* Right side Logo (MITS) & Mobile Toggle */}
+                        <div className="flex items-center gap-4">
+                            {/* MITS Logo */}
+                            <a href="https://mitsgwalior.in/" target="_blank" rel="noopener noreferrer" className="flex items-center group relative">
+                                <img
+                                    src="/mitslogo.png"
+                                    alt="MITS Gwalior"
+                                    width="130"
+                                    height="60"
+                                    className="h-16 xl:h-12 w-auto transition-transform group-hover:scale-105 duration-300"
+                                    style={{
+                                        imageRendering: 'pixelated',
+                                        filter: 'drop-shadow(0 0 12px #00ffff)',
+                                    }}
+                                    onError={(e) => {
+                                        // Fallback to text if image is missing
+                                        e.currentTarget.style.display = 'none';
+                                        e.currentTarget.parentElement?.insertAdjacentHTML('beforeend', '<span class="font-press-start text-[8px] md:text-[10px] text-[#00ffff] drop-shadow-[0_0_8px_#00ffff]">MITS</span>');
+                                    }}
+                                />
+                            </a>
 
-                            <div className="flex flex-col gap-1" style={{ width: '18px' }}>
-                                <span className={cn(
-                                    "block h-[3px] transition-all duration-200",
-                                    isOpen ? "rotate-45 translate-y-[6px] bg-white" : "bg-[#ff00ff]"
-                                )} style={{ boxShadow: '0 0 4px currentColor' }} />
-                                <span className={cn(
-                                    "block h-[3px] transition-all duration-200",
-                                    isOpen ? "opacity-0 bg-white" : "bg-[#00ffff]"
-                                )} style={{ boxShadow: '0 0 4px currentColor' }} />
-                                <span className={cn(
-                                    "block h-[3px] transition-all duration-200",
-                                    isOpen ? "-rotate-45 -translate-y-[6px] bg-white" : "bg-[#ff00ff]"
-                                )} style={{ boxShadow: '0 0 4px currentColor' }} />
-                            </div>
-                        </button>
+                            {/* Mobile Toggle Button */}
+                            <button
+                                className="lg:hidden relative p-2 transition-all duration-200"
+                                onClick={() => {
+                                    setIsOpen(!isOpen);
+                                    playSound('buttonPress');
+                                }}
+                                aria-label="Toggle menu"
+                                style={{
+                                    background: isOpen
+                                        ? 'linear-gradient(to bottom, #ff00ff, #cc00cc)'
+                                        : 'linear-gradient(to bottom, #2a1a4a, #1a0a2e)',
+                                    border: '3px solid',
+                                    borderColor: isOpen ? '#ff66ff' : '#ff00ff',
+                                    boxShadow: isOpen
+                                        ? 'inset -2px -2px 0 #880088, inset 2px 2px 0 #ff66ff, 0 0 15px #ff00ff'
+                                        : 'inset -2px -2px 0 #0a0510, inset 2px 2px 0 #3a2a5a'
+                                }}
+                            >
+                                <span className="absolute -top-1 -left-1 w-2 h-2 bg-[#00ffff]" />
+                                <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#ff00ff]" />
+                                <span className="absolute -bottom-1 -left-1 w-2 h-2 bg-[#ff00ff]" />
+                                <span className="absolute -bottom-1 -right-1 w-2 h-2 bg-[#00ffff]" />
+
+                                <div className="flex flex-col gap-1" style={{ width: '18px' }}>
+                                    <span className={cn(
+                                        "block h-[3px] transition-all duration-200",
+                                        isOpen ? "rotate-45 translate-y-[6px] bg-white" : "bg-[#ff00ff]"
+                                    )} style={{ boxShadow: '0 0 4px currentColor' }} />
+                                    <span className={cn(
+                                        "block h-[3px] transition-all duration-200",
+                                        isOpen ? "opacity-0 bg-white" : "bg-[#00ffff]"
+                                    )} style={{ boxShadow: '0 0 4px currentColor' }} />
+                                    <span className={cn(
+                                        "block h-[3px] transition-all duration-200",
+                                        isOpen ? "-rotate-45 -translate-y-[6px] bg-white" : "bg-[#ff00ff]"
+                                    )} style={{ boxShadow: '0 0 4px currentColor' }} />
+                                </div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </nav>

@@ -503,6 +503,22 @@ export default function UnifiedRegistration() {
             const selectedEventData = events.find(e => e.id === selectedEventId);
             const totalAmount = selectedEventData?.fee || (paymentData.amount / 100);
 
+            // Capture all required values in local variables BEFORE the async callback
+            // to avoid React state closure staleness issues
+            const capturedEventId = selectedEventId;
+            const capturedParticipantId = user?.id;
+            const capturedParticipantType = user?.category || 'CollegeStudent';
+            const capturedEmail = user?.email;
+            const capturedRegId = registration?._id || registration?.id;
+
+            console.log('Payment verification will use:', {
+                capturedEventId,
+                capturedParticipantId,
+                capturedParticipantType,
+                capturedEmail,
+                capturedRegId,
+            });
+
             await openPaymentModal(
                 paymentData.orderId,
                 totalAmount,
@@ -512,7 +528,11 @@ export default function UnifiedRegistration() {
                 async (response: RazorpayResponse) => {
                     try {
                         const verifyResponse = await eventRegistrationApi.verifyPayment({
-                            registrationId: registration?._id || registration?.id,
+                            registrationId: capturedRegId,
+                            eventId: capturedEventId,
+                            participantId: capturedParticipantId,
+                            participantType: capturedParticipantType,
+                            email: capturedEmail,
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_signature: response.razorpay_signature,
