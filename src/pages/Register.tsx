@@ -39,8 +39,9 @@ export default function Register() {
     const [participantId, setParticipantId] = useState('');
     const [paymentDetails, setPaymentDetails] = useState<any>(null);
     const [generatedReferralCode, setGeneratedReferralCode] = useState('');
+    // Stored after step 1 (non-referral path) — passed to verify so backend can create the participant
+    const [registrationData, setRegistrationData] = useState<Record<string, any> | null>(null);
     const navigate = useNavigate();
-    const { openPaymentModal } = useRazorpay();
 
     // Student form state
     const [studentForm, setStudentForm] = useState<StudentFormData>({
@@ -174,20 +175,23 @@ export default function Register() {
 
         try {
             const response = await authApi.onboardExternalParticipant(payload);
-            const data = response.data.data?.participant || response.data.data || response.data;
-            const pId = data._id || data.id;
+            const d = response.data;
 
-            setParticipantId(pId);
-            toast.success('Registration successful!');
-
-            if (studentForm.referralCode) {
-                setStep(5);
-                toast.info('Registration via referral code. Payment skipped.');
-            } else {
+            if (d?.data?.requiresPayment) {
+                // No referral code — participant NOT saved to DB yet.
+                // Store registrationData; it will be sent to /payments/verify to create the participant.
+                setRegistrationData(d.data.registrationData);
+                toast.success('Details saved! Now select your passes.');
                 setStep(2);
+            } else {
+                // Referral code used — participant already created in DB
+                const pId = d?.data?.participant?._id || d?.data?.participant?.id;
+                setParticipantId(pId);
+                toast.success('Registered via referral code!');
+                setStep(5);
             }
         } catch (err: any) {
-            const errorMessage = err.response?.data?.message || err.message || 'Onboarding failed.';
+            const errorMessage = err.response?.data?.message || err.message || 'Registration failed.';
             setError(errorMessage);
             toast.error(errorMessage);
         } finally {
@@ -195,64 +199,93 @@ export default function Register() {
         }
     };
 
+    // Step 2: Create Razorpay order — sends only paymentType + quantity (no participantId)
     const handleCreatePayment = async () => {
         setLoading(true);
+        setError(null);
         try {
             const response = await paymentApi.createPaymentLink({
-                participantId,
-                participantType: 'ExternalParticipant',
                 paymentType: 'pass',
                 quantity: studentForm.quantity,
             });
 
             const paymentData = response.data.data || response.data;
-            setPaymentDetails(paymentData);
+            console.log('[create-link] response:', paymentData);
+            setPaymentDetails(paymentData); // contains orderId, amount (paise), currency, keyId
             toast.success('Payment order created!');
             setStep(3);
         } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Payment creation failed');
+            const msg = error.response?.data?.message || 'Payment creation failed';
+            setError(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }
     };
 
-    const handlePayment = async () => {
-        if (!paymentDetails) return;
+    // Step 3: Open Razorpay directly (no useRazorpay hook — use keyId from server)
+    const handlePayment = () => {
+        if (!paymentDetails || !registrationData) return;
 
-        setLoading(true);
-        try {
-            await openPaymentModal(
-                paymentDetails.orderId,
-                paymentDetails.amount / 100,
-                paymentDetails.currency || 'INR',
-                "Aarunya '24",
-                `Payment for ${studentForm.quantity} Pass(es)`,
-                async (response: any) => {
-                    try {
-                        const verifyResponse = await paymentApi.verifyPaymentExternal({
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature,
-                            participantId,
-                        });
+        // Capture locals to avoid stale closure in the async handler
+        const capturedRegistrationData = registrationData;
+        const capturedQuantity = studentForm.quantity;
+        const capturedOrderDetails = paymentDetails;
 
-                        const vData = verifyResponse.data.data || verifyResponse.data;
-                        if (vData.referralCode) {
-                            setGeneratedReferralCode(vData.referralCode);
-                        }
+        const options = {
+            key: capturedOrderDetails.keyId, // Use keyId returned by server, not env variable
+            amount: capturedOrderDetails.amount, // Already in paise — do NOT multiply
+            currency: capturedOrderDetails.currency || 'INR',
+            name: "Aarunya '25",
+            description: `${capturedQuantity} Pass${capturedQuantity > 1 ? 'es' : ''}`,
+            order_id: capturedOrderDetails.orderId,
+            prefill: {
+                name: studentForm.name,
+                email: studentForm.email,
+                contact: studentForm.mobileNumber,
+            },
+            handler: async (response: any) => {
+                // Razorpay calls this on successful payment
+                setLoading(true);
+                try {
+                    // Send registrationData so backend can create the ExternalParticipant + Payment records
+                    const verifyResponse = await paymentApi.verifyPaymentExternal({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                        quantity: capturedQuantity,
+                        registrationData: capturedRegistrationData,
+                    });
 
-                        toast.success('Payment verified successfully!');
-                        setStep(4);
-                    } catch (error: any) {
-                        toast.error(error.response?.data?.message || 'Payment verification failed');
+                    console.log('[verify] response:', verifyResponse.data);
+                    const vData = verifyResponse.data.data || verifyResponse.data;
+
+                    // Participant is now created in DB
+                    const newParticipantId = vData?.participant?._id || vData?.participant?.id;
+                    if (newParticipantId) setParticipantId(newParticipantId);
+
+                    if (vData?.referralCode) {
+                        setGeneratedReferralCode(vData.referralCode);
                     }
+
+                    toast.success('Payment verified! Registration complete.');
+                    setStep(4);
+                } catch (error: any) {
+                    console.error('[verify] failed:', error.response?.data || error.message);
+                    const msg = error.response?.data?.message || 'Payment verification failed';
+                    setError(msg);
+                    toast.error(msg);
+                } finally {
+                    setLoading(false);
                 }
-            );
-        } catch (error: any) {
-            toast.error('Failed to initiate payment');
-        } finally {
-            setLoading(false);
-        }
+            },
+            modal: {
+                ondismiss: () => toast.info('Payment cancelled'),
+            },
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.open();
     };
 
 
