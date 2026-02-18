@@ -166,6 +166,21 @@ export const MainNavigation = ({ className }: { className?: string }) => {
 
                         {/* Right side Logo (MITS) & Mobile Toggle */}
                         <div className="flex items-center gap-4">
+                            {/* Aarunya Small Logo */}
+                            <div className="hidden sm:flex items-center group relative">
+                                <img
+                                    src="/mits-logo.png"
+                                    alt="MITS"
+                                    width="200"
+                                    height="80"
+                                    className="h-20 2xl:h-12 w-auto transition-transform group-hover:scale-105 duration-300 mr-2"
+                                    style={{
+                                        imageRendering: 'pixelated',
+                                        filter: 'drop-shadow(0 0 10px #ff00ff)',
+                                    }}
+                                />
+                            </div>
+
                             {/* MITS Logo */}
                             <a href="https://mitsgwalior.in/" target="_blank" rel="noopener noreferrer" className="flex items-center group relative">
                                 <img

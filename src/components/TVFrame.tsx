@@ -52,6 +52,11 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
             // On mobile, video MUST start muted to autoplay. 
             // We only unmute if user has interacted with volume controls.
             videoRef.current.muted = !isPowered || (isMobile && !userHasInteracted);
+
+            // Explicitly call play to ensure it starts after load
+            videoRef.current.play().catch(err => {
+                console.log("Autoplay prevented:", err);
+            });
         }
     };
 
@@ -61,6 +66,11 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
         if (videoRef.current) {
             // When turning on, we might stay muted especially on mobile
             videoRef.current.muted = !powered || (isMobile && !userHasInteracted);
+            if (powered) {
+                videoRef.current.play().catch(() => { });
+            } else {
+                videoRef.current.pause();
+            }
         }
     };
 

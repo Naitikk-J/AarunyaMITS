@@ -40,16 +40,16 @@ const Index = () => {
             window.innerWidth <= 768;
 
         const lenis = new Lenis({
-            duration: isMobileDevice ? 2.0 : 1.2,
+            duration: isMobileDevice ? 1.5 : 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             orientation: 'vertical',
             gestureOrientation: 'vertical',
             smoothWheel: true,
-            wheelMultiplier: isMobileDevice ? 0.4 : 1,
-            touchMultiplier: isMobileDevice ? 0.8 : 2,
+            wheelMultiplier: isMobileDevice ? 0.8 : 1,
+            touchMultiplier: isMobileDevice ? 1.5 : 2,
             infinite: false,
             syncTouch: true,
-            lerp: isMobileDevice ? 0.1 : 0.05,
+            lerp: isMobileDevice ? 0.08 : 0.1,
         });
 
         function raf(time: number) {
@@ -193,7 +193,7 @@ const Index = () => {
                     <div
                         className="absolute inset-0 z-0"
                         style={{
-                            backgroundImage: isMobile ? 'url(/bg-phone.avif)' : 'url(/tv-main.avif)',
+                            backgroundImage: isMobile ? 'url(/tv-bgphone.png)' : 'url(/tv-main.avif)',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             backgroundRepeat: 'no-repeat'
