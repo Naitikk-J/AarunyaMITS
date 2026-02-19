@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useRazorpay, calculateAmountWithFee } from '@/hooks/useRazorpay';
 import { Button } from '@/components/ui/button';
@@ -1095,57 +1096,7 @@ export default function UnifiedRegistration() {
                                             })}
                                         </div>
 
-                                        <motion.div
-                                            initial={{ y: 100, opacity: 0 }}
-                                            animate={{ y: 0, opacity: 1 }}
-                                            className={`p-4 sm:p-6 bg-black/80 border-t-2 border-[#ff00ff]/30 backdrop-blur-2xl shadow-[0_-10px_40px_rgba(0,0,0,0.8)] fixed bottom-0 left-0 right-0 lg:left-[25%] xl:left-[20%] z-50 transition-all duration-500 ${!selectedEventId ? 'opacity-50 grayscale pointer-events-none' : 'opacity-100 translate-y-0'}`}
-                                        >
-                                            <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-                                                <div className="flex items-center gap-4 w-full sm:w-auto justify-center sm:justify-start">
-                                                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#ff00ff] to-[#8a2be2] flex items-center justify-center text-lg sm:text-xl shadow-[0_0_15px_rgba(255,0,255,0.4)] shrink-0">
-                                                        💳
-                                                    </div>
-                                                    <div>
-                                                        <h3 className="text-xs sm:text-sm font-black text-[#00ffff] uppercase tracking-widest">
-                                                            {selectedEventId ? 'Payment Strategy Ready' : 'Select Protocol'}
-                                                        </h3>
-                                                        <p className="text-[9px] sm:text-[10px] text-white/50 uppercase line-clamp-1">
-                                                            {selectedEventId ? events.find(e => e.id === selectedEventId)?.name : 'Awaiting event selection...'}
-                                                        </p>
-                                                    </div>
-                                                </div>
 
-                                                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto">
-                                                    <div className="text-center sm:text-right flex flex-row sm:flex-col items-center sm:items-end gap-3 sm:gap-0 justify-between w-full sm:w-auto">
-                                                        <div className="text-[10px] text-[#ff00ff] font-bold uppercase tracking-widest sm:hidden">
-                                                            Total Payload:
-                                                        </div>
-                                                        <div>
-                                                            <div className="text-xl sm:text-2xl font-black text-white leading-none">
-                                                                ₹{calculateAmountWithFee(events.find(e => e.id === selectedEventId)?.fee || 0)}
-                                                            </div>
-                                                            <div className="hidden sm:block text-[8px] text-[#ff00ff] font-bold uppercase tracking-widest mt-1">
-                                                                Total Payload (incl. fee)
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <Button
-                                                        onClick={handleProceedToPayment}
-                                                        disabled={loading || !selectedEventId}
-                                                        className="h-10 sm:h-12 w-full sm:w-auto px-6 sm:px-10 rounded-full font-black text-[10px] sm:text-[11px] uppercase tracking-widest border-2 border-[#ff00ff] shadow-[0_0_20px_rgba(255,0,255,0.3)] transition-all hover:scale-[1.05] active:scale-95 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed group relative overflow-hidden shrink-0"
-                                                        style={{
-                                                            background: 'linear-gradient(to right, #ff00ff, #8a2be2)',
-                                                        }}
-                                                    >
-                                                        <span className="relative z-10">
-                                                            {loading ? 'PROCESSING...' : 'INITIALIZE REGISTRATION'}
-                                                        </span>
-                                                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 ease-in-out" />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </motion.div>
                                     </div>
                                 </motion.div>
                             )}
@@ -1287,6 +1238,68 @@ export default function UnifiedRegistration() {
                     </div>
                 </main>
             </div>
+
+            {/* Payment Bar - Rendered via Portal to escape Framer Motion transforms */}
+            {step === 'dashboard' && ReactDOM.createPortal(
+                <div
+                    className={`font-vt323 p-4 sm:p-6 bg-black/95 border-t-2 border-[#ff00ff]/30 backdrop-blur-2xl shadow-[0_-10px_40px_rgba(0,0,0,0.8)] transition-all duration-500 ${!selectedEventId ? 'opacity-50 grayscale pointer-events-none' : 'opacity-100'}`}
+                    style={{
+                        position: 'fixed',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        zIndex: 99999,
+                        overflow: 'hidden',
+                    }}
+                >
+                    <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 lg:pl-[25%] xl:pl-[20%]">
+                        <div className="flex items-center gap-4 w-full sm:w-auto justify-center sm:justify-start">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#ff00ff] to-[#8a2be2] flex items-center justify-center text-lg sm:text-xl shadow-[0_0_15px_rgba(255,0,255,0.4)] shrink-0">
+                                💳
+                            </div>
+                            <div>
+                                <h3 className="text-xs sm:text-sm font-black text-[#00ffff] uppercase tracking-widest">
+                                    {selectedEventId ? 'Payment Strategy Ready' : 'Select Protocol'}
+                                </h3>
+                                <p className="text-[9px] sm:text-[10px] text-white/50 uppercase line-clamp-1">
+                                    {selectedEventId ? events.find(e => e.id === selectedEventId)?.name : 'Awaiting event selection...'}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto">
+                            <div className="text-center sm:text-right flex flex-row sm:flex-col items-center sm:items-end gap-3 sm:gap-0 justify-between w-full sm:w-auto">
+                                <div className="text-[10px] text-[#ff00ff] font-bold uppercase tracking-widest sm:hidden">
+                                    Total Payload:
+                                </div>
+                                <div>
+                                    <div className="text-xl sm:text-2xl font-black text-white leading-none">
+                                        ₹{calculateAmountWithFee(events.find(e => e.id === selectedEventId)?.fee || 0)}
+                                    </div>
+                                    <div className="hidden sm:block text-[8px] text-[#ff00ff] font-bold uppercase tracking-widest mt-1">
+                                        Total Payload (incl. fee)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                onClick={handleProceedToPayment}
+                                disabled={loading || !selectedEventId}
+                                className="h-10 sm:h-12 w-full sm:w-auto px-6 sm:px-10 rounded-full font-black text-[10px] sm:text-[11px] uppercase tracking-widest border-2 border-[#ff00ff] shadow-[0_0_20px_rgba(255,0,255,0.3)] transition-all hover:scale-[1.05] active:scale-95 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed group relative overflow-hidden shrink-0"
+                                style={{
+                                    background: 'linear-gradient(to right, #ff00ff, #8a2be2)',
+                                }}
+                            >
+                                <span className="relative z-10">
+                                    {loading ? 'PROCESSING...' : 'INITIALIZE REGISTRATION'}
+                                </span>
+                                <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 ease-in-out" />
+                            </Button>
+                        </div>
+                    </div>
+                </div>,
+                document.body
+            )}
         </div>
     );
 }
