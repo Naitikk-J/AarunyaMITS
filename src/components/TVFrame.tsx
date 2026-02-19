@@ -49,9 +49,8 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
         setIsVideoLoading(false);
         if (videoRef.current) {
             videoRef.current.volume = volume / 10;
-            // On mobile, video MUST start muted to autoplay. 
-            // We only unmute if user has interacted with volume controls.
-            videoRef.current.muted = !isPowered || (isMobile && !userHasInteracted);
+            // Ensure audio is ON by default
+            videoRef.current.muted = !isPowered;
 
             // Explicitly call play to ensure it starts after load
             videoRef.current.play().catch(err => {
@@ -64,8 +63,8 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
         setIsPowered(powered);
 
         if (videoRef.current) {
-            // When turning on, we might stay muted especially on mobile
-            videoRef.current.muted = !powered || (isMobile && !userHasInteracted);
+            // When turning on, ensure audio is enabled
+            videoRef.current.muted = !powered;
             if (powered) {
                 videoRef.current.play().catch(() => { });
             } else {
@@ -119,7 +118,7 @@ const TVFrame = ({ children, className = "" }: TVFrameProps) => {
                                     autoPlay
                                     loop
                                     onLoadedData={handleVideoLoad}
-                                    muted={!isPowered || (isMobile && !userHasInteracted)}
+                                    muted={!isPowered}
                                     playsInline
                                     preload="auto"
                                     className={`w-full h-full object-cover transition-opacity duration-500 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`}
