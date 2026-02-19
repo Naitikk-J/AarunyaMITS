@@ -712,7 +712,7 @@ export default function UnifiedRegistration() {
                     </div>
 
                     {/* RIGHT CONTENT AREA */}
-                    <div className="flex-1 flex items-start justify-center pt-8 lg:pt-24 px-4 sm:px-10 pb-24 relative overflow-visible">
+                    <div className="flex-1 flex items-start justify-center pt-8 lg:pt-24 px-4 sm:px-10 pb-48 relative overflow-visible">
                         <motion.div
                             variants={containerVariants}
                             initial="hidden"
@@ -1046,7 +1046,7 @@ export default function UnifiedRegistration() {
                                                         whileInView={{ opacity: 1, y: 0 }}
                                                         viewport={{ once: true }}
                                                         whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                                                        className={`group relative overflow-hidden border-2 rounded-[2.5rem] p-7 cursor-pointer transition-all duration-300 h-full flex flex-col ${isRegistered
+                                                        className={`group relative overflow-hidden border-2 rounded-[2.5rem] p-5 sm:p-7 cursor-pointer transition-all duration-300 h-full flex flex-col ${isRegistered
                                                             ? 'border-green-500/30 bg-green-500/5 cursor-not-allowed grayscale-[0.6] opacity-80'
                                                             : isSelected
                                                                 ? 'border-[#00ffff] bg-gradient-to-br from-[#00ffff]/15 via-indigo-950/60 to-purple-950/40 shadow-[0_0_50px_rgba(0,255,255,0.25)] ring-1 ring-[#00ffff]/50'
@@ -1064,50 +1064,50 @@ export default function UnifiedRegistration() {
                                                             </div>
                                                         )}
 
-                                                        <div className="absolute top-0 right-0 px-5 py-2 rounded-bl-3xl text-[9px] font-black uppercase tracking-[0.2em] bg-white/5 text-white/40 border-l border-b border-white/10">
+                                                        <div className="absolute top-0 right-0 px-4 py-1.5 sm:px-5 sm:py-2 rounded-bl-3xl text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] bg-white/5 text-white/40 border-l border-b border-white/10">
                                                             {event.category}
                                                         </div>
 
-                                                        <div className="flex flex-col gap-4 h-full relative z-0">
+                                                        <div className="flex flex-col gap-3 sm:gap-4 h-full relative z-0 mt-2 sm:mt-0">
                                                             <div className="space-y-2">
-                                                                <div className="flex justify-between items-start gap-4">
+                                                                <div className="flex justify-between items-start gap-3 sm:gap-4">
                                                                     <div className="flex-1">
-                                                                        <h3 className="text-lg sm:text-xl font-black tracking-tighter text-white leading-tight mb-1 group-hover:text-[#00ffff] transition-colors">
+                                                                        <h3 className="text-base sm:text-xl font-black tracking-tighter text-white leading-tight mb-1 group-hover:text-[#00ffff] transition-colors break-words">
                                                                             {event.name}
                                                                         </h3>
                                                                         <div className="flex items-center gap-2">
                                                                             <span className="w-1.5 h-1.5 rounded-full bg-[#ff00ff] shadow-[0_0_5px_#ff00ff]" />
-                                                                            <p className="text-[10px] text-[#ff00ff]/80 font-black uppercase tracking-widest">{event.club}</p>
+                                                                            <p className="text-[9px] sm:text-[10px] text-[#ff00ff]/80 font-black uppercase tracking-widest">{event.club}</p>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="text-right">
-                                                                        <div className={`text-2xl font-black ${event.fee === 0 ? 'text-green-400' : 'text-white'}`}>
+                                                                    <div className="text-right shrink-0">
+                                                                        <div className={`text-xl sm:text-2xl font-black ${event.fee === 0 ? 'text-green-400' : 'text-white'}`}>
                                                                             {event.fee === 0 ? 'FREE' : `₹${event.fee}`}
                                                                         </div>
                                                                         {event.prizePool && (
-                                                                            <div className="text-[9px] bg-yellow-400/20 text-yellow-400 px-2.5 py-1 rounded-lg font-black border border-yellow-400/30 whitespace-nowrap mt-1">
+                                                                            <div className="text-[8px] sm:text-[9px] bg-yellow-400/20 text-yellow-400 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-black border border-yellow-400/30 whitespace-nowrap mt-1">
                                                                                 🏆 {event.prizePool}
                                                                             </div>
                                                                         )}
                                                                     </div>
                                                                 </div>
-                                                                <p className="text-xs text-white/50 line-clamp-2 leading-relaxed font-medium">
+                                                                <p className="text-[10px] sm:text-xs text-white/50 line-clamp-2 leading-relaxed font-medium">
                                                                     {event.description}
                                                                 </p>
                                                             </div>
 
-                                                            <div className="grid grid-cols-2 gap-3 mt-auto pt-4 border-t border-white/5">
-                                                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-wider">
-                                                                    <span className="text-sm opacity-60">📅</span> {event.date}
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mt-auto pt-3 sm:pt-4 border-t border-white/5">
+                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider">
+                                                                    <span className="text-xs sm:text-sm opacity-60">📅</span> {event.date}
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-wider">
-                                                                    <span className="text-sm opacity-60">📍</span> {event.venue}
+                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider">
+                                                                    <span className="text-xs sm:text-sm opacity-60">📍</span> {event.venue}
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-wider truncate">
-                                                                    <span className="text-sm opacity-60">👥</span> {event.isTeamEvent ? `TEAM (${event.teamSize?.min}-${event.teamSize?.max})` : 'SOLO'}
+                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider truncate">
+                                                                    <span className="text-xs sm:text-sm opacity-60">👥</span> {event.isTeamEvent ? `TEAM (${event.teamSize?.min}-${event.teamSize?.max})` : 'SOLO'}
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-wider">
-                                                                    <span className="text-sm opacity-60">🎫</span> {event.currentRegistrations}/{event.maxParticipants}
+                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider">
+                                                                    <span className="text-xs sm:text-sm opacity-60">🎫</span> {event.currentRegistrations}/{event.maxParticipants}
                                                                 </div>
                                                             </div>
 
@@ -1134,34 +1134,39 @@ export default function UnifiedRegistration() {
                                             className={`p-4 sm:p-6 bg-black/80 border-t-2 border-[#ff00ff]/30 backdrop-blur-2xl shadow-[0_-10px_40px_rgba(0,0,0,0.8)] fixed bottom-0 left-0 right-0 lg:left-[25%] xl:left-[20%] z-50 transition-all duration-500 ${!selectedEventId ? 'opacity-50 grayscale pointer-events-none' : 'opacity-100 translate-y-0'}`}
                                         >
                                             <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#ff00ff] to-[#8a2be2] flex items-center justify-center text-xl shadow-[0_0_15px_rgba(255,0,255,0.4)]">
+                                                <div className="flex items-center gap-4 w-full sm:w-auto justify-center sm:justify-start">
+                                                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#ff00ff] to-[#8a2be2] flex items-center justify-center text-lg sm:text-xl shadow-[0_0_15px_rgba(255,0,255,0.4)] shrink-0">
                                                         💳
                                                     </div>
                                                     <div>
-                                                        <h3 className="text-sm font-black text-[#00ffff] uppercase tracking-widest">
+                                                        <h3 className="text-xs sm:text-sm font-black text-[#00ffff] uppercase tracking-widest">
                                                             {selectedEventId ? 'Payment Strategy Ready' : 'Select Protocol'}
                                                         </h3>
-                                                        <p className="text-[10px] text-white/50 uppercase">
+                                                        <p className="text-[9px] sm:text-[10px] text-white/50 uppercase line-clamp-1">
                                                             {selectedEventId ? events.find(e => e.id === selectedEventId)?.name : 'Awaiting event selection...'}
                                                         </p>
                                                     </div>
                                                 </div>
 
-                                                <div className="flex flex-col sm:flex-row items-center gap-6">
-                                                    <div className="text-center sm:text-right">
-                                                        <div className="text-2xl font-black text-white leading-none">
-                                                            ₹{calculateAmountWithFee(events.find(e => e.id === selectedEventId)?.fee || 0)}
+                                                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto">
+                                                    <div className="text-center sm:text-right flex flex-row sm:flex-col items-center sm:items-end gap-3 sm:gap-0 justify-between w-full sm:w-auto">
+                                                        <div className="text-[10px] text-[#ff00ff] font-bold uppercase tracking-widest sm:hidden">
+                                                            Total Payload:
                                                         </div>
-                                                        <div className="text-[8px] text-[#ff00ff] font-bold uppercase tracking-widest mt-1">
-                                                            Total Payload (incl. fee)
+                                                        <div>
+                                                            <div className="text-xl sm:text-2xl font-black text-white leading-none">
+                                                                ₹{calculateAmountWithFee(events.find(e => e.id === selectedEventId)?.fee || 0)}
+                                                            </div>
+                                                            <div className="hidden sm:block text-[8px] text-[#ff00ff] font-bold uppercase tracking-widest mt-1">
+                                                                Total Payload (incl. fee)
+                                                            </div>
                                                         </div>
                                                     </div>
 
                                                     <Button
                                                         onClick={handleProceedToPayment}
                                                         disabled={loading || !selectedEventId}
-                                                        className="h-12 px-10 rounded-full font-black text-[11px] uppercase tracking-widest border-2 border-[#ff00ff] shadow-[0_0_20px_rgba(255,0,255,0.3)] transition-all hover:scale-[1.05] active:scale-95 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed group relative overflow-hidden"
+                                                        className="h-10 sm:h-12 w-full sm:w-auto px-6 sm:px-10 rounded-full font-black text-[10px] sm:text-[11px] uppercase tracking-widest border-2 border-[#ff00ff] shadow-[0_0_20px_rgba(255,0,255,0.3)] transition-all hover:scale-[1.05] active:scale-95 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed group relative overflow-hidden shrink-0"
                                                         style={{
                                                             background: 'linear-gradient(to right, #ff00ff, #8a2be2)',
                                                         }}
