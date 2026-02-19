@@ -943,44 +943,7 @@ export default function UnifiedRegistration() {
                                         }} />
 
                                         {/* User Info Header */}
-                                        <div className="mb-8 px-6 py-5 bg-gradient-to-r from-indigo-950/40 via-purple-900/20 to-indigo-950/40 border border-[#ff00ff]/30 rounded-3xl flex flex-col sm:flex-row justify-between items-center gap-6 shadow-[0_0_20px_rgba(255,0,255,0.1)] relative backdrop-blur-md">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ff00ff] to-[#8a2be2] flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(255,0,255,0.4)] transform hover:rotate-6 transition-transform">
-                                                    👤
-                                                </div>
-                                                <div>
-                                                    <div className="text-[10px] text-indigo-300 uppercase tracking-[0.3em] font-black mb-0.5">Player Statistics</div>
-                                                    <div className="text-xl font-black text-white flex items-center gap-2">
-                                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00ffff] to-white">{user?.name || 'Explorer'}</span>
-                                                        <span className="text-[10px] py-0.5 px-2 bg-[#00ffff]/20 text-[#00ffff] rounded-full border border-[#00ffff]/30">LVL 42</span>
-                                                    </div>
-                                                    <div className="text-xs text-white/40 font-vt323 tracking-widest uppercase mt-0.5">MITS-SYSTEMS IDENTIFIED</div>
-                                                </div>
-                                            </div>
 
-                                            <div className="flex gap-3">
-                                                {referralCode ? (
-                                                    <div className="h-10 rounded-xl text-xs bg-gradient-to-r from-[#ff00ff]/20 to-[#00ffff]/20 text-white border border-[#ff00ff]/40 px-5 font-black uppercase tracking-wider backdrop-blur-sm shadow-[0_4px_15px_-3px_rgba(255,0,255,0.3)] flex items-center gap-2">
-                                                        <span className="text-[#00ffff]">🎫</span>
-                                                        <span>CODE: {referralCode}</span>
-                                                    </div>
-                                                ) : (
-                                                    <Button
-                                                        onClick={() => navigate('/my-registrations')}
-                                                        className="h-10 rounded-xl text-xs bg-[#00ffff]/10 hover:bg-[#00ffff]/20 text-[#00ffff] border border-[#00ffff]/40 px-5 font-black uppercase tracking-wider backdrop-blur-sm shadow-[0_4px_15px_-3px_rgba(0,255,255,0.2)]"
-                                                    >
-                                                        MY REGISTRATIONS
-                                                    </Button>
-                                                )}
-                                                <Button
-                                                    onClick={handleLogout}
-                                                    variant="outline"
-                                                    className="h-10 rounded-xl text-xs border-[#ff00ff]/50 bg-black/40 hover:bg-[#ff00ff]/20 hover:border-[#ff00ff] text-white transition-all shadow-[0_4px_15px_-3px_rgba(255,0,255,0.2)] font-black tracking-widest px-5 uppercase"
-                                                >
-                                                    LOGOUT
-                                                </Button>
-                                            </div>
-                                        </div>
 
                                         <div className="text-center mb-12 relative">
                                             <div className="inline-block relative">
