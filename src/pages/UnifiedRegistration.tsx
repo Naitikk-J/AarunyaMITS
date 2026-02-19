@@ -1033,22 +1033,22 @@ export default function UnifiedRegistration() {
 
                                                         <div className="flex flex-col gap-3 sm:gap-4 h-full relative z-0 mt-2 sm:mt-0">
                                                             <div className="space-y-2">
-                                                                <div className="flex justify-between items-start gap-3 sm:gap-4">
-                                                                    <div className="flex-1">
-                                                                        <h3 className="text-base sm:text-xl font-black tracking-tighter text-white leading-tight mb-1 group-hover:text-[#00ffff] transition-colors break-words">
+                                                                <div className="flex justify-between items-start gap-2 sm:gap-4">
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <h3 className="text-base sm:text-xl font-black tracking-tighter text-white leading-tight mb-1 group-hover:text-[#00ffff] transition-colors break-words pr-1">
                                                                             {event.name}
                                                                         </h3>
                                                                         <div className="flex items-center gap-2">
-                                                                            <span className="w-1.5 h-1.5 rounded-full bg-[#ff00ff] shadow-[0_0_5px_#ff00ff]" />
-                                                                            <p className="text-[9px] sm:text-[10px] text-[#ff00ff]/80 font-black uppercase tracking-widest">{event.club}</p>
+                                                                            <span className="w-1.5 h-1.5 rounded-full bg-[#ff00ff] shadow-[0_0_5px_#ff00ff] shrink-0" />
+                                                                            <p className="text-[9px] sm:text-[10px] text-[#ff00ff]/80 font-black uppercase tracking-widest truncate">{event.club}</p>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="text-right shrink-0">
+                                                                    <div className="text-right shrink-0 max-w-[45%]">
                                                                         <div className={`text-xl sm:text-2xl font-black ${event.fee === 0 ? 'text-green-400' : 'text-white'}`}>
                                                                             {event.fee === 0 ? 'FREE' : `₹${event.fee}`}
                                                                         </div>
                                                                         {event.prizePool && (
-                                                                            <div className="text-[8px] sm:text-[9px] bg-yellow-400/20 text-yellow-400 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-black border border-yellow-400/30 whitespace-nowrap mt-1">
+                                                                            <div className="text-[8px] sm:text-[9px] bg-yellow-400/20 text-yellow-400 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-black border border-yellow-400/30 mt-1 inline-block text-right break-words max-w-full">
                                                                                 🏆 {event.prizePool}
                                                                             </div>
                                                                         )}
@@ -1060,17 +1060,21 @@ export default function UnifiedRegistration() {
                                                             </div>
 
                                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mt-auto pt-3 sm:pt-4 border-t border-white/5">
-                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider">
-                                                                    <span className="text-xs sm:text-sm opacity-60">📅</span> {event.date}
+                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider overflow-hidden">
+                                                                    <span className="text-xs sm:text-sm opacity-60 shrink-0">📅</span>
+                                                                    <span className="truncate">{event.date}</span>
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider">
-                                                                    <span className="text-xs sm:text-sm opacity-60">📍</span> {event.venue}
+                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider overflow-hidden">
+                                                                    <span className="text-xs sm:text-sm opacity-60 shrink-0">📍</span>
+                                                                    <span className="truncate">{event.venue}</span>
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider truncate">
-                                                                    <span className="text-xs sm:text-sm opacity-60">👥</span> {event.isTeamEvent ? `TEAM (${event.teamSize?.min}-${event.teamSize?.max})` : 'SOLO'}
+                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider overflow-hidden">
+                                                                    <span className="text-xs sm:text-sm opacity-60 shrink-0">👥</span>
+                                                                    <span className="truncate">{event.isTeamEvent ? `TEAM (${event.teamSize?.min}-${event.teamSize?.max})` : 'SOLO'}</span>
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider">
-                                                                    <span className="text-xs sm:text-sm opacity-60">🎫</span> {event.currentRegistrations}/{event.maxParticipants}
+                                                                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-wider overflow-hidden">
+                                                                    <span className="text-xs sm:text-sm opacity-60 shrink-0">🎫</span>
+                                                                    <span className="truncate">{event.currentRegistrations}/{event.maxParticipants}</span>
                                                                 </div>
                                                             </div>
 
