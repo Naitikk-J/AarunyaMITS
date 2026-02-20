@@ -10,13 +10,15 @@ export default defineConfig(({ mode }) => ({
         port: 8040,
         allowedHosts: [
             "aarunya.in",
+            "aarunya.harshitvarshney.in",
+            "www.aarunya.harshitvarshney.in"
         ],
         hmr: {
             overlay: false,
         },
         proxy: {
             '/api': {
-                target: 'https://aarunya.snxit.me',
+                target: 'https://aarunya.harshitvarshney.in',
                 changeOrigin: true,
                 secure: true,
             },
@@ -71,4 +73,3 @@ export default defineConfig(({ mode }) => ({
         },
     },
 }));
-
