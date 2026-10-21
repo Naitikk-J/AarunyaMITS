@@ -34,3 +34,7 @@ coverage
 # Misc
 .cache
 .eslintcache
+.env.*
+!.env.example
+!.env.sample
+.vercel
